@@ -1,16 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using System.Linq;
 using System.IO;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.SceneManagement;
-
 
 namespace Cosmobot
 {
     public class DataSaveManager : MonoBehaviour
     {
         private GameData game_data;
+
         [SerializeField]
         private string save_file_name = "";
         public static DataSaveManager Instance { get; private set; }
@@ -40,8 +40,11 @@ namespace Cosmobot
 
         private void GetSaveableObjects()
         {
-            this.saveable_objects = FindObjectsOfType<MonoBehaviour>().OfType<ISaveableData>().ToList();
+            this.saveable_objects = FindObjectsOfType<MonoBehaviour>()
+                .OfType<ISaveableData>()
+                .ToList();
         }
+
         public void LoadGame(string save_file_name = "save_file")
         {
             SaveFileHandler file_handler = new SaveFileHandler(save_file_name);
