@@ -2,7 +2,7 @@ name: Naming
 
 on:
   pull_request:
-    types: [ opened, synchronize, reopened ]
+    types: [opened, synchronize, reopened]
 
 jobs:
   cpr:
@@ -13,6 +13,6 @@ jobs:
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
           message: Invalid PR name. Checkout [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
-          branch_pattern: [a-z]+\/[0-9]+\/[a-z0-9\-]+
-          title_pattern: ([a-z\-]+)(\(\#[0-9]+\))!?: .+
+          branch_pattern: "[a-z]+/[0-9]+/[a-z0-9\\-]+"
+          title_pattern: "([a-z\\-]+)(\\(\\#[0-9]+\\))!?: .+"
           close: false
