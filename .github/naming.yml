@@ -1,0 +1,14 @@
+name: Naming
+
+jobs:
+  cpr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: PR name validate
+        uses: Namchee/conventional-pr@v0.15.1
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+          message: Invalid PR name. Checkout [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/)
+          branch_pattern: [a-z]+\/[0-9]+\/[a-z0-9\-]+
+          title_pattern: ([a-z\-]+)(\(\#[0-9]+\))!?: .+
+          close: false
