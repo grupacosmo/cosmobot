@@ -1,5 +1,11 @@
 name: Naming
 
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+    branches:
+      - main
+
 jobs:
   cpr:
     runs-on: ubuntu-latest
