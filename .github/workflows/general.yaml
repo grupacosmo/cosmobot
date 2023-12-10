@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: Build project
+    name: Build project and run tests
     runs-on: ubuntu-latest
     steps:
       # Checkout (without LFS)
@@ -41,10 +41,7 @@ jobs:
           restore-keys: |
             Library-
 
-  tests:
-    name: Run project tests
-    runs-on: ubuntu-latest
-    steps:
+      # Test
       - name: Run tests
         uses: game-ci/unity-test-runner@v4
         env:
