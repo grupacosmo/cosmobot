@@ -11,6 +11,8 @@ namespace Cosmobot
     public class DataSaveManager : MonoBehaviour
     {
         private GameData game_data;
+        [SerializeField]
+        private string save_file_name = "";
         public static DataSaveManager Instance { get; private set; }
         private List<ISaveableData> saveable_objects;
 
@@ -40,9 +42,9 @@ namespace Cosmobot
         {
             this.saveable_objects = FindObjectsOfType<MonoBehaviour>().OfType<ISaveableData>().ToList();
         }
-        public void LoadGame()
+        public void LoadGame(string save_file_name = "save_file")
         {
-            SaveFileHandler file_handler = new SaveFileHandler(save_file_name: "save_file");
+            SaveFileHandler file_handler = new SaveFileHandler(save_file_name);
             this.game_data = file_handler.Load();
 
             if (this.game_data == null)
@@ -58,10 +60,13 @@ namespace Cosmobot
                 saveableObject.LoadData(game_data);
             }
             Debug.Log("Game loaded");
+            Debug.Log("Game loaded");
         }
 
-        public void SaveGame()
+        public void SaveGame(string save_file_name = "save_file")
         {
+            GetSaveableObjects();
+
             GetSaveableObjects();
 
             foreach (ISaveableData saveableObject in saveable_objects)
@@ -72,7 +77,7 @@ namespace Cosmobot
                 }
             }
             Debug.Log("Game saved");
-            SaveFileHandler File_handler = new SaveFileHandler(save_file_name: "save_file");
+            SaveFileHandler File_handler = new SaveFileHandler(save_file_name);
             File_handler.Save(game_data);
         }
 
