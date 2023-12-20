@@ -26,10 +26,9 @@ namespace Cosmobot
             DontDestroyOnLoad(gameObject);
         }
 
-        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        public void OnSceneUnloaded(Scene scene)
         {
-            this.saveable_objects = FindObjectsOfType<MonoBehaviour>().OfType<ISaveableData>().ToList();
-            LoadGame();
+            SaveGame();
         }
 
         public void NewGame()
@@ -37,6 +36,10 @@ namespace Cosmobot
             this.game_data = new GameData();
         }
 
+        private void GetSaveableObjects()
+        {
+            this.saveable_objects = FindObjectsOfType<MonoBehaviour>().OfType<ISaveableData>().ToList();
+        }
         public void LoadGame()
         {
             SaveFileHandler file_handler = new SaveFileHandler(save_file_name: "save_file");
@@ -54,12 +57,13 @@ namespace Cosmobot
             {
                 saveableObject.LoadData(game_data);
             }
-
-
+            Debug.Log("Game loaded");
         }
 
         public void SaveGame()
         {
+            GetSaveableObjects();
+
             foreach (ISaveableData saveableObject in saveable_objects)
             {
                 if (saveableObject.SaveData(game_data))
