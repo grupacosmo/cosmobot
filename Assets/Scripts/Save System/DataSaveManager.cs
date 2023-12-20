@@ -2,65 +2,77 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System.IO;
+using UnityEngine.SceneManagement;
+
 
 namespace Cosmobot
 {
     public class DataSaveManager : MonoBehaviour
     {
-        private GameData gameData;
+        private GameData game_data;
         public static DataSaveManager Instance { get; private set; }
-        private List<ISaveableData> saveableObjects;
+        private List<ISaveableData> saveable_objects;
 
         private void Awake()
         {
-            if (Instance != null && Instance != this)
+            if (Instance != null)
             {
+                Debug.LogWarning("Multiple instances of DataSaveManager found!");
                 Destroy(gameObject);
+                return;
             }
-            else
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
 
-        private void Start()
+        public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
-            saveableObjects = FindObjectsOfType<MonoBehaviour>().OfType<ISaveableData>().ToList();
+            this.saveable_objects = FindObjectsOfType<MonoBehaviour>().OfType<ISaveableData>().ToList();
             LoadGame();
         }
+
         public void NewGame()
         {
-            this.gameData = new GameData();
+            this.game_data = new GameData();
         }
 
         public void LoadGame()
         {
-            if (this.gameData == null)
+            SaveFileHandler file_handler = new SaveFileHandler(save_file_name: "save_file");
+            this.game_data = file_handler.Load();
+
+            if (this.game_data == null)
             {
                 Debug.Log("No game data found, starting new game");
                 NewGame();
+
                 return;
             }
 
-            foreach (ISaveableData saveableObject in saveableObjects)
+            foreach (ISaveableData saveableObject in saveable_objects)
             {
-                saveableObject.LoadData(gameData);
+                saveableObject.LoadData(game_data);
             }
+
+
         }
 
         public void SaveGame()
         {
-            foreach (ISaveableData saveableObject in saveableObjects)
+            foreach (ISaveableData saveableObject in saveable_objects)
             {
-                if (saveableObject.SaveData(gameData))
+                if (saveableObject.SaveData(game_data))
                 {
                     Debug.Log("Failed to save " + saveableObject);
                 }
             }
             Debug.Log("Game saved");
+            SaveFileHandler File_handler = new SaveFileHandler(save_file_name: "save_file");
+            File_handler.Save(game_data);
         }
 
+        // this can be removed it this behaviour is not intended
         private void OnApplicationQuit()
         {
             SaveGame();
