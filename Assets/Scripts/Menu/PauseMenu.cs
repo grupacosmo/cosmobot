@@ -37,7 +37,7 @@ namespace Cosmobot
             Time.timeScale = 0f;
             IsGamePaused = true;
         }
-        
+
         public void BackToMenu()
         {
             SceneManager.LoadScene(0);

@@ -11,12 +11,12 @@ namespace Cosmobot
         public GameObject loadingScreen;
         public Slider slider;
         public TMP_Text progressText;
-        
+
         public void Quit()
         {
             Application.Quit();
         }
-        
+
         public void LoadLevel(int sceneIndex)
         {
             StartCoroutine(LoadAsynchronously(sceneIndex));
