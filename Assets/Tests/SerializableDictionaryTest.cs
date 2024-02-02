@@ -46,7 +46,7 @@ namespace Cosmobot
         }
 
         [Test]
-        public void ReadValues() 
+        public void ReadValues()
         {
             SerializableDictionary<string, string> dict = new()
             {
@@ -54,7 +54,6 @@ namespace Cosmobot
                 { "key2", "value2" },
                 { "key3", "value3" }
             };
-            
             Assert.AreEqual(dict["key1"], "value1");
             Assert.AreEqual(dict["key2"], "value2");
             Assert.AreEqual(dict["key3"], "value3");
@@ -63,11 +62,11 @@ namespace Cosmobot
 
             var enumerator = dict.GetEnumerator();
             enumerator.MoveNext();
-            Assert.AreEqual(enumerator.Current, new KeyValuePair<string,string>("key1", "value1"));
+            Assert.AreEqual(enumerator.Current, new KeyValuePair<string, string>("key1", "value1"));
             enumerator.MoveNext();
-            Assert.AreEqual(enumerator.Current, new KeyValuePair<string,string>("key2", "value2"));
+            Assert.AreEqual(enumerator.Current, new KeyValuePair<string, string>("key2", "value2"));
             enumerator.MoveNext();
-            Assert.AreEqual(enumerator.Current, new KeyValuePair<string,string>("key3", "value3"));
+            Assert.AreEqual(enumerator.Current, new KeyValuePair<string, string>("key3", "value3"));
             Assert.False(enumerator.MoveNext());
         }
 

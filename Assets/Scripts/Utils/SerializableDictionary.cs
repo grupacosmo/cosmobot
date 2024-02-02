@@ -14,7 +14,6 @@ namespace Cosmobot
         private List<TKey> keys = new();
         [SerializeField]
         private List<TValue> values = new();
-        
         public ICollection<TKey> Keys => keys.AsReadOnly();
 
         public ICollection<TValue> Values => values.AsReadOnly();
@@ -27,8 +26,9 @@ namespace Cosmobot
 
         IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => values.AsReadOnly();
 
-        public SerializableDictionary() {}
-        public SerializableDictionary(IDictionary<TKey, TValue> dictionary) {
+        public SerializableDictionary() { }
+        public SerializableDictionary(IDictionary<TKey, TValue> dictionary)
+        {
             foreach (KeyValuePair<TKey, TValue> pair in dictionary)
             {
                 Add(pair.Key, pair.Value);
@@ -38,7 +38,7 @@ namespace Cosmobot
 
         public TValue GetValue(TKey key)
         {
-            if(TryGetValue(key, out TValue value))
+            if (TryGetValue(key, out TValue value))
             {
                 return value;
             }
@@ -50,9 +50,10 @@ namespace Cosmobot
             return values.Contains(value);
         }
 
-        public TValue this[TKey key] { 
+        public TValue this[TKey key]
+        {
             get => GetValue(key);
-            set => Add(key, value); 
+            set => Add(key, value);
         }
 
         public void Add(TKey key, TValue value)
