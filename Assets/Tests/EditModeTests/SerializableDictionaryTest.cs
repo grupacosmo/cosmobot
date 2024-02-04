@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
@@ -8,6 +9,7 @@ namespace Cosmobot
 {
     public class SerializableDictionaryTest
     {
+
         [Test]
         public void AddPairsAndKeepKeyValueOrder()
         {

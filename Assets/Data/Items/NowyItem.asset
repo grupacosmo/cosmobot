@@ -10,16 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4446f78563c10b824875d5e581ffbbee, type: 3}
-  m_Name: Battery
+  m_Name: NowyItem
   m_EditorClassIdentifier: 
-  id: battery
-  displayName: Battery
+  id: 
+  displayName: 
   icon: {fileID: 0}
-  prefab: {fileID: 1862692014303423458, guid: b7ac8b3ecafe37ea38f80b4b3ca57868, type: 3}
+  prefab: {fileID: 0}
   additionalData:
-    keys:
-    - MaxCharge
-    - Charge
-    values:
-    - 100
-    - 100
+    keys: []
+    values: []

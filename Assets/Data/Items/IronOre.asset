@@ -15,7 +15,7 @@ MonoBehaviour:
   id: iron-ore
   displayName: Iron Ore
   icon: {fileID: 0}
-  prefab: {fileID: 0}
+  prefab: {fileID: 1862692014303423458, guid: b177ef1e583a9b9d99af6f68c5ad1fd7, type: 3}
   additionalData:
     keys: []
     values: []
