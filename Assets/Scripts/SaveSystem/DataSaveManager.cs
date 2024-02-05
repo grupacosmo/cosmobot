@@ -9,11 +9,9 @@ namespace Cosmobot
 {
     public class DataSaveManager : SingletonSystem<DataSaveManager>
     {
-        private GameData game_data;
+        private GameData gameData;
 
-        [SerializeField]
-        private const string default_save_file_name = "save_file";
-        private List<ISaveableData> saveable_objects;
+        private const string DefaultSaveFileName = "save_file";
 
         public void OnSceneUnloaded(Scene scene)
         {
@@ -22,22 +20,20 @@ namespace Cosmobot
 
         public void NewGame()
         {
-            this.game_data = new GameData();
+            this.gameData = new GameData();
         }
 
-        private void GetSaveableObjects()
+        private List<ISaveableData> GetSaveableObjects()
         {
-            this.saveable_objects = FindObjectsOfType<MonoBehaviour>()
-                .OfType<ISaveableData>()
-                .ToList();
+            return FindObjectsOfType<MonoBehaviour>().OfType<ISaveableData>().ToList();
         }
 
-        public void LoadGame(string save_file_name = default_save_file_name)
+        public void LoadGame(string save_file_name = DefaultSaveFileName)
         {
-            SaveFileHandler file_handler = new SaveFileHandler(save_file_name);
-            this.game_data = file_handler.Load();
+            SaveFileHandler fileHandler = new SaveFileHandler(save_file_name);
+            this.gameData = fileHandler.Load();
 
-            if (this.game_data == null)
+            if (this.gameData == null)
             {
                 Debug.Log("No game data found, starting new game");
                 NewGame();
@@ -45,27 +41,25 @@ namespace Cosmobot
                 return;
             }
 
-            foreach (ISaveableData saveableObject in saveable_objects)
+            foreach (ISaveableData saveableObject in GetSaveableObjects())
             {
-                saveableObject.LoadData(game_data);
+                saveableObject.LoadData(gameData);
             }
             Debug.Log("Game loaded");
         }
 
-        public void SaveGame(string save_file_name = default_save_file_name)
+        public void SaveGame(string save_file_name = DefaultSaveFileName)
         {
-            GetSaveableObjects();
-
-            foreach (ISaveableData saveableObject in saveable_objects)
+            foreach (ISaveableData saveableObject in GetSaveableObjects())
             {
-                if (saveableObject.SaveData(game_data))
+                if (saveableObject.SaveData(gameData))
                 {
                     Debug.Log("Failed to save " + saveableObject);
                 }
             }
             Debug.Log("Game saved");
             SaveFileHandler File_handler = new SaveFileHandler(save_file_name);
-            File_handler.Save(game_data);
+            File_handler.Save(gameData);
         }
 
         // this can be removed it this behaviour is not intended
