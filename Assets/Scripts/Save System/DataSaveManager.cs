@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.IO;
-using System.Linq;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -29,9 +27,6 @@ namespace Cosmobot
 
         private void GetSaveableObjects()
         {
-            this.saveable_objects = FindObjectsOfType<MonoBehaviour>()
-                .OfType<ISaveableData>()
-                .ToList();
             this.saveable_objects = FindObjectsOfType<MonoBehaviour>()
                 .OfType<ISaveableData>()
                 .ToList();
