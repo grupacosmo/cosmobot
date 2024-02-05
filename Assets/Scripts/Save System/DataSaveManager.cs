@@ -1,32 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.IO;
+using System.Linq;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Cosmobot
 {
-    public class DataSaveManager : MonoBehaviour
+    public class DataSaveManager : SingletonSystem<DataSaveManager>
     {
         private GameData game_data;
 
         [SerializeField]
-        private string save_file_name = "";
-        public static DataSaveManager Instance { get; private set; }
+        private const string default_save_file_name = "save_file";
         private List<ISaveableData> saveable_objects;
-
-        private void Awake()
-        {
-            if (Instance != null)
-            {
-                Debug.LogWarning("Multiple instances of DataSaveManager found!");
-                Destroy(gameObject);
-                return;
-            }
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
 
         public void OnSceneUnloaded(Scene scene)
         {
@@ -43,9 +32,12 @@ namespace Cosmobot
             this.saveable_objects = FindObjectsOfType<MonoBehaviour>()
                 .OfType<ISaveableData>()
                 .ToList();
+            this.saveable_objects = FindObjectsOfType<MonoBehaviour>()
+                .OfType<ISaveableData>()
+                .ToList();
         }
 
-        public void LoadGame(string save_file_name = "save_file")
+        public void LoadGame(string save_file_name = default_save_file_name)
         {
             SaveFileHandler file_handler = new SaveFileHandler(save_file_name);
             this.game_data = file_handler.Load();
@@ -63,13 +55,10 @@ namespace Cosmobot
                 saveableObject.LoadData(game_data);
             }
             Debug.Log("Game loaded");
-            Debug.Log("Game loaded");
         }
 
-        public void SaveGame(string save_file_name = "save_file")
+        public void SaveGame(string save_file_name = default_save_file_name)
         {
-            GetSaveableObjects();
-
             GetSaveableObjects();
 
             foreach (ISaveableData saveableObject in saveable_objects)
