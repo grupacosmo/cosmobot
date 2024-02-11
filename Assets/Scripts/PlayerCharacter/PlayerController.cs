@@ -8,7 +8,12 @@ namespace Cosmobot
     {
         public float moveSpeed;
         public float acceleration;
+        public float jumpForce;
+        public float gravity;
 
+        private float input_x = 0f;
+        private float input_z = 0f;
+        private bool input_jump = false;
         private Vector3 velocity = Vector3.zero;
 
         private CharacterController cc;
@@ -24,16 +29,20 @@ namespace Cosmobot
 
         private void Update()
         {
-            Debug.Log(1f / Time.deltaTime);
+            input_x = Input.GetAxis("Horizontal");
+            input_z = Input.GetAxis("Vertical");
+            input_jump = Input.GetKeyDown(KeyCode.Space) || input_jump;
+
         }
 
         private void FixedUpdate()
         {
-            float input_x = Input.GetAxis("Horizontal");
-            float input_z = Input.GetAxis("Vertical");
 
+            velocity = cc.velocity;
+            // Horizontal
             Vector3 inputDirection = new Vector3(input_x, 0f, input_z).normalized;
-            Vector3 targetVelocity = new Vector3(inputDirection.x, velocity.y, inputDirection.z) * moveSpeed;
+            Vector3 targetVelocity = new Vector3(inputDirection.x, 0f, inputDirection.z) * moveSpeed;
+            targetVelocity += new Vector3(0, velocity.y, 0);
             if (inputDirection.sqrMagnitude < 0.1f)
             {
                 velocity = new Vector3(0f, velocity.y, 0f);
@@ -43,6 +52,15 @@ namespace Cosmobot
                 velocity = Vector3.MoveTowards(velocity, targetVelocity, acceleration * Time.fixedDeltaTime);
             }
 
+            // Vertical
+            velocity.y -= gravity * Time.fixedDeltaTime;
+            if (input_jump && cc.isGrounded)
+            {
+                velocity.y = jumpForce;
+            }
+            input_jump = false;
+
+            Debug.Log(velocity);
             cc.Move(velocity * Time.fixedDeltaTime);
         }
     }
