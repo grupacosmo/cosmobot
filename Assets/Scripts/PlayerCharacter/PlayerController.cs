@@ -73,7 +73,6 @@ namespace Cosmobot
                 float targetAngle = Mathf.Atan2(inputMove.x, inputMove.z) * Mathf.Rad2Deg;
                 float newAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref rotationSpeed, 0.1f);
                 transform.rotation = Quaternion.Euler(0, newAngle, 0);
-                Debug.Log(targetAngle);
             }
         }
 
