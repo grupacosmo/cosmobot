@@ -22,6 +22,7 @@ namespace Cosmobot
         private Vector3 groundNormal = Vector3.up;
 
         private Rigidbody rb;
+        private CapsuleCollider coll;
         private Transform groundCheckOrigin;
         private Transform cameraTransform;
 
@@ -30,6 +31,7 @@ namespace Cosmobot
             rb = GetComponent<Rigidbody>();
             rb.useGravity = false;
             rb.freezeRotation = true;
+            coll = GetComponent<CapsuleCollider>();
             groundCheckOrigin = transform.Find("GroundCheckOrigin");
             cameraTransform = Camera.main.transform;
         }
@@ -67,7 +69,7 @@ namespace Cosmobot
             }
             else if (!isGrounded)
             {
-                velocityDelta.y = velocityDelta.y - gravity * Time.fixedDeltaTime;
+                velocityDelta.y -= gravity * Time.fixedDeltaTime;
             }
 
             rb.AddForce(velocityDelta, ForceMode.VelocityChange);
@@ -85,12 +87,11 @@ namespace Cosmobot
 
         private void GroundCheck()
         {
-            float radius = 0.45f;
+            float radius = coll.radius * 0.9f;
             Vector3 origin = groundCheckOrigin.position;
-            float cast_distance = 0.6f;
+            float cast_distance = coll.radius * 1.2f;
 
-            RaycastHit hitInfo;
-            Physics.SphereCast(origin, radius, Vector3.down, out hitInfo, cast_distance);
+            Physics.SphereCast(origin, radius, Vector3.down, out RaycastHit hitInfo, cast_distance);
             if (hitInfo.collider != null)
             {
                 groundNormal = hitInfo.normal;
