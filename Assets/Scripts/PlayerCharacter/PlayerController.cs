@@ -66,8 +66,10 @@ namespace Cosmobot
         {
             float radius = 0.45f;
             Vector3 origin = groundCheckOrigin.position;
+            float cast_distance = 0.6f;
+
             RaycastHit hitInfo;
-            Physics.SphereCast(origin, radius, Vector3.down, out hitInfo, 0.6f);
+            Physics.SphereCast(origin, radius, Vector3.down, out hitInfo, cast_distance);
             if (hitInfo.collider != null)
             {
                 groundNormal = hitInfo.normal;
