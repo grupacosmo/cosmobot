@@ -23,6 +23,7 @@ namespace Cosmobot
 
         private Rigidbody rb;
         private Transform groundCheckOrigin;
+        private Transform cameraTransform;
 
         private void Start()
         {
@@ -30,6 +31,7 @@ namespace Cosmobot
             rb.useGravity = false;
             rb.freezeRotation = true;
             groundCheckOrigin = transform.Find("GroundCheckOrigin");
+            cameraTransform = Camera.main.transform;
         }
 
         private void Update()
@@ -47,6 +49,7 @@ namespace Cosmobot
         private void HandleInput()
         {
             inputMove = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
+            inputMove = Quaternion.AngleAxis(cameraTransform.eulerAngles.y, Vector3.up) * inputMove;
             inputJump = Input.GetKeyDown(KeyCode.Space) || inputJump;
         }
 
