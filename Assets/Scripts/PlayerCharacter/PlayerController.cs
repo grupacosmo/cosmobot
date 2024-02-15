@@ -56,14 +56,21 @@ namespace Cosmobot
         private void ProcessMovement()
         {
             Vector3 targetVelocity = inputMove * moveSpeed + new Vector3(0, rb.velocity.y, 0);
-            Vector3 neededForce = Vector3.MoveTowards(rb.velocity, targetVelocity, 
+            Vector3 velocityDelta = Vector3.MoveTowards(rb.velocity, targetVelocity, 
                 acceleration * Time.fixedDeltaTime) - rb.velocity;
 
             bool shouldJump = inputJump && isGrounded;
             inputJump = false;
-            neededForce.y = shouldJump ? jumpForce : neededForce.y - gravity * Time.fixedDeltaTime;
-            
-            rb.AddForce(neededForce, ForceMode.VelocityChange);
+            if (shouldJump)
+            {
+                velocityDelta.y = jumpForce;
+            }
+            else if (!isGrounded)
+            {
+                velocityDelta.y = velocityDelta.y - gravity * Time.fixedDeltaTime;
+            }
+
+            rb.AddForce(velocityDelta, ForceMode.VelocityChange);
         }
 
         private void ProcessRotation()
