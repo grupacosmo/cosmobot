@@ -4,8 +4,11 @@ using UnityEngine;
 
 namespace Cosmobot
 {
+    [RequireComponent(typeof(Rigidbody))]
     public class PlayerController : MonoBehaviour
     {
+
+
         public float moveSpeed;
         public float acceleration;
         public float jumpForce;
@@ -24,6 +27,8 @@ namespace Cosmobot
         private void Start()
         {
             rb = GetComponent<Rigidbody>();
+            rb.useGravity = false;
+            rb.freezeRotation = true;
             groundCheckOrigin = transform.Find("GroundCheckOrigin");
         }
 
