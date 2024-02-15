@@ -7,13 +7,13 @@ namespace Cosmobot
     [RequireComponent(typeof(Rigidbody))]
     public class PlayerController : MonoBehaviour
     {
-
-
         public float moveSpeed;
         public float acceleration;
         public float jumpForce;
         public float gravity;
         public float maxFloorAngleDegrees;
+
+        private float rotationSpeed = 900f;
 
         private Vector3 inputMove = Vector3.zero;
         private bool inputJump = false;
@@ -41,6 +41,7 @@ namespace Cosmobot
         {
             GroundCheck();
             ProcessMovement();
+            ProcessRotation();
         }
         
         private void HandleInput()
@@ -60,6 +61,17 @@ namespace Cosmobot
             neededForce.y = shouldJump ? jumpForce : neededForce.y - gravity * Time.fixedDeltaTime;
             
             rb.AddForce(neededForce, ForceMode.VelocityChange);
+        }
+
+        private void ProcessRotation()
+        {
+            if (inputMove.sqrMagnitude > 0.1f)
+            {
+                float targetAngle = Mathf.Atan2(inputMove.x, inputMove.z) * Mathf.Rad2Deg;
+                float newAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref rotationSpeed, 0.1f);
+                transform.rotation = Quaternion.Euler(0, newAngle, 0);
+                Debug.Log(targetAngle);
+            }
         }
 
         private void GroundCheck()
