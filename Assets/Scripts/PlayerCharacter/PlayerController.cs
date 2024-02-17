@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Cosmobot
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : MonoBehaviour, DefaultInputActions.IPlayerMovementActions
     {
         public float moveSpeed;
         public float acceleration;
@@ -28,6 +29,8 @@ namespace Cosmobot
         private Transform groundCheckOrigin;
         private Transform cameraTransform;
 
+        DefaultInputActions actions;
+
         private void Start()
         {
             rb = GetComponent<Rigidbody>();
@@ -40,23 +43,11 @@ namespace Cosmobot
             cameraTransform = Camera.main.transform;
         }
 
-        private void Update()
-        {
-            HandleInput();
-        }
-
         private void FixedUpdate()
         {
             GroundCheck();
             ProcessMovement();
             ProcessRotation();
-        }
-        
-        private void HandleInput()
-        {
-            inputMove = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
-            inputMove = Quaternion.AngleAxis(cameraTransform.eulerAngles.y, Vector3.up) * inputMove;
-            inputJump = Input.GetKeyDown(KeyCode.Space) || inputJump;
         }
 
         private void ProcessMovement()
@@ -107,6 +98,38 @@ namespace Cosmobot
             
             if (!isGrounded) groundNormal = Vector3.up;
 
+        }
+
+        // Input stuff
+        public void OnMovement(InputAction.CallbackContext context)
+        {
+            Vector2 inputMoveRaw = context.action.ReadValue<Vector2>();
+            inputMove = new Vector3(inputMoveRaw.x, 0, inputMoveRaw.y);
+            inputMove = Quaternion.AngleAxis(cameraTransform.eulerAngles.y, Vector3.up) * inputMove;
+        }
+
+        public void OnJump(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            {
+                inputJump = true;
+            }
+            
+        }
+
+        void OnEnable()
+        {
+            if (actions == null)
+            {
+                actions = new DefaultInputActions();
+                actions.PlayerMovement.SetCallbacks(this);
+            }
+            actions.PlayerMovement.Enable();
+        }
+
+        void OnDisable()
+        {
+            actions.PlayerMovement.Disable();
         }
     }
 }

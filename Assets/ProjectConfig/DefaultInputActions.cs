@@ -37,6 +37,15 @@ namespace Cosmobot
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""a52c290c-e873-4832-925d-15d7ebdee8cb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -149,6 +158,17 @@ namespace Cosmobot
                     ""action"": ""movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cfa0e537-b36d-4304-89a7-d29671c6e0a6"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -158,6 +178,7 @@ namespace Cosmobot
             // PlayerMovement
             m_PlayerMovement = asset.FindActionMap("PlayerMovement", throwIfNotFound: true);
             m_PlayerMovement_movement = m_PlayerMovement.FindAction("movement", throwIfNotFound: true);
+            m_PlayerMovement_jump = m_PlayerMovement.FindAction("jump", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -220,11 +241,13 @@ namespace Cosmobot
         private readonly InputActionMap m_PlayerMovement;
         private List<IPlayerMovementActions> m_PlayerMovementActionsCallbackInterfaces = new List<IPlayerMovementActions>();
         private readonly InputAction m_PlayerMovement_movement;
+        private readonly InputAction m_PlayerMovement_jump;
         public struct PlayerMovementActions
         {
             private @DefaultInputActions m_Wrapper;
             public PlayerMovementActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @movement => m_Wrapper.m_PlayerMovement_movement;
+            public InputAction @jump => m_Wrapper.m_PlayerMovement_jump;
             public InputActionMap Get() { return m_Wrapper.m_PlayerMovement; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -237,6 +260,9 @@ namespace Cosmobot
                 @movement.started += instance.OnMovement;
                 @movement.performed += instance.OnMovement;
                 @movement.canceled += instance.OnMovement;
+                @jump.started += instance.OnJump;
+                @jump.performed += instance.OnJump;
+                @jump.canceled += instance.OnJump;
             }
 
             private void UnregisterCallbacks(IPlayerMovementActions instance)
@@ -244,6 +270,9 @@ namespace Cosmobot
                 @movement.started -= instance.OnMovement;
                 @movement.performed -= instance.OnMovement;
                 @movement.canceled -= instance.OnMovement;
+                @jump.started -= instance.OnJump;
+                @jump.performed -= instance.OnJump;
+                @jump.canceled -= instance.OnJump;
             }
 
             public void RemoveCallbacks(IPlayerMovementActions instance)
@@ -264,6 +293,7 @@ namespace Cosmobot
         public interface IPlayerMovementActions
         {
             void OnMovement(InputAction.CallbackContext context);
+            void OnJump(InputAction.CallbackContext context);
         }
     }
 }
