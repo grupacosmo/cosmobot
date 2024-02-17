@@ -67,9 +67,9 @@ namespace Cosmobot
             {
                 velocityDelta.y = jumpForce;
             }
-            else if (!isGrounded)
+            else
             {
-                velocityDelta.y -= gravity * Time.fixedDeltaTime;
+                velocityDelta -= gravity * Time.fixedDeltaTime * groundNormal;
             }
 
             rb.AddForce(velocityDelta, ForceMode.VelocityChange);
@@ -103,6 +103,8 @@ namespace Cosmobot
                 isGrounded = false;
             }
             
+            if (!isGrounded) groundNormal = Vector3.up;
+
         }
     }
 }
