@@ -20,6 +20,8 @@ namespace Cosmobot
 
         private bool isGrounded = false;
         private Vector3 groundNormal = Vector3.up;
+        private float groundCheckRadius;
+        private float groundCheckDistance;
 
         private Rigidbody rb;
         private CapsuleCollider coll;
@@ -33,6 +35,8 @@ namespace Cosmobot
             rb.freezeRotation = true;
             coll = GetComponent<CapsuleCollider>();
             groundCheckOrigin = transform.Find("GroundCheckOrigin");
+            groundCheckRadius = coll.radius * 0.99f; // 0.99 - padding to make spherecast detect floor
+            groundCheckDistance = coll.radius;
             cameraTransform = Camera.main.transform;
         }
 
@@ -87,11 +91,9 @@ namespace Cosmobot
 
         private void GroundCheck()
         {
-            float radius = coll.radius * 0.9f;
             Vector3 origin = groundCheckOrigin.position;
-            float cast_distance = coll.radius * 1.2f;
 
-            Physics.SphereCast(origin, radius, Vector3.down, out RaycastHit hitInfo, cast_distance);
+            Physics.SphereCast(origin, groundCheckRadius, Vector3.down, out RaycastHit hitInfo, groundCheckDistance);
             if (hitInfo.collider != null)
             {
                 groundNormal = hitInfo.normal;
