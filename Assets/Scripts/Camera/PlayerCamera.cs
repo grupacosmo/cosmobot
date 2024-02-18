@@ -1,8 +1,10 @@
+using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Cosmobot
 {
-    public class PlayerCamera : MonoBehaviour
+    public class PlayerCamera : MonoBehaviour, DefaultInputActions.IPlayerCameraActions
     {
         public float sensX;
         public float sensY;
@@ -11,10 +13,37 @@ namespace Cosmobot
         public KeyCode cameraChangeKey;
         public Transform playerObject;
         public Transform cameraHolder;
-        private float _xRotation;
-        private float _yRotation;
-        private bool _isFirstPerson = true;
-        
+        private DefaultInputActions actions;
+        private float xRotation;
+        private float yRotation;
+        private bool isFirstPerson = true;
+
+        private void OnEnable()
+        {
+            if (actions == null)
+            {
+                actions = new DefaultInputActions();
+                actions.PlayerCamera.SetCallbacks(this);
+            }
+
+            actions.PlayerCamera.Enable();
+        }
+
+        private void OnDisable()
+        {
+            actions.PlayerCamera.Disable();
+        }
+
+        public void OnCamera(InputAction.CallbackContext context)
+        {
+            yRotation += context.ReadValue<Vector2>().x * Time.deltaTime * sensX;
+            xRotation -= context.ReadValue<Vector2>().y * Time.deltaTime * sensY;
+            xRotation = isFirstPerson
+                ? Mathf.Clamp(xRotation, -90f, 90f)
+                : Mathf.Clamp(xRotation, -90f - cameraChangeY / cameraChangeZ * 45f,
+                    90f - cameraChangeY / cameraChangeZ * 45f);
+        }
+
         private void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;
@@ -24,9 +53,6 @@ namespace Cosmobot
 
         private void Update()
         {
-            var mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
-            var mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
-            ChangeRotationValues(mouseX, mouseY);
             RotateCamera();
             if (Input.GetKeyDown(cameraChangeKey))
             {
@@ -34,29 +60,35 @@ namespace Cosmobot
             }
         }
 
-        private void ChangeRotationValues(float mouseX, float mouseY)
-        {
-            _yRotation += mouseX;
-            _xRotation -= mouseY;
-            _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
-        }
-        
         private void RotateCamera()
         {
-            if (_isFirstPerson)
+            if (isFirstPerson)
             {
-                transform.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
+                transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
             }
             else
             {
-                cameraHolder.rotation = Quaternion.Euler(_xRotation, _yRotation, 0);
+                ChangePositionInThirdPerson();
             }
-            playerObject.rotation = Quaternion.Euler(0, _yRotation, 0);
+
+            playerObject.rotation = Quaternion.Euler(0, yRotation, 0);
         }
-        
+
+        private void ChangePositionInThirdPerson()
+        {
+            var cameraRotationCenterPosition = cameraHolder.position;
+            var rayDirection = -transform.forward;
+            var cameraDistance = (float)Math.Sqrt(Math.Pow(cameraChangeZ, 2f) + Math.Pow(cameraChangeY, 2f));
+            var targetCameraPoint = Physics.Raycast(cameraRotationCenterPosition, rayDirection, out var hit, cameraDistance)
+                ? hit.point
+                : rayDirection * cameraDistance;
+            transform.position = targetCameraPoint + cameraRotationCenterPosition;
+            cameraHolder.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+        }
+
         private void SwitchCameraPosition()
         {
-            if (_isFirstPerson)
+            if (isFirstPerson)
             {
                 transform.position += new Vector3(0, cameraChangeY, -cameraChangeZ);
                 transform.LookAt(playerObject);
@@ -66,8 +98,8 @@ namespace Cosmobot
                 cameraHolder.rotation = Quaternion.Euler(0, 0, 0);
                 transform.position = cameraHolder.position;
             }
-            
-            _isFirstPerson = !_isFirstPerson;
+
+            isFirstPerson = !isFirstPerson;
         }
     }
 }

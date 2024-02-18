@@ -151,6 +151,34 @@ namespace Cosmobot
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""PlayerCamera"",
+            ""id"": ""8e621584-24a6-434f-afb7-5bbe85d11be2"",
+            ""actions"": [
+                {
+                    ""name"": ""camera"",
+                    ""type"": ""Value"",
+                    ""id"": ""c4cf1433-09cd-4fab-be87-842ce20e02b4"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""3f4b0925-51cd-4cda-b4ae-1b38ca4df841"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""camera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -158,6 +186,9 @@ namespace Cosmobot
             // PlayerMovement
             m_PlayerMovement = asset.FindActionMap("PlayerMovement", throwIfNotFound: true);
             m_PlayerMovement_movement = m_PlayerMovement.FindAction("movement", throwIfNotFound: true);
+            // PlayerCamera
+            m_PlayerCamera = asset.FindActionMap("PlayerCamera", throwIfNotFound: true);
+            m_PlayerCamera_camera = m_PlayerCamera.FindAction("camera", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -261,9 +292,59 @@ namespace Cosmobot
             }
         }
         public PlayerMovementActions @PlayerMovement => new PlayerMovementActions(this);
+
+        // PlayerCamera
+        private readonly InputActionMap m_PlayerCamera;
+        private List<IPlayerCameraActions> m_PlayerCameraActionsCallbackInterfaces = new List<IPlayerCameraActions>();
+        private readonly InputAction m_PlayerCamera_camera;
+        public struct PlayerCameraActions
+        {
+            private @DefaultInputActions m_Wrapper;
+            public PlayerCameraActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @camera => m_Wrapper.m_PlayerCamera_camera;
+            public InputActionMap Get() { return m_Wrapper.m_PlayerCamera; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(PlayerCameraActions set) { return set.Get(); }
+            public void AddCallbacks(IPlayerCameraActions instance)
+            {
+                if (instance == null || m_Wrapper.m_PlayerCameraActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_PlayerCameraActionsCallbackInterfaces.Add(instance);
+                @camera.started += instance.OnCamera;
+                @camera.performed += instance.OnCamera;
+                @camera.canceled += instance.OnCamera;
+            }
+
+            private void UnregisterCallbacks(IPlayerCameraActions instance)
+            {
+                @camera.started -= instance.OnCamera;
+                @camera.performed -= instance.OnCamera;
+                @camera.canceled -= instance.OnCamera;
+            }
+
+            public void RemoveCallbacks(IPlayerCameraActions instance)
+            {
+                if (m_Wrapper.m_PlayerCameraActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IPlayerCameraActions instance)
+            {
+                foreach (var item in m_Wrapper.m_PlayerCameraActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_PlayerCameraActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public PlayerCameraActions @PlayerCamera => new PlayerCameraActions(this);
         public interface IPlayerMovementActions
         {
             void OnMovement(InputAction.CallbackContext context);
+        }
+        public interface IPlayerCameraActions
+        {
+            void OnCamera(InputAction.CallbackContext context);
         }
     }
 }
