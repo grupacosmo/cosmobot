@@ -5,11 +5,10 @@ using UnityEngine;
 namespace Cosmobot
 {
     public class Tracking : MonoBehaviour {
-        //for tracking to work remember to freeze turret's position in place, else it could fly away idk why
-        public float speed = 20.0f;
-        public float angleRange = 160f;
-
-        GameObject target = null;
+        
+        TurretStats turretStats;
+        public GameObject target = null;
+        HashSet<GameObject> targetsList = new();
         Vector3 lastKnownPosition = Vector3.zero;
         Quaternion lookAtRotation;
         Quaternion defaultRotation;
@@ -18,21 +17,23 @@ namespace Cosmobot
         bool goMaxAngle = false;
 
         void Start () {
+            turretStats = GetComponent<TurretStats>();
             defaultRotation = transform.rotation;
-            maxAngleRotation = Quaternion.AngleAxis(angleRange/2, Vector3.up);
-            minAngleRotation = Quaternion.AngleAxis(angleRange/2*-1, Vector3.up);
         }
         void Update () {
+            maxAngleRotation = Quaternion.AngleAxis(turretStats.angleRange/2, Vector3.up);
+            minAngleRotation = Quaternion.AngleAxis(turretStats.angleRange/2*-1, Vector3.up);
+            ChooseTarget();
             if(target){
                 if(lastKnownPosition != target.transform.position){
                     if(!IsTargetInRange(target))
                     {
-                        UnSetTarget();
+                        RemoveTargetFromList(target);
                     }
                 }
 
                 if(transform.rotation != lookAtRotation){
-                    transform.rotation = Quaternion.RotateTowards(transform.rotation, lookAtRotation, speed * Time.deltaTime);
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, lookAtRotation, turretStats.speed * Time.deltaTime);
                 }
             }
             else
@@ -48,19 +49,49 @@ namespace Cosmobot
             }
         }
 
-        public void SetTarget(GameObject toTarget){
-            target = toTarget;
+        public void SetTarget(GameObject newTarget)
+        {
+            target = newTarget;
         }
 
-        public void UnSetTarget(){
-            target = null;
+        /// <summary>
+        /// Chooses which enemy in range should be targeted based on distance (shortest distance)
+        /// </summary>
+        public void ChooseTarget(){
+            float minDistance = Vector3.Distance(transform.position, new Vector3(1000,1000,1000));
+            GameObject closestTarget = null;
+            foreach (GameObject potentialTarget in targetsList)
+            {
+                float targetDistance = Vector3.Distance(potentialTarget.transform.position, transform.position);
+                if(minDistance>targetDistance)
+                {
+                    minDistance = targetDistance;
+                    closestTarget = potentialTarget;
+                }
+            }
+            SetTarget(closestTarget);
         }
 
+        public void AddTargetToList(GameObject newTarget)
+        {
+            targetsList.Add(newTarget);
+        }
+
+        public void RemoveTargetFromList(GameObject leavingTarget)
+        {
+            targetsList.Remove(leavingTarget);
+        }
+
+        /// <summary>
+        /// Checks if target is in range, based on angle rotation of a turret
+        /// </summary>
+        /// <param name="target">Currently targeted enemy</param>
+        /// <returns>true if target is in range, false if it isn't</returns>
         public bool IsTargetInRange(GameObject target)
         {
             lastKnownPosition = target.transform.position;
             lookAtRotation = Quaternion.LookRotation(lastKnownPosition - transform.position);
-            if(Quaternion.Angle(defaultRotation, lookAtRotation)<=angleRange/2 && Quaternion.Angle(defaultRotation, lookAtRotation)>=angleRange/2*-1)
+            if(Quaternion.Angle(defaultRotation, lookAtRotation)<=turretStats.angleRange/2 && Quaternion.Angle(defaultRotation, lookAtRotation)>=turretStats.angleRange/2*-1)
             {
                 return true;
             }
@@ -69,7 +100,7 @@ namespace Cosmobot
 
         public void IdleScanningMin()
         {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, minAngleRotation, speed * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, minAngleRotation, turretStats.speed * Time.deltaTime);
             if(transform.rotation==minAngleRotation)
             {
                 goMaxAngle=true;
@@ -78,7 +109,7 @@ namespace Cosmobot
 
         public void IdleScanningMax()
         {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, maxAngleRotation, speed * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, maxAngleRotation, turretStats.speed * Time.deltaTime);
             if(transform.rotation==maxAngleRotation)
             {
                 goMaxAngle=false;
@@ -86,33 +117,30 @@ namespace Cosmobot
         }
 
         private void OnTriggerEnter(Collider other) {
-            if(other.gameObject.tag=="Enemy")
+            if(other.gameObject.CompareTag("Enemy"))
             {
                 if(IsTargetInRange(other.gameObject))
                 {
-                    SetTarget(other.gameObject);
+                    AddTargetToList(other.gameObject);
                 }
             }
         }
 
         private void OnTriggerExit(Collider other) {
-            if(other.gameObject == target)
+            if(other.gameObject.CompareTag("Enemy"))
             {
-                UnSetTarget();
+                RemoveTargetFromList(other.gameObject);
             }
         }
 
         private void OnTriggerStay(Collider other) {
-            if(target==null)
+            if(other.gameObject.CompareTag("Enemy"))
             {
-                if(other.gameObject.tag=="Enemy")
+                if(IsTargetInRange(other.gameObject))
                 {
-                    if(IsTargetInRange(other.gameObject))
-                    {
-                        SetTarget(other.gameObject);
-                    }
+                    AddTargetToList(other.gameObject);
                 }
-            }   
+            }
         }
     }
 }
