@@ -1,13 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
 
 namespace Cosmobot
 {
     public class SerializableDictionaryTest
     {
+
         [Test]
         public void AddPairsAndKeepKeyValueOrder()
         {
@@ -54,7 +52,6 @@ namespace Cosmobot
                 { "key2", "value2" },
                 { "key3", "value3" }
             };
-
             Assert.AreEqual(dict["key1"], "value1");
             Assert.AreEqual(dict["key2"], "value2");
             Assert.AreEqual(dict["key3"], "value3");

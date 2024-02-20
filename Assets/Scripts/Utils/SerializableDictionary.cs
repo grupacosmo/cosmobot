@@ -14,7 +14,6 @@ namespace Cosmobot
         private List<TKey> keys = new();
         [SerializeField]
         private List<TValue> values = new();
-
         public ICollection<TKey> Keys => keys.AsReadOnly();
 
         public ICollection<TValue> Values => values.AsReadOnly();
