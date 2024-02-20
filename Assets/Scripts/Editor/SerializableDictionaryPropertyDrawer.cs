@@ -6,8 +6,8 @@ namespace Cosmobot.Editor
     [CustomPropertyDrawer(typeof(SerializableDictionary<,>))]
     public class SerializableDictionaryPropertyDrawer : PropertyDrawer
     {
-        private const string PROP_KEYS = "keys";
-        private const string PROP_VALUES = "values";
+        private const string PropKeys = "keys";
+        private const string PropValues = "values";
 
         private const float HPadding = 4;
         private const float VPadding = 2;
@@ -37,8 +37,8 @@ namespace Cosmobot.Editor
 
         private void DrawListGUI(Rect listRect, SerializedProperty property)
         {
-            SerializedProperty keys = property.FindPropertyRelative(PROP_KEYS);
-            SerializedProperty values = property.FindPropertyRelative(PROP_VALUES);
+            SerializedProperty keys = property.FindPropertyRelative(PropKeys);
+            SerializedProperty values = property.FindPropertyRelative(PropValues);
             EnsureSameSize(keys, values);
 
             float deleteButtonWidth = 20;
@@ -109,7 +109,7 @@ namespace Cosmobot.Editor
         {
             if (!property.isExpanded) return EditorGUIUtility.singleLineHeight;
 
-            SerializedProperty keys = property.FindPropertyRelative(PROP_KEYS);
+            SerializedProperty keys = property.FindPropertyRelative(PropKeys);
 
             const int additionalLines = 4; // label, header row, button, top-down margin
             float fullLineHeight = LineHeight;
