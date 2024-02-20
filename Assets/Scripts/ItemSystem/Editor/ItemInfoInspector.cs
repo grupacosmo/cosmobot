@@ -1,15 +1,13 @@
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
-using UnityEngine;
 
-namespace Cosmobot.ItemSystem.Editors
+namespace Cosmobot.ItemSystem.Editor
 {
     [CustomEditor(typeof(ItemInfo))]
-    public class ItemInfoInspector : Editor
+    public class ItemInfoInspector : UnityEditor.Editor
     {
         private ItemInfo itemInfo;
-        private SerializedProperty additionalData;
 
         private static string[] declaredConstants;
 
@@ -17,7 +15,6 @@ namespace Cosmobot.ItemSystem.Editors
         private void OnEnable()
         {
             itemInfo = (ItemInfo)target;
-            additionalData = serializedObject.FindProperty("additionalData");
 
             InitializeDeclaredConstants();
         }
@@ -43,7 +40,7 @@ namespace Cosmobot.ItemSystem.Editors
                 MessageType.Warning);
         }
 
-        private void InitializeDeclaredConstants()
+        private static void InitializeDeclaredConstants()
         {
             if (declaredConstants is not null) return;
 

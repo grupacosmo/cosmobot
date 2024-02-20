@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Cosmobot.Editors
+namespace Cosmobot.Editor
 {
     [CustomPropertyDrawer(typeof(SerializableDictionary<,>))]
     public class SerializableDictionaryPropertyDrawer : PropertyDrawer
@@ -9,11 +9,11 @@ namespace Cosmobot.Editors
         private const string PROP_KEYS = "keys";
         private const string PROP_VALUES = "values";
 
-        private const float hPadding = 4;
-        private const float vPadding = 2;
+        private const float HPadding = 4;
+        private const float VPadding = 2;
 
         private float FieldHeight => EditorGUIUtility.singleLineHeight;
-        private float LineHeight => FieldHeight + vPadding;
+        private float LineHeight => FieldHeight + VPadding;
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
@@ -42,27 +42,27 @@ namespace Cosmobot.Editors
             EnsureSameSize(keys, values);
 
             float deleteButtonWidth = 20;
-            float halfWidth = (listRect.width - deleteButtonWidth - hPadding) / 2;
-            float keyWidth = halfWidth - hPadding * 2;
-            float valueWidth = halfWidth - hPadding * 2; ;
+            float halfWidth = (listRect.width - deleteButtonWidth - HPadding) / 2;
+            float keyWidth = halfWidth - HPadding * 2;
+            float valueWidth = halfWidth - HPadding * 2; ;
 
             GUI.Box(listRect, GUIContent.none);
             listRect.y += LineHeight / 2;
 
             Rect keyRect = new(
-                listRect.x + hPadding,
+                listRect.x + HPadding,
                 listRect.y,
                 keyWidth,
                 FieldHeight);
 
             Rect valueRect = new(
-                keyRect.xMax + hPadding * 2,
+                keyRect.xMax + HPadding * 2,
                 listRect.y,
                 valueWidth,
                 FieldHeight);
 
             Rect deleteButtonRect = new(
-                valueRect.xMax + hPadding * 2,
+                valueRect.xMax + HPadding * 2,
                 listRect.y,
                 deleteButtonWidth,
                 FieldHeight);

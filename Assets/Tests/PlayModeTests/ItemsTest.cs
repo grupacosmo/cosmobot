@@ -74,7 +74,7 @@ namespace Cosmobot.ItemSystem
             Item item = object1.GetComponent<Item>();
 
             // operator [] not found exceptions
-            Assert.Throws<KeyNotFoundException>(() => { bool x = item.BoolValue[nonExistingKey]; });
+            Assert.Throws<KeyNotFoundException>(() => { _ = item.BoolValue[nonExistingKey]; });
 
             // math on nullable
             item.SetIntValue(nullableOpKey, item.GetIntValue(nonExistingKey) + 2);
@@ -86,15 +86,15 @@ namespace Cosmobot.ItemSystem
             Assert.AreEqual(3.14f, item.FloatValue[newKeyOne]);
             Assert.AreEqual("3.14", item.StringValue[newKeyOne]);
             Assert.IsNull(item.GetIntValue(newKeyOne));
-            Assert.Throws<FormatException>(() => { int x = item.IntValue[newKeyOne]; });
+            Assert.Throws<FormatException>(() => { _ = item.IntValue[newKeyOne]; });
 
             item.BoolValue[newKeyTwo] = true;
             Assert.AreEqual(true, item.BoolValue[newKeyTwo]);
             Assert.AreEqual("true", item.StringValue[newKeyTwo]);
             Assert.IsNull(item.GetIntValue(newKeyTwo));
             Assert.IsNull(item.GetFloatValue(newKeyTwo));
-            Assert.Throws<FormatException>(() => { int x = item.IntValue[newKeyTwo]; });
-            Assert.Throws<FormatException>(() => { float x = item.FloatValue[newKeyTwo]; });
+            Assert.Throws<FormatException>(() => { _ = item.IntValue[newKeyTwo]; });
+            Assert.Throws<FormatException>(() => { _ = item.FloatValue[newKeyTwo]; });
 
             GameObject.Destroy(object1);
             yield return null;

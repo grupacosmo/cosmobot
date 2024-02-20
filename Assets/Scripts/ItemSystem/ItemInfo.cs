@@ -52,9 +52,7 @@ namespace Cosmobot.ItemSystem
         public static bool operator ==(ItemInfo left, ItemInfo right)
         {
             if (ReferenceEquals(left, right)) return true;
-            if (left is null) return false;
-            if (right is null) return false;
-            return left.Equals(right);
+            return left is not null && right is not null && left.Equals(right);
         }
 
         public static bool operator !=(ItemInfo left, ItemInfo right) => !(left == right);
