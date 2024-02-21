@@ -10,12 +10,13 @@ namespace Cosmobot
         public float sensY;
         public float cameraChangeY;
         public float cameraChangeZ;
-        public KeyCode cameraChangeKey;
         public Transform playerObject;
         public Transform cameraHolder;
         private DefaultInputActions actions;
         private float xRotation;
         private float yRotation;
+        private float xInput;
+        private float yInput;
         private bool isFirstPerson = true;
 
         private void OnEnable()
@@ -36,12 +37,13 @@ namespace Cosmobot
 
         public void OnCamera(InputAction.CallbackContext context)
         {
-            yRotation += context.ReadValue<Vector2>().x * Time.deltaTime * sensX;
-            xRotation -= context.ReadValue<Vector2>().y * Time.deltaTime * sensY;
-            xRotation = isFirstPerson
-                ? Mathf.Clamp(xRotation, -90f, 90f)
-                : Mathf.Clamp(xRotation, -90f - cameraChangeY / cameraChangeZ * 45f,
-                    90f - cameraChangeY / cameraChangeZ * 45f);
+            xInput = context.ReadValue<Vector2>().x;
+            yInput = context.ReadValue<Vector2>().y;
+        }
+
+        public void OnSwitchView(InputAction.CallbackContext context)
+        {
+            SwitchCameraPosition();
         }
 
         private void Start()
@@ -53,11 +55,18 @@ namespace Cosmobot
 
         private void Update()
         {
+            AssignRotation();
             RotateCamera();
-            if (Input.GetKeyDown(cameraChangeKey))
-            {
-                SwitchCameraPosition();
-            }
+        }
+
+        private void AssignRotation()
+        {
+            yRotation += xInput * Time.deltaTime * sensX;
+            xRotation -= yInput * Time.deltaTime * sensY;
+            xRotation = isFirstPerson
+                ? Mathf.Clamp(xRotation, -90f, 90f)
+                : Mathf.Clamp(xRotation, -90f - cameraChangeY / cameraChangeZ * 45f,
+                    90f - cameraChangeY / cameraChangeZ * 45f);
         }
 
         private void RotateCamera()
@@ -79,9 +88,10 @@ namespace Cosmobot
             var cameraRotationCenterPosition = cameraHolder.position;
             var rayDirection = -transform.forward;
             var cameraDistance = (float)Math.Sqrt(Math.Pow(cameraChangeZ, 2f) + Math.Pow(cameraChangeY, 2f));
-            var targetCameraPoint = Physics.Raycast(cameraRotationCenterPosition, rayDirection, out var hit, cameraDistance)
-                ? hit.point
-                : rayDirection * cameraDistance;
+            var targetCameraPoint =
+                Physics.Raycast(cameraRotationCenterPosition, rayDirection, out var hit, cameraDistance)
+                    ? hit.point
+                    : rayDirection * cameraDistance;
             transform.position = targetCameraPoint + cameraRotationCenterPosition;
             cameraHolder.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         }

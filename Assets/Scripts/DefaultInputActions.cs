@@ -184,6 +184,15 @@ namespace Cosmobot
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""switchView"",
+                    ""type"": ""Button"",
+                    ""id"": ""104b72e1-39e0-4769-9acd-910a4f80dea7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -195,6 +204,17 @@ namespace Cosmobot
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""camera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""da79b65e-0d14-44f0-ab32-6f2929a5fc37"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""switchView"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -210,6 +230,7 @@ namespace Cosmobot
             // PlayerCamera
             m_PlayerCamera = asset.FindActionMap("PlayerCamera", throwIfNotFound: true);
             m_PlayerCamera_camera = m_PlayerCamera.FindAction("camera", throwIfNotFound: true);
+            m_PlayerCamera_switchView = m_PlayerCamera.FindAction("switchView", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -326,11 +347,13 @@ namespace Cosmobot
         private readonly InputActionMap m_PlayerCamera;
         private List<IPlayerCameraActions> m_PlayerCameraActionsCallbackInterfaces = new List<IPlayerCameraActions>();
         private readonly InputAction m_PlayerCamera_camera;
+        private readonly InputAction m_PlayerCamera_switchView;
         public struct PlayerCameraActions
         {
             private @DefaultInputActions m_Wrapper;
             public PlayerCameraActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @camera => m_Wrapper.m_PlayerCamera_camera;
+            public InputAction @switchView => m_Wrapper.m_PlayerCamera_switchView;
             public InputActionMap Get() { return m_Wrapper.m_PlayerCamera; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -343,6 +366,9 @@ namespace Cosmobot
                 @camera.started += instance.OnCamera;
                 @camera.performed += instance.OnCamera;
                 @camera.canceled += instance.OnCamera;
+                @switchView.started += instance.OnSwitchView;
+                @switchView.performed += instance.OnSwitchView;
+                @switchView.canceled += instance.OnSwitchView;
             }
 
             private void UnregisterCallbacks(IPlayerCameraActions instance)
@@ -350,6 +376,9 @@ namespace Cosmobot
                 @camera.started -= instance.OnCamera;
                 @camera.performed -= instance.OnCamera;
                 @camera.canceled -= instance.OnCamera;
+                @switchView.started -= instance.OnSwitchView;
+                @switchView.performed -= instance.OnSwitchView;
+                @switchView.canceled -= instance.OnSwitchView;
             }
 
             public void RemoveCallbacks(IPlayerCameraActions instance)
@@ -375,6 +404,7 @@ namespace Cosmobot
         public interface IPlayerCameraActions
         {
             void OnCamera(InputAction.CallbackContext context);
+            void OnSwitchView(InputAction.CallbackContext context);
         }
     }
 }
