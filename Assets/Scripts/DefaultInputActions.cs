@@ -171,6 +171,54 @@ namespace Cosmobot
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""PlayerCamera"",
+            ""id"": ""8e621584-24a6-434f-afb7-5bbe85d11be2"",
+            ""actions"": [
+                {
+                    ""name"": ""camera"",
+                    ""type"": ""Value"",
+                    ""id"": ""c4cf1433-09cd-4fab-be87-842ce20e02b4"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""switchView"",
+                    ""type"": ""Button"",
+                    ""id"": ""104b72e1-39e0-4769-9acd-910a4f80dea7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""3f4b0925-51cd-4cda-b4ae-1b38ca4df841"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""camera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""da79b65e-0d14-44f0-ab32-6f2929a5fc37"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""switchView"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -179,6 +227,10 @@ namespace Cosmobot
             m_PlayerMovement = asset.FindActionMap("PlayerMovement", throwIfNotFound: true);
             m_PlayerMovement_movement = m_PlayerMovement.FindAction("movement", throwIfNotFound: true);
             m_PlayerMovement_jump = m_PlayerMovement.FindAction("jump", throwIfNotFound: true);
+            // PlayerCamera
+            m_PlayerCamera = asset.FindActionMap("PlayerCamera", throwIfNotFound: true);
+            m_PlayerCamera_camera = m_PlayerCamera.FindAction("camera", throwIfNotFound: true);
+            m_PlayerCamera_switchView = m_PlayerCamera.FindAction("switchView", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -290,10 +342,69 @@ namespace Cosmobot
             }
         }
         public PlayerMovementActions @PlayerMovement => new PlayerMovementActions(this);
+
+        // PlayerCamera
+        private readonly InputActionMap m_PlayerCamera;
+        private List<IPlayerCameraActions> m_PlayerCameraActionsCallbackInterfaces = new List<IPlayerCameraActions>();
+        private readonly InputAction m_PlayerCamera_camera;
+        private readonly InputAction m_PlayerCamera_switchView;
+        public struct PlayerCameraActions
+        {
+            private @DefaultInputActions m_Wrapper;
+            public PlayerCameraActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @camera => m_Wrapper.m_PlayerCamera_camera;
+            public InputAction @switchView => m_Wrapper.m_PlayerCamera_switchView;
+            public InputActionMap Get() { return m_Wrapper.m_PlayerCamera; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(PlayerCameraActions set) { return set.Get(); }
+            public void AddCallbacks(IPlayerCameraActions instance)
+            {
+                if (instance == null || m_Wrapper.m_PlayerCameraActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_PlayerCameraActionsCallbackInterfaces.Add(instance);
+                @camera.started += instance.OnCamera;
+                @camera.performed += instance.OnCamera;
+                @camera.canceled += instance.OnCamera;
+                @switchView.started += instance.OnSwitchView;
+                @switchView.performed += instance.OnSwitchView;
+                @switchView.canceled += instance.OnSwitchView;
+            }
+
+            private void UnregisterCallbacks(IPlayerCameraActions instance)
+            {
+                @camera.started -= instance.OnCamera;
+                @camera.performed -= instance.OnCamera;
+                @camera.canceled -= instance.OnCamera;
+                @switchView.started -= instance.OnSwitchView;
+                @switchView.performed -= instance.OnSwitchView;
+                @switchView.canceled -= instance.OnSwitchView;
+            }
+
+            public void RemoveCallbacks(IPlayerCameraActions instance)
+            {
+                if (m_Wrapper.m_PlayerCameraActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IPlayerCameraActions instance)
+            {
+                foreach (var item in m_Wrapper.m_PlayerCameraActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_PlayerCameraActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public PlayerCameraActions @PlayerCamera => new PlayerCameraActions(this);
         public interface IPlayerMovementActions
         {
             void OnMovement(InputAction.CallbackContext context);
             void OnJump(InputAction.CallbackContext context);
+        }
+        public interface IPlayerCameraActions
+        {
+            void OnCamera(InputAction.CallbackContext context);
+            void OnSwitchView(InputAction.CallbackContext context);
         }
     }
 }
