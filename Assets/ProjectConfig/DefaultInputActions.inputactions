@@ -147,6 +147,54 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "PlayerCamera",
+            "id": "8e621584-24a6-434f-afb7-5bbe85d11be2",
+            "actions": [
+                {
+                    "name": "camera",
+                    "type": "Value",
+                    "id": "c4cf1433-09cd-4fab-be87-842ce20e02b4",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "switchView",
+                    "type": "Button",
+                    "id": "104b72e1-39e0-4769-9acd-910a4f80dea7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3f4b0925-51cd-4cda-b4ae-1b38ca4df841",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "camera",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "da79b65e-0d14-44f0-ab32-6f2929a5fc37",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "switchView",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
