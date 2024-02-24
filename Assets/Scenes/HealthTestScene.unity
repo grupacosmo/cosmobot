@@ -3303,7 +3303,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4219877313132212137, guid: 79ef66475ae399711b79c1cfa32ecb34, type: 3}
       propertyPath: m_Name
-      value: Dummy
+      value: HealthInsuranceTestingEntity
       objectReference: {fileID: 0}
     - target: {fileID: 5884157743908418242, guid: 79ef66475ae399711b79c1cfa32ecb34, type: 3}
       propertyPath: accuracy

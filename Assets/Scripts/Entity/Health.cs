@@ -37,7 +37,7 @@ namespace Cosmobot.Entity
             float oldHealth = currentHealth;
             currentHealth = Mathf.Clamp(currentHealth - damage, 0, MaxHealth);
             LastDamageSource = damageSource;
-
+            
             OnHealthChange?.Invoke(this, oldHealth, damage);
             if (IsDead) OnDeath?.Invoke(this, oldHealth, damage);
         }
