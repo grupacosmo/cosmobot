@@ -16,7 +16,7 @@ namespace Cosmobot.Entity
 
         public void ResetHealth()
         {
-            target.Reset();
+            target.ResetHealth();
         }
 
         private void OnEnable()

@@ -6,28 +6,10 @@ namespace Cosmobot
 {
     public class TurretStats : MonoBehaviour
     {
-        public float speed;
-        public float angleRange;
-        public float hp;
-        public float fireRate;
-        public float power;
-
-        void Start()
-        {
-            speed = 40f;
-            angleRange = 160f;
-            hp = 100f;
-            fireRate = 2f;
-            power = 12.5f;
-        }
-
-        public void Damaged(float damageAmount)
-        {
-            hp-=damageAmount;
-            if(hp<=0)
-            {
-                Destroy(gameObject);
-            }
-        }
+        public float speed = 40f;
+        public float angleRange = 160f;
+        public float hp = 100f;
+        public float fireRate = 2f;
+        public float power = 12.5f;
     }
 }

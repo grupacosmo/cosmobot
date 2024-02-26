@@ -42,7 +42,7 @@ namespace Cosmobot.Entity
             if (IsDead) OnDeath?.Invoke(this, oldHealth, damage);
         }
 
-        public virtual void Reset(bool clearEventListeners = false)
+        public virtual void ResetHealth(bool clearEventListeners = false)
         {
             currentHealth = MaxHealth;
             LastDamageSource = DamageSource.Empty;

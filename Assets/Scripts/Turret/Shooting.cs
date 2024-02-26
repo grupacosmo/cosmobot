@@ -1,20 +1,19 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cosmobot.Entity;
 using UnityEngine;
 
 namespace Cosmobot
 {
+    [RequireComponent(typeof(Tracking), typeof(TurretStats), typeof(ParticleSystem))]
     public class Shooting : MonoBehaviour
     {
-        ParticleSystem ps;
-        Ray ray;
-        RaycastHit hit;
-        Tracking tracking;
-        TurretStats turretStats;
-        //public float fireRate = 2f;
-        //public float power = 12.5f;
-        bool canFire = true;
+        private ParticleSystem ps;
+        private Tracking tracking;
+        private TurretStats turretStats;
+        private bool canFire = true;
+
         void Start()
         {
             tracking = GetComponent<Tracking>();
@@ -22,35 +21,29 @@ namespace Cosmobot
             turretStats = GetComponent<TurretStats>();
         }
 
-        // Update is called once per frame
         void Update()
         {
-            ray = new Ray(transform.position, transform.forward);
-            if(Physics.Raycast(ray, out hit))
+            if (canFire && tracking.target != null)
             {
-                if(hit.collider.gameObject==tracking.target && canFire)
+                Ray ray = new Ray(transform.position, transform.forward);
+                if (Physics.Raycast(ray, out RaycastHit hit))
                 {
-                    StartCoroutine(Shoot(hit.collider.gameObject));
+                    if (hit.collider.gameObject == tracking.target.gameObject)
+                    {
+                        StartCoroutine(Shoot(hit.collider.gameObject));
+                    }
                 }
             }
         }
-
 
         public IEnumerator Shoot(GameObject target)
         {
             canFire = false;
             ps.Play();
-            EnemyAi targetAi = target.GetComponent<EnemyAi>();
-            if(targetAi.Damaged(turretStats.power)<=0)
-            {
-                tracking.RemoveTargetFromList(target);
-                Destroy(target);
-            }
+            Health.TakeDamage(target, turretStats.power, new DamageSource(gameObject));
             yield return new WaitForSeconds(turretStats.fireRate);
-            canFire=true;
+            canFire = true;
             ps.Stop();
-            
-            
         }
     }
 }
