@@ -10,6 +10,7 @@ namespace Cosmobot
         public float sensY;
         public float cameraChangeY;
         public float cameraChangeZ;
+        public float wallCollisionOffset;
         public Transform playerObject;
         public Transform cameraHolder;
         private DefaultInputActions actions;
@@ -88,11 +89,10 @@ namespace Cosmobot
             var cameraRotationCenterPosition = cameraHolder.position;
             var rayDirection = -transform.forward;
             var cameraDistance = (float)Math.Sqrt(Math.Pow(cameraChangeZ, 2f) + Math.Pow(cameraChangeY, 2f));
-            var targetCameraPoint =
+            transform.position =
                 Physics.Raycast(cameraRotationCenterPosition, rayDirection, out var hit, cameraDistance)
-                    ? hit.point
-                    : rayDirection * cameraDistance;
-            transform.position = targetCameraPoint + cameraRotationCenterPosition;
+                    ? hit.point - rayDirection.normalized * wallCollisionOffset
+                    : rayDirection * cameraDistance + cameraRotationCenterPosition;
             cameraHolder.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         }
 

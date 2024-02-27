@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,12 +12,12 @@ namespace Cosmobot
         public float gravity;
         public float maxFloorAngleDegrees;
 
-        private float rotationSpeed = 900f;
+        public Transform cameraTransform;
 
         private Vector3 inputMove = Vector3.zero;
-        private bool inputJump = false;
+        private bool inputJump;
 
-        private bool isGrounded = false;
+        private bool isGrounded;
         private Vector3 groundNormal = Vector3.up;
         private float groundCheckRadius;
         private float groundCheckDistance;
@@ -27,9 +25,8 @@ namespace Cosmobot
         private Rigidbody rb;
         private CapsuleCollider coll;
         private Transform groundCheckOrigin;
-        private Transform cameraTransform;
 
-        DefaultInputActions actions;
+        private DefaultInputActions actions;
 
         private void Start()
         {
@@ -38,25 +35,22 @@ namespace Cosmobot
             rb.freezeRotation = true;
             coll = GetComponent<CapsuleCollider>();
             groundCheckOrigin = transform.Find("GroundCheckOrigin");
-            groundCheckRadius = coll.radius * 0.99f; // 0.99 - padding to make spherecast detect floor
-            groundCheckDistance = coll.radius;
-            cameraTransform = Camera.main.transform;
+            var radius = coll.radius;
+            groundCheckRadius = radius * 0.99f; // 0.99 - padding to make spherecast detect floor
+            groundCheckDistance = radius;
         }
 
         private void FixedUpdate()
         {
             GroundCheck();
             ProcessMovement();
-            ProcessRotation();
         }
 
         private void ProcessMovement()
         {
-            Vector3 targetVelocity = inputMove * moveSpeed + new Vector3(0, rb.velocity.y, 0);
-            Vector3 velocityDelta = Vector3.MoveTowards(rb.velocity, targetVelocity, 
-                acceleration * Time.fixedDeltaTime) - rb.velocity;
+            var velocityDelta = CalculateVelocityDelta();
 
-            bool shouldJump = inputJump && isGrounded;
+            var shouldJump = inputJump && isGrounded;
             inputJump = false;
             if (shouldJump)
             {
@@ -70,42 +64,41 @@ namespace Cosmobot
             rb.AddForce(velocityDelta, ForceMode.VelocityChange);
         }
 
-        private void ProcessRotation()
+        private Vector3 CalculateVelocityDelta()
         {
-            if (inputMove.sqrMagnitude > 0.1f)
-            {
-                float targetAngle = Mathf.Atan2(inputMove.x, inputMove.z) * Mathf.Rad2Deg;
-                float newAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref rotationSpeed, 0.1f);
-                transform.rotation = Quaternion.Euler(0, newAngle, 0);
-            }
+            var cameraForward = cameraTransform.forward;
+            cameraForward.y = 0f;
+            var inputDirection = Quaternion.LookRotation(cameraForward) * inputMove;
+
+            var velocity = rb.velocity;
+            var targetVelocity = inputDirection * moveSpeed + new Vector3(0, velocity.y, 0);
+            return Vector3.MoveTowards(velocity, targetVelocity,
+                acceleration * Time.fixedDeltaTime) - rb.velocity;
         }
 
         private void GroundCheck()
         {
-            Vector3 origin = groundCheckOrigin.position;
+            var origin = groundCheckOrigin.position;
 
-            Physics.SphereCast(origin, groundCheckRadius, Vector3.down, out RaycastHit hitInfo, groundCheckDistance);
+            Physics.SphereCast(origin, groundCheckRadius, Vector3.down, out var hitInfo, groundCheckDistance);
             if (hitInfo.collider != null)
             {
                 groundNormal = hitInfo.normal;
-                float floorAngleDegrees = Mathf.Acos(Vector3.Dot(Vector3.up, groundNormal)) * Mathf.Rad2Deg;
-                isGrounded = floorAngleDegrees <= maxFloorAngleDegrees;  
+                var floorAngleDegrees = Mathf.Acos(Vector3.Dot(Vector3.up, groundNormal)) * Mathf.Rad2Deg;
+                isGrounded = floorAngleDegrees <= maxFloorAngleDegrees;
             }
             else
             {
                 isGrounded = false;
             }
-            
-            if (!isGrounded) groundNormal = Vector3.up;
 
+            if (!isGrounded) groundNormal = Vector3.up;
         }
 
-        // Input stuff
         public void OnMovement(InputAction.CallbackContext context)
         {
-            Vector2 inputMoveRaw = context.action.ReadValue<Vector2>();
+            var inputMoveRaw = context.action.ReadValue<Vector2>();
             inputMove = new Vector3(inputMoveRaw.x, 0, inputMoveRaw.y);
-            inputMove = Quaternion.AngleAxis(cameraTransform.eulerAngles.y, Vector3.up) * inputMove;
         }
 
         public void OnJump(InputAction.CallbackContext context)
@@ -114,20 +107,20 @@ namespace Cosmobot
             {
                 inputJump = true;
             }
-            
         }
 
-        void OnEnable()
+        private void OnEnable()
         {
             if (actions == null)
             {
                 actions = new DefaultInputActions();
                 actions.PlayerMovement.SetCallbacks(this);
             }
+
             actions.PlayerMovement.Enable();
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             actions.PlayerMovement.Disable();
         }
