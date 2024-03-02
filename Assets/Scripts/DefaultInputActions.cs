@@ -219,6 +219,34 @@ namespace Cosmobot
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Minimap"",
+            ""id"": ""937d75ae-f092-46fc-ad81-0a2f41e94b59"",
+            ""actions"": [
+                {
+                    ""name"": ""Toggle"",
+                    ""type"": ""Button"",
+                    ""id"": ""46a81420-c1a6-435b-aeff-bdfb512c6404"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""13d04ef6-9c13-4c3d-ae4d-a4afcabb07e4"",
+                    ""path"": ""<Keyboard>/m"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Toggle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -231,6 +259,9 @@ namespace Cosmobot
             m_PlayerCamera = asset.FindActionMap("PlayerCamera", throwIfNotFound: true);
             m_PlayerCamera_camera = m_PlayerCamera.FindAction("camera", throwIfNotFound: true);
             m_PlayerCamera_switchView = m_PlayerCamera.FindAction("switchView", throwIfNotFound: true);
+            // Minimap
+            m_Minimap = asset.FindActionMap("Minimap", throwIfNotFound: true);
+            m_Minimap_Toggle = m_Minimap.FindAction("Toggle", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -396,6 +427,52 @@ namespace Cosmobot
             }
         }
         public PlayerCameraActions @PlayerCamera => new PlayerCameraActions(this);
+
+        // Minimap
+        private readonly InputActionMap m_Minimap;
+        private List<IMinimapActions> m_MinimapActionsCallbackInterfaces = new List<IMinimapActions>();
+        private readonly InputAction m_Minimap_Toggle;
+        public struct MinimapActions
+        {
+            private @DefaultInputActions m_Wrapper;
+            public MinimapActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Toggle => m_Wrapper.m_Minimap_Toggle;
+            public InputActionMap Get() { return m_Wrapper.m_Minimap; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(MinimapActions set) { return set.Get(); }
+            public void AddCallbacks(IMinimapActions instance)
+            {
+                if (instance == null || m_Wrapper.m_MinimapActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_MinimapActionsCallbackInterfaces.Add(instance);
+                @Toggle.started += instance.OnToggle;
+                @Toggle.performed += instance.OnToggle;
+                @Toggle.canceled += instance.OnToggle;
+            }
+
+            private void UnregisterCallbacks(IMinimapActions instance)
+            {
+                @Toggle.started -= instance.OnToggle;
+                @Toggle.performed -= instance.OnToggle;
+                @Toggle.canceled -= instance.OnToggle;
+            }
+
+            public void RemoveCallbacks(IMinimapActions instance)
+            {
+                if (m_Wrapper.m_MinimapActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IMinimapActions instance)
+            {
+                foreach (var item in m_Wrapper.m_MinimapActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_MinimapActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public MinimapActions @Minimap => new MinimapActions(this);
         public interface IPlayerMovementActions
         {
             void OnMovement(InputAction.CallbackContext context);
@@ -405,6 +482,10 @@ namespace Cosmobot
         {
             void OnCamera(InputAction.CallbackContext context);
             void OnSwitchView(InputAction.CallbackContext context);
+        }
+        public interface IMinimapActions
+        {
+            void OnToggle(InputAction.CallbackContext context);
         }
     }
 }
