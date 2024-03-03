@@ -195,6 +195,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Minimap",
+            "id": "937d75ae-f092-46fc-ad81-0a2f41e94b59",
+            "actions": [
+                {
+                    "name": "Toggle",
+                    "type": "Button",
+                    "id": "46a81420-c1a6-435b-aeff-bdfb512c6404",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "13d04ef6-9c13-4c3d-ae4d-a4afcabb07e4",
+                    "path": "<Keyboard>/m",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Toggle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
