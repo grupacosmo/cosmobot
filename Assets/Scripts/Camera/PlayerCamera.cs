@@ -10,6 +10,9 @@ namespace Cosmobot
         public float sensY;
         public float cameraChangeY;
         public float cameraChangeZ;
+        public float rotationClampTop;
+        public float rotationClampBottom;
+        public float wallCollisionOffset;
         public Transform playerObject;
         public Transform cameraHolder;
         private DefaultInputActions actions;
@@ -64,9 +67,9 @@ namespace Cosmobot
             yRotation += xInput * Time.deltaTime * sensX;
             xRotation -= yInput * Time.deltaTime * sensY;
             xRotation = isFirstPerson
-                ? Mathf.Clamp(xRotation, -90f, 90f)
-                : Mathf.Clamp(xRotation, -90f - cameraChangeY / cameraChangeZ * 45f,
-                    90f - cameraChangeY / cameraChangeZ * 45f);
+                ? Mathf.Clamp(xRotation, rotationClampBottom, rotationClampTop)
+                : Mathf.Clamp(xRotation, rotationClampBottom - cameraChangeY / cameraChangeZ * 45f,
+                    rotationClampTop - cameraChangeY / cameraChangeZ * 45f);
         }
 
         private void RotateCamera()
@@ -79,8 +82,6 @@ namespace Cosmobot
             {
                 ChangePositionInThirdPerson();
             }
-
-            playerObject.rotation = Quaternion.Euler(0, yRotation, 0);
         }
 
         private void ChangePositionInThirdPerson()
@@ -88,11 +89,10 @@ namespace Cosmobot
             var cameraRotationCenterPosition = cameraHolder.position;
             var rayDirection = -transform.forward;
             var cameraDistance = (float)Math.Sqrt(Math.Pow(cameraChangeZ, 2f) + Math.Pow(cameraChangeY, 2f));
-            var targetCameraPoint =
+            transform.position =
                 Physics.Raycast(cameraRotationCenterPosition, rayDirection, out var hit, cameraDistance)
-                    ? hit.point
-                    : rayDirection * cameraDistance;
-            transform.position = targetCameraPoint + cameraRotationCenterPosition;
+                    ? hit.point - rayDirection.normalized * wallCollisionOffset
+                    : rayDirection * cameraDistance + cameraRotationCenterPosition;
             cameraHolder.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         }
 
