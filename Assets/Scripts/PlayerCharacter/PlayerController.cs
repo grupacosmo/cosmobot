@@ -11,6 +11,7 @@ namespace Cosmobot
         public float jumpForce;
         public float gravity;
         public float maxFloorAngleDegrees;
+        public float playerRotationSpeed;
 
         public Transform cameraTransform;
 
@@ -44,6 +45,7 @@ namespace Cosmobot
         {
             GroundCheck();
             ProcessMovement();
+            ProcessRotation();
         }
 
         private void ProcessMovement()
@@ -93,6 +95,15 @@ namespace Cosmobot
             }
 
             if (!isGrounded) groundNormal = Vector3.up;
+        }
+        
+        private void ProcessRotation()
+        {
+            if (inputMove.magnitude < 0.1f) return;
+            var moveDirection = rb.velocity.normalized;
+            moveDirection.y = 0;
+            var toRotation = Quaternion.LookRotation(moveDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, playerRotationSpeed * Time.deltaTime);
         }
 
         public void OnMovement(InputAction.CallbackContext context)

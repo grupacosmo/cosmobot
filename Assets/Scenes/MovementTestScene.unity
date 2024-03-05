@@ -328,6 +328,7 @@ MonoBehaviour:
   jumpForce: 15
   gravity: 50
   maxFloorAngleDegrees: 45
+  playerRotationSpeed: 10
   cameraTransform: {fileID: 619884164}
 --- !u!54 &824633232
 Rigidbody:

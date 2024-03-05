@@ -67,7 +67,7 @@ namespace Cosmobot
             xRotation = isFirstPerson
                 ? Mathf.Clamp(xRotation, -90f, 90f)
                 : Mathf.Clamp(xRotation, -90f - cameraChangeY / cameraChangeZ * 45f,
-                    90f - cameraChangeY / cameraChangeZ * 45f);
+                    88f - cameraChangeY / cameraChangeZ * 45f);
         }
 
         private void RotateCamera()
@@ -80,8 +80,6 @@ namespace Cosmobot
             {
                 ChangePositionInThirdPerson();
             }
-
-            playerObject.rotation = Quaternion.Euler(0, yRotation, 0);
         }
 
         private void ChangePositionInThirdPerson()
