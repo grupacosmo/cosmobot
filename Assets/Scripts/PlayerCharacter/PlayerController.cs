@@ -14,9 +14,7 @@ namespace Cosmobot
         public float playerRotationSpeed;
 
         public Transform cameraTransform;
-
-        [SerializeField]
-        private Transform groundCheckOrigin;
+        public Transform groundCheckOrigin;
         
         private Vector3 inputMove = Vector3.zero;
         private bool inputJump;
@@ -37,7 +35,6 @@ namespace Cosmobot
             rb.useGravity = false;
             rb.freezeRotation = true;
             coll = GetComponent<CapsuleCollider>();
-            groundCheckOrigin = transform.Find("GroundCheckOrigin");
             var radius = coll.radius;
             groundCheckRadius = radius * 0.99f; // 0.99 - padding to make spherecast detect floor
             groundCheckDistance = radius;
@@ -101,9 +98,10 @@ namespace Cosmobot
         
         private void ProcessRotation()
         {
-            if (inputMove.sqrMagnitude < 0.01f || rb.velocity.sqrMagnitude < 0.01f) return;
+            if (inputMove.sqrMagnitude < 0.01f) return;
             var moveDirection = rb.velocity.normalized;
             moveDirection.y = 0f;
+            if (moveDirection.sqrMagnitude < 0.01f) return;
             var toRotation = Quaternion.LookRotation(moveDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, playerRotationSpeed * Time.deltaTime);
         }
@@ -116,10 +114,7 @@ namespace Cosmobot
 
         public void OnJump(InputAction.CallbackContext context)
         {
-            if (context.performed)
-            {
-                inputJump = true;
-            }
+            inputJump = context.performed;
         }
 
         private void OnEnable()

@@ -330,7 +330,7 @@ MonoBehaviour:
   maxFloorAngleDegrees: 45
   playerRotationSpeed: 10
   cameraTransform: {fileID: 619884164}
-  groundCheckOrigin: {fileID: 0}
+  groundCheckOrigin: {fileID: 2114071164}
 --- !u!54 &824633232
 Rigidbody:
   m_ObjectHideFlags: 0
