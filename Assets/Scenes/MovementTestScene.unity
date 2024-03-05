@@ -330,6 +330,7 @@ MonoBehaviour:
   maxFloorAngleDegrees: 45
   playerRotationSpeed: 10
   cameraTransform: {fileID: 619884164}
+  groundCheckOrigin: {fileID: 0}
 --- !u!54 &824633232
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1546,6 +1547,14 @@ PrefabInstance:
       propertyPath: playerObject
       value: 
       objectReference: {fileID: 824633230}
+    - target: {fileID: 1899427008657512, guid: 04190c0f75b13174f88a77b5d54b0289, type: 3}
+      propertyPath: rotationClampTop
+      value: 87
+      objectReference: {fileID: 0}
+    - target: {fileID: 1899427008657512, guid: 04190c0f75b13174f88a77b5d54b0289, type: 3}
+      propertyPath: rotationClampBottom
+      value: -87
+      objectReference: {fileID: 0}
     - target: {fileID: 1982184028273715393, guid: 04190c0f75b13174f88a77b5d54b0289, type: 3}
       propertyPath: target
       value: 

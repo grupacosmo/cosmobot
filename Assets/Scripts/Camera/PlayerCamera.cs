@@ -10,6 +10,8 @@ namespace Cosmobot
         public float sensY;
         public float cameraChangeY;
         public float cameraChangeZ;
+        public float rotationClampTop;
+        public float rotationClampBottom;
         public float wallCollisionOffset;
         public Transform playerObject;
         public Transform cameraHolder;
@@ -65,9 +67,9 @@ namespace Cosmobot
             yRotation += xInput * Time.deltaTime * sensX;
             xRotation -= yInput * Time.deltaTime * sensY;
             xRotation = isFirstPerson
-                ? Mathf.Clamp(xRotation, -90f, 90f)
-                : Mathf.Clamp(xRotation, -90f - cameraChangeY / cameraChangeZ * 45f,
-                    88f - cameraChangeY / cameraChangeZ * 45f);
+                ? Mathf.Clamp(xRotation, rotationClampBottom, rotationClampTop)
+                : Mathf.Clamp(xRotation, rotationClampBottom - cameraChangeY / cameraChangeZ * 45f,
+                    rotationClampTop - cameraChangeY / cameraChangeZ * 45f);
         }
 
         private void RotateCamera()

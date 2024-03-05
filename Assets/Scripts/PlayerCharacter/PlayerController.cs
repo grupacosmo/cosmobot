@@ -15,6 +15,9 @@ namespace Cosmobot
 
         public Transform cameraTransform;
 
+        [SerializeField]
+        private Transform groundCheckOrigin;
+        
         private Vector3 inputMove = Vector3.zero;
         private bool inputJump;
 
@@ -25,7 +28,6 @@ namespace Cosmobot
 
         private Rigidbody rb;
         private CapsuleCollider coll;
-        private Transform groundCheckOrigin;
 
         private DefaultInputActions actions;
 
@@ -83,7 +85,7 @@ namespace Cosmobot
             var origin = groundCheckOrigin.position;
 
             Physics.SphereCast(origin, groundCheckRadius, Vector3.down, out var hitInfo, groundCheckDistance);
-            if (hitInfo.collider != null)
+            if (hitInfo.collider != null && rb.velocity.y < 0.01)
             {
                 groundNormal = hitInfo.normal;
                 var floorAngleDegrees = Mathf.Acos(Vector3.Dot(Vector3.up, groundNormal)) * Mathf.Rad2Deg;
@@ -99,9 +101,9 @@ namespace Cosmobot
         
         private void ProcessRotation()
         {
-            if (inputMove.magnitude < 0.1f) return;
+            if (inputMove.sqrMagnitude < 0.01f || rb.velocity.sqrMagnitude < 0.01f) return;
             var moveDirection = rb.velocity.normalized;
-            moveDirection.y = 0;
+            moveDirection.y = 0f;
             var toRotation = Quaternion.LookRotation(moveDirection);
             transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, playerRotationSpeed * Time.deltaTime);
         }
