@@ -8,6 +8,9 @@ namespace Cosmobot.ItemSystem
     public class Item : MonoBehaviour
     {
         [SerializeField]
+        private bool canInteract;
+
+        [SerializeField]
         private ItemInfo itemInfo;
 
         [SerializeField]

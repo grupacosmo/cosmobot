@@ -219,6 +219,34 @@ namespace Cosmobot
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""RobotInteract"",
+            ""id"": ""0d3e7b12-7543-445a-9101-c6d826fec661"",
+            ""actions"": [
+                {
+                    ""name"": ""Grab/Release"",
+                    ""type"": ""Button"",
+                    ""id"": ""3bacf199-346a-4232-bc20-ade52c8fc2e7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""3f1a0810-e3fe-4975-a484-71be7b7aeca5"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Grab/Release"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -231,6 +259,9 @@ namespace Cosmobot
             m_PlayerCamera = asset.FindActionMap("PlayerCamera", throwIfNotFound: true);
             m_PlayerCamera_camera = m_PlayerCamera.FindAction("camera", throwIfNotFound: true);
             m_PlayerCamera_switchView = m_PlayerCamera.FindAction("switchView", throwIfNotFound: true);
+            // RobotInteract
+            m_RobotInteract = asset.FindActionMap("RobotInteract", throwIfNotFound: true);
+            m_RobotInteract_GrabRelease = m_RobotInteract.FindAction("Grab/Release", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -396,6 +427,52 @@ namespace Cosmobot
             }
         }
         public PlayerCameraActions @PlayerCamera => new PlayerCameraActions(this);
+
+        // RobotInteract
+        private readonly InputActionMap m_RobotInteract;
+        private List<IRobotInteractActions> m_RobotInteractActionsCallbackInterfaces = new List<IRobotInteractActions>();
+        private readonly InputAction m_RobotInteract_GrabRelease;
+        public struct RobotInteractActions
+        {
+            private @DefaultInputActions m_Wrapper;
+            public RobotInteractActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @GrabRelease => m_Wrapper.m_RobotInteract_GrabRelease;
+            public InputActionMap Get() { return m_Wrapper.m_RobotInteract; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(RobotInteractActions set) { return set.Get(); }
+            public void AddCallbacks(IRobotInteractActions instance)
+            {
+                if (instance == null || m_Wrapper.m_RobotInteractActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_RobotInteractActionsCallbackInterfaces.Add(instance);
+                @GrabRelease.started += instance.OnGrabRelease;
+                @GrabRelease.performed += instance.OnGrabRelease;
+                @GrabRelease.canceled += instance.OnGrabRelease;
+            }
+
+            private void UnregisterCallbacks(IRobotInteractActions instance)
+            {
+                @GrabRelease.started -= instance.OnGrabRelease;
+                @GrabRelease.performed -= instance.OnGrabRelease;
+                @GrabRelease.canceled -= instance.OnGrabRelease;
+            }
+
+            public void RemoveCallbacks(IRobotInteractActions instance)
+            {
+                if (m_Wrapper.m_RobotInteractActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IRobotInteractActions instance)
+            {
+                foreach (var item in m_Wrapper.m_RobotInteractActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_RobotInteractActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public RobotInteractActions @RobotInteract => new RobotInteractActions(this);
         public interface IPlayerMovementActions
         {
             void OnMovement(InputAction.CallbackContext context);
@@ -405,6 +482,10 @@ namespace Cosmobot
         {
             void OnCamera(InputAction.CallbackContext context);
             void OnSwitchView(InputAction.CallbackContext context);
+        }
+        public interface IRobotInteractActions
+        {
+            void OnGrabRelease(InputAction.CallbackContext context);
         }
     }
 }

@@ -195,6 +195,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "RobotInteract",
+            "id": "0d3e7b12-7543-445a-9101-c6d826fec661",
+            "actions": [
+                {
+                    "name": "Grab/Release",
+                    "type": "Button",
+                    "id": "3bacf199-346a-4232-bc20-ade52c8fc2e7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3f1a0810-e3fe-4975-a484-71be7b7aeca5",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Grab/Release",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
