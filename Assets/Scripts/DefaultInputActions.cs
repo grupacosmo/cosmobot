@@ -193,6 +193,15 @@ namespace Cosmobot
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""zoom"",
+                    ""type"": ""Button"",
+                    ""id"": ""b298ad49-16e3-4c70-a1e2-79d0cdd79d1e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -215,6 +224,17 @@ namespace Cosmobot
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""switchView"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b2b55378-1c0d-469a-ac3f-9342f1f91d56"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -259,6 +279,7 @@ namespace Cosmobot
             m_PlayerCamera = asset.FindActionMap("PlayerCamera", throwIfNotFound: true);
             m_PlayerCamera_camera = m_PlayerCamera.FindAction("camera", throwIfNotFound: true);
             m_PlayerCamera_switchView = m_PlayerCamera.FindAction("switchView", throwIfNotFound: true);
+            m_PlayerCamera_zoom = m_PlayerCamera.FindAction("zoom", throwIfNotFound: true);
             // Minimap
             m_Minimap = asset.FindActionMap("Minimap", throwIfNotFound: true);
             m_Minimap_Toggle = m_Minimap.FindAction("Toggle", throwIfNotFound: true);
@@ -379,12 +400,14 @@ namespace Cosmobot
         private List<IPlayerCameraActions> m_PlayerCameraActionsCallbackInterfaces = new List<IPlayerCameraActions>();
         private readonly InputAction m_PlayerCamera_camera;
         private readonly InputAction m_PlayerCamera_switchView;
+        private readonly InputAction m_PlayerCamera_zoom;
         public struct PlayerCameraActions
         {
             private @DefaultInputActions m_Wrapper;
             public PlayerCameraActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @camera => m_Wrapper.m_PlayerCamera_camera;
             public InputAction @switchView => m_Wrapper.m_PlayerCamera_switchView;
+            public InputAction @zoom => m_Wrapper.m_PlayerCamera_zoom;
             public InputActionMap Get() { return m_Wrapper.m_PlayerCamera; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -400,6 +423,9 @@ namespace Cosmobot
                 @switchView.started += instance.OnSwitchView;
                 @switchView.performed += instance.OnSwitchView;
                 @switchView.canceled += instance.OnSwitchView;
+                @zoom.started += instance.OnZoom;
+                @zoom.performed += instance.OnZoom;
+                @zoom.canceled += instance.OnZoom;
             }
 
             private void UnregisterCallbacks(IPlayerCameraActions instance)
@@ -410,6 +436,9 @@ namespace Cosmobot
                 @switchView.started -= instance.OnSwitchView;
                 @switchView.performed -= instance.OnSwitchView;
                 @switchView.canceled -= instance.OnSwitchView;
+                @zoom.started -= instance.OnZoom;
+                @zoom.performed -= instance.OnZoom;
+                @zoom.canceled -= instance.OnZoom;
             }
 
             public void RemoveCallbacks(IPlayerCameraActions instance)
@@ -482,6 +511,7 @@ namespace Cosmobot
         {
             void OnCamera(InputAction.CallbackContext context);
             void OnSwitchView(InputAction.CallbackContext context);
+            void OnZoom(InputAction.CallbackContext context);
         }
         public interface IMinimapActions
         {

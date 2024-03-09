@@ -8,13 +8,17 @@ namespace Cosmobot
     {
         public float sensX;
         public float sensY;
+        public float zoomSensitivityMultiplier;
         public Vector3 thirdPersonCameraOffset;
         public float rotationClampTop;
         public float rotationClampBottom;
         public float wallCollisionOffset;
+        public float zoomMagnification;
+        public float zoomSpeed;
         public Transform playerObject;
         public Transform cameraHolder;
 
+        private Camera cam;
         private DefaultInputActions actions;
         private float xRotation;
         private float yRotation;
@@ -22,6 +26,9 @@ namespace Cosmobot
         private float yInput;
         private Vector3 cameraOffset = Vector3.zero;
         private bool isFirstPerson = true;
+        private bool isZoomed = false;
+        private float defaultFov;
+        private float zoomFov;
 
         private void OnEnable()
         {
@@ -50,23 +57,36 @@ namespace Cosmobot
             SwitchCameraView();
         }
 
+        public void OnZoom(InputAction.CallbackContext context)
+        {
+            if (context.performed) isZoomed = true;
+            if (context.canceled) isZoomed=false;
+        }
+
         private void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             transform.position = cameraHolder.position;
+
+            cam = GetComponent<Camera>();
+            defaultFov = cam.fieldOfView;
+            zoomFov = defaultFov / zoomMagnification;
         }
 
         private void Update()
         {
             HandleInput();
             UpdateTransform();
+            UpdateFov();
         }
 
         private void HandleInput()
         {
-            yRotation += xInput * Time.deltaTime * sensX;
-            xRotation -= yInput * Time.deltaTime * sensY;
+            Vector2 rotationDelta = new Vector2(yInput * Time.deltaTime * sensY, xInput * Time.deltaTime * sensX);
+            if (isZoomed) rotationDelta *= zoomSensitivityMultiplier;
+            yRotation += rotationDelta.y;
+            xRotation -= rotationDelta.x;
             xRotation = Mathf.Clamp(xRotation, rotationClampBottom, rotationClampTop);
         }
 
@@ -87,5 +107,12 @@ namespace Cosmobot
             isFirstPerson = !isFirstPerson;
             cameraOffset = isFirstPerson ? Vector3.zero : thirdPersonCameraOffset;
         }
+
+        private void UpdateFov()
+        {
+            float targetFov = isZoomed ? zoomFov : defaultFov;
+            cam.fieldOfView = Mathf.MoveTowards(cam.fieldOfView, targetFov, zoomSpeed * Time.deltaTime);
+        }
+
     }
 }
