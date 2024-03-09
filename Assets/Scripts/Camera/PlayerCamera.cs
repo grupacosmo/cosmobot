@@ -8,18 +8,19 @@ namespace Cosmobot
     {
         public float sensX;
         public float sensY;
-        public float cameraChangeY;
-        public float cameraChangeZ;
+        public Vector3 thirdPersonCameraOffset;
         public float rotationClampTop;
         public float rotationClampBottom;
         public float wallCollisionOffset;
         public Transform playerObject;
         public Transform cameraHolder;
+
         private DefaultInputActions actions;
         private float xRotation;
         private float yRotation;
         private float xInput;
         private float yInput;
+        private Vector3 cameraOffset = Vector3.zero;
         private bool isFirstPerson = true;
 
         private void OnEnable()
@@ -46,7 +47,7 @@ namespace Cosmobot
 
         public void OnSwitchView(InputAction.CallbackContext context)
         {
-            SwitchCameraPosition();
+            SwitchCameraView();
         }
 
         private void Start()
@@ -58,37 +59,22 @@ namespace Cosmobot
 
         private void Update()
         {
-            AssignRotation();
-            RotateCamera();
+            HandleInput();
+            UpdateTransform();
         }
 
-        private void AssignRotation()
+        private void HandleInput()
         {
             yRotation += xInput * Time.deltaTime * sensX;
             xRotation -= yInput * Time.deltaTime * sensY;
-            xRotation = isFirstPerson
-                ? Mathf.Clamp(xRotation, rotationClampBottom, rotationClampTop)
-                : Mathf.Clamp(xRotation, rotationClampBottom - cameraChangeY / cameraChangeZ * 45f,
-                    rotationClampTop - cameraChangeY / cameraChangeZ * 45f);
+            xRotation = Mathf.Clamp(xRotation, rotationClampBottom, rotationClampTop);
         }
 
-        private void RotateCamera()
-        {
-            if (isFirstPerson)
-            {
-                transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
-            }
-            else
-            {
-                ChangePositionInThirdPerson();
-            }
-        }
-
-        private void ChangePositionInThirdPerson()
+        private void UpdateTransform()
         {
             var cameraRotationCenterPosition = cameraHolder.position;
-            var rayDirection = -transform.forward;
-            var cameraDistance = (float)Math.Sqrt(Math.Pow(cameraChangeZ, 2f) + Math.Pow(cameraChangeY, 2f));
+            var rayDirection = transform.rotation * cameraOffset;
+            var cameraDistance = cameraOffset.magnitude;
             transform.position =
                 Physics.Raycast(cameraRotationCenterPosition, rayDirection, out var hit, cameraDistance)
                     ? hit.point - rayDirection.normalized * wallCollisionOffset
@@ -96,20 +82,10 @@ namespace Cosmobot
             cameraHolder.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         }
 
-        private void SwitchCameraPosition()
+        private void SwitchCameraView()
         {
-            if (isFirstPerson)
-            {
-                transform.position += new Vector3(0, cameraChangeY, -cameraChangeZ);
-                transform.LookAt(playerObject);
-            }
-            else
-            {
-                cameraHolder.rotation = Quaternion.Euler(0, 0, 0);
-                transform.position = cameraHolder.position;
-            }
-
             isFirstPerson = !isFirstPerson;
+            cameraOffset = isFirstPerson ? Vector3.zero : thirdPersonCameraOffset;
         }
     }
 }
