@@ -13,6 +13,7 @@ namespace Cosmobot
         private DefaultInputActions actions;
         [SerializeField]
         private TMP_Text interactionPrompt;
+
         private void OnTriggerEnter(Collider other)
         {
             if (other.TryGetComponent(out IInteractable encounteredInteraction))
@@ -21,6 +22,7 @@ namespace Cosmobot
                 ShowInteractionPrompt();
             }
         }
+
         private void OnTriggerExit(Collider other)
         {
             if (other.TryGetComponent(out IInteractable encounteredInteraction))
@@ -32,16 +34,19 @@ namespace Cosmobot
                 }
             }
         }
+
         private void ShowInteractionPrompt()
         {
             interactionPrompt.text = interaction?.Prompt;
             interactionPrompt.enabled = true;
         }
+
         private void Interact()
         {
             interaction?.Use();
             ShowInteractionPrompt();
         }
+
         public void OnInteract(UnityEngine.InputSystem.InputAction.CallbackContext context)
         {
             if (context.performed)
@@ -49,6 +54,7 @@ namespace Cosmobot
                 Interact();
             }
         }
+
         private void OnEnable()
         {
             if (actions == null)
@@ -56,9 +62,10 @@ namespace Cosmobot
                 actions = new DefaultInputActions();
                 actions.Interaction.SetCallbacks(this);
             }
-
+            
             actions.Interaction.Enable();
         }
+        
         private void OnDisable()
         {
             actions.Interaction.Disable();
