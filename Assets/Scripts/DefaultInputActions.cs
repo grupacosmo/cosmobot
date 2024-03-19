@@ -247,6 +247,34 @@ namespace Cosmobot
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Interaction"",
+            ""id"": ""b4594d13-259d-499f-a6cf-584010a42367"",
+            ""actions"": [
+                {
+                    ""name"": ""interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""13928db4-d06b-41b3-b93e-6d6a66be1279"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""56c28f2f-b886-4a04-b750-908be6f1470d"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -262,6 +290,9 @@ namespace Cosmobot
             // Minimap
             m_Minimap = asset.FindActionMap("Minimap", throwIfNotFound: true);
             m_Minimap_Toggle = m_Minimap.FindAction("Toggle", throwIfNotFound: true);
+            // Interaction
+            m_Interaction = asset.FindActionMap("Interaction", throwIfNotFound: true);
+            m_Interaction_interact = m_Interaction.FindAction("interact", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -473,6 +504,52 @@ namespace Cosmobot
             }
         }
         public MinimapActions @Minimap => new MinimapActions(this);
+
+        // Interaction
+        private readonly InputActionMap m_Interaction;
+        private List<IInteractionActions> m_InteractionActionsCallbackInterfaces = new List<IInteractionActions>();
+        private readonly InputAction m_Interaction_interact;
+        public struct InteractionActions
+        {
+            private @DefaultInputActions m_Wrapper;
+            public InteractionActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @interact => m_Wrapper.m_Interaction_interact;
+            public InputActionMap Get() { return m_Wrapper.m_Interaction; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(InteractionActions set) { return set.Get(); }
+            public void AddCallbacks(IInteractionActions instance)
+            {
+                if (instance == null || m_Wrapper.m_InteractionActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_InteractionActionsCallbackInterfaces.Add(instance);
+                @interact.started += instance.OnInteract;
+                @interact.performed += instance.OnInteract;
+                @interact.canceled += instance.OnInteract;
+            }
+
+            private void UnregisterCallbacks(IInteractionActions instance)
+            {
+                @interact.started -= instance.OnInteract;
+                @interact.performed -= instance.OnInteract;
+                @interact.canceled -= instance.OnInteract;
+            }
+
+            public void RemoveCallbacks(IInteractionActions instance)
+            {
+                if (m_Wrapper.m_InteractionActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IInteractionActions instance)
+            {
+                foreach (var item in m_Wrapper.m_InteractionActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_InteractionActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public InteractionActions @Interaction => new InteractionActions(this);
         public interface IPlayerMovementActions
         {
             void OnMovement(InputAction.CallbackContext context);
@@ -486,6 +563,10 @@ namespace Cosmobot
         public interface IMinimapActions
         {
             void OnToggle(InputAction.CallbackContext context);
+        }
+        public interface IInteractionActions
+        {
+            void OnInteract(InputAction.CallbackContext context);
         }
     }
 }
