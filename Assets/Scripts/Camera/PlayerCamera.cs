@@ -60,7 +60,7 @@ namespace Cosmobot
         public void OnZoom(InputAction.CallbackContext context)
         {
             if (context.performed) isZoomed = true;
-            if (context.canceled) isZoomed=false;
+            if (context.canceled) isZoomed = false;
         }
 
         private void Start()

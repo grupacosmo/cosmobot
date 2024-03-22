@@ -1250,6 +1250,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 22047482429002795, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
+      propertyPath: rotationMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22047482429002795, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
       propertyPath: cameraTransform
       value: 
       objectReference: {fileID: 619884164}
