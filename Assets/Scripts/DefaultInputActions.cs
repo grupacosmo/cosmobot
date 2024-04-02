@@ -267,6 +267,34 @@ namespace Cosmobot
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""PlayerGun"",
+            ""id"": ""9d2713aa-b648-490b-b1eb-fb411b4d6512"",
+            ""actions"": [
+                {
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""0f8c47af-d8db-4bac-ab79-c85a2326ba6d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""12bf8558-66df-4230-8831-84fd76b16420"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -283,6 +311,9 @@ namespace Cosmobot
             // Minimap
             m_Minimap = asset.FindActionMap("Minimap", throwIfNotFound: true);
             m_Minimap_Toggle = m_Minimap.FindAction("Toggle", throwIfNotFound: true);
+            // PlayerGun
+            m_PlayerGun = asset.FindActionMap("PlayerGun", throwIfNotFound: true);
+            m_PlayerGun_Shoot = m_PlayerGun.FindAction("Shoot", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -502,6 +533,52 @@ namespace Cosmobot
             }
         }
         public MinimapActions @Minimap => new MinimapActions(this);
+
+        // PlayerGun
+        private readonly InputActionMap m_PlayerGun;
+        private List<IPlayerGunActions> m_PlayerGunActionsCallbackInterfaces = new List<IPlayerGunActions>();
+        private readonly InputAction m_PlayerGun_Shoot;
+        public struct PlayerGunActions
+        {
+            private @DefaultInputActions m_Wrapper;
+            public PlayerGunActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Shoot => m_Wrapper.m_PlayerGun_Shoot;
+            public InputActionMap Get() { return m_Wrapper.m_PlayerGun; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(PlayerGunActions set) { return set.Get(); }
+            public void AddCallbacks(IPlayerGunActions instance)
+            {
+                if (instance == null || m_Wrapper.m_PlayerGunActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_PlayerGunActionsCallbackInterfaces.Add(instance);
+                @Shoot.started += instance.OnShoot;
+                @Shoot.performed += instance.OnShoot;
+                @Shoot.canceled += instance.OnShoot;
+            }
+
+            private void UnregisterCallbacks(IPlayerGunActions instance)
+            {
+                @Shoot.started -= instance.OnShoot;
+                @Shoot.performed -= instance.OnShoot;
+                @Shoot.canceled -= instance.OnShoot;
+            }
+
+            public void RemoveCallbacks(IPlayerGunActions instance)
+            {
+                if (m_Wrapper.m_PlayerGunActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IPlayerGunActions instance)
+            {
+                foreach (var item in m_Wrapper.m_PlayerGunActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_PlayerGunActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public PlayerGunActions @PlayerGun => new PlayerGunActions(this);
         public interface IPlayerMovementActions
         {
             void OnMovement(InputAction.CallbackContext context);
@@ -516,6 +593,10 @@ namespace Cosmobot
         public interface IMinimapActions
         {
             void OnToggle(InputAction.CallbackContext context);
+        }
+        public interface IPlayerGunActions
+        {
+            void OnShoot(InputAction.CallbackContext context);
         }
     }
 }
