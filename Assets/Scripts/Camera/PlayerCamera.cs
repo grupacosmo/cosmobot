@@ -72,6 +72,8 @@ namespace Cosmobot
             cam = GetComponent<Camera>();
             defaultFov = cam.fieldOfView;
             zoomFov = defaultFov / zoomMagnification;
+
+            SwitchCameraView();
         }
 
         private void Update()
