@@ -1359,7 +1359,7 @@ PrefabInstance:
       objectReference: {fileID: 897632191}
     - target: {fileID: 7799368095451474857, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
       propertyPath: maxPickupRange
-      value: 2
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7799368095451474857, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
       propertyPath: cameraTransform

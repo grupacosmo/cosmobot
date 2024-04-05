@@ -79,7 +79,8 @@ namespace Cosmobot
                 }
                 else if (Physics.Raycast(ray, out var hit, 1000f, mask))
                 {
-                    if (hit.transform.CompareTag("Item") && hit.rigidbody)
+                    if (hit.transform.CompareTag("Item") && 
+                        (hit.transform.position-transform.position).magnitude<maxPickupRange)
                     {
                         SetCarriedItem(hit.transform);
                     }
