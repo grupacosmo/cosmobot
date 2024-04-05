@@ -1377,6 +1377,22 @@ PrefabInstance:
       propertyPath: carryPositionOffset.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7799368095451474857, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
+      propertyPath: holdingDistanceZoomMultiplier
+      value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799368095451474857, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
+      propertyPath: carryPositionFirstPersonOffset.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799368095451474857, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
+      propertyPath: carryPositionThirdPersonOffset.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799368095451474857, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
+      propertyPath: carryPositionThirdPersonOffset.y
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7836811508043725155, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
       propertyPath: m_Layer
       value: 0

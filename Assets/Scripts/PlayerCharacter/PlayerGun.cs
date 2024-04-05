@@ -11,7 +11,9 @@ namespace Cosmobot
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private float maxPickupRange; // relative to character, not camera
         [SerializeField] private float carryHoldingDistance;
-        [SerializeField] private Vector3 carryPositionOffset;
+        [SerializeField] private float holdingDistanceZoomMultiplier = 1f;
+        [SerializeField] private Vector3 carryPositionFirstPersonOffset;
+        [SerializeField] private Vector3 carryPositionThirdPersonOffset;
         [SerializeField] private float carryForceMultiplier = 1f;
 
         private bool carryingItem = false;
@@ -30,7 +32,12 @@ namespace Cosmobot
 
         public void FixedUpdate()
         {
-            carryPosition = transform.position + cameraTransform.forward * carryHoldingDistance + carryPositionOffset;
+            var carryPosOffset = playerCamera.isFirstPerson ? carryPositionFirstPersonOffset : carryPositionThirdPersonOffset;
+            carryPosOffset = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0) * carryPosOffset;
+
+            var holdDistance = carryHoldingDistance * (playerCamera.isZoomed ? holdingDistanceZoomMultiplier : 1);
+
+            carryPosition = transform.position + cameraTransform.forward * holdDistance + carryPosOffset;
             if (carryingItem)
             {
                 //currentItemBody.MovePosition(carryPosition);

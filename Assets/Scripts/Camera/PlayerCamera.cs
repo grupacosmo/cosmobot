@@ -25,8 +25,8 @@ namespace Cosmobot
         private float xInput;
         private float yInput;
         private Vector3 cameraOffset = Vector3.zero;
-        private bool isFirstPerson = true;
-        private bool isZoomed = false;
+        public bool isFirstPerson = true;
+        public bool isZoomed = false;
         private float defaultFov;
         private float zoomFov;
 
