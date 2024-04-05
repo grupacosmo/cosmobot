@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.HID;
 
 namespace Cosmobot
 {
@@ -27,7 +26,6 @@ namespace Cosmobot
         public void Update()
         {
             UpdateModel();
-            //Debug.Log(currentItemTransform);
         }
 
         public void FixedUpdate()
@@ -40,8 +38,6 @@ namespace Cosmobot
             carryPosition = transform.position + cameraTransform.forward * holdDistance + carryPosOffset;
             if (carryingItem)
             {
-                //currentItemBody.MovePosition(carryPosition);
-                //currentItemBody.velocity = Vector3.zero;
                 var force = (carryPosition - carriedItemTransform.position) * carryForceMultiplier
                     - carriedItemBody.velocity;
                 carriedItemBody.AddForce(force, ForceMode.VelocityChange);
