@@ -249,9 +249,18 @@
             "id": "9d2713aa-b648-490b-b1eb-fb411b4d6512",
             "actions": [
                 {
-                    "name": "Shoot",
+                    "name": "shoot",
                     "type": "Button",
                     "id": "0f8c47af-d8db-4bac-ab79-c85a2326ba6d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "pickup",
+                    "type": "Button",
+                    "id": "5b451df9-5ab6-4ed1-bac3-497b0a359349",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -266,7 +275,18 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Shoot",
+                    "action": "shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "66420144-d7ce-42f4-916e-7df72986650f",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "pickup",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

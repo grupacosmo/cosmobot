@@ -273,9 +273,18 @@ namespace Cosmobot
             ""id"": ""9d2713aa-b648-490b-b1eb-fb411b4d6512"",
             ""actions"": [
                 {
-                    ""name"": ""Shoot"",
+                    ""name"": ""shoot"",
                     ""type"": ""Button"",
                     ""id"": ""0f8c47af-d8db-4bac-ab79-c85a2326ba6d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""pickup"",
+                    ""type"": ""Button"",
+                    ""id"": ""5b451df9-5ab6-4ed1-bac3-497b0a359349"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -290,7 +299,18 @@ namespace Cosmobot
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Shoot"",
+                    ""action"": ""shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""66420144-d7ce-42f4-916e-7df72986650f"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""pickup"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -313,7 +333,8 @@ namespace Cosmobot
             m_Minimap_Toggle = m_Minimap.FindAction("Toggle", throwIfNotFound: true);
             // PlayerGun
             m_PlayerGun = asset.FindActionMap("PlayerGun", throwIfNotFound: true);
-            m_PlayerGun_Shoot = m_PlayerGun.FindAction("Shoot", throwIfNotFound: true);
+            m_PlayerGun_shoot = m_PlayerGun.FindAction("shoot", throwIfNotFound: true);
+            m_PlayerGun_pickup = m_PlayerGun.FindAction("pickup", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -537,12 +558,14 @@ namespace Cosmobot
         // PlayerGun
         private readonly InputActionMap m_PlayerGun;
         private List<IPlayerGunActions> m_PlayerGunActionsCallbackInterfaces = new List<IPlayerGunActions>();
-        private readonly InputAction m_PlayerGun_Shoot;
+        private readonly InputAction m_PlayerGun_shoot;
+        private readonly InputAction m_PlayerGun_pickup;
         public struct PlayerGunActions
         {
             private @DefaultInputActions m_Wrapper;
             public PlayerGunActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
-            public InputAction @Shoot => m_Wrapper.m_PlayerGun_Shoot;
+            public InputAction @shoot => m_Wrapper.m_PlayerGun_shoot;
+            public InputAction @pickup => m_Wrapper.m_PlayerGun_pickup;
             public InputActionMap Get() { return m_Wrapper.m_PlayerGun; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -552,16 +575,22 @@ namespace Cosmobot
             {
                 if (instance == null || m_Wrapper.m_PlayerGunActionsCallbackInterfaces.Contains(instance)) return;
                 m_Wrapper.m_PlayerGunActionsCallbackInterfaces.Add(instance);
-                @Shoot.started += instance.OnShoot;
-                @Shoot.performed += instance.OnShoot;
-                @Shoot.canceled += instance.OnShoot;
+                @shoot.started += instance.OnShoot;
+                @shoot.performed += instance.OnShoot;
+                @shoot.canceled += instance.OnShoot;
+                @pickup.started += instance.OnPickup;
+                @pickup.performed += instance.OnPickup;
+                @pickup.canceled += instance.OnPickup;
             }
 
             private void UnregisterCallbacks(IPlayerGunActions instance)
             {
-                @Shoot.started -= instance.OnShoot;
-                @Shoot.performed -= instance.OnShoot;
-                @Shoot.canceled -= instance.OnShoot;
+                @shoot.started -= instance.OnShoot;
+                @shoot.performed -= instance.OnShoot;
+                @shoot.canceled -= instance.OnShoot;
+                @pickup.started -= instance.OnPickup;
+                @pickup.performed -= instance.OnPickup;
+                @pickup.canceled -= instance.OnPickup;
             }
 
             public void RemoveCallbacks(IPlayerGunActions instance)
@@ -597,6 +626,7 @@ namespace Cosmobot
         public interface IPlayerGunActions
         {
             void OnShoot(InputAction.CallbackContext context);
+            void OnPickup(InputAction.CallbackContext context);
         }
     }
 }
