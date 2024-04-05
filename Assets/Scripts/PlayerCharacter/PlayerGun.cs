@@ -48,7 +48,7 @@ namespace Cosmobot
 
         public void OnShoot(InputAction.CallbackContext context)
         {
-            Debug.Log("shoot");
+            
         }
 
         private void SetCarriedItem(Transform newItemTransform)
@@ -58,9 +58,13 @@ namespace Cosmobot
                 carriedItemTransform = newItemTransform;
                 carriedItemBody = newItemTransform.GetComponent<Rigidbody>();
                 carryingItem = true;
+
+                carriedItemBody.excludeLayers |= 1 << LayerMask.NameToLayer("Player");
             }
             else
             {
+                carriedItemBody.excludeLayers &= ~(1 << LayerMask.NameToLayer("Player"));
+
                 carriedItemTransform = null;
                 carriedItemBody = null;
                 carryingItem = false;

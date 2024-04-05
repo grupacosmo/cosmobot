@@ -1327,7 +1327,7 @@ PrefabInstance:
       objectReference: {fileID: 619884164}
     - target: {fileID: 735998889914099504, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1137498538287740836, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
       propertyPath: m_Name
@@ -1339,7 +1339,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1682369736395010421, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4052988221077880138, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -1347,11 +1347,11 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 9875a245ac49007498213638a307faa1, type: 2}
     - target: {fileID: 7157319831883534927, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7590353541553076469, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7799368095451474857, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
       propertyPath: playerCamera
@@ -1379,7 +1379,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7836811508043725155, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7985631433997210231, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
       propertyPath: m_LocalScale.x
