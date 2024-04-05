@@ -95,9 +95,10 @@ namespace Cosmobot
             var cameraRotationCenterPosition = cameraHolder.position;
             var rayDirection = transform.rotation * cameraOffset;
             var cameraDistance = cameraOffset.magnitude;
+            var mask = LayerMask.GetMask("Default");
             transform.position =
                 Physics.SphereCast(cameraRotationCenterPosition, wallCollisionOffset, 
-                        rayDirection, out var hit, cameraDistance + wallCollisionOffset)
+                        rayDirection, out var hit, cameraDistance + wallCollisionOffset, mask)
                     ? hit.point + hit.normal * wallCollisionOffset
                     : rayDirection + cameraRotationCenterPosition;
             cameraHolder.rotation = Quaternion.Euler(xRotation, yRotation, 0);
