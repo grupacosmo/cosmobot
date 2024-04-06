@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 namespace Cosmobot
 {
+    [RequireComponent(typeof(Camera))]
     public class PlayerCamera : MonoBehaviour, DefaultInputActions.IPlayerCameraActions
     {
         public float sensX;
@@ -16,6 +17,8 @@ namespace Cosmobot
         public float zoomSpeed;
         public Transform playerObject;
         public Transform cameraHolder;
+        public bool isFirstPerson { get; private set; } = true;
+        public bool isZoomed { get; private set; } = false;
 
         private Camera cam;
         private DefaultInputActions actions;
@@ -24,8 +27,6 @@ namespace Cosmobot
         private float xInput;
         private float yInput;
         private Vector3 cameraOffset = Vector3.zero;
-        public bool isFirstPerson = true;
-        public bool isZoomed = false;
         private float defaultFov;
         private float zoomFov;
 
@@ -77,9 +78,13 @@ namespace Cosmobot
 
         private void Update()
         {
-            HandleInput();
-            UpdateTransform();
+            HandleInput();  
             UpdateFov();
+        }
+
+        private void LateUpdate()
+        {
+            UpdateTransform();
         }
 
         private void HandleInput()

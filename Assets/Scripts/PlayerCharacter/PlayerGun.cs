@@ -14,6 +14,8 @@ namespace Cosmobot
         [SerializeField] private Vector3 carryPositionFirstPersonOffset;
         [SerializeField] private Vector3 carryPositionThirdPersonOffset;
         [SerializeField] private float carryForceMultiplier = 1f;
+        [SerializeField] private string playerLayerName = "Player";
+        [SerializeField] private string itemLayerName = "Item";
 
         private bool carryingItem = false;
         private Transform carriedItemTransform = null;
@@ -62,11 +64,11 @@ namespace Cosmobot
                 carriedItemBody = newItemTransform.GetComponent<Rigidbody>();
                 carryingItem = true;
 
-                carriedItemBody.excludeLayers |= 1 << LayerMask.NameToLayer("Player");
+                carriedItemBody.excludeLayers |= 1 << LayerMask.NameToLayer(playerLayerName);
             }
             else
             {
-                carriedItemBody.excludeLayers &= ~(1 << LayerMask.NameToLayer("Player"));
+                carriedItemBody.excludeLayers &= ~(1 << LayerMask.NameToLayer(playerLayerName));
 
                 carriedItemTransform = null;
                 carriedItemBody = null;
@@ -78,7 +80,7 @@ namespace Cosmobot
         {
             if (context.performed)
             {
-                int mask = LayerMask.GetMask("Item");
+                int mask = LayerMask.GetMask(itemLayerName);
                 Ray ray = new(cameraTransform.position, cameraTransform.forward);
                 if (carryingItem)
                 {
@@ -86,7 +88,7 @@ namespace Cosmobot
                 }
                 else if (Physics.Raycast(ray, out var hit, 1000f, mask))
                 {
-                    if (hit.transform.CompareTag("Item") && 
+                    if (hit.transform.CompareTag(itemLayerName) && 
                         (hit.transform.position-transform.position).magnitude<maxPickupRange)
                     {
                         SetCarriedItem(hit.transform);
