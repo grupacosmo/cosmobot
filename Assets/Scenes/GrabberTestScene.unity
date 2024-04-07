@@ -338,7 +338,7 @@ Transform:
   m_GameObject: {fileID: 261309985}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.05400002, y: -0.98, z: 0.025000572}
+  m_LocalPosition: {x: -0.05400002, y: -1.044, z: 0.025000572}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -626,9 +626,9 @@ GameObject:
   - component: {fileID: 693207474}
   - component: {fileID: 693207473}
   - component: {fileID: 693207472}
-  - component: {fileID: 693207471}
+  - component: {fileID: 693207475}
   m_Layer: 6
-  m_Name: Sphere
+  m_Name: GrabberSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -649,18 +649,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1245394999}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &693207471
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 693207469}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95e59b28ed6ad0a4b8fffbbc3edc10b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!135 &693207472
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -732,6 +720,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 693207469}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &693207475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 693207469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9b10f847b0403a43ba4c47fcfd6b5c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grabbedItem: {fileID: 0}
+  grabOffset: {x: 0, y: 2, z: 0}
+  grabDistance: 5
+  releaseDistance: 1
 --- !u!1 &824633225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1422,7 +1426,6 @@ GameObject:
   - component: {fileID: 1245394996}
   - component: {fileID: 1245394995}
   - component: {fileID: 1245395001}
-  - component: {fileID: 1245395002}
   m_Layer: 6
   m_Name: Robot
   m_TagString: Robot
@@ -1452,7 +1455,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
@@ -1539,7 +1542,7 @@ Transform:
   m_GameObject: {fileID: 1245394994}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1, y: 2, z: 3}
+  m_LocalPosition: {x: 3.96, y: 2, z: 3.84}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -1560,12 +1563,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04d5e2ca72a9b4f49a5e5aaba70e065c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canMove: 0
-  robotSpeed: 10
-  acceleration: 50
+  robotSpeed: 15
+  gravity: 50
+  distanceToGround: 0.1
+  direction: {x: 0, y: 0, z: 0}
   loopMode: 1
-  grabEveryWaypoint: 0
-  currentPointIndex: 0
+  automaticGrabMode: 0
+  routeIndex: 0
   route:
   - waypoint: {x: -1, y: 2, z: 5}
     release: 1
@@ -1573,35 +1577,12 @@ MonoBehaviour:
   - waypoint: {x: 5, y: 2, z: 5}
     release: 1
     grab: 1
-  - waypoint: {x: 5, y: 2, z: -1}
+  - waypoint: {x: 3.5, y: 2, z: -1}
     release: 1
     grab: 1
   - waypoint: {x: -1, y: 2, z: -1}
     release: 1
     grab: 1
-  routeForward: 0
-  obstacleLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  maxFloorAngleDegrees: 0
-  groundCheckOrigin: {fileID: 261309986}
-  gravity: 50
---- !u!114 &1245395002
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1245394994}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9b10f847b0403a43ba4c47fcfd6b5c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  grabbedItem: {fileID: 0}
-  grabOffset: {x: 0, y: 1, z: 0}
-  grabDistance: 5
-  releaseDistance: 1
 --- !u!1001 &1420718239
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1616,7 +1597,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3516543481110741587, guid: b7ac8b3ecafe37ea38f80b4b3ca57868, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.41
+      value: -1.94
       objectReference: {fileID: 0}
     - target: {fileID: 3516543481110741587, guid: b7ac8b3ecafe37ea38f80b4b3ca57868, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1624,7 +1605,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3516543481110741587, guid: b7ac8b3ecafe37ea38f80b4b3ca57868, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 5.22
+      value: 2.43
       objectReference: {fileID: 0}
     - target: {fileID: 3516543481110741587, guid: b7ac8b3ecafe37ea38f80b4b3ca57868, type: 3}
       propertyPath: m_LocalRotation.w
