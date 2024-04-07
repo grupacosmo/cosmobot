@@ -7,11 +7,12 @@ TagManager:
   - Item
   - UI
   - Enemy
+  - Robot
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Floor
   - Water
   - UI
   - Enemy
