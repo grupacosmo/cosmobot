@@ -5,17 +5,18 @@ namespace Cosmobot
 {
     public class PlayerGun : MonoBehaviour, DefaultInputActions.IPlayerGunActions
     {
-
         [SerializeField] private PlayerCamera playerCamera;
         [SerializeField] private Transform cameraTransform;
-        [SerializeField] private float maxPickupRange; // relative to character, not camera
+        [SerializeField, Tooltip("Relative to character, not camera")] private float maxPickupRange;
         [SerializeField] private float carryHoldingDistance;
         [SerializeField] private float holdingDistanceZoomMultiplier = 1f;
         [SerializeField] private Vector3 carryPositionFirstPersonOffset;
         [SerializeField] private Vector3 carryPositionThirdPersonOffset;
         [SerializeField] private float carryForceMultiplier = 1f;
-        [SerializeField] private string playerLayerName = "Player";
-        [SerializeField] private string itemLayerName = "Item";
+        [SerializeField] private LayerMask playerLayer;
+        [SerializeField] private LayerMask itemLayer;
+        //[SerializeField] private string playerLayerName = "Player";
+        //[SerializeField] private string itemLayerName = "Item";
 
         private bool carryingItem = false;
         private Transform carriedItemTransform = null;
@@ -25,22 +26,27 @@ namespace Cosmobot
 
         private DefaultInputActions actions;
 
-        public void Update()
+        private void Update()
         {
             UpdateModel();
         }
 
         public void FixedUpdate()
         {
-            var carryPosOffset = playerCamera.isFirstPerson ? carryPositionFirstPersonOffset : carryPositionThirdPersonOffset;
-            carryPosOffset = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0) * carryPosOffset;
+            ProcessCarrying();
+        }
 
-            var holdDistance = carryHoldingDistance * (playerCamera.isZoomed ? holdingDistanceZoomMultiplier : 1);
-
-            carryPosition = transform.position + cameraTransform.forward * holdDistance + carryPosOffset;
+        private void ProcessCarrying()
+        {
             if (carryingItem)
             {
-                var force = (carryPosition - carriedItemTransform.position) * carryForceMultiplier
+                Vector3 carryPosOffset = playerCamera.isFirstPerson ? carryPositionFirstPersonOffset : carryPositionThirdPersonOffset;
+                carryPosOffset = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0) * carryPosOffset;
+
+                var holdDistance = carryHoldingDistance * (playerCamera.isZoomed ? holdingDistanceZoomMultiplier : 1);
+
+                carryPosition = transform.position + cameraTransform.forward * holdDistance + carryPosOffset;
+                Vector3 force = (carryPosition - carriedItemTransform.position) * carryForceMultiplier
                     - carriedItemBody.velocity;
                 carriedItemBody.AddForce(force, ForceMode.VelocityChange);
             }
@@ -58,17 +64,17 @@ namespace Cosmobot
 
         private void SetCarriedItem(Transform newItemTransform)
         {
-            if(newItemTransform != null)
+            if (newItemTransform is not null)
             {
                 carriedItemTransform = newItemTransform;
                 carriedItemBody = newItemTransform.GetComponent<Rigidbody>();
                 carryingItem = true;
 
-                carriedItemBody.excludeLayers |= 1 << LayerMask.NameToLayer(playerLayerName);
+                carriedItemBody.excludeLayers |= playerLayer.value;
             }
             else
             {
-                carriedItemBody.excludeLayers &= ~(1 << LayerMask.NameToLayer(playerLayerName));
+                carriedItemBody.excludeLayers &= ~playerLayer.value;
 
                 carriedItemTransform = null;
                 carriedItemBody = null;
@@ -80,7 +86,7 @@ namespace Cosmobot
         {
             if (context.performed)
             {
-                int mask = LayerMask.GetMask(itemLayerName);
+                int mask = itemLayer;
                 Ray ray = new(cameraTransform.position, cameraTransform.forward);
                 if (carryingItem)
                 {
@@ -88,8 +94,9 @@ namespace Cosmobot
                 }
                 else if (Physics.Raycast(ray, out var hit, 1000f, mask))
                 {
-                    if (hit.transform.CompareTag(itemLayerName) && 
-                        (hit.transform.position-transform.position).magnitude<maxPickupRange)
+                    var hitIsItem = hit.transform.CompareTag("Item");
+                    var hitInPickupRange = (hit.transform.position - transform.position).magnitude < maxPickupRange;
+                    if (hitIsItem && hitInPickupRange)
                     {
                         SetCarriedItem(hit.transform);
                     }
@@ -99,7 +106,7 @@ namespace Cosmobot
 
         private void OnEnable()
         {
-            if (actions == null)
+            if (actions is null)
             {
                 actions = new DefaultInputActions();
                 actions.PlayerGun.SetCallbacks(this);

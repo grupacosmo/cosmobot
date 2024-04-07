@@ -20,8 +20,8 @@ namespace Cosmobot
         public float playerRotationSpeed;
         public RotationMode rotationMode;
 
-        public Transform cameraTransform;
-        public Transform groundCheckOrigin;
+        [SerializeField] private Transform cameraTransform;
+        [SerializeField] private Transform groundCheckOrigin;
         
         private Vector3 inputMove = Vector3.zero;
         private Vector3 inputDirection = Vector3.zero;
@@ -33,7 +33,6 @@ namespace Cosmobot
         private float groundCheckDistance;
 
         private Rigidbody rb;
-        private CapsuleCollider coll;
 
         private DefaultInputActions actions;
 
@@ -42,7 +41,7 @@ namespace Cosmobot
             rb = GetComponent<Rigidbody>();
             rb.useGravity = false;
             rb.freezeRotation = true;
-            coll = GetComponent<CapsuleCollider>();
+            var coll = GetComponent<CapsuleCollider>();
             var radius = coll.radius;
             groundCheckRadius = radius * 0.99f; // 0.99 - padding to make spherecast detect floor
             groundCheckDistance = radius;
@@ -123,7 +122,7 @@ namespace Cosmobot
                     transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, playerRotationSpeed * Time.deltaTime);
                 }
             }
-            else //if (rotationMode == RotationMode.CameraDirection)
+            else
             {
                 var faceDirection = new Vector3(cameraTransform.forward.x, 0, cameraTransform.forward.z).normalized;
                 transform.rotation = Quaternion.LookRotation(faceDirection);
@@ -143,7 +142,7 @@ namespace Cosmobot
 
         private void OnEnable()
         {
-            if (actions == null)
+            if (actions is null)
             {
                 actions = new DefaultInputActions();
                 actions.PlayerMovement.SetCallbacks(this);

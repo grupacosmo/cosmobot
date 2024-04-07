@@ -1366,6 +1366,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 619884164}
     - target: {fileID: 7799368095451474857, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
+      propertyPath: itemLayer.m_Bits
+      value: 1024
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799368095451474857, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
+      propertyPath: playerLayer.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799368095451474857, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
       propertyPath: carryForceMultiplier
       value: 5
       objectReference: {fileID: 0}
@@ -1481,12 +1489,28 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 824633230}
     - target: {fileID: 1899427008657512, guid: 04190c0f75b13174f88a77b5d54b0289, type: 3}
+      propertyPath: sensitivityX
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1899427008657512, guid: 04190c0f75b13174f88a77b5d54b0289, type: 3}
+      propertyPath: sensitivityY
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1899427008657512, guid: 04190c0f75b13174f88a77b5d54b0289, type: 3}
       propertyPath: cameraChangeY
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1899427008657512, guid: 04190c0f75b13174f88a77b5d54b0289, type: 3}
       propertyPath: cameraChangeZ
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1899427008657512, guid: 04190c0f75b13174f88a77b5d54b0289, type: 3}
+      propertyPath: sensitivity.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1899427008657512, guid: 04190c0f75b13174f88a77b5d54b0289, type: 3}
+      propertyPath: sensitivity.y
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1899427008657512, guid: 04190c0f75b13174f88a77b5d54b0289, type: 3}
       propertyPath: cameraOffset.y
