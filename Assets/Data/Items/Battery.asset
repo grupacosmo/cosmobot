@@ -20,6 +20,8 @@ MonoBehaviour:
     keys:
     - MaxCharge
     - Charge
+    - TransferRate
     values:
     - 100
     - 100
+    - 10
