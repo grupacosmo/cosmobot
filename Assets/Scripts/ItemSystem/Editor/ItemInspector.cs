@@ -31,7 +31,7 @@ namespace Cosmobot.ItemSystem.Editor
             {
                 if (GUILayout.Button("Add ItemInfo keys"))
                 {
-                    fillMissingKeys();
+                    AddMissingKeys();
                 }
 
                 return;
@@ -62,12 +62,12 @@ namespace Cosmobot.ItemSystem.Editor
             {
                 if (GUILayout.Button("Add missing ItemInfo keys"))
                 {
-                    fillMissingKeys();
+                    AddMissingKeys();
                 }
             }
         }
 
-        private void fillMissingKeys()
+        private void AddMissingKeys()
         {
             SerializedProperty keys = serializedObject.FindProperty("ItemData.keys");
             SerializedProperty values = serializedObject.FindProperty("ItemData.values");
