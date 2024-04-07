@@ -11,7 +11,6 @@ namespace Cosmobot
         private List<IEnergyReceiver> receivers = new();
         private float currentTransferTime;
 
-
         public void TransferEnergy()
         {
             if (receivers.Count > 0)
@@ -32,7 +31,7 @@ namespace Cosmobot
         void Update()
         {
             currentTransferTime += Time.deltaTime;
-            if (currentTransferTime > 1)
+            if (currentTransferTime > 1f)
             {
                 currentTransferTime = 0;
                 TransferEnergy();

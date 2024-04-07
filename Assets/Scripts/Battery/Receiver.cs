@@ -8,6 +8,7 @@ namespace Cosmobot
     public class Receiver : MonoBehaviour, IEnergyReceiver
     {
         private ReceiverStats receiverStats;
+        
         public float CollectEnergy(float amount)
         {
             float rest = 0;
