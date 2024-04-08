@@ -1552,6 +1552,10 @@ PrefabInstance:
       propertyPath: zoomSensitivityMultiplier
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 1899427008657512, guid: 04190c0f75b13174f88a77b5d54b0289, type: 3}
+      propertyPath: cameraCollisionLayer.m_Bits
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1982184028273715393, guid: 04190c0f75b13174f88a77b5d54b0289, type: 3}
       propertyPath: target
       value: 

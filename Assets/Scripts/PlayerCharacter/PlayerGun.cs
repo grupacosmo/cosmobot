@@ -15,8 +15,6 @@ namespace Cosmobot
         [SerializeField] private float carryForceMultiplier = 1f;
         [SerializeField] private LayerMask playerLayer;
         [SerializeField] private LayerMask itemLayer;
-        //[SerializeField] private string playerLayerName = "Player";
-        //[SerializeField] private string itemLayerName = "Item";
 
         private bool carryingItem = false;
         private Transform carriedItemTransform = null;
@@ -31,7 +29,7 @@ namespace Cosmobot
             UpdateModel();
         }
 
-        public void FixedUpdate()
+        private void FixedUpdate()
         {
             ProcessCarrying();
         }

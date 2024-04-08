@@ -12,13 +12,13 @@ namespace Cosmobot
             CameraDirection
         }
 
-        public float moveSpeed;
-        public float acceleration;
-        public float jumpForce;
-        public float gravity;
-        public float maxFloorAngleDegrees;
-        public float playerRotationSpeed;
-        public RotationMode rotationMode;
+        [SerializeField] private float moveSpeed;
+        [SerializeField] private float acceleration;
+        [SerializeField] private float jumpForce;
+        [SerializeField] private float gravity;
+        [SerializeField] private float maxFloorAngleDegrees;
+        [SerializeField] private float playerRotationSpeed;
+        [SerializeField] private RotationMode rotationMode;
 
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private Transform groundCheckOrigin;
@@ -82,10 +82,10 @@ namespace Cosmobot
             cameraForward.y = 0f;
             inputDirection = Quaternion.LookRotation(cameraForward) * inputMove;
 
-            var velocity = rb.velocity;
-            var targetVelocity = inputDirection * moveSpeed + new Vector3(0, velocity.y, 0);
-            return Vector3.MoveTowards(velocity, targetVelocity,
+            var targetVelocity = inputDirection * moveSpeed + new Vector3(0, rb.velocity.y, 0);
+            var velocityDelta = Vector3.MoveTowards(rb.velocity, targetVelocity,
                 acceleration * Time.fixedDeltaTime) - rb.velocity;
+            return velocityDelta;
         }
 
         private void GroundCheck()
@@ -107,7 +107,7 @@ namespace Cosmobot
             if (!isGrounded) groundNormal = Vector3.up;
         }
         
-        public void SwitchRotationMode(RotationMode mode)
+        public void SetRotationMode(RotationMode mode)
         {
             rotationMode = mode;
         }

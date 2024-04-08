@@ -6,19 +6,22 @@ namespace Cosmobot
     [RequireComponent(typeof(Camera))]
     public class PlayerCamera : MonoBehaviour, DefaultInputActions.IPlayerCameraActions
     {
-        public Vector2 sensitivity;
-        public float zoomSensitivityMultiplier;
-        public Vector3 thirdPersonCameraOffset;
-        public float rotationClampTop;
-        public float rotationClampBottom;
-        public float wallCollisionOffset;
-        public float zoomMagnification;
-        public float zoomSpeed;
         public bool isFirstPerson { get; private set; } = true;
         public bool isZoomed { get; private set; } = false;
 
+        [SerializeField] private Vector2 sensitivity;
+        [SerializeField] private float zoomSensitivityMultiplier;
+        [SerializeField] private Vector3 thirdPersonCameraOffset;
+        [SerializeField] private float rotationClampTop;
+        [SerializeField] private float rotationClampBottom;
+        [SerializeField] private float wallCollisionOffset;
+        [SerializeField] private float zoomMagnification;
+        [SerializeField] private float zoomSpeed;
+        [SerializeField] private LayerMask cameraCollisionLayer;
+
         [SerializeField] private Transform playerObject;
         [SerializeField] private Transform cameraHolder;
+
         private Camera camera;
         private DefaultInputActions actions;
         private float xRotation;
@@ -47,8 +50,9 @@ namespace Cosmobot
 
         public void OnCamera(InputAction.CallbackContext context)
         {
-            xInput = context.ReadValue<Vector2>().x;
-            yInput = context.ReadValue<Vector2>().y;
+            Vector2 inputVector = context.ReadValue<Vector2>();
+            xInput = inputVector.x;
+            yInput = inputVector.y;
         }
 
         public void OnSwitchView(InputAction.CallbackContext context)
@@ -98,7 +102,7 @@ namespace Cosmobot
             var cameraRotationCenterPosition = cameraHolder.position;
             var rayDirection = transform.rotation * cameraOffset;
             var cameraDistance = cameraOffset.magnitude;
-            var mask = LayerMask.GetMask("Default");
+            var mask = cameraCollisionLayer;
             transform.position =
                 Physics.SphereCast(cameraRotationCenterPosition, wallCollisionOffset, 
                         rayDirection, out var hit, cameraDistance + wallCollisionOffset, mask)
