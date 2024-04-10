@@ -17,8 +17,10 @@ TagManager:
   - Enemy
   - Player
   - FriendlyAttack
-  - 
+  - Interactive
   - Item
+  - 
+  - 
   - 
   - 
   - 
