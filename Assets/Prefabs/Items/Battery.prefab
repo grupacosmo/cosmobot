@@ -384,6 +384,42 @@ PrefabInstance:
       propertyPath: m_Name
       value: Battery
       objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: itemInfo
+      value: 
+      objectReference: {fileID: 11400000, guid: 5279402d783a7cd6ab3e69233e367baa, type: 2}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: ItemData.keys.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: ItemData.values.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: ItemData.keys.Array.data[0]
+      value: MaxCharge
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: ItemData.keys.Array.data[1]
+      value: Charge
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: ItemData.keys.Array.data[2]
+      value: TransferRate
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: ItemData.values.Array.data[0]
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: ItemData.values.Array.data[1]
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: ItemData.values.Array.data[2]
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -399,10 +435,54 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1184754906315201856, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5214797043673580511}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3240347071796910601, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -1252653463308643256}
+    - targetCorrespondingSourceObject: {fileID: 3240347071796910601, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -6898828939821629135}
   m_SourcePrefab: {fileID: 100100000, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
 --- !u!4 &5565729857058558405 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1184754906315201856, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
   m_PrefabInstance: {fileID: 6722864472913038469}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8193296630200260236 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3240347071796910601, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+  m_PrefabInstance: {fileID: 6722864472913038469}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-1252653463308643256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8193296630200260236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed4728350dedf10479df061f4b006c44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!135 &-6898828939821629135
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8193296630200260236}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 2.5
+  m_Center: {x: 0, y: 0, z: 0}
