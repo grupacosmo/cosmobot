@@ -644,7 +644,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 5, z: 5}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1245394999}
@@ -677,7 +677,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 693207469}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -732,10 +732,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9b10f847b0403a43ba4c47fcfd6b5c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  automaticGrabMode: 1
   grabbedItem: {fileID: 0}
+  lastItem: {fileID: 0}
   grabOffset: {x: 0, y: 2, z: 0}
-  grabDistance: 5
-  releaseDistance: 1
+  grabDistance: 8
+  releaseDistance: 2
+  releaseExcludedLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &824633225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1568,21 +1573,20 @@ MonoBehaviour:
   distanceToGround: 0.1
   direction: {x: 0, y: 0, z: 0}
   loopMode: 1
-  automaticGrabMode: 0
   routeIndex: 0
   route:
   - waypoint: {x: -1, y: 2, z: 5}
     release: 1
-    grab: 1
+    grab: 0
   - waypoint: {x: 5, y: 2, z: 5}
     release: 1
-    grab: 1
+    grab: 0
   - waypoint: {x: 3.5, y: 2, z: -1}
     release: 1
-    grab: 1
+    grab: 0
   - waypoint: {x: -1, y: 2, z: -1}
     release: 1
-    grab: 1
+    grab: 0
 --- !u!1001 &1420718239
 PrefabInstance:
   m_ObjectHideFlags: 0

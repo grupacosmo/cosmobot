@@ -1,13 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
-using System.Linq;
-using UnityEngine.Events;
-using UnityEditor.Callbacks;
 
 namespace Cosmobot
 {
+
+    [RequireComponent(typeof(Rigidbody))]
     public class RouteMovement : MonoBehaviour
     {
         public float robotSpeed;
@@ -15,12 +11,14 @@ namespace Cosmobot
         public float distanceToGround = 0.1f;
         public Vector3 direction = Vector3.zero;
 
-        #region route
+        [Header("Route")]
         public bool loopMode;
         public int routeIndex = 0;
         public Route[] route;
         private bool routeForward = true;
-        #endregion route
+        // arrivalThreshold had been tested for 0.5f, might not work correctly for higher velocities
+        // (but i don't think we ever plan to set the velocity THAT high)
+        public float arrivalThreshold;
 
         private Rigidbody rb;
         private Grabber grabber;
@@ -42,20 +40,18 @@ namespace Cosmobot
             if (CheckIfArrived(route[routeIndex].waypoint)) 
             {
                 UpdateRoute();
-                if (grabber != null) GrabOrRelease();
+                if (grabber)
+                {
+                    TryRelease();
+                    TryGrab();
+                }
             }
             
             Vector3 directionToPoint = GetDirectionToPoint(transform.position, route[routeIndex].waypoint);
             directionToPoint.y = 0f;
 
-            if (IsGrounded())
-            {
-                rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-            }
-            else
-            {
-                directionToPoint += Vector3.down * gravity * Time.fixedDeltaTime;
-            }
+            if (IsGrounded()) rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            else directionToPoint += Vector3.down * gravity * Time.fixedDeltaTime;
             directionToPoint.Normalize();
 
             Vector3 velocity = directionToPoint * robotSpeed;
@@ -67,9 +63,7 @@ namespace Cosmobot
             var rotation = Quaternion.LookRotation(directionToPoint);
 
             direction = directionToPoint;
-
             transform.rotation = rotation;
-        
         }
         private bool IsGrounded()
         {
@@ -86,7 +80,7 @@ namespace Cosmobot
 
         private void UpdateRoute()
         {
-            if (routeForward == true)
+            if (routeForward)
             {
                 if (routeIndex == route.Length - 1) 
                 {
@@ -99,18 +93,21 @@ namespace Cosmobot
             int add_amount = routeForward ? 1 : -1;
             routeIndex += add_amount;
         }
-        private void GrabOrRelease()
+
+        private void TryRelease()
         {
-            if (grabber.automaticGrabMode) return;
-            else if (route[routeIndex].release && (grabber.grabbedItem != null))
+            if (route[routeIndex].release && (grabber.grabbedItem is not null))
             {
                 grabber.ReleaseItem();
             }
-            else if (route[routeIndex].grab && (grabber.grabbedItem == null))
+        }
+        private void TryGrab()
+        {
+            if (grabber.automaticGrabMode) return;
+            if (route[routeIndex].grab && (grabber.grabbedItem is null))
             {
                 grabber.GrabItem();
             }
-            
         }
         private bool CheckIfArrived(Vector3 point)
         {
@@ -118,18 +115,13 @@ namespace Cosmobot
             point = new Vector3(point.x, 0f, point.z);
 
             float distanceToTarget = Vector3.Distance(currentPosition, point);
-            float arrivalThreshold = 0.1f;
 
             if (distanceToTarget <= arrivalThreshold)
             {
                 Debug.Log($"Robot has arrived at the point number '{routeIndex}'.");
                 return true;
             }
-            else
-            {
-                return false;
-            }
+            else  return false;
         }
-        
     }
 }
