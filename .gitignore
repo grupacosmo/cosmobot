@@ -73,3 +73,6 @@ crashlytics-build.properties
 .vs/
 .vscode/
 .idea/
+
+# Auto-generated script
+Assets/Scripts/DefaultInputActions.cs

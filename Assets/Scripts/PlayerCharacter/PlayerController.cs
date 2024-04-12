@@ -6,17 +6,25 @@ namespace Cosmobot
     [RequireComponent(typeof(Rigidbody))]
     public class PlayerController : MonoBehaviour, DefaultInputActions.IPlayerMovementActions
     {
-        public float moveSpeed;
-        public float acceleration;
-        public float jumpForce;
-        public float gravity;
-        public float maxFloorAngleDegrees;
-        public float playerRotationSpeed;
+        public enum RotationMode
+        {
+            MovementDirection,
+            CameraDirection
+        }
 
-        public Transform cameraTransform;
-        public Transform groundCheckOrigin;
+        [SerializeField] private float moveSpeed;
+        [SerializeField] private float acceleration;
+        [SerializeField] private float jumpForce;
+        [SerializeField] private float gravity;
+        [SerializeField] private float maxFloorAngleDegrees;
+        [SerializeField] private float playerRotationSpeed;
+        [SerializeField] private RotationMode rotationMode;
+
+        [SerializeField] private Transform cameraTransform;
+        [SerializeField] private Transform groundCheckOrigin;
         
         private Vector3 inputMove = Vector3.zero;
+        private Vector3 inputDirection = Vector3.zero;
         private bool inputJump;
 
         private bool isGrounded;
@@ -25,7 +33,6 @@ namespace Cosmobot
         private float groundCheckDistance;
 
         private Rigidbody rb;
-        private CapsuleCollider coll;
 
         private DefaultInputActions actions;
 
@@ -34,17 +41,21 @@ namespace Cosmobot
             rb = GetComponent<Rigidbody>();
             rb.useGravity = false;
             rb.freezeRotation = true;
-            coll = GetComponent<CapsuleCollider>();
+            var coll = GetComponent<CapsuleCollider>();
             var radius = coll.radius;
             groundCheckRadius = radius * 0.99f; // 0.99 - padding to make spherecast detect floor
             groundCheckDistance = radius;
+        }
+
+        private void Update()
+        {
+            ProcessRotation();
         }
 
         private void FixedUpdate()
         {
             GroundCheck();
             ProcessMovement();
-            ProcessRotation();
         }
 
         private void ProcessMovement()
@@ -69,12 +80,12 @@ namespace Cosmobot
         {
             var cameraForward = cameraTransform.forward;
             cameraForward.y = 0f;
-            var inputDirection = Quaternion.LookRotation(cameraForward) * inputMove;
+            inputDirection = Quaternion.LookRotation(cameraForward) * inputMove;
 
-            var velocity = rb.velocity;
-            var targetVelocity = inputDirection * moveSpeed + new Vector3(0, velocity.y, 0);
-            return Vector3.MoveTowards(velocity, targetVelocity,
+            var targetVelocity = inputDirection * moveSpeed + new Vector3(0, rb.velocity.y, 0);
+            var velocityDelta = Vector3.MoveTowards(rb.velocity, targetVelocity,
                 acceleration * Time.fixedDeltaTime) - rb.velocity;
+            return velocityDelta;
         }
 
         private void GroundCheck()
@@ -96,14 +107,26 @@ namespace Cosmobot
             if (!isGrounded) groundNormal = Vector3.up;
         }
         
+        public void SetRotationMode(RotationMode mode)
+        {
+            rotationMode = mode;
+        }
+
         private void ProcessRotation()
         {
-            if (inputMove.sqrMagnitude < 0.01f) return;
-            var moveDirection = rb.velocity.normalized;
-            moveDirection.y = 0f;
-            if (moveDirection.sqrMagnitude < 0.01f) return;
-            var toRotation = Quaternion.LookRotation(moveDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, playerRotationSpeed * Time.deltaTime);
+            if (rotationMode == RotationMode.MovementDirection)
+            {
+                if (inputDirection.magnitude > 0.01f)
+                {
+                    var toRotation = Quaternion.LookRotation(inputDirection);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, playerRotationSpeed * Time.deltaTime);
+                }
+            }
+            else
+            {
+                var faceDirection = new Vector3(cameraTransform.forward.x, 0, cameraTransform.forward.z).normalized;
+                transform.rotation = Quaternion.LookRotation(faceDirection);
+            }
         }
 
         public void OnMovement(InputAction.CallbackContext context)
@@ -119,7 +142,7 @@ namespace Cosmobot
 
         private void OnEnable()
         {
-            if (actions == null)
+            if (actions is null)
             {
                 actions = new DefaultInputActions();
                 actions.PlayerMovement.SetCallbacks(this);

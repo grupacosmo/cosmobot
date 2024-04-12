@@ -193,6 +193,15 @@ namespace Cosmobot
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""zoom"",
+                    ""type"": ""Button"",
+                    ""id"": ""b298ad49-16e3-4c70-a1e2-79d0cdd79d1e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -215,6 +224,17 @@ namespace Cosmobot
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""switchView"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b2b55378-1c0d-469a-ac3f-9342f1f91d56"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -249,13 +269,22 @@ namespace Cosmobot
             ]
         },
         {
-            ""name"": ""Interaction"",
-            ""id"": ""b4594d13-259d-499f-a6cf-584010a42367"",
+            ""name"": ""PlayerGun"",
+            ""id"": ""9d2713aa-b648-490b-b1eb-fb411b4d6512"",
             ""actions"": [
                 {
-                    ""name"": ""interact"",
+                    ""name"": ""shoot"",
                     ""type"": ""Button"",
-                    ""id"": ""13928db4-d06b-41b3-b93e-6d6a66be1279"",
+                    ""id"": ""0f8c47af-d8db-4bac-ab79-c85a2326ba6d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""pickup"",
+                    ""type"": ""Button"",
+                    ""id"": ""5b451df9-5ab6-4ed1-bac3-497b0a359349"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -265,7 +294,46 @@ namespace Cosmobot
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""56c28f2f-b886-4a04-b750-908be6f1470d"",
+                    ""id"": ""12bf8558-66df-4230-8831-84fd76b16420"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""66420144-d7ce-42f4-916e-7df72986650f"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""pickup"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Interaction"",
+            ""id"": ""87ea07c2-17b4-4bd4-9c97-8e707bc3d096"",
+            ""actions"": [
+                {
+                    ""name"": ""interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""54f766f1-c186-4d62-ac28-82127740a46f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""b5223094-0dd0-4fa5-8380-8e8f01dc6840"",
                     ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -287,9 +355,14 @@ namespace Cosmobot
             m_PlayerCamera = asset.FindActionMap("PlayerCamera", throwIfNotFound: true);
             m_PlayerCamera_camera = m_PlayerCamera.FindAction("camera", throwIfNotFound: true);
             m_PlayerCamera_switchView = m_PlayerCamera.FindAction("switchView", throwIfNotFound: true);
+            m_PlayerCamera_zoom = m_PlayerCamera.FindAction("zoom", throwIfNotFound: true);
             // Minimap
             m_Minimap = asset.FindActionMap("Minimap", throwIfNotFound: true);
             m_Minimap_Toggle = m_Minimap.FindAction("Toggle", throwIfNotFound: true);
+            // PlayerGun
+            m_PlayerGun = asset.FindActionMap("PlayerGun", throwIfNotFound: true);
+            m_PlayerGun_shoot = m_PlayerGun.FindAction("shoot", throwIfNotFound: true);
+            m_PlayerGun_pickup = m_PlayerGun.FindAction("pickup", throwIfNotFound: true);
             // Interaction
             m_Interaction = asset.FindActionMap("Interaction", throwIfNotFound: true);
             m_Interaction_interact = m_Interaction.FindAction("interact", throwIfNotFound: true);
@@ -410,12 +483,14 @@ namespace Cosmobot
         private List<IPlayerCameraActions> m_PlayerCameraActionsCallbackInterfaces = new List<IPlayerCameraActions>();
         private readonly InputAction m_PlayerCamera_camera;
         private readonly InputAction m_PlayerCamera_switchView;
+        private readonly InputAction m_PlayerCamera_zoom;
         public struct PlayerCameraActions
         {
             private @DefaultInputActions m_Wrapper;
             public PlayerCameraActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @camera => m_Wrapper.m_PlayerCamera_camera;
             public InputAction @switchView => m_Wrapper.m_PlayerCamera_switchView;
+            public InputAction @zoom => m_Wrapper.m_PlayerCamera_zoom;
             public InputActionMap Get() { return m_Wrapper.m_PlayerCamera; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -431,6 +506,9 @@ namespace Cosmobot
                 @switchView.started += instance.OnSwitchView;
                 @switchView.performed += instance.OnSwitchView;
                 @switchView.canceled += instance.OnSwitchView;
+                @zoom.started += instance.OnZoom;
+                @zoom.performed += instance.OnZoom;
+                @zoom.canceled += instance.OnZoom;
             }
 
             private void UnregisterCallbacks(IPlayerCameraActions instance)
@@ -441,6 +519,9 @@ namespace Cosmobot
                 @switchView.started -= instance.OnSwitchView;
                 @switchView.performed -= instance.OnSwitchView;
                 @switchView.canceled -= instance.OnSwitchView;
+                @zoom.started -= instance.OnZoom;
+                @zoom.performed -= instance.OnZoom;
+                @zoom.canceled -= instance.OnZoom;
             }
 
             public void RemoveCallbacks(IPlayerCameraActions instance)
@@ -505,6 +586,60 @@ namespace Cosmobot
         }
         public MinimapActions @Minimap => new MinimapActions(this);
 
+        // PlayerGun
+        private readonly InputActionMap m_PlayerGun;
+        private List<IPlayerGunActions> m_PlayerGunActionsCallbackInterfaces = new List<IPlayerGunActions>();
+        private readonly InputAction m_PlayerGun_shoot;
+        private readonly InputAction m_PlayerGun_pickup;
+        public struct PlayerGunActions
+        {
+            private @DefaultInputActions m_Wrapper;
+            public PlayerGunActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @shoot => m_Wrapper.m_PlayerGun_shoot;
+            public InputAction @pickup => m_Wrapper.m_PlayerGun_pickup;
+            public InputActionMap Get() { return m_Wrapper.m_PlayerGun; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(PlayerGunActions set) { return set.Get(); }
+            public void AddCallbacks(IPlayerGunActions instance)
+            {
+                if (instance == null || m_Wrapper.m_PlayerGunActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_PlayerGunActionsCallbackInterfaces.Add(instance);
+                @shoot.started += instance.OnShoot;
+                @shoot.performed += instance.OnShoot;
+                @shoot.canceled += instance.OnShoot;
+                @pickup.started += instance.OnPickup;
+                @pickup.performed += instance.OnPickup;
+                @pickup.canceled += instance.OnPickup;
+            }
+
+            private void UnregisterCallbacks(IPlayerGunActions instance)
+            {
+                @shoot.started -= instance.OnShoot;
+                @shoot.performed -= instance.OnShoot;
+                @shoot.canceled -= instance.OnShoot;
+                @pickup.started -= instance.OnPickup;
+                @pickup.performed -= instance.OnPickup;
+                @pickup.canceled -= instance.OnPickup;
+            }
+
+            public void RemoveCallbacks(IPlayerGunActions instance)
+            {
+                if (m_Wrapper.m_PlayerGunActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IPlayerGunActions instance)
+            {
+                foreach (var item in m_Wrapper.m_PlayerGunActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_PlayerGunActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public PlayerGunActions @PlayerGun => new PlayerGunActions(this);
+
         // Interaction
         private readonly InputActionMap m_Interaction;
         private List<IInteractionActions> m_InteractionActionsCallbackInterfaces = new List<IInteractionActions>();
@@ -559,10 +694,16 @@ namespace Cosmobot
         {
             void OnCamera(InputAction.CallbackContext context);
             void OnSwitchView(InputAction.CallbackContext context);
+            void OnZoom(InputAction.CallbackContext context);
         }
         public interface IMinimapActions
         {
             void OnToggle(InputAction.CallbackContext context);
+        }
+        public interface IPlayerGunActions
+        {
+            void OnShoot(InputAction.CallbackContext context);
+            void OnPickup(InputAction.CallbackContext context);
         }
         public interface IInteractionActions
         {

@@ -169,6 +169,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "zoom",
+                    "type": "Button",
+                    "id": "b298ad49-16e3-4c70-a1e2-79d0cdd79d1e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -191,6 +200,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "switchView",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b2b55378-1c0d-469a-ac3f-9342f1f91d56",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "zoom",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -225,13 +245,22 @@
             ]
         },
         {
-            "name": "Interaction",
-            "id": "b4594d13-259d-499f-a6cf-584010a42367",
+            "name": "PlayerGun",
+            "id": "9d2713aa-b648-490b-b1eb-fb411b4d6512",
             "actions": [
                 {
-                    "name": "interact",
+                    "name": "shoot",
                     "type": "Button",
-                    "id": "13928db4-d06b-41b3-b93e-6d6a66be1279",
+                    "id": "0f8c47af-d8db-4bac-ab79-c85a2326ba6d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "pickup",
+                    "type": "Button",
+                    "id": "5b451df9-5ab6-4ed1-bac3-497b0a359349",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -241,7 +270,46 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "56c28f2f-b886-4a04-b750-908be6f1470d",
+                    "id": "12bf8558-66df-4230-8831-84fd76b16420",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "shoot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "66420144-d7ce-42f4-916e-7df72986650f",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "pickup",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Interaction",
+            "id": "87ea07c2-17b4-4bd4-9c97-8e707bc3d096",
+            "actions": [
+                {
+                    "name": "interact",
+                    "type": "Button",
+                    "id": "54f766f1-c186-4d62-ac28-82127740a46f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "b5223094-0dd0-4fa5-8380-8e8f01dc6840",
                     "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
