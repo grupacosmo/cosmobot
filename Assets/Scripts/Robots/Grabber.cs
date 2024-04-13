@@ -34,7 +34,7 @@ namespace Cosmobot
 
         private void ResetTimer()
         {
-            if (resetCoroutine != null) StopCoroutine(resetCoroutine);
+            if (resetCoroutine is not null) StopCoroutine(resetCoroutine);
 
             resetCoroutine = StartCoroutine(ResetLastItemCoroutine());
         }

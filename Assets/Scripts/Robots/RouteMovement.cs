@@ -80,10 +80,7 @@ namespace Cosmobot
                 var floorAngleDegrees = Mathf.Acos(Vector3.Dot(Vector3.up, groundNormal)) * Mathf.Rad2Deg;
                 isGrounded = floorAngleDegrees <= maxFloorAngleDegrees;
             }
-            else
-            {
-                isGrounded = false;
-            }
+            else isGrounded = false;
 
             if (!isGrounded) groundNormal = Vector3.up;
         }
@@ -115,7 +112,6 @@ namespace Cosmobot
         {
             Vector3 directionToPoint = pointTo - pointFrom;
             directionToPoint = new Vector3(directionToPoint.x, 0, directionToPoint.z).normalized;
-
             return directionToPoint;
         }
 
@@ -137,7 +133,7 @@ namespace Cosmobot
 
         private void TryRelease()
         {
-            if (route[routeIndex].release && (grabber.grabbedItem is not null))
+            if (route[routeIndex].release && grabber.grabbedItem is not null)
             {
                 grabber.ReleaseItem();
             }
@@ -145,7 +141,7 @@ namespace Cosmobot
         private void TryGrab()
         {
             if (grabber.automaticGrabMode) return;
-            if (route[routeIndex].grab && (grabber.grabbedItem is null))
+            if (route[routeIndex].grab && grabber.grabbedItem is null)
             {
                 grabber.GrabItem();
             }
