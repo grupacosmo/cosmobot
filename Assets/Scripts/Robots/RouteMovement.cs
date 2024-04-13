@@ -6,38 +6,91 @@ namespace Cosmobot
     [RequireComponent(typeof(Rigidbody))]
     public class RouteMovement : MonoBehaviour
     {
+        #region start variables
         public float robotSpeed;
         public float gravity = 50;
         public float distanceToGround = 0.1f;
+
         public Vector3 direction = Vector3.zero;
 
+        #endregion start variables
+
+        #region route
         [Header("Route")]
         public bool loopMode;
+        public float arrivalThreshold;
         public int routeIndex = 0;
         public Route[] route;
         private bool routeForward = true;
-        // arrivalThreshold had been tested for 0.5f, might not work correctly for higher velocities
-        // (but i don't think we ever plan to set the velocity THAT high)
-        public float arrivalThreshold;
+        // arrivalThreshold had been tested for 0.5f, but might not work correctly for higher velocities
+        // (but i don't think we ever plan to set the velocity THAT high, we're talking about setting it to 999 speed)
+        #endregion route
+
+        #region ground check
+        private bool isGrounded;
+        private float groundCheckRadius;
+        private float groundCheckDistance;
+        public float maxFloorAngleDegrees;
+        private Vector3 groundNormal = Vector3.up;
+        public Transform groundCheckOrigin;
+        private CapsuleCollider capsuleCollider;
+        #endregion ground check
 
         private Rigidbody rb;
         private Grabber grabber;
 
         void Start()
         {
+            capsuleCollider = GetComponent<CapsuleCollider>();
+            var radius = capsuleCollider.radius;
+            groundCheckRadius = radius * 0.99f; // 0.99 - padding to make spherecast detect floor
+            groundCheckDistance = radius;
+
             rb = GetComponent<Rigidbody>();
             grabber = GetComponentInChildren<Grabber>();
         }
 
         void FixedUpdate()
         {
+            GroundCheck();
             ProcessMovement();
             ProcessRotation();
         }
 
+        private Vector3 CalculateVelocityDelta()
+        {
+            direction.y = 0f;
+
+            var inputDirection = Quaternion.LookRotation(direction);
+
+            var velocity = rb.velocity;
+            var targetVelocity = direction * robotSpeed + new Vector3(0, velocity.y, 0);
+            return Vector3.MoveTowards(velocity, targetVelocity,
+                50 * Time.fixedDeltaTime) - rb.velocity;
+        }
+
+        private void GroundCheck()
+        {
+            var origin = groundCheckOrigin.position;
+
+            Physics.SphereCast(origin, groundCheckRadius, Vector3.down, out var hitInfo, groundCheckDistance);
+            if (hitInfo.collider != null && rb.velocity.y < 0.01)
+            {
+                groundNormal = hitInfo.normal;
+                var floorAngleDegrees = Mathf.Acos(Vector3.Dot(Vector3.up, groundNormal)) * Mathf.Rad2Deg;
+                isGrounded = floorAngleDegrees <= maxFloorAngleDegrees;
+            }
+            else
+            {
+                isGrounded = false;
+            }
+
+            if (!isGrounded) groundNormal = Vector3.up;
+        }
+
         private void ProcessMovement()
         {
-            if (CheckIfArrived(route[routeIndex].waypoint)) 
+            if (CheckIfArrived(route[routeIndex].waypoint))
             {
                 UpdateRoute();
                 if (grabber)
@@ -46,28 +99,16 @@ namespace Cosmobot
                     TryGrab();
                 }
             }
-            
-            Vector3 directionToPoint = GetDirectionToPoint(transform.position, route[routeIndex].waypoint);
-            directionToPoint.y = 0f;
-
-            if (IsGrounded()) rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-            else directionToPoint += Vector3.down * gravity * Time.fixedDeltaTime;
-            directionToPoint.Normalize();
-
-            Vector3 velocity = directionToPoint * robotSpeed;
-            rb.velocity = velocity;
+            var velocityDelta = CalculateVelocityDelta();
+            velocityDelta -= gravity * Time.fixedDeltaTime * groundNormal;
+            rb.AddForce(velocityDelta, ForceMode.VelocityChange);
         }
+
         private void ProcessRotation()
         {
-            var directionToPoint = GetDirectionToPoint(transform.position, route[routeIndex].waypoint);
-            var rotation = Quaternion.LookRotation(directionToPoint);
-
-            direction = directionToPoint;
+            direction = GetDirectionToPoint(transform.position, route[routeIndex].waypoint);
+            var rotation = Quaternion.LookRotation(direction);
             transform.rotation = rotation;
-        }
-        private bool IsGrounded()
-        {
-            return Physics.Raycast(transform.position, Vector3.down, distanceToGround + 0.1f);
         }
 
         Vector3 GetDirectionToPoint(Vector3 pointFrom, Vector3 pointTo)
@@ -82,12 +123,12 @@ namespace Cosmobot
         {
             if (routeForward)
             {
-                if (routeIndex == route.Length - 1) 
+                if (routeIndex == route.Length - 1)
                 {
                     if (loopMode) routeIndex = -1;
                     else routeForward = false;
                 }
-            } 
+            }
             else if (routeIndex == 0) routeForward = true;
 
             int add_amount = routeForward ? 1 : -1;
@@ -121,7 +162,7 @@ namespace Cosmobot
                 Debug.Log($"Robot has arrived at the point number '{routeIndex}'.");
                 return true;
             }
-            else  return false;
+            else return false;
         }
     }
 }

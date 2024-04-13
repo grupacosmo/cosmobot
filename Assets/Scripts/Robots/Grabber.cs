@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Collections;
 
 namespace Cosmobot
 {
@@ -9,12 +9,35 @@ namespace Cosmobot
         public GameObject grabbedItem = null;
         public GameObject lastItem = null;
 
+        #region grab
+        [Header("Grab")]
         public Vector3 grabOffset;
         public float grabDistance;
-        public float releaseDistance;
-        public LayerMask releaseExcludedLayer;
+        #endregion grab
 
+        #region release
+        [Header("Release")]
+        public float releaseDistance;
+        public float releaseResetTime = 15f;
+        public LayerMask releaseExcludedLayer;
+        #endregion release
+
+        private Coroutine resetCoroutine;
         private RouteMovement routeMovement;
+
+        private IEnumerator ResetLastItemCoroutine()
+        {
+            yield return new WaitForSeconds(releaseResetTime);
+            lastItem = null;
+            resetCoroutine = StartCoroutine(ResetLastItemCoroutine());
+        }
+
+        private void ResetTimer()
+        {
+            if (resetCoroutine != null) StopCoroutine(resetCoroutine);
+
+            resetCoroutine = StartCoroutine(ResetLastItemCoroutine());
+        }
 
         public void Start()
         {
@@ -36,18 +59,14 @@ namespace Cosmobot
             {
                 if (grabbedItem is not null) return;
                 if (collider.gameObject == lastItem) return;
-                //if (lastItem is null) return;
-                //lastItem is not collider.gameObject && 
-                if (collider.CompareTag("Item")) GrabItem();
+
+                if (collider.CompareTag("Item")) GrabItem(collider.gameObject);
             }
         }
 
         public void MoveGrabbedItem()
         {
-            if (grabbedItem)
-            {
-                grabbedItem.transform.position = transform.position + grabOffset;
-            }
+            if (grabbedItem) grabbedItem.transform.position = transform.position + grabOffset;
         }
 
         public void GrabItem(GameObject item = null)
@@ -58,6 +77,7 @@ namespace Cosmobot
                 if (item is null)
                 {
                     GameObject nearestItem = GetNearestItem();
+
                     grabbedItem = nearestItem;
                 }
                 else grabbedItem = item;
@@ -79,8 +99,9 @@ namespace Cosmobot
                     Debug.Log("Raycast: SUCCESFUL");
 
                     Vector3 facingDirection = routeMovement.transform.forward;
-
                     grabbedItem.transform.position = new Vector3(pos.x, hit.point.y, pos.z) + facingDirection * releaseDistance;
+
+                    ResetTimer();
                 }
 
                 grabbedItem = null;
@@ -101,7 +122,7 @@ namespace Cosmobot
                 {
                     float distance = Vector3.Distance(transform.position, nearItem.transform.position);
 
-                    if (distance < nearestDistance)
+                    if (distance < nearestDistance && nearItem.gameObject != lastItem)
                     {
                         nearestDistance = distance;
                         nearestItem = nearItem.gameObject;
@@ -111,7 +132,5 @@ namespace Cosmobot
 
             return nearestItem;
         }
-
-
     }
 }
