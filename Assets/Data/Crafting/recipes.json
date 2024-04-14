@@ -1,0 +1,71 @@
+{
+  "Recipes": [
+    {
+      "Id": "smelt-iron-ore",
+      "Name": "Smelt Iron Ore",
+      "Ingredients": [
+        "iron-ore"
+      ],
+      "Result": [
+        "iron-bar"
+      ],
+      "EnergyCost": 10
+    },
+    {
+      "Id": "smelt-titanium-ore",
+      "Name": "Smelt Titanium Ore",
+      "Ingredients": [
+        "titanium-ore"
+      ],
+      "Result": [
+        "titanium-bar"
+      ],
+      "EnergyCost": 20
+    },
+    {
+      "Id": "composite-materials",
+      "Name": "Composite materials",
+      "Ingredients": [
+        "iron-bar",
+        "titanium-bar"
+      ],
+      "Result": [
+        "material-composite",
+        "material-composite"
+      ],
+      "EnergyCost": 0
+    },
+    {
+      "Id": "make-a-mess",
+      "Name": "Make a mess",
+      "Ingredients": [
+        "iron-bar",
+        "titanium-bar",
+        "material-composite"
+      ],
+      "Result": [
+        "material-mess"
+      ],
+      "EnergyCost": 0
+    }
+  ],
+  "Groups": [
+    {
+      "Id": "furnace",
+      "Name": "Furnace",
+      "Recipes": [
+        "smelt-iron-ore",
+        "smelt-titanium-ore",
+        "composite-materials",
+        "make-a-mess"
+      ]
+    },
+    {
+      "Id": "mess-maker",
+      "Name": "Mess maker",
+      "Recipes": [
+        "make-a-mess"
+      ]
+    }
+  ]
+}

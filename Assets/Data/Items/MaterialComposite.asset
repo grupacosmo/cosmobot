@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4446f78563c10b824875d5e581ffbbee, type: 3}
-  m_Name: IronOre
+  m_Name: MaterialComposite
   m_EditorClassIdentifier: 
-  id: iron-ore
-  displayName: Iron ore
+  id: material-composite
+  displayName: Material Composite
   icon: {fileID: 0}
-  prefab: {fileID: 1862692014303423458, guid: b177ef1e583a9b9d99af6f68c5ad1fd7, type: 3}
+  prefab: {fileID: 5481697963393283948, guid: eb1dffa687b06e9879b2e9ec005e687f, type: 3}
   additionalData:
     keys: []
     values: []
