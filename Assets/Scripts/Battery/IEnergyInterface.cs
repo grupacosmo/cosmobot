@@ -5,36 +5,36 @@ namespace Cosmobot
     public interface IEnergyInterface
     {
         /// <summary>
-        /// The maximum amount of energy that the interface can store.
+        ///     The maximum amount of energy that the interface can store.
         /// </summary>
         float Capacity { get; }
-        
+
         /// <summary>
-        /// The amount of energy available in the interface.
+        ///     The amount of energy available in the interface.
         /// </summary>
         float Charge { get; }
-        
+
         /// <summary>
-        /// Adds energy to the interface. Returns the amount of energy added.
+        ///     Adds energy to the interface. Returns the amount of energy added.
         /// </summary>
         /// <param name="amount">Requested amount of energy</param>
         /// <returns>Actual amount of energy added to the interface </returns>
         float TransferEnergyIn(float amount);
-        
+
         /// <summary>
-        /// Removes energy from the interface. Returns the amount of energy removed.
+        ///     Removes energy from the interface. Returns the amount of energy removed.
         /// </summary>
         /// <param name="amount">Requested amount of energy</param>
         /// <returns>Actual amount of energy removed from the interface</returns>
         float TransferEnergyOut(float amount);
 
         /// <summary>
-        /// Attempts to add energy to the interface. Returns true if the requested amount of energy was added. Does not
-        /// add any energy if the requested amount exceeds the capacity of the interface.
+        ///     Attempts to add energy to the interface. Returns true if the requested amount of energy was added. Does not
+        ///     add any energy if the requested amount exceeds the capacity of the interface.
         /// </summary>
         /// <param name="amount">Requested amount of energy</param>
         /// <returns>True if the requested amount of energy was added, false otherwise</returns>
-        bool TransferEnergyInOrFail(float amount)
+        public bool TransferEnergyInOrFail(float amount)
         {
             if (Charge + amount <= Capacity)
             {
@@ -45,15 +45,15 @@ namespace Cosmobot
 
             return false;
         }
-        
-        
+
+
         /// <summary>
-        /// Attempts to remove energy from the interface. Returns true if the requested amount of energy was removed.
-        /// Does not remove any energy if the requested amount exceeds the available charge.
+        ///     Attempts to remove energy from the interface. Returns true if the requested amount of energy was removed.
+        ///     Does not remove any energy if the requested amount exceeds the available charge.
         /// </summary>
         /// <param name="amount">Requested amount of energy</param>
         /// <returns>True if the requested amount of energy was removed, false otherwise</returns>
-        bool TransferEnergyOutOrFail(float amount)
+        public bool TransferEnergyOutOrFail(float amount)
         {
             if (Charge >= amount)
             {

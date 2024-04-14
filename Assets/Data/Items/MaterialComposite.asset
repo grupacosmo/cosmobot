@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4446f78563c10b824875d5e581ffbbee, type: 3}
-  m_Name: TitaniumBar
+  m_Name: MaterialComposite
   m_EditorClassIdentifier: 
-  id: titanium-bar
-  displayName: Titanium bar
+  id: material-composite
+  displayName: Material Composite
   icon: {fileID: 0}
-  prefab: {fileID: 5953828964735165714, guid: 78de67eb5f1c9d34d863815e02e02c1a, type: 3}
+  prefab: {fileID: 5481697963393283948, guid: eb1dffa687b06e9879b2e9ec005e687f, type: 3}
   additionalData:
     keys: []
     values: []

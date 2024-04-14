@@ -10,12 +10,5 @@ namespace Cosmobot
         public abstract float Charge { get; }
         public abstract float TransferEnergyIn(float amount);
         public abstract float TransferEnergyOut(float amount);
-        
-        public virtual bool TransferEnergyInOrFail(float amount) {
-            return ((IEnergyInterface)this).TransferEnergyInOrFail(amount); // wtf C#
-        }
-        public virtual bool TransferEnergyOutOrFail(float amount) {
-            return ((IEnergyInterface)this).TransferEnergyOutOrFail(amount);
-        }
     }
 }

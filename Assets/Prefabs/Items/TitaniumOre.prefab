@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 8401434707131471660}
   - component: {fileID: 678188504027488934}
   m_Layer: 0
-  m_Name: Titanium
+  m_Name: TitaniumOre
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
