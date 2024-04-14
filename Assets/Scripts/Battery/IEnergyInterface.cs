@@ -34,7 +34,7 @@ namespace Cosmobot
         /// </summary>
         /// <param name="amount">Requested amount of energy</param>
         /// <returns>True if the requested amount of energy was added, false otherwise</returns>
-        public bool TransferEnergyInOrFail(float amount)
+        public bool TryTransferEnergyIn(float amount)
         {
             if (Charge + amount <= Capacity)
             {
@@ -53,7 +53,7 @@ namespace Cosmobot
         /// </summary>
         /// <param name="amount">Requested amount of energy</param>
         /// <returns>True if the requested amount of energy was removed, false otherwise</returns>
-        public bool TransferEnergyOutOrFail(float amount)
+        public bool TryTransferEnergyOut(float amount)
         {
             if (Charge >= amount)
             {

@@ -6,22 +6,26 @@ namespace Cosmobot.ItemSystem
 {
     public class Crafter : MonoBehaviour
     {
-        [SerializeField] private string craftingRecipeGroupId;
+        [SerializeField]
+        private string craftingRecipeGroupId;
 
-        [Tooltip("Can be null if the crafter doesn't require energy to craft items.")] [SerializeReference]
+        [Tooltip("Can be null if the crafter doesn't require energy to craft items.")]
+        [SerializeReference]
         private MonoBehaviourEnergyInterface energyInterface;
 
-        [SerializeField] private List<Transform> outputSlots;
+        [SerializeField]
+        private List<Transform> outputSlots;
 
 #if UNITY_EDITOR
         // TODO: temporary debug tool
-        [SerializeField] private bool clickToCraft;
+        [SerializeField]
+        private bool clickToCraft;
 #endif
+
+        private readonly List<Collider> itemsCollidersInInputSlot = new();
 
 
         private CraftingRecipeGroup craftingRecipeGroup;
-
-        private readonly List<Collider> itemsCollidersInInputSlot = new();
 
         private ISet<Item> ItemsInInputSlot =>
             itemsCollidersInInputSlot
@@ -79,8 +83,7 @@ namespace Cosmobot.ItemSystem
 
             CraftingRecipe recipe = recipeOp.Value;
 
-            if (recipe.EnergyCost > 0 &&
-                !((IEnergyInterface)energyInterface).TransferEnergyOutOrFail(recipe.EnergyCost))
+            if (recipe.EnergyCost > 0 && !((IEnergyInterface)energyInterface).TryTransferEnergyOut(recipe.EnergyCost))
             {
                 Debug.Log("Not enough energy to craft the item");
                 return;
@@ -104,13 +107,11 @@ namespace Cosmobot.ItemSystem
         // can fit in the output slots. If no recipe is found, it will return null.
         private CraftingRecipe? GetCraftingRecipeForItemsInSlot()
         {
-            if (itemsCollidersInInputSlot.Count == 0) return null;
-
-            bool energyInterfaceAvailable = energyInterface is not null;
+            bool energyInterfaceNotAvailable = energyInterface is null;
             foreach (var recipe in craftingRecipeGroup.Recipes)
             {
                 if (recipe.Result.Count > outputSlots.Count) continue;
-                if (recipe.EnergyCost > 0 && !energyInterfaceAvailable) continue;
+                if (recipe.EnergyCost > 0 && energyInterfaceNotAvailable) continue;
 
                 var itemsIdsInInputSlot = ItemsInInputSlot.Select(iis => iis.ItemInfo.Id);
                 if (recipe.Ingredients.OrderBy(x => x).SequenceEqual(itemsIdsInInputSlot.OrderBy(x => x)))
