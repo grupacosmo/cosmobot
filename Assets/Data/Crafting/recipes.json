@@ -12,6 +12,41 @@
       "EnergyCost": 10
     },
     {
+      "Id": "oil-cracking",
+      "Name": "Oil Cracking",
+      "Ingredients": [
+        "oil-barrel"
+      ],
+      "Result": [
+        "fuel-barrel",
+        "lubricant-barrel",
+        "acid-barrel"
+      ],
+      "EnergyCost": 10
+    },
+    {
+      "Id": "smelt-copper-ore",
+      "Name": "Smelt Copper Ore",
+      "Ingredients": [
+        "copper-ore"
+      ],
+      "Result": [
+        "copper-bar"
+      ],
+      "EnergyCost": 10
+    },
+    {
+      "Id": "smelt-uranium-ore",
+      "Name": "Smelt Uranium Ore",
+      "Ingredients": [
+        "uranium-ore"
+      ],
+      "Result": [
+        "uranium-bar"
+      ],
+      "EnergyCost": 20
+    },
+    {
       "Id": "smelt-titanium-ore",
       "Name": "Smelt Titanium Ore",
       "Ingredients": [
@@ -47,6 +82,26 @@
         "material-mess"
       ],
       "EnergyCost": 0
+    },
+    {
+      "Id": "produce-oil-barrel",
+      "Name": "Produce Oil Barrel",
+      "Ingredients": [],
+      "Result": [
+        "oil-barrel"
+      ],
+      "EnergyCost": 10
+    },
+    {
+      "Id": "smelt-tin-ore",
+      "Name": "Smelt Tin Ore",
+      "Ingredients": [
+        "tin-ore"
+      ],
+      "Result": [
+        "tin-bar"
+      ],
+      "EnergyCost": 10
     }
   ],
   "Groups": [
@@ -56,8 +111,17 @@
       "Recipes": [
         "smelt-iron-ore",
         "smelt-titanium-ore",
+        "smelt-copper-ore",
         "composite-materials",
-        "make-a-mess"
+        "make-a-mess",
+        "smelt-tin-ore"
+      ]
+    },
+    {
+      "Id": "chemical-crafter",
+      "Name": "Chemical Crafter",
+      "Recipes": [
+        "oil-cracking"
       ]
     },
     {
@@ -66,6 +130,18 @@
       "Recipes": [
         "make-a-mess"
       ]
+    },
+    {
+      "Id": "pump-jack",
+      "Name": "Pump Jack",
+      "Recipes": [
+        "produce-oil-barrel"
+      ]
+    },
+    {
+      "Id": "",
+      "Name": "",
+      "Recipes": []
     }
   ]
 }
