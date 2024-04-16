@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4446f78563c10b824875d5e581ffbbee, type: 3}
   m_Name: Lens
   m_EditorClassIdentifier: 
-  id: crystal
-  displayName: Crystal
+  id: lens
+  displayName: Lens
   icon: {fileID: 0}
-  prefab: {fileID: 0}
+  prefab: {fileID: 1862692014303423458, guid: 923e0323b3dc7ec758da772f8658600f, type: 3}
   additionalData:
     keys: []
     values: []

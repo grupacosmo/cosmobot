@@ -7,7 +7,8 @@ namespace Cosmobot
 {
     public class AutoClicker : MonoBehaviour
     {
-        [SerializeField] private float clickInterval = 1f;
+        [SerializeField]
+        private float clickInterval = 1f;
         private IInteractable target;
 
         private float currentClickInterval = 1f;
@@ -17,7 +18,7 @@ namespace Cosmobot
             target = GetComponent<IInteractable>();
         }
 
-        void Update()
+        private void Update()
         {
             currentClickInterval -= Time.deltaTime;
             if (currentClickInterval <= 0)

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: crystal
   displayName: Crystal
   icon: {fileID: 0}
-  prefab: {fileID: 0}
+  prefab: {fileID: 1862692014303423458, guid: 619364fb76c0b707b99d1aaebcd32f45, type: 3}
   additionalData:
     keys: []
     values: []

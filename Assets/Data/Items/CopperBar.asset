@@ -15,7 +15,7 @@ MonoBehaviour:
   id: copper-bar
   displayName: Copper Bar
   icon: {fileID: 0}
-  prefab: {fileID: 0}
+  prefab: {fileID: 1862692014303423458, guid: a6488b269fd867bfd840f43448e9b71d, type: 3}
   additionalData:
     keys: []
     values: []

@@ -15,7 +15,7 @@ MonoBehaviour:
   id: copper-ore
   displayName: Copper Ore
   icon: {fileID: 0}
-  prefab: {fileID: 0}
+  prefab: {fileID: 1862692014303423458, guid: c04cc4750f51256c2a65b82b07c0e960, type: 3}
   additionalData:
     keys: []
     values: []
