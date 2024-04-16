@@ -24,7 +24,7 @@ namespace Cosmobot
 
         private DefaultInputActions actions;
 
-        private void Update()
+        private void LateUpdate()
         {
             UpdateModel();
         }
