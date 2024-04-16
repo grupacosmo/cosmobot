@@ -93,7 +93,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8588927043253974589}
   - component: {fileID: 22047482429002795}
-  - component: {fileID: 3786247306033661533}
   - component: {fileID: 9145526218627217818}
   - component: {fileID: 8923823829295642403}
   - component: {fileID: 2478930478815991005}
@@ -146,32 +145,6 @@ MonoBehaviour:
   rotationMode: 1
   cameraTransform: {fileID: 7577094790283547248}
   groundCheckOrigin: {fileID: 1859885140800310256}
---- !u!114 &3786247306033661533
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1137498538287740836}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b2339a8116eace48bafaea42fbc60bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerCamera: {fileID: 1775979558093859875}
-  cameraTransform: {fileID: 7577094790283547248}
-  maxPickupRange: 5
-  carryHoldingDistance: 2
-  holdingDistanceZoomMultiplier: 2.5
-  carryPositionFirstPersonOffset: {x: 0, y: 0.5, z: 0}
-  carryPositionThirdPersonOffset: {x: 1, y: 1, z: 0}
-  carryForceMultiplier: 5
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 128
-  itemLayer:
-    serializedVersion: 2
-    m_Bits: 1024
 --- !u!33 &9145526218627217818
 MeshFilter:
   m_ObjectHideFlags: 0
