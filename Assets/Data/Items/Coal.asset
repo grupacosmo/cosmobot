@@ -17,7 +17,5 @@ MonoBehaviour:
   icon: {fileID: 0}
   prefab: {fileID: 1862692014303423458, guid: 3f9f20c496ab84804954e104c9f29e73, type: 3}
   additionalData:
-    keys:
-    - EnergyValue
-    values:
-    - 10
+    keys: []
+    values: []

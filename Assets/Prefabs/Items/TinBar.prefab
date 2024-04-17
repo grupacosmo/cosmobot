@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 869d2ebfad8479bb881a27510d8f90e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemInfo: {fileID: 11400000, guid: 9b6eec19752d2cfbcbf3ceea5e73d3e1, type: 2}
+  itemInfo: {fileID: 11400000, guid: e0a14426b54101ce085acdf3d12ef6b4, type: 2}
   ItemData:
     keys: []
     values: []
