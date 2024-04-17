@@ -8,7 +8,7 @@ namespace Cosmobot
 {
     public class RobotRoutingTool : MonoBehaviour
     {
-        [Header("HOW TO USE:\nF - switch to new robot\nLeft MB - add waypoint\nRight MB - set route\nF1/F2 - swap release/grab modes\n")]
+        [Header("HOW TO USE:\nF - switch to new robot\nLeft MB - add waypoint\nRight MB - set route\nF1/F2 - swap grab/release modes\n")]
         public bool isOn;
         public float maxPointDistance = 20f;
         public GameObject currentRobot = null;

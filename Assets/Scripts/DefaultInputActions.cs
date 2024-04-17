@@ -409,7 +409,7 @@ namespace Cosmobot
                 {
                     ""name"": """",
                     ""id"": ""e17127c4-3cec-430e-84a3-db23ea47f99f"",
-                    ""path"": ""<Keyboard>/f1"",
+                    ""path"": ""<Keyboard>/f2"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -420,7 +420,7 @@ namespace Cosmobot
                 {
                     ""name"": """",
                     ""id"": ""d6c87046-e1c4-4797-9663-1a2b7284b0cb"",
-                    ""path"": ""<Keyboard>/f2"",
+                    ""path"": ""<Keyboard>/f1"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
