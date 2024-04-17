@@ -325,24 +325,104 @@
             "id": "2c2cd101-e173-422b-a3f3-b6f6b1b3f510",
             "actions": [
                 {
-                    "name": "New action",
+                    "name": "addWaypointToRoute",
                     "type": "Button",
                     "id": "d14b9ce3-81f1-46de-a380-51b02f68e5f7",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
+                    "interactions": "Tap",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "changeReleaseMode",
+                    "type": "Button",
+                    "id": "f3bc3b29-45ec-4c65-8636-9089bb412c0c",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "changeGrabMode",
+                    "type": "Button",
+                    "id": "0d0f873a-d75b-4056-a05a-2bc512502d68",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "switchRobot",
+                    "type": "Button",
+                    "id": "9bb93b59-5ab3-433c-a9a5-f548cb1d2dc0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "applyRouteToRobot",
+                    "type": "Button",
+                    "id": "e5f40c2c-9c92-4810-8fe4-97bbc7e646e7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
                     "name": "",
                     "id": "865751bd-d223-47b5-b91c-f04e045b112d",
-                    "path": "",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "New action",
+                    "action": "addWaypointToRoute",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e17127c4-3cec-430e-84a3-db23ea47f99f",
+                    "path": "<Keyboard>/f1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "changeReleaseMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d6c87046-e1c4-4797-9663-1a2b7284b0cb",
+                    "path": "<Keyboard>/f2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "changeGrabMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e226c24e-89b0-4101-94e1-979ade041739",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "switchRobot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "eb5f73d6-a883-4d19-a1b1-0e8de55dc457",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "applyRouteToRobot",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

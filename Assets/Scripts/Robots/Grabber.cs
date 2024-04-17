@@ -84,7 +84,6 @@ namespace Cosmobot
                     Rigidbody itemRigidbody = grabbedItem.GetComponent<Rigidbody>();
                     if (itemRigidbody is not null)
                     {
-                        itemRigidbody.velocity = Vector3.zero;
                         itemRigidbody.isKinematic = true;
                     }
                 }
@@ -104,8 +103,6 @@ namespace Cosmobot
 
                 if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ~releaseExcludedLayer))
                 {
-                    Debug.Log("Raycast: SUCCESFUL");
-
                     Rigidbody itemRigidbody = grabbedItem.GetComponent<Rigidbody>();
                     if (itemRigidbody is not null)
                     {

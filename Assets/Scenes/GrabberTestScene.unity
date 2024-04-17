@@ -853,6 +853,7 @@ Transform:
   - {fileID: 1153904988}
   - {fileID: 2114071164}
   - {fileID: 45913693}
+  - {fileID: 960885926}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &824633231
@@ -1126,6 +1127,372 @@ Transform:
   m_Children: []
   m_Father: {fileID: 300491291}
   m_LocalEulerAnglesHint: {x: -70.38, y: 0, z: 0}
+--- !u!1 &960885925
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 960885926}
+  - component: {fileID: 960885930}
+  - component: {fileID: 960885929}
+  - component: {fileID: 960885927}
+  - component: {fileID: 960885931}
+  - component: {fileID: 960885932}
+  m_Layer: 0
+  m_Name: ToolRobotRoutingTool
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &960885926
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960885925}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.043, y: -0.027, z: 0.732}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 824633230}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &960885927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960885925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79daa8f5ec94a0b448a1eb73b1f4cc95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isOn: 1
+  maxPointDistance: 20
+  currentRobot: {fileID: 0}
+  resetModesAtWaypoints: 1
+  grabAtWaypoint: 0
+  releaseAtWaypoint: 0
+  currentRoute:
+  - waypoint: {x: 0, y: 0, z: 0}
+    grab: 0
+    release: 0
+  - waypoint: {x: 0, y: 0, z: 0}
+    grab: 0
+    release: 0
+  floorLayer:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  robotTag: Robot
+  lineRenderer: {fileID: 960885932}
+--- !u!23 &960885929
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960885925}
+  m_Enabled: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &960885930
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960885925}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &960885931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960885925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 32c14d953ae4e202bb905248393a925b, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 583a3c59-aef5-44ec-879b-b8a8420f4413
+    m_ActionName: PlayerMovement/movement[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d,/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a52c290c-e873-4832-925d-15d7ebdee8cb
+    m_ActionName: PlayerMovement/jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c4cf1433-09cd-4fab-be87-842ce20e02b4
+    m_ActionName: PlayerCamera/camera[/Mouse/delta]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 104b72e1-39e0-4769-9acd-910a4f80dea7
+    m_ActionName: PlayerCamera/switchView[/Keyboard/c]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: b298ad49-16e3-4c70-a1e2-79d0cdd79d1e
+    m_ActionName: PlayerCamera/zoom[/Mouse/rightButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 46a81420-c1a6-435b-aeff-bdfb512c6404
+    m_ActionName: Minimap/Toggle[/Keyboard/m]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0f8c47af-d8db-4bac-ab79-c85a2326ba6d
+    m_ActionName: PlayerGun/shoot[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5b451df9-5ab6-4ed1-bac3-497b0a359349
+    m_ActionName: PlayerGun/pickup[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 54f766f1-c186-4d62-ac28-82127740a46f
+    m_ActionName: Interaction/interact[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 960885927}
+        m_TargetAssemblyTypeName: Cosmobot.RobotRoutingTool, Cosmobot
+        m_MethodName: AddLookedAtWaypoint
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: d14b9ce3-81f1-46de-a380-51b02f68e5f7
+    m_ActionName: PlayerRoutingTool/setWaypoint[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 960885927}
+        m_TargetAssemblyTypeName: Cosmobot.RobotRoutingTool, Cosmobot
+        m_MethodName: ChangeReleasedMode
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: f3bc3b29-45ec-4c65-8636-9089bb412c0c
+    m_ActionName: PlayerRoutingTool/changeReleaseMode
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 960885927}
+        m_TargetAssemblyTypeName: Cosmobot.RobotRoutingTool, Cosmobot
+        m_MethodName: ChangeGrabMode
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 0d0f873a-d75b-4056-a05a-2bc512502d68
+    m_ActionName: PlayerRoutingTool/changeGrabMode
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 960885927}
+        m_TargetAssemblyTypeName: Cosmobot.RobotRoutingTool, Cosmobot
+        m_MethodName: SwitchToLookedAtRobot
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 9bb93b59-5ab3-433c-a9a5-f548cb1d2dc0
+    m_ActionName: PlayerRoutingTool/switchRobot[/Keyboard/f]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 960885927}
+        m_TargetAssemblyTypeName: Cosmobot.RobotRoutingTool, Cosmobot
+        m_MethodName: ApplyRoute
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: e5f40c2c-9c92-4810-8fe4-97bbc7e646e7
+    m_ActionName: PlayerRoutingTool/applyRouteToRobot[/Mouse/rightButton]
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: PlayerRoutingTool
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
+--- !u!120 &960885932
+LineRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 960885925}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Positions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 1}
+  m_Parameters:
+    serializedVersion: 3
+    widthMultiplier: 1
+    widthCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0.1764698
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    colorGradient:
+      serializedVersion: 2
+      key0: {r: 1, g: 0, b: 0, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
+      key2: {r: 0, g: 0, b: 0, a: 0}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 0
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 0
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_ColorSpace: 0
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    numCornerVertices: 0
+    numCapVertices: 0
+    alignment: 0
+    textureMode: 0
+    textureScale: {x: 1, y: 1}
+    shadowBias: 0.5
+    generateLightingData: 0
+  m_MaskInteraction: 0
+  m_UseWorldSpace: 1
+  m_Loop: 0
+  m_ApplyActiveColorSpace: 1
 --- !u!1 &968869380
 GameObject:
   m_ObjectHideFlags: 0
@@ -1571,26 +1938,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canMove: 1
-  robotSpeed: 15
+  robotSpeed: 10
   gravity: 50
   distanceToGround: 0.1
   direction: {x: 0, y: 0, z: 0}
   loopMode: 1
   arrivalThreshold: 0.5
   routeIndex: 0
-  route:
-  - waypoint: {x: -1, y: 2, z: 5}
-    release: 1
-    grab: 1
-  - waypoint: {x: 5, y: 2, z: 5}
-    release: 1
-    grab: 1
-  - waypoint: {x: 3.5, y: 2, z: -1}
-    release: 1
-    grab: 1
-  - waypoint: {x: -1, y: 2, z: -1}
-    release: 1
-    grab: 1
+  route: []
   maxFloorAngleDegrees: 45
   groundCheckOrigin: {fileID: 261309986}
 --- !u!1 &1421269898
@@ -2542,6 +2897,14 @@ PrefabInstance:
       propertyPath: playerObject
       value: 
       objectReference: {fileID: 824633230}
+    - target: {fileID: 1899427008657512, guid: 04190c0f75b13174f88a77b5d54b0289, type: 3}
+      propertyPath: sensitivity.x
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 1899427008657512, guid: 04190c0f75b13174f88a77b5d54b0289, type: 3}
+      propertyPath: sensitivity.y
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 1899427008657512, guid: 04190c0f75b13174f88a77b5d54b0289, type: 3}
       propertyPath: rotationClampTop
       value: 87
