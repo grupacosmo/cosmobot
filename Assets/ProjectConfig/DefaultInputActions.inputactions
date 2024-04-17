@@ -319,6 +319,34 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "PlayerRoutingTool",
+            "id": "2c2cd101-e173-422b-a3f3-b6f6b1b3f510",
+            "actions": [
+                {
+                    "name": "New action",
+                    "type": "Button",
+                    "id": "d14b9ce3-81f1-46de-a380-51b02f68e5f7",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "865751bd-d223-47b5-b91c-f04e045b112d",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "New action",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

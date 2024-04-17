@@ -343,6 +343,34 @@ namespace Cosmobot
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""PlayerRoutingTool"",
+            ""id"": ""2c2cd101-e173-422b-a3f3-b6f6b1b3f510"",
+            ""actions"": [
+                {
+                    ""name"": ""New action"",
+                    ""type"": ""Button"",
+                    ""id"": ""d14b9ce3-81f1-46de-a380-51b02f68e5f7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""865751bd-d223-47b5-b91c-f04e045b112d"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""New action"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -366,6 +394,9 @@ namespace Cosmobot
             // Interaction
             m_Interaction = asset.FindActionMap("Interaction", throwIfNotFound: true);
             m_Interaction_interact = m_Interaction.FindAction("interact", throwIfNotFound: true);
+            // PlayerRoutingTool
+            m_PlayerRoutingTool = asset.FindActionMap("PlayerRoutingTool", throwIfNotFound: true);
+            m_PlayerRoutingTool_Newaction = m_PlayerRoutingTool.FindAction("New action", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -685,6 +716,52 @@ namespace Cosmobot
             }
         }
         public InteractionActions @Interaction => new InteractionActions(this);
+
+        // PlayerRoutingTool
+        private readonly InputActionMap m_PlayerRoutingTool;
+        private List<IPlayerRoutingToolActions> m_PlayerRoutingToolActionsCallbackInterfaces = new List<IPlayerRoutingToolActions>();
+        private readonly InputAction m_PlayerRoutingTool_Newaction;
+        public struct PlayerRoutingToolActions
+        {
+            private @DefaultInputActions m_Wrapper;
+            public PlayerRoutingToolActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Newaction => m_Wrapper.m_PlayerRoutingTool_Newaction;
+            public InputActionMap Get() { return m_Wrapper.m_PlayerRoutingTool; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(PlayerRoutingToolActions set) { return set.Get(); }
+            public void AddCallbacks(IPlayerRoutingToolActions instance)
+            {
+                if (instance == null || m_Wrapper.m_PlayerRoutingToolActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_PlayerRoutingToolActionsCallbackInterfaces.Add(instance);
+                @Newaction.started += instance.OnNewaction;
+                @Newaction.performed += instance.OnNewaction;
+                @Newaction.canceled += instance.OnNewaction;
+            }
+
+            private void UnregisterCallbacks(IPlayerRoutingToolActions instance)
+            {
+                @Newaction.started -= instance.OnNewaction;
+                @Newaction.performed -= instance.OnNewaction;
+                @Newaction.canceled -= instance.OnNewaction;
+            }
+
+            public void RemoveCallbacks(IPlayerRoutingToolActions instance)
+            {
+                if (m_Wrapper.m_PlayerRoutingToolActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IPlayerRoutingToolActions instance)
+            {
+                foreach (var item in m_Wrapper.m_PlayerRoutingToolActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_PlayerRoutingToolActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public PlayerRoutingToolActions @PlayerRoutingTool => new PlayerRoutingToolActions(this);
         public interface IPlayerMovementActions
         {
             void OnMovement(InputAction.CallbackContext context);
@@ -708,6 +785,10 @@ namespace Cosmobot
         public interface IInteractionActions
         {
             void OnInteract(InputAction.CallbackContext context);
+        }
+        public interface IPlayerRoutingToolActions
+        {
+            void OnNewaction(InputAction.CallbackContext context);
         }
     }
 }
