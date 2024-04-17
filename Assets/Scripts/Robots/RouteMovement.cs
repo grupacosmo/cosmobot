@@ -7,6 +7,7 @@ namespace Cosmobot
     public class RouteMovement : MonoBehaviour
     {
         #region start variables
+        public bool canMove;
         public float robotSpeed;
         public float gravity = 50;
         public float distanceToGround = 0.1f;
@@ -96,7 +97,12 @@ namespace Cosmobot
                     TryGrab();
                 }
             }
-            var velocityDelta = CalculateVelocityDelta();
+
+            Vector3 velocityDelta;
+
+            if (canMove) velocityDelta = CalculateVelocityDelta();
+            else velocityDelta = Vector3.zero;
+
             velocityDelta -= gravity * Time.fixedDeltaTime * groundNormal;
             rb.AddForce(velocityDelta, ForceMode.VelocityChange);
         }
