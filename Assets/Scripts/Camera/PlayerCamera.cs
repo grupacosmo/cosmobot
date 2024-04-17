@@ -19,8 +19,7 @@ namespace Cosmobot
         [SerializeField] private float zoomSpeed;
         [SerializeField] private LayerMask cameraCollisionLayer;
 
-        [SerializeField] private Transform playerObject;
-        [SerializeField] private Transform cameraHolder;
+        [SerializeField] private Transform cameraOrigin;
 
         private Camera camera;
         private DefaultInputActions actions;
@@ -70,7 +69,7 @@ namespace Cosmobot
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            transform.position = cameraHolder.position;
+            transform.position = cameraOrigin.position;
 
             camera = GetComponent<Camera>();
             defaultFov = camera.fieldOfView;
@@ -99,7 +98,9 @@ namespace Cosmobot
 
         private void UpdateTransform()
         {
-            var cameraRotationCenterPosition = cameraHolder.position;
+            transform.rotation = Quaternion.Euler(xRotation, yRotation, 0);
+
+            var cameraRotationCenterPosition = cameraOrigin.position;
             var rayDirection = transform.rotation * cameraOffset;
             var cameraDistance = cameraOffset.magnitude;
             var mask = cameraCollisionLayer;
@@ -108,7 +109,6 @@ namespace Cosmobot
                         rayDirection, out var hit, cameraDistance + wallCollisionOffset, mask)
                     ? hit.point + hit.normal * wallCollisionOffset
                     : rayDirection + cameraRotationCenterPosition;
-            cameraHolder.rotation = Quaternion.Euler(xRotation, yRotation, 0);
         }
 
         private void SwitchCameraView()
