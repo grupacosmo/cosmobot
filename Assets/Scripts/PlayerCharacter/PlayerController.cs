@@ -52,6 +52,7 @@ namespace Cosmobot
 
         private void Update()
         {
+            Debug.Log("PlayerController");
             ProcessRotation();
         }
 
@@ -120,7 +121,7 @@ namespace Cosmobot
         {
             if (rotationMode == RotationMode.MovementDirection)
             {
-                if (!(inputDirection.sqrMagnitude > 0.01f)) return;
+                if (inputDirection.sqrMagnitude <= 0.1f) return;
                 var toRotation = Quaternion.LookRotation(inputDirection);
                 transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, playerRotationSpeed * Time.deltaTime);
             }
