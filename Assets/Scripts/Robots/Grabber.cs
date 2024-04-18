@@ -110,7 +110,7 @@ namespace Cosmobot
                     }
 
                     Vector3 facingDirection = routeMovement.transform.forward;
-                    grabbedItem.transform.position = new Vector3(pos.x, hit.point.y, pos.z) + facingDirection * releaseDistance;
+                    grabbedItem.transform.position = new Vector3(pos.x, hit.point.y + 1, pos.z) + facingDirection * releaseDistance;
                     grabbedItem.transform.rotation = Quaternion.identity;
 
 

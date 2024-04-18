@@ -187,6 +187,24 @@
       "EnergyCost": 20
     },
     {
+      "Id": "dig-sand",
+      "Name": "Dig Sand",
+      "Ingredients": [],
+      "Result": [
+        "sand"
+      ],
+      "EnergyCost": 20
+    },
+    {
+      "Id": "dig-stone",
+      "Name": "Dig Stone",
+      "Ingredients": [],
+      "Result": [
+        "stone"
+      ],
+      "EnergyCost": 20
+    },
+    {
       "Id": "dig-uranium-ore",
       "Name": "Dig Uranium Ore",
       "Ingredients": [],
@@ -264,10 +282,45 @@
       ]
     },
     {
+      "Id": "sand-miner",
+      "Name": "Sand Miner",
+      "Recipes": [
+        "dig-sand"
+      ]
+    },
+    {
+      "Id": "stone-miner",
+      "Name": "Stone Miner",
+      "Recipes": [
+        "dig-stone"
+      ]
+    },
+    {
       "Id": "uranium-miner",
       "Name": "Uranium Miner",
       "Recipes": [
         "dig-uranium-ore"
+      ]
+    },
+    {
+      "Id": "lens-crafter",
+      "Name": "Lens Crafter",
+      "Recipes": [
+        "make-lens"
+      ]
+    },
+    {
+      "Id": "battery-crafter",
+      "Name": "Battery Crafter",
+      "Recipes": [
+        "make-battery"
+      ]
+    },
+    {
+      "Id": "gun-crafter",
+      "Name": "Gun Crafter",
+      "Recipes": [
+        "make-gun"
       ]
     }
   ]

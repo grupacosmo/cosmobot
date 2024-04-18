@@ -81,7 +81,6 @@ namespace Cosmobot
 
         private void Update()
         {
-            Debug.Log("PlayerCamera");
             HandleInput();
             UpdateFov();
         }

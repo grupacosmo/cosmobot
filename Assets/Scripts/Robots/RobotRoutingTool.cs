@@ -108,6 +108,7 @@ namespace Cosmobot
                     {
                         Debug.Log("Switched to new robot: " + hit.collider.gameObject.name);
                         currentRobot = hit.collider.gameObject;
+                        lineRenderer.enabled = true;
                     }
                 }
             }
@@ -125,6 +126,8 @@ namespace Cosmobot
                 routeMovement.routeIndex = 0;
 
                 if (clearRoutePreviewAfterApplying) lineRenderer.enabled = false;
+                routeMovement.canMove = true;
+                lineRenderer.enabled = false;
             }
         }
         public void ChangeReleasedMode(InputAction.CallbackContext context)
