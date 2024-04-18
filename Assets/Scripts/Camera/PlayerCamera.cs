@@ -6,8 +6,8 @@ namespace Cosmobot
     [RequireComponent(typeof(Camera))]
     public class PlayerCamera : MonoBehaviour, DefaultInputActions.IPlayerCameraActions
     {
-        public bool isFirstPerson { get; private set; } = true;
-        public bool isZoomed { get; private set; } = false;
+        public bool IsFirstPerson { get; private set; } = true;
+        public bool IsZoomed { get; private set; }
 
         [SerializeField] private Vector2 sensitivity;
         [SerializeField] private float zoomSensitivityMultiplier;
@@ -20,8 +20,9 @@ namespace Cosmobot
         [SerializeField] private LayerMask cameraCollisionLayer;
 
         [SerializeField] private Transform cameraOrigin;
+        [SerializeField] private GameObject playerModel;
 
-        private Camera camera;
+        private new Camera camera;
         private DefaultInputActions actions;
         private float xRotation;
         private float yRotation;
@@ -61,8 +62,8 @@ namespace Cosmobot
 
         public void OnZoom(InputAction.CallbackContext context)
         {
-            if (context.performed) isZoomed = true;
-            if (context.canceled) isZoomed = false;
+            if (context.performed) IsZoomed = true;
+            if (context.canceled) IsZoomed = false;
         }
 
         private void Start()
@@ -90,7 +91,7 @@ namespace Cosmobot
         private void HandleInput()
         {
             Vector2 rotationDelta = new Vector2(yInput * Time.deltaTime * sensitivity.y, xInput * Time.deltaTime * sensitivity.x);
-            if (isZoomed) rotationDelta *= zoomSensitivityMultiplier;
+            if (IsZoomed) rotationDelta *= zoomSensitivityMultiplier;
             yRotation += rotationDelta.y;
             xRotation -= rotationDelta.x;
             xRotation = Mathf.Clamp(xRotation, rotationClampBottom, rotationClampTop);
@@ -113,13 +114,22 @@ namespace Cosmobot
 
         private void SwitchCameraView()
         {
-            isFirstPerson = !isFirstPerson;
-            cameraOffset = isFirstPerson ? Vector3.zero : thirdPersonCameraOffset;
+            IsFirstPerson = !IsFirstPerson;
+            if (IsFirstPerson)
+            {
+                cameraOffset = Vector3.zero;
+                playerModel.SetActive(false);
+            }
+            else
+            {
+                cameraOffset = thirdPersonCameraOffset;
+                playerModel.SetActive(true);
+            }
         }
 
         private void UpdateFov()
         {
-            float targetFov = isZoomed ? zoomFov : defaultFov;
+            float targetFov = IsZoomed ? zoomFov : defaultFov;
             camera.fieldOfView = Mathf.MoveTowards(camera.fieldOfView, targetFov, zoomSpeed * Time.deltaTime);
         }
 

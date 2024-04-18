@@ -22,6 +22,7 @@ namespace Cosmobot
 
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private Transform groundCheckOrigin;
+        [SerializeField] private Animator animator;
         
         private Vector3 inputMove = Vector3.zero;
         private Vector3 inputDirection = Vector3.zero;
@@ -35,6 +36,8 @@ namespace Cosmobot
         private Rigidbody rb;
 
         private DefaultInputActions actions;
+        private static readonly int Speed = Animator.StringToHash("speed");
+        private static readonly int Jump = Animator.StringToHash("jump");
 
         private void Start()
         {
@@ -67,13 +70,14 @@ namespace Cosmobot
             if (shouldJump)
             {
                 velocityDelta.y = jumpForce;
+                animator.SetTrigger(Jump);
             }
             else
             {
                 velocityDelta -= gravity * Time.fixedDeltaTime * groundNormal;
             }
-
             rb.AddForce(velocityDelta, ForceMode.VelocityChange);
+            animator.SetFloat(Speed, new Vector2(rb.velocity.x, rb.velocity.z).sqrMagnitude);
         }
 
         private Vector3 CalculateVelocityDelta()
@@ -116,11 +120,9 @@ namespace Cosmobot
         {
             if (rotationMode == RotationMode.MovementDirection)
             {
-                if (inputDirection.magnitude > 0.01f)
-                {
-                    var toRotation = Quaternion.LookRotation(inputDirection);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, playerRotationSpeed * Time.deltaTime);
-                }
+                if (!(inputDirection.sqrMagnitude > 0.01f)) return;
+                var toRotation = Quaternion.LookRotation(inputDirection);
+                transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, playerRotationSpeed * Time.deltaTime);
             }
             else
             {

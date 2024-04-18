@@ -38,10 +38,10 @@ namespace Cosmobot
         {
             if (carryingItem)
             {
-                Vector3 carryPosOffset = playerCamera.isFirstPerson ? carryPositionFirstPersonOffset : carryPositionThirdPersonOffset;
+                Vector3 carryPosOffset = playerCamera.IsFirstPerson ? carryPositionFirstPersonOffset : carryPositionThirdPersonOffset;
                 carryPosOffset = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0) * carryPosOffset;
 
-                var holdDistance = carryHoldingDistance * (playerCamera.isZoomed ? holdingDistanceZoomMultiplier : 1);
+                var holdDistance = carryHoldingDistance * (playerCamera.IsZoomed ? holdingDistanceZoomMultiplier : 1);
 
                 carryPosition = transform.position + cameraTransform.forward * holdDistance + carryPosOffset;
                 Vector3 force = (carryPosition - carriedItemTransform.position) * carryForceMultiplier
