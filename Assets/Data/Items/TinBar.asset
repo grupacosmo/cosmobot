@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4446f78563c10b824875d5e581ffbbee, type: 3}
   m_Name: TinBar
   m_EditorClassIdentifier: 
-  id: crystal
-  displayName: Crystal
+  id: tin-bar
+  displayName: Tin Bar
   icon: {fileID: 0}
   prefab: {fileID: 1862692014303423458, guid: a30f73e82edb90ce2a9c9a612ee02882, type: 3}
   additionalData:
