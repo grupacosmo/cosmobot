@@ -59,7 +59,7 @@ MonoBehaviour:
   gravity: 50
   maxFloorAngleDegrees: 45
   playerRotationSpeed: 10
-  rotationMode: 1
+  rotationMode: 0
   cameraTransform: {fileID: 7577094790283547248}
   groundCheckOrigin: {fileID: 1859885140800310256}
   animator: {fileID: 3148441669088234227}
