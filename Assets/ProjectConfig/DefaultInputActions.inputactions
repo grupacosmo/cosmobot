@@ -425,6 +425,17 @@
                     "action": "applyRouteToRobot",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b58427b0-0fd3-401e-ab69-5b56efe81da1",
+                    "path": "",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "applyRouteToRobot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         }

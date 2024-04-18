@@ -27,6 +27,10 @@ namespace Cosmobot
         public bool clearRoutePreviewAfterApplying;
         private LineRenderer lineRenderer;
 
+
+        [SerializeField]
+        private LayerMask robotSelectorMask;
+
         void Start()
         {
             lineRenderer = GetComponent<LineRenderer>();
@@ -91,11 +95,15 @@ namespace Cosmobot
         {
             if (context.performed)
             {
+                Debug.Log("Switching to new robot");
                 RaycastHit hit;
 
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out hit))
+                Transform cameraTransform = Camera.main.transform;
+                Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+                Debug.DrawRay(ray.origin, ray.direction, Color.red, 1f);
+                if (Physics.Raycast(ray, out hit, 100, robotSelectorMask))
                 {
+                    Debug.Log("hit: " + hit.collider.gameObject,  hit.collider.gameObject);
                     if (hit.collider.CompareTag(robotTag))
                     {
                         Debug.Log("Switched to new robot: " + hit.collider.gameObject.name);
@@ -114,6 +122,7 @@ namespace Cosmobot
                 routeMovement.route = new List<Route>(currentRoute);
 
                 currentRoute.Clear();
+                routeMovement.routeIndex = 0;
 
                 if (clearRoutePreviewAfterApplying) lineRenderer.enabled = false;
             }
