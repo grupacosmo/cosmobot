@@ -97,7 +97,7 @@ namespace Cosmobot
             var origin = groundCheckOrigin.position;
 
             Physics.SphereCast(origin, groundCheckRadius, Vector3.down, out var hitInfo, groundCheckDistance);
-            if (hitInfo.collider != null && rb.velocity.y < 0.01)
+            if (hitInfo.collider is not null && rb.velocity.y < 0.01)
             {
                 groundNormal = hitInfo.normal;
                 var floorAngleDegrees = Mathf.Acos(Vector3.Dot(Vector3.up, groundNormal)) * Mathf.Rad2Deg;
@@ -120,7 +120,7 @@ namespace Cosmobot
         {
             if (rotationMode == RotationMode.MovementDirection)
             {
-                if (!(inputDirection.sqrMagnitude > 0.01f)) return;
+                if (inputDirection.sqrMagnitude <= 0.01f) return;
                 var toRotation = Quaternion.LookRotation(inputDirection);
                 transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, playerRotationSpeed * Time.deltaTime);
             }

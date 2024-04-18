@@ -90,7 +90,7 @@ namespace Cosmobot
 
         private void HandleInput()
         {
-            Vector2 rotationDelta = new Vector2(yInput * Time.deltaTime * sensitivity.y, xInput * Time.deltaTime * sensitivity.x);
+            Vector2 rotationDelta = new Vector2(yInput * sensitivity.y, xInput * sensitivity.x) * Time.deltaTime;
             if (IsZoomed) rotationDelta *= zoomSensitivityMultiplier;
             yRotation += rotationDelta.y;
             xRotation -= rotationDelta.x;
