@@ -77,8 +77,15 @@ namespace Cosmobot
                 if (item is null)
                 {
                     GameObject nearestItem = GetNearestItem();
-
                     grabbedItem = nearestItem;
+
+                    grabbedItem.transform.rotation = Quaternion.identity;
+
+                    Rigidbody itemRigidbody = grabbedItem.GetComponent<Rigidbody>();
+                    if (itemRigidbody is not null)
+                    {
+                        itemRigidbody.isKinematic = true;
+                    }
                 }
                 else grabbedItem = item;
 
@@ -96,10 +103,17 @@ namespace Cosmobot
 
                 if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ~releaseExcludedLayer))
                 {
-                    Debug.Log("Raycast: SUCCESFUL");
+                    Rigidbody itemRigidbody = grabbedItem.GetComponent<Rigidbody>();
+                    if (itemRigidbody is not null)
+                    {
+                        itemRigidbody.isKinematic = false;
+                    }
 
                     Vector3 facingDirection = routeMovement.transform.forward;
                     grabbedItem.transform.position = new Vector3(pos.x, hit.point.y, pos.z) + facingDirection * releaseDistance;
+                    grabbedItem.transform.rotation = Quaternion.identity;
+
+
 
                     ResetTimer();
                 }

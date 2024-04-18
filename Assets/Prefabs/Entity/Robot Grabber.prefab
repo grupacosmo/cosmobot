@@ -58,19 +58,7 @@ MonoBehaviour:
   loopMode: 1
   arrivalThreshold: 0.5
   routeIndex: 0
-  route:
-  - waypoint: {x: 1, y: 2, z: -4}
-    release: 1
-    grab: 1
-  - waypoint: {x: 8, y: 2, z: -4}
-    release: 1
-    grab: 1
-  - waypoint: {x: 8, y: 2, z: 0}
-    release: 1
-    grab: 1
-  - waypoint: {x: 1, y: 2, z: 0}
-    release: 1
-    grab: 1
+  route: []
   maxFloorAngleDegrees: 45
   groundCheckOrigin: {fileID: 9140248211940166113}
 --- !u!33 &3122259164325547166
