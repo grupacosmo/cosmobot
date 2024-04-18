@@ -12,6 +12,31 @@
       "EnergyCost": 10
     },
     {
+      "Id": "make-battery",
+      "Name": "Make Battery",
+      "Ingredients": [
+        "iron-bar",
+        "uranium-bar"
+      ],
+      "Result": [
+        "battery"
+      ],
+      "EnergyCost": 10
+    },
+    {
+      "Id": "make-gun",
+      "Name": "Make Gun",
+      "Ingredients": [
+        "copper-bar",
+        "battery",
+        "lens"
+      ],
+      "Result": [
+        "gun"
+      ],
+      "EnergyCost": 10
+    },
+    {
       "Id": "oil-cracking",
       "Name": "Oil Cracking",
       "Ingredients": [
@@ -56,6 +81,28 @@
         "titanium-bar"
       ],
       "EnergyCost": 20
+    },
+    {
+      "Id": "smelt-crystal",
+      "Name": "Smelt Crystal",
+      "Ingredients": [
+        "sand"
+      ],
+      "Result": [
+        "crystal"
+      ],
+      "EnergyCost": 10
+    },
+    {
+      "Id": "make-lens",
+      "Name": "Make Lens",
+      "Ingredients": [
+        "crystal"
+      ],
+      "Result": [
+        "lens"
+      ],
+      "EnergyCost": 10
     },
     {
       "Id": "composite-materials",
