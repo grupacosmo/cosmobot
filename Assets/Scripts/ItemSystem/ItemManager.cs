@@ -11,10 +11,10 @@ namespace Cosmobot.ItemSystem
     public class ItemManager : SingletonSystem<ItemManager>
     {
         [SerializeField]
-        private string[] itemsDataDirectory = { };
+        private string[] itemsDataDirectory = { "Assets/Data/Items" };
 
         [SerializeField]
-        private string craftingRecipesDataDirectory = "Assets/Scripts/ItemSystem/CraftingRecipes";
+        private string craftingRecipesDataDirectory = "Assets/Data/Crafting/recipes.json";
 
         private List<CraftingRecipe> craftingRecipes;
         private List<CraftingRecipeGroup> craftingRecipesGroups;
