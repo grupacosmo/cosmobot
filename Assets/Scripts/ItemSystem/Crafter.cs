@@ -89,11 +89,19 @@ namespace Cosmobot.ItemSystem
                 return;
             }
 
+            List<Vector3> validOutputSlots = FindValidOutputSlots();
+            if (validOutputSlots.Count < recipe.Result.Count)
+            {
+                Debug.Log("Not enough free output slots to hold the result items");
+                return;
+            }
+            
+            
             int outputSlotIndex = 0;
             foreach (string resultItemId in recipe.Result)
             {
                 ItemInfo resultItem = ItemManager.Instance.GetItem(resultItemId);
-                resultItem.InstantiateItem(outputSlots[outputSlotIndex].position, Quaternion.identity);
+                resultItem.InstantiateItem(validOutputSlots[outputSlotIndex], Quaternion.identity);
                 outputSlotIndex++;
             }
 
@@ -101,6 +109,16 @@ namespace Cosmobot.ItemSystem
                 Destroy(itemGo);
             // coz OnTriggerExit is not called when destroying colliders
             itemsCollidersInInputSlot.Clear();
+        }
+
+        private List<Vector3> FindValidOutputSlots()
+        {
+            return outputSlots.Where(isSlotFree).Select(t => t.position).ToList();
+        }
+        
+        private bool isSlotFree(Transform slot)
+        {
+            return !Physics.CheckBox(slot.position, Vector3.one * 0.25f, Quaternion.identity);
         }
 
         // will return the first recipe that can be crafted with the items in the input slot and with result items that

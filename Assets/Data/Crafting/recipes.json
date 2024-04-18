@@ -102,6 +102,51 @@
         "tin-bar"
       ],
       "EnergyCost": 10
+    },
+    {
+      "Id": "dig-iron-ore",
+      "Name": "Dig Iron Ore",
+      "Ingredients": [],
+      "Result": [
+        "iron-ore"
+      ],
+      "EnergyCost": 10
+    },
+    {
+      "Id": "dig-copper-ore",
+      "Name": "Dig Copper Ore",
+      "Ingredients": [],
+      "Result": [
+        "copper-ore"
+      ],
+      "EnergyCost": 10
+    },
+    {
+      "Id": "dig-tin-ore",
+      "Name": "Dig Tin Ore",
+      "Ingredients": [],
+      "Result": [
+        "tin-ore"
+      ],
+      "EnergyCost": 10
+    },
+    {
+      "Id": "dig-titanium-ore",
+      "Name": "Dig Titanium Ore",
+      "Ingredients": [],
+      "Result": [
+        "titanium-ore"
+      ],
+      "EnergyCost": 20
+    },
+    {
+      "Id": "dig-uranium-ore",
+      "Name": "Dig Uranium Ore",
+      "Ingredients": [],
+      "Result": [
+        "uranium-ore"
+      ],
+      "EnergyCost": 20
     }
   ],
   "Groups": [
@@ -142,6 +187,41 @@
       "Id": "",
       "Name": "",
       "Recipes": []
+    },
+    {
+      "Id": "iron-miner",
+      "Name": "Iron Miner",
+      "Recipes": [
+        "dig-iron-ore"
+      ]
+    },
+    {
+      "Id": "copper-miner",
+      "Name": "Copper Miner",
+      "Recipes": [
+        "dig-copper-ore"
+      ]
+    },
+    {
+      "Id": "tin-miner",
+      "Name": "Tin Miner",
+      "Recipes": [
+        "dig-tin-ore"
+      ]
+    },
+    {
+      "Id": "titanium-miner",
+      "Name": "Titanium Miner",
+      "Recipes": [
+        "dig-titanium-ore"
+      ]
+    },
+    {
+      "Id": "uranium-miner",
+      "Name": "Uranium Miner",
+      "Recipes": [
+        "dig-uranium-ore"
+      ]
     }
   ]
 }
