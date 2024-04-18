@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4446f78563c10b824875d5e581ffbbee, type: 3}
-  m_Name: IronOre
+  m_Name: UraniumOre
   m_EditorClassIdentifier: 
-  id: iron-ore
-  displayName: Iron ore
+  id: uranium-ore
+  displayName: Uranium Ore
   icon: {fileID: 0}
-  prefab: {fileID: 1862692014303423458, guid: c488f1a3d7026cab98f1a75431a1fb9e, type: 3}
+  prefab: {fileID: 1862692014303423458, guid: 5d47c927b432588a887399a2f1456cd4, type: 3}
   additionalData:
     keys: []
     values: []

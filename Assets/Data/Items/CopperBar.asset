@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4446f78563c10b824875d5e581ffbbee, type: 3}
-  m_Name: IronOre
+  m_Name: CopperBar
   m_EditorClassIdentifier: 
-  id: iron-ore
-  displayName: Iron ore
+  id: copper-bar
+  displayName: Copper Bar
   icon: {fileID: 0}
-  prefab: {fileID: 1862692014303423458, guid: c488f1a3d7026cab98f1a75431a1fb9e, type: 3}
+  prefab: {fileID: 1862692014303423458, guid: a6488b269fd867bfd840f43448e9b71d, type: 3}
   additionalData:
     keys: []
     values: []
