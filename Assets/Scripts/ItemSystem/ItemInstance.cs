@@ -4,13 +4,22 @@ using UnityEngine;
 
 namespace Cosmobot.ItemSystem
 {
-    public class Item : MonoBehaviour
+    [Serializable]
+    public class ItemInstance
     {
-        [SerializeField] private ItemInfo itemInfo;
+        [SerializeField]
+        private ItemInfo itemInfo;
 
-        [SerializeField] public SerializableDictionary<string, string> ItemData;
-
+        [SerializeField]
+        private SerializableDictionary<string, string> itemData;
+        
         public ItemInfo ItemInfo => itemInfo;
+
+        public SerializableDictionary<string, string> ItemData
+        {
+            get => itemData;
+            set => itemData = value ?? throw new ArgumentNullException(nameof(value));
+        }
 
         /// <summary>
         ///     <c>ItemData</c> accessor that treats the values as integers.
@@ -19,7 +28,7 @@ namespace Cosmobot.ItemSystem
         /// </summary>
         /// <exception cref="FormatException">Thrown when the value is not a valid integer.</exception>
         /// <exception cref="KeyNotFoundException">Thrown when the key does not exist.</exception>
-        public ValueAccessor<int> IntValue => new(ItemData);
+        public ValueAccessor<int> IntValue => new(itemData);
 
         /// <summary>
         ///     <c>ItemData</c> accessor that treats the values as float.
@@ -28,7 +37,7 @@ namespace Cosmobot.ItemSystem
         /// </summary>
         /// <exception cref="FormatException">Thrown when the value is not a valid float.</exception>
         /// <exception cref="KeyNotFoundException">Thrown when the key does not exist.</exception>
-        public ValueAccessor<float> FloatValue => new(ItemData);
+        public ValueAccessor<float> FloatValue => new(itemData);
 
         /// <summary>
         ///     <c>ItemData</c> accessor that treats the values as bool.
@@ -37,23 +46,30 @@ namespace Cosmobot.ItemSystem
         /// </summary>
         /// <exception cref="FormatException">Thrown when the value is not a valid bool.</exception>
         /// <exception cref="KeyNotFoundException">Thrown when the key does not exist.</exception>
-        public ValueAccessor<bool> BoolValue => new(ItemData);
+        public ValueAccessor<bool> BoolValue => new(itemData);
 
-        public SerializableDictionary<string, string> StringValue => ItemData;
+        public SerializableDictionary<string, string> StringValue => itemData;
+        
+        public string Id => itemInfo.Id;
 
-        private void Awake()
+        public ItemInstance(ItemInfo itemInfo)
         {
-            ComponentUtils.RequireNotNull(itemInfo, "itemInfo is not set.", this);
-            InitItemData();
-        }
-
-        private void InitItemData()
-        {
-            ItemData ??= new SerializableDictionary<string, string>();
+            this.itemInfo = itemInfo;
+            ItemData = new SerializableDictionary<string, string>();
 
             foreach (var additionalField in itemInfo.AdditionalData)
                 ItemData.TryAdd(additionalField.Key, additionalField.Value);
         }
+        
+        /// <summary>
+        /// This constructor is for serialization purposes only.
+        /// </summary>
+        [Obsolete("This constructor is for serialization purposes only.")]
+        public ItemInstance()
+        {
+            ItemData = new SerializableDictionary<string, string>();
+        }
+        
 
         /// <summary>
         ///     Returns the value of the given key, or null if the key does not exist.
@@ -103,35 +119,6 @@ namespace Cosmobot.ItemSystem
         {
             SetValue(key, value.ToString());
         }
-
-
-        // helper
-        public class ValueAccessor<T>
-        {
-            private readonly SerializableDictionary<string, string> array;
-
-            public ValueAccessor(SerializableDictionary<string, string> array)
-            {
-                this.array = array;
-            }
-
-            public T this[string index]
-            {
-                get => (T)Convert.ChangeType(array[index], typeof(T));
-                set => array[index] = ValueToString(value);
-            }
-
-            private string ValueToString(T value)
-            {
-                if (value is null) return null;
-                if (typeof(T) == typeof(bool))
-                {
-                    var b = (bool)Convert.ChangeType(value, typeof(bool));
-                    return b ? "true" : "false"; // i hate C#
-                }
-
-                return value.ToString();
-            }
-        }
+        
     }
 }
