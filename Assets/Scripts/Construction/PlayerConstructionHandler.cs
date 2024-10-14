@@ -19,7 +19,7 @@ namespace Cosmobot
             
         }
 
-        void Update()
+        void LateUpdate()
         {
             Vector3? buildPoint = GetBuildPoint();
             Debug.Log(buildPoint);
@@ -32,18 +32,18 @@ namespace Cosmobot
             Ray cameraRay = new Ray(cameraTransform.position, cameraTransform.forward);
             bool cameraRaySuccess = Physics.Raycast(cameraRay, out RaycastHit cameraRayHit, maxBuildDistance * 2, buildTargetingCollisionMask);
 
-            if (cameraRaySuccess) {
+            if (cameraRaySuccess && Vector3.ProjectOnPlane(cameraTransform.position - cameraRayHit.point, Vector3.up).magnitude < maxBuildDistance) {
                 return cameraRayHit.point;
             }
-            else {
-                Vector3 orig = playerTransform.position + Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up) * maxBuildDistance + Vector3.up * maxTerrainHeight;
-                Ray skyRay = new Ray(orig, Vector3.down);
-                bool skyRaySuccess = Physics.Raycast(skyRay, out RaycastHit skyRayHit, maxTerrainHeight*2, buildTargetingCollisionMask);
+           
+            Vector3 orig = cameraTransform.position + Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up) * maxBuildDistance + Vector3.up * maxTerrainHeight;
+            Ray skyRay = new Ray(orig, Vector3.down);
+            bool skyRaySuccess = Physics.Raycast(skyRay, out RaycastHit skyRayHit, maxTerrainHeight*2, buildTargetingCollisionMask);
                 
-                if (skyRaySuccess) {
-                    return skyRayHit.point;
-                }
+            if (skyRaySuccess) {
+               return skyRayHit.point;
             }
+            
 
             return null;
         }

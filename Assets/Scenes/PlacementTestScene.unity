@@ -668,7 +668,10 @@ MonoBehaviour:
   cameraTransform: {fileID: 1206252142}
   playerTransform: {fileID: 1206252143}
   buildPointIndicator: {fileID: 476511549}
-  maxBuildDistance: 4
+  buildTargetingCollisionMask:
+    serializedVersion: 2
+    m_Bits: 1
+  maxBuildDistance: 10
   maxTerrainHeight: 100
 --- !u!4 &1206252142 stripped
 Transform:
