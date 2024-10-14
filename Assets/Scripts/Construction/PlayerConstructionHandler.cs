@@ -10,16 +10,15 @@ namespace Cosmobot
         [SerializeField] Transform cameraTransform;
         [SerializeField] Transform playerTransform;
         [SerializeField] Transform buildPointIndicator;
+        [SerializeField] LayerMask buildTargetingCollisionMask;
         [SerializeField] float maxBuildDistance = 20.0f;
         [SerializeField] float maxTerrainHeight = 100.0f;
 
-        // Start is called before the first frame update
         void Start()
         {
             
         }
 
-        // Update is called once per frame
         void Update()
         {
             Vector3? buildPoint = GetBuildPoint();
@@ -31,7 +30,7 @@ namespace Cosmobot
 
         public Vector3? GetBuildPoint() {
             Ray cameraRay = new Ray(cameraTransform.position, cameraTransform.forward);
-            bool cameraRaySuccess = Physics.Raycast(cameraRay, out RaycastHit cameraRayHit, maxBuildDistance * 2);
+            bool cameraRaySuccess = Physics.Raycast(cameraRay, out RaycastHit cameraRayHit, maxBuildDistance * 2, buildTargetingCollisionMask);
 
             if (cameraRaySuccess) {
                 return cameraRayHit.point;
@@ -39,7 +38,7 @@ namespace Cosmobot
             else {
                 Vector3 orig = playerTransform.position + Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up) * maxBuildDistance + Vector3.up * maxTerrainHeight;
                 Ray skyRay = new Ray(orig, Vector3.down);
-                bool skyRaySuccess = Physics.Raycast(skyRay, out RaycastHit skyRayHit, maxTerrainHeight*2);
+                bool skyRaySuccess = Physics.Raycast(skyRay, out RaycastHit skyRayHit, maxTerrainHeight*2, buildTargetingCollisionMask);
                 
                 if (skyRaySuccess) {
                     return skyRayHit.point;
