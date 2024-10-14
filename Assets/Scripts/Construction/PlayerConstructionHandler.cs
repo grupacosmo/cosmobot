@@ -13,39 +13,34 @@ namespace Cosmobot
         [SerializeField] LayerMask buildTargetingCollisionMask;
         [SerializeField] float maxBuildDistance = 20.0f;
         [SerializeField] float maxTerrainHeight = 100.0f;
-
-        void Start()
-        {
-            
-        }
+        [SerializeField] float gridSize = 1.0f;
 
         void LateUpdate()
         {
-            Vector3? buildPoint = GetBuildPoint();
-            Debug.Log(buildPoint);
-            if (buildPoint != null) {
-                buildPointIndicator.position = (Vector3)buildPoint;
-            }
+            Vector3 buildPoint = SnapToGrid(GetBuildPoint(), false);
+            Ray skyRay = new Ray(buildPoint + Vector3.up * maxTerrainHeight, Vector3.down);
+            bool skyRaySuccess = Physics.Raycast(skyRay, out RaycastHit skyRayHit, maxTerrainHeight*2, buildTargetingCollisionMask);
+            buildPointIndicator.position = skyRayHit.point;
         }
 
-        public Vector3? GetBuildPoint() {
+        private Vector3 GetBuildPoint() {
             Ray cameraRay = new Ray(cameraTransform.position, cameraTransform.forward);
             bool cameraRaySuccess = Physics.Raycast(cameraRay, out RaycastHit cameraRayHit, maxBuildDistance * 2, buildTargetingCollisionMask);
 
             if (cameraRaySuccess && Vector3.ProjectOnPlane(cameraTransform.position - cameraRayHit.point, Vector3.up).magnitude < maxBuildDistance) {
-                return cameraRayHit.point;
+                return new Vector3(cameraRayHit.point.x, 0, cameraRayHit.point.z);
             }
-           
-            Vector3 orig = cameraTransform.position + Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up) * maxBuildDistance + Vector3.up * maxTerrainHeight;
-            Ray skyRay = new Ray(orig, Vector3.down);
-            bool skyRaySuccess = Physics.Raycast(skyRay, out RaycastHit skyRayHit, maxTerrainHeight*2, buildTargetingCollisionMask);
-                
-            if (skyRaySuccess) {
-               return skyRayHit.point;
-            }
-            
 
-            return null;
+            return Vector3.ProjectOnPlane(cameraTransform.position, Vector3.up) + Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up) * maxBuildDistance;
+        }
+
+        private Vector3 SnapToGrid(Vector3 vec, bool tileCenter) {
+            vec /= gridSize;
+            Vector3 newVec = new Vector3(Mathf.Round(vec.x), 0, Mathf.Round(vec.z));
+            newVec *= gridSize;
+
+            if (tileCenter) return newVec + new Vector3(gridSize/2.0f, 0, gridSize/2.0f);
+            return newVec;
         }
     }
 }
