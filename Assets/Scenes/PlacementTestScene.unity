@@ -673,6 +673,7 @@ MonoBehaviour:
     m_Bits: 1
   maxBuildDistance: 10
   maxTerrainHeight: 100
+  gridSize: 2
 --- !u!4 &1206252142 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7577094790283547248, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}

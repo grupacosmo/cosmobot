@@ -17,7 +17,7 @@ namespace Cosmobot
 
         void LateUpdate()
         {
-            Vector3 buildPoint = SnapToGrid(GetBuildPoint(), false);
+            Vector3 buildPoint = SnapToGrid(GetBuildPoint(), false, false);
             Ray skyRay = new Ray(buildPoint + Vector3.up * maxTerrainHeight, Vector3.down);
             bool skyRaySuccess = Physics.Raycast(skyRay, out RaycastHit skyRayHit, maxTerrainHeight*2, buildTargetingCollisionMask);
             buildPointIndicator.position = skyRayHit.point;
@@ -34,13 +34,12 @@ namespace Cosmobot
             return Vector3.ProjectOnPlane(cameraTransform.position, Vector3.up) + Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up) * maxBuildDistance;
         }
 
-        private Vector3 SnapToGrid(Vector3 vec, bool tileCenter) {
+        private Vector3 SnapToGrid(Vector3 vec, bool centerX, bool centerZ) {
             vec /= gridSize;
             Vector3 newVec = new Vector3(Mathf.Round(vec.x), 0, Mathf.Round(vec.z));
             newVec *= gridSize;
 
-            if (tileCenter) return newVec + new Vector3(gridSize/2.0f, 0, gridSize/2.0f);
-            return newVec;
+            return newVec + new Vector3(centerX ? gridSize/2.0f : 0, 0, centerZ ? gridSize/2.0f : 0);
         }
     }
 }
