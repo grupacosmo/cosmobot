@@ -27,9 +27,9 @@ namespace Cosmobot.ItemSystem
 
         private CraftingRecipeGroup craftingRecipeGroup;
 
-        private ISet<Item> ItemsInInputSlot =>
+        private ISet<ItemComponent> ItemsInInputSlot =>
             itemsCollidersInInputSlot
-                .Select(c => c.GetComponent<Item>())
+                .Select(c => c.GetComponent<ItemComponent>())
                 .Where(i => i is not null)
                 .ToHashSet();
 
