@@ -27,7 +27,6 @@ namespace Cosmobot
         public bool clearRoutePreviewAfterApplying;
         private LineRenderer lineRenderer;
 
-
         [SerializeField]
         private LayerMask robotSelectorMask;
 
@@ -49,6 +48,7 @@ namespace Cosmobot
                 lineRenderer.SetPosition(i, currentRoute[i].waypoint + offsetY);
             }
         }
+
         private void addWaypoint(Vector3 waypoint)
         {
             var length = currentRoute.Count;
@@ -70,17 +70,16 @@ namespace Cosmobot
             lineRenderer.positionCount = currentRoute.Count;
             DrawLine();
         }
+
         private Vector3 GetLookedAtPointCoordinates()
         {
             Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
             RaycastHit hit;
 
-            if (Physics.Raycast(ray, out hit, maxPointDistance, floorLayer))
-            {
-                return hit.point;
-            }
-            else return Vector3.zero;
+            if (Physics.Raycast(ray, out hit, maxPointDistance, floorLayer)) return hit.point;
+            return Vector3.zero;
         }
+
         public void AddLookedAtWaypoint(InputAction.CallbackContext context)
         {
             if (context.performed)
@@ -91,6 +90,7 @@ namespace Cosmobot
                 if (waypoint != Vector3.zero) addWaypoint(waypoint);
             }
         }
+
         public void SwitchToLookedAtRobot(InputAction.CallbackContext context)
         {
             if (context.performed)
@@ -103,7 +103,7 @@ namespace Cosmobot
                 Debug.DrawRay(ray.origin, ray.direction, Color.red, 1f);
                 if (Physics.Raycast(ray, out hit, 100, robotSelectorMask))
                 {
-                    Debug.Log("hit: " + hit.collider.gameObject,  hit.collider.gameObject);
+                    Debug.Log("hit: " + hit.collider.gameObject, hit.collider.gameObject);
                     if (hit.collider.CompareTag(robotTag))
                     {
                         Debug.Log("Switched to new robot: " + hit.collider.gameObject.name);
@@ -112,6 +112,7 @@ namespace Cosmobot
                 }
             }
         }
+
         public void ApplyRoute(InputAction.CallbackContext context)
         {
             if (context.performed)
@@ -127,10 +128,12 @@ namespace Cosmobot
                 if (clearRoutePreviewAfterApplying) lineRenderer.enabled = false;
             }
         }
+
         public void ChangeReleasedMode(InputAction.CallbackContext context)
         {
             if (context.performed) releaseAtWaypoint = !releaseAtWaypoint;
         }
+
         public void ChangeGrabMode(InputAction.CallbackContext context)
         {
             if (context.performed) grabAtWaypoint = !grabAtWaypoint;
