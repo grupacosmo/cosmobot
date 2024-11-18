@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d24fe6321f6aa96a96dcb5b6836039f, type: 3}
+  m_Name: Test3x3
+  m_EditorClassIdentifier: 
+  id: test3x3
+  displayName: Test Building 3x3
+  icon: {fileID: 0}
+  prefab: {fileID: 9128753160050716850, guid: 18e5a4e70819cf55e8e1c064591e11ac, type: 3}
+  additionalData:
+    keys: []
+    values: []
+  gridDimensions: {x: 3, y: 3}

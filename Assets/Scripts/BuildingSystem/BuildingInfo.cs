@@ -19,14 +19,14 @@ namespace Cosmobot.BuildingSystem
         [SerializeField]
         private SerializableDictionary<string, string> additionalData = new();
         [SerializeField]
-        private Vector2Int gridSize = new(1,1);
+        private Vector2Int gridDimensions = new(1,1);
 
         public string Id => id;
         public string DisplayName => displayName;
         public Texture2D Icon => icon;
         public GameObject Prefab => prefab;
         public IReadOnlyDictionary<string, string> AdditionalData => additionalData;
-        public Vector2Int GridSize => gridSize;
+        public Vector2Int GridDimensions => gridDimensions;
 
         public override bool Equals(object obj) => Equals(obj as BuildingInfo);
 
