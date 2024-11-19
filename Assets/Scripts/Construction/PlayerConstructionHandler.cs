@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Cosmobot
 {
-    public class PlayerConstructionHandler : MonoBehaviour
+    public class PlayerConstructionHandler : MonoBehaviour, DefaultInputActions.IBuildingPlacementActions
     {
 
         [SerializeField] Transform cameraTransform;
@@ -17,10 +17,13 @@ namespace Cosmobot
 
         [SerializeField] BuildingInfo currentBuildingInfo;
 
+        [SerializeField] bool isPlacementActive;
+
+        private DefaultInputActions actions;
 
         void LateUpdate()
         {
-            if (currentBuildingInfo is not null) {
+            if (isPlacementActive) {
                 ScanBuildingPlacement(GetBuildPoint(), currentBuildingInfo.GridDimensions);
             }
             
@@ -30,16 +33,22 @@ namespace Cosmobot
         // TODO: hook this up to a state machine or something so it works with the rest of the player mechanics
         public void InitiatePlacement(BuildingInfo buildingInfo) {
             currentBuildingInfo = buildingInfo;
+            isPlacementActive = true;
         }
         
         // Place the construction plot
         public void ExecutePlacement() {
+            if (!isPlacementActive){
+                Debug.LogWarning("Attempted to place building outside of placement mode!");
+                return;
+            }
             ExitPlacement();
         }
 
         // Exit placement mode
         public void ExitPlacement() {
             currentBuildingInfo = null;
+            isPlacementActive = false;
         }
 
         private Vector3 GetBuildPoint() {
@@ -79,6 +88,29 @@ namespace Cosmobot
             buildPreview.position = new Vector3(buildPoint.x, result.point.y+0.5f, buildPoint.z);
 
             return finalPlacementPosition;
+        }
+
+        private void OnEnable()
+        {
+            if (actions is null)
+            {
+                actions = new DefaultInputActions();
+                actions.BuildingPlacement.SetCallbacks(this);
+            }
+
+            actions.BuildingPlacement.Enable();
+        }
+
+        public void OnCancelPlacement(UnityEngine.InputSystem.InputAction.CallbackContext context)
+        {
+            if (context.performed) 
+                ExitPlacement();
+        }
+
+        public void OnConfirmPlacement(UnityEngine.InputSystem.InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                ExecutePlacement();
         }
     }
 }

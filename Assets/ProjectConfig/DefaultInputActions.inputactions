@@ -319,6 +319,54 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "BuildingPlacement",
+            "id": "6cf32048-e77c-4665-8a03-3c5d63b231b4",
+            "actions": [
+                {
+                    "name": "cancelPlacement",
+                    "type": "Button",
+                    "id": "480c38c9-721c-4092-8c55-9c5b232362db",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "confirmPlacement",
+                    "type": "Button",
+                    "id": "3503ef88-7009-4be4-964e-009a938eb457",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "84d3f752-ee1d-4101-8db6-9388ed07291d",
+                    "path": "<Keyboard>/g",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "cancelPlacement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1074272c-97d5-42e6-9812-a7042f81b4bc",
+                    "path": "<Keyboard>/f",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "confirmPlacement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

@@ -685,6 +685,7 @@ MonoBehaviour:
   maxTerrainHeight: 100
   gridSize: 2
   currentBuildingInfo: {fileID: 11400000, guid: d726d3f77459ca7c3b5b6e4be31e20a3, type: 2}
+  isPlacementActive: 1
 --- !u!4 &1206252142 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7577094790283547248, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
