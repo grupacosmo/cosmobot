@@ -8,8 +8,7 @@ namespace Cosmobot
 
         [SerializeField] Transform cameraTransform;
         [SerializeField] Transform playerTransform;
-        [SerializeField] Transform buildPointIndicator;
-        [SerializeField] Transform buildPreview;
+        [SerializeField] ConstructionPreview constructionPreview;
         [SerializeField] LayerMask buildTargetingCollisionMask;
         [SerializeField] float maxBuildDistance = 20.0f;
         [SerializeField] float maxTerrainHeight = 100.0f;
@@ -19,14 +18,19 @@ namespace Cosmobot
 
         [SerializeField] bool isPlacementActive;
 
+        [SerializeField] BuildingInfo initialBuilding; // TEMP
+
         private DefaultInputActions actions;
+
+        void Start() {
+            InitiatePlacement(initialBuilding); // TEMP
+        }
 
         void LateUpdate()
         {
             if (isPlacementActive) {
                 ScanBuildingPlacement(GetBuildPoint(), currentBuildingInfo.GridDimensions);
             }
-            
         }  
 
         // Select a building and start scanning for placement position
@@ -34,6 +38,8 @@ namespace Cosmobot
         public void InitiatePlacement(BuildingInfo buildingInfo) {
             currentBuildingInfo = buildingInfo;
             isPlacementActive = true;
+            constructionPreview.SetBuilding(buildingInfo, gridSize);
+            constructionPreview.SetActive(true);
         }
         
         // Place the construction plot
@@ -49,6 +55,7 @@ namespace Cosmobot
         public void ExitPlacement() {
             currentBuildingInfo = null;
             isPlacementActive = false;
+            constructionPreview.SetActive(false);
         }
 
         private Vector3 GetBuildPoint() {
@@ -77,15 +84,14 @@ namespace Cosmobot
 
             bool success = Physics.BoxCast(boxOrigin, boxHalfExtents, Vector3.down, out RaycastHit result, Quaternion.identity, maxTerrainHeight*2, buildTargetingCollisionMask);
             if (!success) {
-                buildPreview.position = new Vector3(0, 10000, 0);
+                constructionPreview.SetActive(false);
                 return null;
             }
+            constructionPreview.SetActive(true);
 
             Vector3 finalPlacementPosition = new Vector3(buildPoint.x, result.point.y, buildPoint.z);
 
-            buildPreview.localScale = new Vector3(buildingGridDimensions.x * gridSize, 1, buildingGridDimensions.y * gridSize);
-
-            buildPreview.position = new Vector3(buildPoint.x, result.point.y+0.5f, buildPoint.z);
+            constructionPreview.SetPosition(finalPlacementPosition);
 
             return finalPlacementPosition;
         }

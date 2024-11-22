@@ -478,11 +478,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 397245202}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &476511549 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6388429540397180674, guid: 2d4f17eaeeaac3328ae10aefe9e25f08, type: 3}
-  m_PrefabInstance: {fileID: 6539188073921923383}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &616146023
 GameObject:
   m_ObjectHideFlags: 0
@@ -588,11 +583,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 616146023}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &798504977 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7441757833244653461, guid: ccbc01999b2ced4e8933ea7171bed4bc, type: 3}
-  m_PrefabInstance: {fileID: 4111913057974122854}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1206252139
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -676,16 +666,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraTransform: {fileID: 1206252142}
   playerTransform: {fileID: 1206252143}
-  buildPointIndicator: {fileID: 476511549}
-  buildPreview: {fileID: 798504977}
+  constructionPreview: {fileID: 1566745210}
   buildTargetingCollisionMask:
     serializedVersion: 2
     m_Bits: 1
   maxBuildDistance: 10
   maxTerrainHeight: 100
   gridSize: 2
-  currentBuildingInfo: {fileID: 11400000, guid: d726d3f77459ca7c3b5b6e4be31e20a3, type: 2}
+  currentBuildingInfo: {fileID: 0}
   isPlacementActive: 1
+  initialBuilding: {fileID: 11400000, guid: d726d3f77459ca7c3b5b6e4be31e20a3, type: 2}
 --- !u!4 &1206252142 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7577094790283547248, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
@@ -696,6 +686,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8588927043253974589, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
   m_PrefabInstance: {fileID: 1206252139}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1566745210 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4713952467827898380, guid: ccbc01999b2ced4e8933ea7171bed4bc, type: 3}
+  m_PrefabInstance: {fileID: 4111913057974122854}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab89b2850639b28c7b8f984df7ae8750, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1588946592
 GameObject:
   m_ObjectHideFlags: 0
@@ -1389,7 +1390,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9059512905014548148, guid: ccbc01999b2ced4e8933ea7171bed4bc, type: 3}
       propertyPath: m_Name
-      value: BuildingPreview
+      value: ConstructionPreview
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
