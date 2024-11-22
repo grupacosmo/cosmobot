@@ -10,17 +10,20 @@ namespace Cosmobot
         public int SpawnInterval;
         public int EnemyLimit;
         private float timer;
+        public GameObject PotentialTarget;
         private List<GameObject> enemies = new List<GameObject>();
+        private int childId = 0;
 
 
         void Update()
         {
             if (timer > SpawnInterval)
             {
-                SpawnEnemy();
+                SpawnEnemy(childId);
                 if (enemies.Count == EnemyLimit)
                 {
                     ReleaseEnemies();
+                    SpawnInterval = 100000;
                 }
                 timer = 0;
             }
@@ -34,16 +37,18 @@ namespace Cosmobot
         {
             for (int i = 0; i < EnemyLimit; i++)
             {
-                //call function to change state to f.e. attack
+                enemies[i].GetComponent<EnemyBehaviour>().SetTarget(PotentialTarget);
             }
             Debug.Log("Enemies released");
             RemoveEnemy(null);
         }
 
-        void SpawnEnemy()
+        void SpawnEnemy(int childId)
         {
             GameObject e = Instantiate(Enemy, CreateSpawnPoint(), Quaternion.identity);
             e.GetComponent<EnemyBehaviour>().SetNest(gameObject);
+            e.GetComponent<EnemyBehaviour>().id = childId;
+            this.childId++;
             enemies.Add(e);
 
         }
