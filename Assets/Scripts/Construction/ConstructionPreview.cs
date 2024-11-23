@@ -16,12 +16,17 @@ namespace Cosmobot
             if (!isActive) return;
             transform.position = newPosition + new Vector3(0, 0.5f, 0);
         }
-
+        public void SetRotation(Quaternion currentConstructionRotation)
+        {
+            transform.rotation = currentConstructionRotation; // TODO: put a tween/animation
+        }
         public void SetActive(bool newActive) {
             isActive = newActive;
             if (!newActive) {
                 transform.position = new Vector3(0, 10000f, 0);
             }
         }
+
+        
     }
 }

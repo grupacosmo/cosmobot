@@ -13,14 +13,14 @@ namespace Cosmobot
         [SerializeField] float maxBuildDistance = 20.0f;
         [SerializeField] float maxTerrainHeight = 100.0f;
         [SerializeField] float gridSize = 1.0f;
-
-        [SerializeField] BuildingInfo currentBuildingInfo;
-
         [SerializeField] bool isPlacementActive;
 
         [SerializeField] BuildingInfo initialBuilding; // TEMP
 
         private DefaultInputActions actions;
+
+        private BuildingInfo currentBuildingInfo;
+        private Quaternion currentConstructionRotation = Quaternion.identity;
 
         void Start() {
             InitiatePlacement(initialBuilding); // TEMP
@@ -29,7 +29,7 @@ namespace Cosmobot
         void LateUpdate()
         {
             if (isPlacementActive) {
-                ScanBuildingPlacement(GetBuildPoint(), currentBuildingInfo.GridDimensions);
+                ScanBuildingPlacement(GetBuildPoint(), currentBuildingInfo.GridDimensions, currentConstructionRotation);
             }
         }  
 
@@ -40,10 +40,11 @@ namespace Cosmobot
             isPlacementActive = true;
             constructionPreview.SetBuilding(buildingInfo, gridSize);
             constructionPreview.SetActive(true);
+            currentConstructionRotation = Quaternion.identity;
         }
         
         // Place the construction plot
-        public void ExecutePlacement() {
+        private void ExecutePlacement() {
             if (!isPlacementActive){
                 Debug.LogWarning("Attempted to place building outside of placement mode!");
                 return;
@@ -56,6 +57,11 @@ namespace Cosmobot
             currentBuildingInfo = null;
             isPlacementActive = false;
             constructionPreview.SetActive(false);
+        }
+
+        private void RotatePlacement(bool reverse=false) {
+            currentConstructionRotation *= Quaternion.Euler(0, reverse ? -90 : 90, 0);
+            constructionPreview.SetRotation(currentConstructionRotation);
         }
 
         private Vector3 GetBuildPoint() {
@@ -78,11 +84,11 @@ namespace Cosmobot
         }
 
         // Returns the ultimate placement position of the building
-        private Vector3? ScanBuildingPlacement(Vector3 buildPoint, Vector2Int buildingGridDimensions) {
+        private Vector3? ScanBuildingPlacement(Vector3 buildPoint, Vector2Int buildingGridDimensions, Quaternion buildingRotation) {
             Vector3 boxOrigin = new Vector3(buildPoint.x, maxTerrainHeight+1, buildPoint.z);
             Vector3 boxHalfExtents = new Vector3(buildingGridDimensions.x * gridSize * 0.5f, 1, buildingGridDimensions.y * gridSize * 0.5f);
 
-            bool success = Physics.BoxCast(boxOrigin, boxHalfExtents, Vector3.down, out RaycastHit result, Quaternion.identity, maxTerrainHeight*2, buildTargetingCollisionMask);
+            bool success = Physics.BoxCast(boxOrigin, boxHalfExtents, Vector3.down, out RaycastHit result, buildingRotation, maxTerrainHeight*2, buildTargetingCollisionMask);
             if (!success) {
                 constructionPreview.SetActive(false);
                 return null;
@@ -117,6 +123,12 @@ namespace Cosmobot
         {
             if (context.performed)
                 ExecutePlacement();
+        }
+
+        public void OnRotatePlacement(UnityEngine.InputSystem.InputAction.CallbackContext context)
+        {
+            if (context.performed)
+                RotatePlacement();
         }
     }
 }
