@@ -47,8 +47,8 @@ namespace Cosmobot.ItemSystem
             GameObject object1 = itemInfo.InstantiateItem(Vector3.zero, Quaternion.identity);
             GameObject object2 = itemInfo.InstantiateItem(Vector3.zero, Quaternion.identity);
             Assert.AreNotEqual(object1, object2);
-            Item item1 = object1.GetComponent<Item>();
-            Item item2 = object2.GetComponent<Item>();
+            ItemComponent item1 = object1.GetComponent<ItemComponent>();
+            ItemComponent item2 = object2.GetComponent<ItemComponent>();
             Assert.AreEqual(item1.ItemData[TestProperty], "TestValue");
             Assert.AreEqual(item2.ItemData[TestProperty], "TestValue");
             item1.ItemData[TestProperty] = "NewValue";
@@ -71,30 +71,30 @@ namespace Cosmobot.ItemSystem
 
             ItemInfo itemInfo = ItemManager.Instance.GetItem(TestItemId);
             GameObject object1 = itemInfo.InstantiateItem(Vector3.zero, Quaternion.identity);
-            Item item = object1.GetComponent<Item>();
+            ItemComponent itemComponent = object1.GetComponent<ItemComponent>();
 
             // operator [] not found exceptions
-            Assert.Throws<KeyNotFoundException>(() => { _ = item.BoolValue[nonExistingKey]; });
+            Assert.Throws<KeyNotFoundException>(() => { _ = itemComponent.BoolValue[nonExistingKey]; });
 
             // math on nullable
-            item.SetIntValue(nullableOpKey, item.GetIntValue(nonExistingKey) + 2);
-            Assert.IsNull(item.GetIntValue(nullableOpKey));
+            itemComponent.SetIntValue(nullableOpKey, itemComponent.GetIntValue(nonExistingKey) + 2);
+            Assert.IsNull(itemComponent.GetIntValue(nullableOpKey));
 
             // conversion
-            item.SetFloatValue(newKeyOne, 3.14f);
-            Assert.AreEqual(3.14f, item.GetFloatValue(newKeyOne));
-            Assert.AreEqual(3.14f, item.FloatValue[newKeyOne]);
-            Assert.AreEqual("3.14", item.StringValue[newKeyOne]);
-            Assert.IsNull(item.GetIntValue(newKeyOne));
-            Assert.Throws<FormatException>(() => { _ = item.IntValue[newKeyOne]; });
+            itemComponent.SetFloatValue(newKeyOne, 3.14f);
+            Assert.AreEqual(3.14f, itemComponent.GetFloatValue(newKeyOne));
+            Assert.AreEqual(3.14f, itemComponent.FloatValue[newKeyOne]);
+            Assert.AreEqual("3.14", itemComponent.StringValue[newKeyOne]);
+            Assert.IsNull(itemComponent.GetIntValue(newKeyOne));
+            Assert.Throws<FormatException>(() => { _ = itemComponent.IntValue[newKeyOne]; });
 
-            item.BoolValue[newKeyTwo] = true;
-            Assert.AreEqual(true, item.BoolValue[newKeyTwo]);
-            Assert.AreEqual("true", item.StringValue[newKeyTwo]);
-            Assert.IsNull(item.GetIntValue(newKeyTwo));
-            Assert.IsNull(item.GetFloatValue(newKeyTwo));
-            Assert.Throws<FormatException>(() => { _ = item.IntValue[newKeyTwo]; });
-            Assert.Throws<FormatException>(() => { _ = item.FloatValue[newKeyTwo]; });
+            itemComponent.BoolValue[newKeyTwo] = true;
+            Assert.AreEqual(true, itemComponent.BoolValue[newKeyTwo]);
+            Assert.AreEqual("true", itemComponent.StringValue[newKeyTwo]);
+            Assert.IsNull(itemComponent.GetIntValue(newKeyTwo));
+            Assert.IsNull(itemComponent.GetFloatValue(newKeyTwo));
+            Assert.Throws<FormatException>(() => { _ = itemComponent.IntValue[newKeyTwo]; });
+            Assert.Throws<FormatException>(() => { _ = itemComponent.FloatValue[newKeyTwo]; });
 
             GameObject.Destroy(object1);
             yield return null;
