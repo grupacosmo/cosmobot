@@ -8,8 +8,8 @@ namespace Cosmobot
 
         bool isActive = false;
 
-        public void SetBuilding(BuildingInfo buildingInfo, float gridSize) {
-            transform.localScale = new Vector3(buildingInfo.GridDimensions.x * gridSize, 1, buildingInfo.GridDimensions.y * gridSize);
+        public void SetBuilding(BuildingInfo buildingInfo) {
+            transform.localScale = new Vector3(buildingInfo.GridDimensions.x * GlobalConstants.GRID_SIZE, 1, buildingInfo.GridDimensions.y * GlobalConstants.GRID_SIZE);
         }
 
         public void SetPosition(Vector3 newPosition) {
