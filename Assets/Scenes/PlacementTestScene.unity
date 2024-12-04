@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657832, g: 0.49641222, b: 0.57481664, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -670,11 +670,17 @@ MonoBehaviour:
   buildTargetingCollisionMask:
     serializedVersion: 2
     m_Bits: 1
+  constructionSiteCollisionMask:
+    serializedVersion: 2
+    m_Bits: 1
   maxBuildDistance: 10
   maxTerrainHeight: 100
   isPlacementActive: 1
   constructionSitePrefab: {fileID: 6571599839263284129, guid: 11c3bb8c65eb71bca9cff435f75bdc0b, type: 3}
+  resourcePrefab: {fileID: 3999130057310175395, guid: 2648d271a4492304bac8ad48b4706f2f, type: 3}
+  finishedBuildingPrefab: {fileID: 9128753160050716850, guid: 0d569d2f24f15c7cfaf6b541e8598371, type: 3}
   initialBuilding: {fileID: 11400000, guid: d726d3f77459ca7c3b5b6e4be31e20a3, type: 2}
+  finishedBuilding: {fileID: 11400000, guid: d726d3f77459ca7c3b5b6e4be31e20a3, type: 2}
 --- !u!4 &1206252142 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7577094790283547248, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}

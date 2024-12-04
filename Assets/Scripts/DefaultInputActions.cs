@@ -411,6 +411,34 @@ namespace Cosmobot
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""BuildingInteraction"",
+            ""id"": ""ab4ccb98-d0b6-4c44-b0ab-04283a21de94"",
+            ""actions"": [
+                {
+                    ""name"": ""giveResource"",
+                    ""type"": ""Button"",
+                    ""id"": ""7fd521d4-77a3-41d3-a577-e512c251b556"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""f5db7ed9-1201-498a-93a5-5d74056dcbcf"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""giveResource"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -439,6 +467,9 @@ namespace Cosmobot
             m_BuildingPlacement_cancelPlacement = m_BuildingPlacement.FindAction("cancelPlacement", throwIfNotFound: true);
             m_BuildingPlacement_confirmPlacement = m_BuildingPlacement.FindAction("confirmPlacement", throwIfNotFound: true);
             m_BuildingPlacement_rotatePlacement = m_BuildingPlacement.FindAction("rotatePlacement", throwIfNotFound: true);
+            // BuildingInteraction
+            m_BuildingInteraction = asset.FindActionMap("BuildingInteraction", throwIfNotFound: true);
+            m_BuildingInteraction_giveResource = m_BuildingInteraction.FindAction("giveResource", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -820,6 +851,52 @@ namespace Cosmobot
             }
         }
         public BuildingPlacementActions @BuildingPlacement => new BuildingPlacementActions(this);
+
+        // BuildingInteraction
+        private readonly InputActionMap m_BuildingInteraction;
+        private List<IBuildingInteractionActions> m_BuildingInteractionActionsCallbackInterfaces = new List<IBuildingInteractionActions>();
+        private readonly InputAction m_BuildingInteraction_giveResource;
+        public struct BuildingInteractionActions
+        {
+            private @DefaultInputActions m_Wrapper;
+            public BuildingInteractionActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @giveResource => m_Wrapper.m_BuildingInteraction_giveResource;
+            public InputActionMap Get() { return m_Wrapper.m_BuildingInteraction; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(BuildingInteractionActions set) { return set.Get(); }
+            public void AddCallbacks(IBuildingInteractionActions instance)
+            {
+                if (instance == null || m_Wrapper.m_BuildingInteractionActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_BuildingInteractionActionsCallbackInterfaces.Add(instance);
+                @giveResource.started += instance.OnGiveResource;
+                @giveResource.performed += instance.OnGiveResource;
+                @giveResource.canceled += instance.OnGiveResource;
+            }
+
+            private void UnregisterCallbacks(IBuildingInteractionActions instance)
+            {
+                @giveResource.started -= instance.OnGiveResource;
+                @giveResource.performed -= instance.OnGiveResource;
+                @giveResource.canceled -= instance.OnGiveResource;
+            }
+
+            public void RemoveCallbacks(IBuildingInteractionActions instance)
+            {
+                if (m_Wrapper.m_BuildingInteractionActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IBuildingInteractionActions instance)
+            {
+                foreach (var item in m_Wrapper.m_BuildingInteractionActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_BuildingInteractionActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public BuildingInteractionActions @BuildingInteraction => new BuildingInteractionActions(this);
         public interface IPlayerMovementActions
         {
             void OnMovement(InputAction.CallbackContext context);
@@ -849,6 +926,10 @@ namespace Cosmobot
             void OnCancelPlacement(InputAction.CallbackContext context);
             void OnConfirmPlacement(InputAction.CallbackContext context);
             void OnRotatePlacement(InputAction.CallbackContext context);
+        }
+        public interface IBuildingInteractionActions
+        {
+            void OnGiveResource(InputAction.CallbackContext context);
         }
     }
 }
