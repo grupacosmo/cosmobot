@@ -19,7 +19,8 @@ namespace Cosmobot
         private DefaultInputActions actions;
         private Vector3? currentPlacementPosition;
         private BuildingInfo currentBuildingInfo;
-        private Quaternion currentConstructionRotation = Quaternion.identity;
+        private int currentConstructionRotationSteps = 0; // multiply by 90deg to get actual rotation
+        private Quaternion CurrentConstructionRotation => Quaternion.Euler(0, currentConstructionRotationSteps * 90.0f, 0);
 
         void Start() {
             InitiatePlacement(initialBuilding); // TEMP
@@ -28,7 +29,7 @@ namespace Cosmobot
         void LateUpdate()
         {
             if (isPlacementActive) {
-                currentPlacementPosition = ScanBuildingPlacement(GetBuildPoint(), currentBuildingInfo.GridDimensions, currentConstructionRotation);
+                currentPlacementPosition = ScanBuildingPlacement(GetBuildPoint(), currentBuildingInfo.GridDimensions, CurrentConstructionRotation);
             }
         }  
 
@@ -39,7 +40,6 @@ namespace Cosmobot
             isPlacementActive = true;
             constructionPreview.SetBuilding(buildingInfo);
             constructionPreview.SetActive(true);
-            currentConstructionRotation = Quaternion.identity;
         }
         
         // Place the construction plot
@@ -54,7 +54,7 @@ namespace Cosmobot
                 return;
             }
 
-            GameObject newSite = Instantiate(constructionSitePrefab, (Vector3)currentPlacementPosition, currentConstructionRotation);
+            GameObject newSite = Instantiate(constructionSitePrefab, (Vector3)currentPlacementPosition, CurrentConstructionRotation);
             newSite.GetComponent<ConstructionSite>().Initialize(currentBuildingInfo);
 
             ExitPlacement();
@@ -68,8 +68,8 @@ namespace Cosmobot
         }
 
         private void RotatePlacement(bool reverse=false) {
-            currentConstructionRotation *= Quaternion.Euler(0, reverse ? -90 : 90, 0);
-            constructionPreview.SetRotation(currentConstructionRotation);
+            currentConstructionRotationSteps = (currentConstructionRotationSteps + (reverse ? -1 : 1)) % 4;
+            constructionPreview.SetRotation(CurrentConstructionRotation);
         }
 
         private Vector3 GetBuildPoint() {
