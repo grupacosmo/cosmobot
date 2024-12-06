@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using Cosmobot.BuildingSystem;
 using UnityEngine;
@@ -17,7 +16,6 @@ namespace Cosmobot
         [SerializeField] float maxTerrainHeight = 100.0f;
         [SerializeField] bool isPlacementActive;
         [SerializeField] GameObject constructionSitePrefab;
-        [SerializeField] GameObject resourcePrefab; // TEMP
         [SerializeField] GameObject finishedBuildingPrefab;
         [SerializeField] BuildingInfo initialBuilding; // TEMP
 
@@ -61,38 +59,37 @@ namespace Cosmobot
 
             GameObject newSite = Instantiate(constructionSitePrefab, (Vector3)currentPlacementPosition, CurrentConstructionRotation);
             newSite.GetComponent<ConstructionSite>().Initialize(currentBuildingInfo);
-            newSite.GetComponent<ConstructionSite>().SetRequiredResources(new SerializableDictionary<string, int>{{"Iron Ore", 0}, {"Stone", 0}}); // TEMP
-            
-            Vector3 sitePosition = newSite.GetComponent<ConstructionSite>().TempCube.transform.position;
-            float distance = 0.5f; // TEMP
-            float height = 1.5f; // TEMP
-
-            // Demo objects of what resources will be needed for the building
-            GameObject resourceIron = Instantiate(resourcePrefab, new Vector3(
-                sitePosition.x + (newSite.transform.eulerAngles.y == 90 ? -distance : newSite.transform.eulerAngles.y == 270 ? distance : 0), sitePosition.y + height, 
-                sitePosition.z + (newSite.transform.eulerAngles.y == 0 ? distance : newSite.transform.eulerAngles.y == 180 ? -distance : 0)), newSite.transform.rotation);
-            GameObject resourceStone = Instantiate(resourcePrefab, new Vector3(
-                sitePosition.x + (newSite.transform.eulerAngles.y == 90 ? distance : newSite.transform.eulerAngles.y == 270 ? -distance : 0), sitePosition.y + height, 
-                sitePosition.z + (newSite.transform.eulerAngles.y == 0 ? -distance : newSite.transform.eulerAngles.y == 180 ? distance : 0)), newSite.transform.rotation);
-            
-            ExitPlacement();
+            newSite.GetComponent<ConstructionSite>().SetRequiredResources(new SerializableDictionary<string, int>{{"Iron Ore", 8}, {"Stone", 4}}); // should be set based on building type
+           
+            //ExitPlacement();
         }
 
         private void GiveResource() {
             Ray looking = new Ray(cameraTransform.position, cameraTransform.forward);
             bool isLooking = Physics.Raycast(looking, out RaycastHit hit, maxBuildDistance, constructionSiteCollisionMask);
-
             if (isLooking && hit.collider.gameObject.name == "Cube") { //TEMP
-                SerializableDictionary<string, int> targetSiteNeededResources = hit.collider.gameObject.GetComponentInParent<ConstructionSite>().ConstructionSiteResources;
-                foreach (KeyValuePair<string, int> resource in targetSiteNeededResources) {
-                    Debug.Log($"{resource.Key}: {resource.Value}");
-                }
-                
-                bool isFinished = targetSiteNeededResources.Values.All(value => value == 0);
+                try
+                {
+                    SerializableDictionary<string, int> targetSiteNeededResources = hit.collider.gameObject.GetComponentInParent<ConstructionSite>().ConstructionSiteResources;
+                    foreach (var key in targetSiteNeededResources.ToList()) {
+                        if (targetSiteNeededResources[key.Key] >= 0) {
+                            targetSiteNeededResources[key.Key]--;
+                        }
+                    }
+                    hit.collider.gameObject.GetComponentInParent<ConstructionSite>().DecreaseResourceRequirement();
 
-                if (isFinished) {
-                    GameObject finishedSite = Instantiate(finishedBuildingPrefab, hit.collider.gameObject.transform.position, hit.collider.gameObject.transform.rotation);
-                    Destroy(hit.collider.gameObject);
+                    bool isFinished = targetSiteNeededResources.Values.All(value => value == -1);
+
+                    if (isFinished) {
+                        GameObject finishedSite = Instantiate(finishedBuildingPrefab, hit.collider.gameObject.transform.position, hit.collider.gameObject.transform.rotation);
+                        hit.collider.gameObject.GetComponentInParent<ConstructionSite>().DestroyPreview();
+                        Destroy(hit.collider.gameObject);
+                    }
+                    
+                }
+                catch (System.NullReferenceException)
+                {
+                    Debug.LogWarning("Unable to access the building");
                 }
             }
         }
