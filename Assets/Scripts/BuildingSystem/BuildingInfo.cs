@@ -28,8 +28,9 @@ namespace Cosmobot.BuildingSystem
         public IReadOnlyDictionary<string, string> AdditionalData => additionalData;
         public Vector2Int GridSize => gridSize;
 
-        // get building's grid size accounting for rotation; each rotation step is 90 degrees
-        public Vector2Int GetEffectiveGridSize(int rotationSteps) {
+        // Get building's grid size accounting for rotation; each rotation step is 90 degrees
+        public Vector2Int GetEffectiveGridSize(int rotationSteps) 
+        {
             return rotationSteps % 2 == 0 ? gridSize : new(gridSize.y, gridSize.x);
         }
 

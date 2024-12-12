@@ -5,7 +5,6 @@ namespace Cosmobot
 {
     public class PlayerConstructionHandler : MonoBehaviour, DefaultInputActions.IBuildingPlacementActions
     {
-
         [SerializeField] Transform cameraTransform;
         [SerializeField] ConstructionPreview constructionPreview;
         [SerializeField] LayerMask buildTargetingCollisionMask;
@@ -28,7 +27,8 @@ namespace Cosmobot
 
         // Select a building and start scanning for placement position
         // TODO: hook this up to a state machine or something so it works with the rest of the player mechanics
-        public void InitiatePlacement(BuildingInfo buildingInfo) {
+        public void InitiatePlacement(BuildingInfo buildingInfo) 
+        {
             currentBuildingInfo = buildingInfo;
             isPlacementActive = true;
             constructionPreview.SetBuilding(buildingInfo);
@@ -36,8 +36,9 @@ namespace Cosmobot
         }
         
         // Place the construction plot
-        private void ExecutePlacement() {
-            if (!isPlacementActive){
+        private void ExecutePlacement() 
+        {
+            if (isPlacementActive == false){
                 Debug.LogWarning("Attempted to place building outside of placement mode!");
                 return;
             }
@@ -54,13 +55,15 @@ namespace Cosmobot
         }
 
         // Exit placement mode
-        public void ExitPlacement() {
+        public void ExitPlacement() 
+        {
             currentBuildingInfo = null;
             isPlacementActive = false;
             constructionPreview.gameObject.SetActive(false);
         }
 
-        private void ProcessPlacement() {
+        private void ProcessPlacement() 
+        {
             if (isPlacementActive) {
                 Vector2Int effectiveGridSize = currentBuildingInfo.GetEffectiveGridSize(currentConstructionRotationSteps);
                 bool centerSnapX = effectiveGridSize.x % 2 == 1;
@@ -70,12 +73,14 @@ namespace Cosmobot
             }
         }
 
-        private void RotatePlacement(bool reverse=false) {
+        private void RotatePlacement(bool reverse=false) 
+        {
             currentConstructionRotationSteps = (currentConstructionRotationSteps + (reverse ? -1 : 1)) % 4;
             constructionPreview.SetRotation(CurrentConstructionRotation);
         }
 
-        private Vector3 GetBuildPoint() {
+        private Vector3 GetBuildPoint() 
+        {
             Ray cameraRay = new Ray(cameraTransform.position, cameraTransform.forward);
             bool cameraRaySuccess = Physics.Raycast(cameraRay, out RaycastHit cameraRayHit, maxBuildDistance * 2, buildTargetingCollisionMask);
 
@@ -86,7 +91,8 @@ namespace Cosmobot
             return Vector3.ProjectOnPlane(cameraTransform.position, Vector3.up) + Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up) * maxBuildDistance;
         }
 
-        private Vector3 SnapToGrid(Vector3 vec, bool centerX, bool centerZ) {
+        private Vector3 SnapToGrid(Vector3 vec, bool centerX, bool centerZ) 
+        {
             vec /= GlobalConstants.GRID_CELL_SIZE;
             Vector3 newVec = new Vector3(Mathf.Round(vec.x), 0, Mathf.Round(vec.z));
             newVec *= GlobalConstants.GRID_CELL_SIZE;
@@ -95,12 +101,13 @@ namespace Cosmobot
         }
 
         // Returns the ultimate placement position of the building
-        private Vector3? ScanBuildingPlacement(Vector3 buildPoint, Vector2Int buildingGridSize, Quaternion buildingRotation) {
+        private Vector3? ScanBuildingPlacement(Vector3 buildPoint, Vector2Int buildingGridSize, Quaternion buildingRotation) 
+        {
             Vector3 boxOrigin = new Vector3(buildPoint.x, maxTerrainHeight+1, buildPoint.z);
             Vector3 boxHalfExtents = new Vector3(buildingGridSize.x * GlobalConstants.GRID_CELL_SIZE * 0.5f, 1, buildingGridSize.y * GlobalConstants.GRID_CELL_SIZE * 0.5f);
 
             bool success = Physics.BoxCast(boxOrigin, boxHalfExtents, Vector3.down, out RaycastHit result, buildingRotation, maxTerrainHeight*2, buildTargetingCollisionMask);
-            if (!success) {
+            if (success == false) {
                 constructionPreview.gameObject.SetActive(false);
                 return null;
             }
