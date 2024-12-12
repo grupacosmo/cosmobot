@@ -11,7 +11,6 @@ namespace Cosmobot
         [SerializeField] LayerMask buildTargetingCollisionMask;
         [SerializeField] float maxBuildDistance = 20.0f;
         [SerializeField] float maxTerrainHeight = 100.0f;
-        [SerializeField] bool isPlacementActive;
         [SerializeField] GameObject constructionSitePrefab;
         [SerializeField] BuildingInfo initialBuilding; // TEMP
 
@@ -20,10 +19,7 @@ namespace Cosmobot
         private BuildingInfo currentBuildingInfo;
         private int currentConstructionRotationSteps = 0; // multiply by 90deg to get actual rotation
         private Quaternion CurrentConstructionRotation => Quaternion.Euler(0, currentConstructionRotationSteps * 90.0f, 0);
-
-        void Start() {
-            InitiatePlacement(initialBuilding); // TEMP
-        }
+        private bool isPlacementActive = false;
 
         void LateUpdate()
         {
@@ -36,7 +32,7 @@ namespace Cosmobot
             currentBuildingInfo = buildingInfo;
             isPlacementActive = true;
             constructionPreview.SetBuilding(buildingInfo);
-            constructionPreview.SetActive(true);
+            constructionPreview.gameObject.SetActive(true);
         }
         
         // Place the construction plot
@@ -61,7 +57,7 @@ namespace Cosmobot
         public void ExitPlacement() {
             currentBuildingInfo = null;
             isPlacementActive = false;
-            constructionPreview.SetActive(false);
+            constructionPreview.gameObject.SetActive(false);
         }
 
         private void ProcessPlacement() {
@@ -105,10 +101,10 @@ namespace Cosmobot
 
             bool success = Physics.BoxCast(boxOrigin, boxHalfExtents, Vector3.down, out RaycastHit result, buildingRotation, maxTerrainHeight*2, buildTargetingCollisionMask);
             if (!success) {
-                constructionPreview.SetActive(false);
+                constructionPreview.gameObject.SetActive(false);
                 return null;
             }
-            constructionPreview.SetActive(true);
+            constructionPreview.gameObject.SetActive(true);
 
             Vector3 finalPlacementPosition = new Vector3(buildPoint.x, result.point.y, buildPoint.z);
 
@@ -144,6 +140,11 @@ namespace Cosmobot
         {
             if (context.performed)
                 RotatePlacement();
+        }
+
+        public void OnStartPlacementTemp(UnityEngine.InputSystem.InputAction.CallbackContext context)
+        {
+            InitiatePlacement(initialBuilding);
         }
     }
 }

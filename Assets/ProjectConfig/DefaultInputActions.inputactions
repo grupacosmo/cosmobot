@@ -350,6 +350,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "startPlacementTemp",
+                    "type": "Button",
+                    "id": "48daa551-aa4b-4a70-ab5f-e4f624af6a1e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -383,6 +392,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "rotatePlacement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6ddd37b2-71ed-43e8-b06f-01a700d6b0a0",
+                    "path": "<Keyboard>/b",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "startPlacementTemp",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -374,6 +374,15 @@ namespace Cosmobot
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""startPlacementTemp"",
+                    ""type"": ""Button"",
+                    ""id"": ""48daa551-aa4b-4a70-ab5f-e4f624af6a1e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -409,6 +418,17 @@ namespace Cosmobot
                     ""action"": ""rotatePlacement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6ddd37b2-71ed-43e8-b06f-01a700d6b0a0"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""startPlacementTemp"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -439,6 +459,7 @@ namespace Cosmobot
             m_BuildingPlacement_cancelPlacement = m_BuildingPlacement.FindAction("cancelPlacement", throwIfNotFound: true);
             m_BuildingPlacement_confirmPlacement = m_BuildingPlacement.FindAction("confirmPlacement", throwIfNotFound: true);
             m_BuildingPlacement_rotatePlacement = m_BuildingPlacement.FindAction("rotatePlacement", throwIfNotFound: true);
+            m_BuildingPlacement_startPlacementTemp = m_BuildingPlacement.FindAction("startPlacementTemp", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -765,6 +786,7 @@ namespace Cosmobot
         private readonly InputAction m_BuildingPlacement_cancelPlacement;
         private readonly InputAction m_BuildingPlacement_confirmPlacement;
         private readonly InputAction m_BuildingPlacement_rotatePlacement;
+        private readonly InputAction m_BuildingPlacement_startPlacementTemp;
         public struct BuildingPlacementActions
         {
             private @DefaultInputActions m_Wrapper;
@@ -772,6 +794,7 @@ namespace Cosmobot
             public InputAction @cancelPlacement => m_Wrapper.m_BuildingPlacement_cancelPlacement;
             public InputAction @confirmPlacement => m_Wrapper.m_BuildingPlacement_confirmPlacement;
             public InputAction @rotatePlacement => m_Wrapper.m_BuildingPlacement_rotatePlacement;
+            public InputAction @startPlacementTemp => m_Wrapper.m_BuildingPlacement_startPlacementTemp;
             public InputActionMap Get() { return m_Wrapper.m_BuildingPlacement; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -790,6 +813,9 @@ namespace Cosmobot
                 @rotatePlacement.started += instance.OnRotatePlacement;
                 @rotatePlacement.performed += instance.OnRotatePlacement;
                 @rotatePlacement.canceled += instance.OnRotatePlacement;
+                @startPlacementTemp.started += instance.OnStartPlacementTemp;
+                @startPlacementTemp.performed += instance.OnStartPlacementTemp;
+                @startPlacementTemp.canceled += instance.OnStartPlacementTemp;
             }
 
             private void UnregisterCallbacks(IBuildingPlacementActions instance)
@@ -803,6 +829,9 @@ namespace Cosmobot
                 @rotatePlacement.started -= instance.OnRotatePlacement;
                 @rotatePlacement.performed -= instance.OnRotatePlacement;
                 @rotatePlacement.canceled -= instance.OnRotatePlacement;
+                @startPlacementTemp.started -= instance.OnStartPlacementTemp;
+                @startPlacementTemp.performed -= instance.OnStartPlacementTemp;
+                @startPlacementTemp.canceled -= instance.OnStartPlacementTemp;
             }
 
             public void RemoveCallbacks(IBuildingPlacementActions instance)
@@ -849,6 +878,7 @@ namespace Cosmobot
             void OnCancelPlacement(InputAction.CallbackContext context);
             void OnConfirmPlacement(InputAction.CallbackContext context);
             void OnRotatePlacement(InputAction.CallbackContext context);
+            void OnStartPlacementTemp(InputAction.CallbackContext context);
         }
     }
 }
