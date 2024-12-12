@@ -66,11 +66,11 @@ namespace Cosmobot
 
         private void ProcessPlacement() {
             if (isPlacementActive) {
-                Vector2Int effectiveGridDimensions = currentBuildingInfo.GetEffectiveGridDimensions(currentConstructionRotationSteps);
-                bool centerSnapX = effectiveGridDimensions.x % 2 == 1;
-                bool centerSnapZ = effectiveGridDimensions.y % 2 == 1;
+                Vector2Int effectiveGridSize = currentBuildingInfo.GetEffectiveGridSize(currentConstructionRotationSteps);
+                bool centerSnapX = effectiveGridSize.x % 2 == 1;
+                bool centerSnapZ = effectiveGridSize.y % 2 == 1;
                 Vector3 snappedBuildPoint = SnapToGrid(GetBuildPoint(), centerSnapX, centerSnapZ);
-                currentPlacementPosition = ScanBuildingPlacement(snappedBuildPoint, currentBuildingInfo.GridDimensions, CurrentConstructionRotation);
+                currentPlacementPosition = ScanBuildingPlacement(snappedBuildPoint, currentBuildingInfo.GridSize, CurrentConstructionRotation);
             }
         }
 
@@ -91,17 +91,17 @@ namespace Cosmobot
         }
 
         private Vector3 SnapToGrid(Vector3 vec, bool centerX, bool centerZ) {
-            vec /= GlobalConstants.GRID_SIZE;
+            vec /= GlobalConstants.GRID_CELL_SIZE;
             Vector3 newVec = new Vector3(Mathf.Round(vec.x), 0, Mathf.Round(vec.z));
-            newVec *= GlobalConstants.GRID_SIZE;
+            newVec *= GlobalConstants.GRID_CELL_SIZE;
 
-            return newVec + new Vector3(centerX ? GlobalConstants.GRID_SIZE/2.0f : 0, 0, centerZ ? GlobalConstants.GRID_SIZE/2.0f : 0);
+            return newVec + new Vector3(centerX ? GlobalConstants.GRID_CELL_SIZE/2.0f : 0, 0, centerZ ? GlobalConstants.GRID_CELL_SIZE/2.0f : 0);
         }
 
         // Returns the ultimate placement position of the building
-        private Vector3? ScanBuildingPlacement(Vector3 buildPoint, Vector2Int buildingGridDimensions, Quaternion buildingRotation) {
+        private Vector3? ScanBuildingPlacement(Vector3 buildPoint, Vector2Int buildingGridSize, Quaternion buildingRotation) {
             Vector3 boxOrigin = new Vector3(buildPoint.x, maxTerrainHeight+1, buildPoint.z);
-            Vector3 boxHalfExtents = new Vector3(buildingGridDimensions.x * GlobalConstants.GRID_SIZE * 0.5f, 1, buildingGridDimensions.y * GlobalConstants.GRID_SIZE * 0.5f);
+            Vector3 boxHalfExtents = new Vector3(buildingGridSize.x * GlobalConstants.GRID_CELL_SIZE * 0.5f, 1, buildingGridSize.y * GlobalConstants.GRID_CELL_SIZE * 0.5f);
 
             bool success = Physics.BoxCast(boxOrigin, boxHalfExtents, Vector3.down, out RaycastHit result, buildingRotation, maxTerrainHeight*2, buildTargetingCollisionMask);
             if (!success) {

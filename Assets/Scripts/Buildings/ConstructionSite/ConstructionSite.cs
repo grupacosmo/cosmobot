@@ -9,7 +9,7 @@ namespace Cosmobot
 
         public void Initialize(BuildingInfo newBuildingInfo) {
             buildingInfo = newBuildingInfo;
-            tempCube.localScale = new Vector3(buildingInfo.GridDimensions.x, 0.2f, buildingInfo.GridDimensions.y);
+            tempCube.localScale = new Vector3(buildingInfo.GridSize.x, 0.2f, buildingInfo.GridSize.y);
         }
 
         public void FinishConstruction() {

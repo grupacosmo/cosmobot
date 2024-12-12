@@ -9,7 +9,7 @@ namespace Cosmobot
 
         public BuildingInfo buildingInfo {get; protected set;}
 
-        public Vector2Int GridDimensions => buildingInfo.GridDimensions;
+        public Vector2Int GridSize => buildingInfo.GridSize;
 
         // Remove the building (does not drop resources or anything like that)
         public void Despawn() {
