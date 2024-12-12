@@ -5,7 +5,7 @@ namespace Cosmobot
 {
     public class BaseBuilding : MonoBehaviour
     {
-        public BuildingInfo buildingInfo {get; protected set;}
+        public BuildingInfo buildingInfo { get; protected set; }
 
         public Vector2Int GridSize => buildingInfo.GridSize;
 

@@ -32,7 +32,6 @@ namespace Cosmobot
             currentBuildingInfo = buildingInfo;
             isPlacementActive = true;
             constructionPreview.SetBuilding(buildingInfo);
-            constructionPreview.gameObject.SetActive(true);
         }
         
         // Place the construction plot
@@ -64,16 +63,26 @@ namespace Cosmobot
 
         private void ProcessPlacement() 
         {
-            if (isPlacementActive) {
-                Vector2Int effectiveGridSize = currentBuildingInfo.GetEffectiveGridSize(currentConstructionRotationSteps);
-                bool centerSnapX = effectiveGridSize.x % 2 == 1;
-                bool centerSnapZ = effectiveGridSize.y % 2 == 1;
-                Vector3 snappedBuildPoint = SnapToGrid(GetBuildPoint(), centerSnapX, centerSnapZ);
-                currentPlacementPosition = ScanBuildingPlacement(snappedBuildPoint, currentBuildingInfo.GridSize, CurrentConstructionRotation);
+            if (isPlacementActive == false) return;
+
+            Vector2Int effectiveGridSize = currentBuildingInfo.GetEffectiveGridSize(currentConstructionRotationSteps);
+            bool centerSnapX = effectiveGridSize.x % 2 == 1;
+            bool centerSnapZ = effectiveGridSize.y % 2 == 1;
+            Vector3 snappedBuildPoint = SnapToGrid(GetBuildPoint(), centerSnapX, centerSnapZ);
+            currentPlacementPosition = ScanBuildingPlacement(snappedBuildPoint, currentBuildingInfo.GridSize, CurrentConstructionRotation);
+
+            if (currentPlacementPosition is not null) 
+            {
+                constructionPreview.gameObject.SetActive(true);
+                constructionPreview.SetPosition(currentPlacementPosition.Value);
+            }
+            else 
+            {
+                constructionPreview.gameObject.SetActive(false);
             }
         }
 
-        private void RotatePlacement(bool reverse=false) 
+        private void RotatePlacement(bool reverse = false) 
         {
             currentConstructionRotationSteps = (currentConstructionRotationSteps + (reverse ? -1 : 1)) % 4;
             constructionPreview.SetRotation(CurrentConstructionRotation);
@@ -100,24 +109,19 @@ namespace Cosmobot
             return newVec + new Vector3(centerX ? GlobalConstants.GRID_CELL_SIZE/2.0f : 0, 0, centerZ ? GlobalConstants.GRID_CELL_SIZE/2.0f : 0);
         }
 
-        // Returns the ultimate placement position of the building
+        // Returns the final placement position of the building, or null if no valid position is found
         private Vector3? ScanBuildingPlacement(Vector3 buildPoint, Vector2Int buildingGridSize, Quaternion buildingRotation) 
         {
             Vector3 boxOrigin = new Vector3(buildPoint.x, maxTerrainHeight+1, buildPoint.z);
             Vector3 boxHalfExtents = new Vector3(buildingGridSize.x * GlobalConstants.GRID_CELL_SIZE * 0.5f, 1, buildingGridSize.y * GlobalConstants.GRID_CELL_SIZE * 0.5f);
 
-            bool success = Physics.BoxCast(boxOrigin, boxHalfExtents, Vector3.down, out RaycastHit result, buildingRotation, maxTerrainHeight*2, buildTargetingCollisionMask);
-            if (success == false) {
-                constructionPreview.gameObject.SetActive(false);
-                return null;
+            if(Physics.BoxCast(boxOrigin, boxHalfExtents, Vector3.down, out RaycastHit result, buildingRotation, maxTerrainHeight*2, buildTargetingCollisionMask))
+            {
+                Vector3 finalPlacementPosition = new Vector3(buildPoint.x, result.point.y, buildPoint.z);
+                return finalPlacementPosition;
             }
-            constructionPreview.gameObject.SetActive(true);
 
-            Vector3 finalPlacementPosition = new Vector3(buildPoint.x, result.point.y, buildPoint.z);
-
-            constructionPreview.SetPosition(finalPlacementPosition);
-
-            return finalPlacementPosition;
+            return null;
         }
 
         private void OnEnable()

@@ -36,7 +36,7 @@ namespace Cosmobot.BuildingSystem
 
         public override bool Equals(object obj) => Equals(obj as BuildingInfo);
 
-        public bool Equals(BuildingInfo other) => other != null && id == other.id;
+        public bool Equals(BuildingInfo other) => other is not null && id == other.id;
 
         public override int GetHashCode() => id.GetHashCode();
 
