@@ -7,7 +7,6 @@ namespace Cosmobot
     {
 
         [SerializeField] Transform cameraTransform;
-        [SerializeField] Transform playerTransform;
         [SerializeField] ConstructionPreview constructionPreview;
         [SerializeField] LayerMask buildTargetingCollisionMask;
         [SerializeField] float maxBuildDistance = 20.0f;
@@ -28,10 +27,8 @@ namespace Cosmobot
 
         void LateUpdate()
         {
-            if (isPlacementActive) {
-                currentPlacementPosition = ScanBuildingPlacement(GetBuildPoint(), currentBuildingInfo.GridDimensions, CurrentConstructionRotation);
-            }
-        }  
+            ProcessPlacement();
+        } 
 
         // Select a building and start scanning for placement position
         // TODO: hook this up to a state machine or something so it works with the rest of the player mechanics
@@ -65,6 +62,16 @@ namespace Cosmobot
             currentBuildingInfo = null;
             isPlacementActive = false;
             constructionPreview.SetActive(false);
+        }
+
+        private void ProcessPlacement() {
+            if (isPlacementActive) {
+                Vector2Int effectiveGridDimensions = currentBuildingInfo.GetEffectiveGridDimensions(currentConstructionRotationSteps);
+                bool centerSnapX = effectiveGridDimensions.x % 2 == 1;
+                bool centerSnapZ = effectiveGridDimensions.y % 2 == 1;
+                Vector3 snappedBuildPoint = SnapToGrid(GetBuildPoint(), centerSnapX, centerSnapZ);
+                currentPlacementPosition = ScanBuildingPlacement(snappedBuildPoint, currentBuildingInfo.GridDimensions, CurrentConstructionRotation);
+            }
         }
 
         private void RotatePlacement(bool reverse=false) {

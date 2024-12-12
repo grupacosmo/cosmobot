@@ -28,6 +28,11 @@ namespace Cosmobot.BuildingSystem
         public IReadOnlyDictionary<string, string> AdditionalData => additionalData;
         public Vector2Int GridDimensions => gridDimensions;
 
+        // get building's grid size accounting for rotation; each rotation step is 90 degrees
+        public Vector2Int GetEffectiveGridDimensions(int rotationSteps) {
+            return rotationSteps % 2 == 0 ? gridDimensions : new(gridDimensions.y, gridDimensions.x);
+        }
+        
         public override bool Equals(object obj) => Equals(obj as BuildingInfo);
 
         public bool Equals(BuildingInfo other) => other != null && id == other.id;
