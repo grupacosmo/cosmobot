@@ -19,4 +19,4 @@ MonoBehaviour:
   additionalData:
     keys: []
     values: []
-  gridDimensions: {x: 2, y: 2}
+  gridSize: {x: 2, y: 2}
