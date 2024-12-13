@@ -354,7 +354,7 @@ namespace Cosmobot
                     ""id"": ""56bbef0f-e87a-4605-8d83-a76c26f63581"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -363,7 +363,7 @@ namespace Cosmobot
                     ""id"": ""2d83529a-d50b-447b-848b-0da4e89ca12c"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -372,7 +372,7 @@ namespace Cosmobot
                     ""id"": ""b89674fd-7d7b-4e50-b82f-70ba8909b161"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -381,7 +381,7 @@ namespace Cosmobot
                     ""id"": ""eeca9117-3ccd-4ff3-8e85-bb2156aa25cc"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap"",
                     ""initialStateCheck"": false
                 },
                 {
@@ -390,7 +390,7 @@ namespace Cosmobot
                     ""id"": ""903f15f6-6433-4e02-89e1-c5bf6105143b"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Tap"",
                     ""initialStateCheck"": false
                 }
             ],
