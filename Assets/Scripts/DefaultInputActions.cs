@@ -346,58 +346,58 @@ namespace Cosmobot
         },
         {
             ""name"": ""PlayerRoutingTool"",
-            ""id"": ""2c2cd101-e173-422b-a3f3-b6f6b1b3f510"",
+            ""id"": ""31c51f7f-1001-4cb6-9cd5-47e5790367cb"",
             ""actions"": [
                 {
                     ""name"": ""addWaypointToRoute"",
                     ""type"": ""Button"",
-                    ""id"": ""d14b9ce3-81f1-46de-a380-51b02f68e5f7"",
+                    ""id"": ""56bbef0f-e87a-4605-8d83-a76c26f63581"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Tap"",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""changeReleaseMode"",
                     ""type"": ""Button"",
-                    ""id"": ""f3bc3b29-45ec-4c65-8636-9089bb412c0c"",
+                    ""id"": ""2d83529a-d50b-447b-848b-0da4e89ca12c"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Tap"",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""changeGrabMode"",
                     ""type"": ""Button"",
-                    ""id"": ""0d0f873a-d75b-4056-a05a-2bc512502d68"",
+                    ""id"": ""b89674fd-7d7b-4e50-b82f-70ba8909b161"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Tap"",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""switchRobot"",
                     ""type"": ""Button"",
-                    ""id"": ""9bb93b59-5ab3-433c-a9a5-f548cb1d2dc0"",
+                    ""id"": ""eeca9117-3ccd-4ff3-8e85-bb2156aa25cc"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Tap"",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""applyRouteToRobot"",
                     ""type"": ""Button"",
-                    ""id"": ""e5f40c2c-9c92-4810-8fe4-97bbc7e646e7"",
+                    ""id"": ""903f15f6-6433-4e02-89e1-c5bf6105143b"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": ""Tap"",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""865751bd-d223-47b5-b91c-f04e045b112d"",
+                    ""id"": ""634006ef-e299-4560-b168-a77416ed86f7"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -408,7 +408,7 @@ namespace Cosmobot
                 },
                 {
                     ""name"": """",
-                    ""id"": ""e17127c4-3cec-430e-84a3-db23ea47f99f"",
+                    ""id"": ""78123ab1-832f-489d-aedd-848402129c6d"",
                     ""path"": ""<Keyboard>/f2"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -419,7 +419,7 @@ namespace Cosmobot
                 },
                 {
                     ""name"": """",
-                    ""id"": ""d6c87046-e1c4-4797-9663-1a2b7284b0cb"",
+                    ""id"": ""46f1d95b-b93d-4a89-92b6-ba8ec19904a1"",
                     ""path"": ""<Keyboard>/f1"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -430,7 +430,7 @@ namespace Cosmobot
                 },
                 {
                     ""name"": """",
-                    ""id"": ""e226c24e-89b0-4101-94e1-979ade041739"",
+                    ""id"": ""6af24d83-09b1-4693-8602-6e8caac9df75"",
                     ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -441,7 +441,7 @@ namespace Cosmobot
                 },
                 {
                     ""name"": """",
-                    ""id"": ""eb5f73d6-a883-4d19-a1b1-0e8de55dc457"",
+                    ""id"": ""74c4db3a-4c8a-4e52-87a7-b2466fc7228d"",
                     ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -449,15 +449,92 @@ namespace Cosmobot
                     ""action"": ""applyRouteToRobot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""BuildingPlacement"",
+            ""id"": ""6cf32048-e77c-4665-8a03-3c5d63b231b4"",
+            ""actions"": [
+                {
+                    ""name"": ""cancelPlacement"",
+                    ""type"": ""Button"",
+                    ""id"": ""480c38c9-721c-4092-8c55-9c5b232362db"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""confirmPlacement"",
+                    ""type"": ""Button"",
+                    ""id"": ""3503ef88-7009-4be4-964e-009a938eb457"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""rotatePlacement"",
+                    ""type"": ""Button"",
+                    ""id"": ""f83028df-c50b-40c4-a871-a7c5157a420d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""startPlacementTemp"",
+                    ""type"": ""Button"",
+                    ""id"": ""48daa551-aa4b-4a70-ab5f-e4f624af6a1e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
                     ""name"": """",
-                    ""id"": ""b58427b0-0fd3-401e-ab69-5b56efe81da1"",
-                    ""path"": """",
+                    ""id"": ""84d3f752-ee1d-4101-8db6-9388ed07291d"",
+                    ""path"": ""<Keyboard>/g"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""applyRouteToRobot"",
+                    ""action"": ""cancelPlacement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1074272c-97d5-42e6-9812-a7042f81b4bc"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""confirmPlacement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e6997b68-26ce-45a1-a7fc-f120d3063d4d"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""rotatePlacement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6ddd37b2-71ed-43e8-b06f-01a700d6b0a0"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""startPlacementTemp"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -492,6 +569,12 @@ namespace Cosmobot
             m_PlayerRoutingTool_changeGrabMode = m_PlayerRoutingTool.FindAction("changeGrabMode", throwIfNotFound: true);
             m_PlayerRoutingTool_switchRobot = m_PlayerRoutingTool.FindAction("switchRobot", throwIfNotFound: true);
             m_PlayerRoutingTool_applyRouteToRobot = m_PlayerRoutingTool.FindAction("applyRouteToRobot", throwIfNotFound: true);
+            // BuildingPlacement
+            m_BuildingPlacement = asset.FindActionMap("BuildingPlacement", throwIfNotFound: true);
+            m_BuildingPlacement_cancelPlacement = m_BuildingPlacement.FindAction("cancelPlacement", throwIfNotFound: true);
+            m_BuildingPlacement_confirmPlacement = m_BuildingPlacement.FindAction("confirmPlacement", throwIfNotFound: true);
+            m_BuildingPlacement_rotatePlacement = m_BuildingPlacement.FindAction("rotatePlacement", throwIfNotFound: true);
+            m_BuildingPlacement_startPlacementTemp = m_BuildingPlacement.FindAction("startPlacementTemp", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -889,6 +972,76 @@ namespace Cosmobot
             }
         }
         public PlayerRoutingToolActions @PlayerRoutingTool => new PlayerRoutingToolActions(this);
+
+        // BuildingPlacement
+        private readonly InputActionMap m_BuildingPlacement;
+        private List<IBuildingPlacementActions> m_BuildingPlacementActionsCallbackInterfaces = new List<IBuildingPlacementActions>();
+        private readonly InputAction m_BuildingPlacement_cancelPlacement;
+        private readonly InputAction m_BuildingPlacement_confirmPlacement;
+        private readonly InputAction m_BuildingPlacement_rotatePlacement;
+        private readonly InputAction m_BuildingPlacement_startPlacementTemp;
+        public struct BuildingPlacementActions
+        {
+            private @DefaultInputActions m_Wrapper;
+            public BuildingPlacementActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @cancelPlacement => m_Wrapper.m_BuildingPlacement_cancelPlacement;
+            public InputAction @confirmPlacement => m_Wrapper.m_BuildingPlacement_confirmPlacement;
+            public InputAction @rotatePlacement => m_Wrapper.m_BuildingPlacement_rotatePlacement;
+            public InputAction @startPlacementTemp => m_Wrapper.m_BuildingPlacement_startPlacementTemp;
+            public InputActionMap Get() { return m_Wrapper.m_BuildingPlacement; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(BuildingPlacementActions set) { return set.Get(); }
+            public void AddCallbacks(IBuildingPlacementActions instance)
+            {
+                if (instance == null || m_Wrapper.m_BuildingPlacementActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_BuildingPlacementActionsCallbackInterfaces.Add(instance);
+                @cancelPlacement.started += instance.OnCancelPlacement;
+                @cancelPlacement.performed += instance.OnCancelPlacement;
+                @cancelPlacement.canceled += instance.OnCancelPlacement;
+                @confirmPlacement.started += instance.OnConfirmPlacement;
+                @confirmPlacement.performed += instance.OnConfirmPlacement;
+                @confirmPlacement.canceled += instance.OnConfirmPlacement;
+                @rotatePlacement.started += instance.OnRotatePlacement;
+                @rotatePlacement.performed += instance.OnRotatePlacement;
+                @rotatePlacement.canceled += instance.OnRotatePlacement;
+                @startPlacementTemp.started += instance.OnStartPlacementTemp;
+                @startPlacementTemp.performed += instance.OnStartPlacementTemp;
+                @startPlacementTemp.canceled += instance.OnStartPlacementTemp;
+            }
+
+            private void UnregisterCallbacks(IBuildingPlacementActions instance)
+            {
+                @cancelPlacement.started -= instance.OnCancelPlacement;
+                @cancelPlacement.performed -= instance.OnCancelPlacement;
+                @cancelPlacement.canceled -= instance.OnCancelPlacement;
+                @confirmPlacement.started -= instance.OnConfirmPlacement;
+                @confirmPlacement.performed -= instance.OnConfirmPlacement;
+                @confirmPlacement.canceled -= instance.OnConfirmPlacement;
+                @rotatePlacement.started -= instance.OnRotatePlacement;
+                @rotatePlacement.performed -= instance.OnRotatePlacement;
+                @rotatePlacement.canceled -= instance.OnRotatePlacement;
+                @startPlacementTemp.started -= instance.OnStartPlacementTemp;
+                @startPlacementTemp.performed -= instance.OnStartPlacementTemp;
+                @startPlacementTemp.canceled -= instance.OnStartPlacementTemp;
+            }
+
+            public void RemoveCallbacks(IBuildingPlacementActions instance)
+            {
+                if (m_Wrapper.m_BuildingPlacementActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IBuildingPlacementActions instance)
+            {
+                foreach (var item in m_Wrapper.m_BuildingPlacementActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_BuildingPlacementActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public BuildingPlacementActions @BuildingPlacement => new BuildingPlacementActions(this);
         public interface IPlayerMovementActions
         {
             void OnMovement(InputAction.CallbackContext context);
@@ -920,6 +1073,13 @@ namespace Cosmobot
             void OnChangeGrabMode(InputAction.CallbackContext context);
             void OnSwitchRobot(InputAction.CallbackContext context);
             void OnApplyRouteToRobot(InputAction.CallbackContext context);
+        }
+        public interface IBuildingPlacementActions
+        {
+            void OnCancelPlacement(InputAction.CallbackContext context);
+            void OnConfirmPlacement(InputAction.CallbackContext context);
+            void OnRotatePlacement(InputAction.CallbackContext context);
+            void OnStartPlacementTemp(InputAction.CallbackContext context);
         }
     }
 }
