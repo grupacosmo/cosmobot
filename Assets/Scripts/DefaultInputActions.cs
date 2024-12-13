@@ -345,6 +345,114 @@ namespace Cosmobot
             ]
         },
         {
+            ""name"": ""PlayerRoutingTool"",
+            ""id"": ""31c51f7f-1001-4cb6-9cd5-47e5790367cb"",
+            ""actions"": [
+                {
+                    ""name"": ""addWaypointToRoute"",
+                    ""type"": ""Button"",
+                    ""id"": ""56bbef0f-e87a-4605-8d83-a76c26f63581"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""changeReleaseMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""2d83529a-d50b-447b-848b-0da4e89ca12c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""changeGrabMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""b89674fd-7d7b-4e50-b82f-70ba8909b161"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""switchRobot"",
+                    ""type"": ""Button"",
+                    ""id"": ""eeca9117-3ccd-4ff3-8e85-bb2156aa25cc"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""applyRouteToRobot"",
+                    ""type"": ""Button"",
+                    ""id"": ""903f15f6-6433-4e02-89e1-c5bf6105143b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""634006ef-e299-4560-b168-a77416ed86f7"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""addWaypointToRoute"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""78123ab1-832f-489d-aedd-848402129c6d"",
+                    ""path"": ""<Keyboard>/f2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""changeReleaseMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""46f1d95b-b93d-4a89-92b6-ba8ec19904a1"",
+                    ""path"": ""<Keyboard>/f1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""changeGrabMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6af24d83-09b1-4693-8602-6e8caac9df75"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""switchRobot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""74c4db3a-4c8a-4e52-87a7-b2466fc7228d"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""applyRouteToRobot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
             ""name"": ""BuildingPlacement"",
             ""id"": ""6cf32048-e77c-4665-8a03-3c5d63b231b4"",
             ""actions"": [
@@ -454,6 +562,13 @@ namespace Cosmobot
             // Interaction
             m_Interaction = asset.FindActionMap("Interaction", throwIfNotFound: true);
             m_Interaction_interact = m_Interaction.FindAction("interact", throwIfNotFound: true);
+            // PlayerRoutingTool
+            m_PlayerRoutingTool = asset.FindActionMap("PlayerRoutingTool", throwIfNotFound: true);
+            m_PlayerRoutingTool_addWaypointToRoute = m_PlayerRoutingTool.FindAction("addWaypointToRoute", throwIfNotFound: true);
+            m_PlayerRoutingTool_changeReleaseMode = m_PlayerRoutingTool.FindAction("changeReleaseMode", throwIfNotFound: true);
+            m_PlayerRoutingTool_changeGrabMode = m_PlayerRoutingTool.FindAction("changeGrabMode", throwIfNotFound: true);
+            m_PlayerRoutingTool_switchRobot = m_PlayerRoutingTool.FindAction("switchRobot", throwIfNotFound: true);
+            m_PlayerRoutingTool_applyRouteToRobot = m_PlayerRoutingTool.FindAction("applyRouteToRobot", throwIfNotFound: true);
             // BuildingPlacement
             m_BuildingPlacement = asset.FindActionMap("BuildingPlacement", throwIfNotFound: true);
             m_BuildingPlacement_cancelPlacement = m_BuildingPlacement.FindAction("cancelPlacement", throwIfNotFound: true);
@@ -780,6 +895,84 @@ namespace Cosmobot
         }
         public InteractionActions @Interaction => new InteractionActions(this);
 
+        // PlayerRoutingTool
+        private readonly InputActionMap m_PlayerRoutingTool;
+        private List<IPlayerRoutingToolActions> m_PlayerRoutingToolActionsCallbackInterfaces = new List<IPlayerRoutingToolActions>();
+        private readonly InputAction m_PlayerRoutingTool_addWaypointToRoute;
+        private readonly InputAction m_PlayerRoutingTool_changeReleaseMode;
+        private readonly InputAction m_PlayerRoutingTool_changeGrabMode;
+        private readonly InputAction m_PlayerRoutingTool_switchRobot;
+        private readonly InputAction m_PlayerRoutingTool_applyRouteToRobot;
+        public struct PlayerRoutingToolActions
+        {
+            private @DefaultInputActions m_Wrapper;
+            public PlayerRoutingToolActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @addWaypointToRoute => m_Wrapper.m_PlayerRoutingTool_addWaypointToRoute;
+            public InputAction @changeReleaseMode => m_Wrapper.m_PlayerRoutingTool_changeReleaseMode;
+            public InputAction @changeGrabMode => m_Wrapper.m_PlayerRoutingTool_changeGrabMode;
+            public InputAction @switchRobot => m_Wrapper.m_PlayerRoutingTool_switchRobot;
+            public InputAction @applyRouteToRobot => m_Wrapper.m_PlayerRoutingTool_applyRouteToRobot;
+            public InputActionMap Get() { return m_Wrapper.m_PlayerRoutingTool; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(PlayerRoutingToolActions set) { return set.Get(); }
+            public void AddCallbacks(IPlayerRoutingToolActions instance)
+            {
+                if (instance == null || m_Wrapper.m_PlayerRoutingToolActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_PlayerRoutingToolActionsCallbackInterfaces.Add(instance);
+                @addWaypointToRoute.started += instance.OnAddWaypointToRoute;
+                @addWaypointToRoute.performed += instance.OnAddWaypointToRoute;
+                @addWaypointToRoute.canceled += instance.OnAddWaypointToRoute;
+                @changeReleaseMode.started += instance.OnChangeReleaseMode;
+                @changeReleaseMode.performed += instance.OnChangeReleaseMode;
+                @changeReleaseMode.canceled += instance.OnChangeReleaseMode;
+                @changeGrabMode.started += instance.OnChangeGrabMode;
+                @changeGrabMode.performed += instance.OnChangeGrabMode;
+                @changeGrabMode.canceled += instance.OnChangeGrabMode;
+                @switchRobot.started += instance.OnSwitchRobot;
+                @switchRobot.performed += instance.OnSwitchRobot;
+                @switchRobot.canceled += instance.OnSwitchRobot;
+                @applyRouteToRobot.started += instance.OnApplyRouteToRobot;
+                @applyRouteToRobot.performed += instance.OnApplyRouteToRobot;
+                @applyRouteToRobot.canceled += instance.OnApplyRouteToRobot;
+            }
+
+            private void UnregisterCallbacks(IPlayerRoutingToolActions instance)
+            {
+                @addWaypointToRoute.started -= instance.OnAddWaypointToRoute;
+                @addWaypointToRoute.performed -= instance.OnAddWaypointToRoute;
+                @addWaypointToRoute.canceled -= instance.OnAddWaypointToRoute;
+                @changeReleaseMode.started -= instance.OnChangeReleaseMode;
+                @changeReleaseMode.performed -= instance.OnChangeReleaseMode;
+                @changeReleaseMode.canceled -= instance.OnChangeReleaseMode;
+                @changeGrabMode.started -= instance.OnChangeGrabMode;
+                @changeGrabMode.performed -= instance.OnChangeGrabMode;
+                @changeGrabMode.canceled -= instance.OnChangeGrabMode;
+                @switchRobot.started -= instance.OnSwitchRobot;
+                @switchRobot.performed -= instance.OnSwitchRobot;
+                @switchRobot.canceled -= instance.OnSwitchRobot;
+                @applyRouteToRobot.started -= instance.OnApplyRouteToRobot;
+                @applyRouteToRobot.performed -= instance.OnApplyRouteToRobot;
+                @applyRouteToRobot.canceled -= instance.OnApplyRouteToRobot;
+            }
+
+            public void RemoveCallbacks(IPlayerRoutingToolActions instance)
+            {
+                if (m_Wrapper.m_PlayerRoutingToolActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IPlayerRoutingToolActions instance)
+            {
+                foreach (var item in m_Wrapper.m_PlayerRoutingToolActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_PlayerRoutingToolActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public PlayerRoutingToolActions @PlayerRoutingTool => new PlayerRoutingToolActions(this);
+
         // BuildingPlacement
         private readonly InputActionMap m_BuildingPlacement;
         private List<IBuildingPlacementActions> m_BuildingPlacementActionsCallbackInterfaces = new List<IBuildingPlacementActions>();
@@ -872,6 +1065,14 @@ namespace Cosmobot
         public interface IInteractionActions
         {
             void OnInteract(InputAction.CallbackContext context);
+        }
+        public interface IPlayerRoutingToolActions
+        {
+            void OnAddWaypointToRoute(InputAction.CallbackContext context);
+            void OnChangeReleaseMode(InputAction.CallbackContext context);
+            void OnChangeGrabMode(InputAction.CallbackContext context);
+            void OnSwitchRobot(InputAction.CallbackContext context);
+            void OnApplyRouteToRobot(InputAction.CallbackContext context);
         }
         public interface IBuildingPlacementActions
         {
