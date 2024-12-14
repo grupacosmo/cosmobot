@@ -67,10 +67,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 869d2ebfad8479bb881a27510d8f90e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemInfo: {fileID: 11400000, guid: 461db7fdba3e7563a9154a0c18a66e6f, type: 2}
-  ItemData:
-    keys: []
-    values: []
+  item:
+    itemInfo: {fileID: 11400000, guid: 461db7fdba3e7563a9154a0c18a66e6f, type: 2}
+    itemData:
+      keys: []
+      values: []
 --- !u!1001 &4979856224988876276
 PrefabInstance:
   m_ObjectHideFlags: 0
