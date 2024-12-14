@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657832, g: 0.49641222, b: 0.57481664, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -665,28 +665,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraTransform: {fileID: 1206252142}
-  playerTransform: {fileID: 1206252143}
   constructionPreview: {fileID: 1566745210}
   buildTargetingCollisionMask:
     serializedVersion: 2
     m_Bits: 1
-  constructionSiteCollisionMask:
-    serializedVersion: 2
-    m_Bits: 1
   maxBuildDistance: 10
   maxTerrainHeight: 100
-  isPlacementActive: 1
   constructionSitePrefab: {fileID: 6571599839263284129, guid: 11c3bb8c65eb71bca9cff435f75bdc0b, type: 3}
-  finishedBuildingPrefab: {fileID: 9128753160050716850, guid: 0d569d2f24f15c7cfaf6b541e8598371, type: 3}
   initialBuilding: {fileID: 11400000, guid: d726d3f77459ca7c3b5b6e4be31e20a3, type: 2}
 --- !u!4 &1206252142 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7577094790283547248, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
-  m_PrefabInstance: {fileID: 1206252139}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1206252143 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8588927043253974589, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
   m_PrefabInstance: {fileID: 1206252139}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1566745210 stripped
@@ -1394,6 +1383,10 @@ PrefabInstance:
     - target: {fileID: 9059512905014548148, guid: ccbc01999b2ced4e8933ea7171bed4bc, type: 3}
       propertyPath: m_Name
       value: ConstructionPreview
+      objectReference: {fileID: 0}
+    - target: {fileID: 9059512905014548148, guid: ccbc01999b2ced4e8933ea7171bed4bc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

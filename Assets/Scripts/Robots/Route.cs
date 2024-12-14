@@ -8,7 +8,8 @@ namespace Cosmobot
     public struct Route
     {
         public Vector3 waypoint;
-        public bool release;
+
         public bool grab;
+        public bool release;
     }
 }
