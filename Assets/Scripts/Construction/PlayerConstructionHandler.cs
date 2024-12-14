@@ -1,13 +1,15 @@
+using System.Linq;
 using Cosmobot.BuildingSystem;
 using UnityEngine;
 
 namespace Cosmobot
 {
-    public class PlayerConstructionHandler : MonoBehaviour, DefaultInputActions.IBuildingPlacementActions
+    public class PlayerConstructionHandler : MonoBehaviour, DefaultInputActions.IBuildingPlacementActions, DefaultInputActions.IBuildingInteractionActions
     {
         [SerializeField] Transform cameraTransform;
         [SerializeField] ConstructionPreview constructionPreview;
         [SerializeField] LayerMask buildTargetingCollisionMask;
+        [SerializeField] LayerMask constructionSiteCollisionMask;
         [SerializeField] float maxBuildDistance = 20.0f;
         [SerializeField] float maxTerrainHeight = 100.0f;
         [SerializeField] GameObject constructionSitePrefab;
@@ -50,6 +52,9 @@ namespace Cosmobot
 
             GameObject newSite = Instantiate(constructionSitePrefab, (Vector3)currentPlacementPosition, CurrentConstructionRotation);
             newSite.GetComponent<ConstructionSite>().Initialize(currentBuildingInfo);
+
+            // should be set based on building type
+            newSite.GetComponent<ConstructionSite>().SetRequiredResources(new SerializableDictionary<string, int>{{"Iron Ore", 8}, {"Stone", 4}, {"Coal", 5}}); 
 
             ExitPlacement();
         }
@@ -161,9 +166,11 @@ namespace Cosmobot
             {
                 actions = new DefaultInputActions();
                 actions.BuildingPlacement.SetCallbacks(this);
+                actions.BuildingInteraction.SetCallbacks(this);
             }
 
             actions.BuildingPlacement.Enable();
+            actions.BuildingInteraction.Enable();
         }
 
         public void OnCancelPlacement(UnityEngine.InputSystem.InputAction.CallbackContext context)

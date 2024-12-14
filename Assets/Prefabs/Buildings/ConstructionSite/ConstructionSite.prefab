@@ -186,6 +186,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tempCube: {fileID: 6689353583756171334}
+  constructionSiteResources:
+    keys: []
+    values: 
+  previewObjects:
+  - {fileID: 0}
+  - {fileID: 0}
+  resourcePreview: {fileID: 8049031691766240843, guid: 2648d271a4492304bac8ad48b4706f2f, type: 3}
 --- !u!4 &8064686758654593877 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2055545887810521016, guid: 20631df0109e92d4892d2f63540ac1a2, type: 3}

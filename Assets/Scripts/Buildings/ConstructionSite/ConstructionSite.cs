@@ -1,7 +1,6 @@
 using UnityEngine;
 using Cosmobot.BuildingSystem;
 using System.Linq;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
 
 namespace Cosmobot
 {
@@ -9,36 +8,50 @@ namespace Cosmobot
     {    
         [SerializeField] private Transform tempCube;
         [SerializeField] private SerializableDictionary<string, int> constructionSiteResources = new();
-        [SerializeField] private GameObject[] previewObjects = new GameObject[2];
+        private GameObject[] previewObjects;
         [SerializeField] public GameObject resourcePreview;
         public Transform TempCube => tempCube;
         public SerializableDictionary<string, int> ConstructionSiteResources => constructionSiteResources;
 
         public void SetRequiredResources(SerializableDictionary<string, int> requiredResources) {
             constructionSiteResources = requiredResources;
+            previewObjects = new GameObject[constructionSiteResources.Count];
         }
 
         void Start() {
-            Vector3 sitePosition = TempCube.transform.position;
-            float distance = 0.5f; // TEMP
-            float height = 0.5f; // TEMP
-            
-            // Demo objects of what resources will be needed for the building
-            GameObject resourceOne = Instantiate(resourcePreview, new Vector3(
-                sitePosition.x + (transform.eulerAngles.y == 90 ? -distance : transform.eulerAngles.y == 270 ? distance : 0), sitePosition.y + height, 
-                sitePosition.z + (transform.eulerAngles.y == 0 ? distance : transform.eulerAngles.y == 180 ? -distance : 0)), transform.rotation);
-            GameObject resourceTwo = Instantiate(resourcePreview, new Vector3(
-                sitePosition.x + (transform.eulerAngles.y == 90 ? distance : transform.eulerAngles.y == 270 ? -distance : 0), sitePosition.y + height, 
-                sitePosition.z + (transform.eulerAngles.y == 0 ? -distance : transform.eulerAngles.y == 180 ? distance : 0)), transform.rotation);
-
-            // TEMP, in future should be set based on resource type amount
-            resourceOne.GetComponentInChildren<ResourceTextHandler>().InitializeText(constructionSiteResources.ElementAt(0).Value);
-            resourceTwo.GetComponentInChildren<ResourceTextHandler>().InitializeText(constructionSiteResources.ElementAt(1).Value);
-
-            previewObjects.SetValue(resourceOne, 0);
-            previewObjects.SetValue(resourceTwo, 1);
+            CreateResourcePreview();
         }
         
+        private void CreateResourcePreview() {
+            Vector3 sitePosition = TempCube.transform.position;
+            float height = 0.5f; // TEMP
+            if (constructionSiteResources.Count == 1) {
+                GameObject resource = Instantiate(resourcePreview, new Vector3(sitePosition.x, sitePosition.y + height, sitePosition.z), transform.rotation);
+                resource.GetComponentInChildren<ResourceTextHandler>().InitializeText(constructionSiteResources.ElementAt(0).Value);
+                previewObjects.SetValue(resource, 0);
+                return;
+            }
+            
+            float siteWidth = 
+            transform.eulerAngles.y == 0 || transform.eulerAngles.y == 180 ? GetComponentInChildren<MeshRenderer>().bounds.size.x : 
+            transform.eulerAngles.y == 90 || transform.eulerAngles.y == 270 ? GetComponentInChildren<MeshRenderer>().bounds.size.z : 0;
+            float distance = siteWidth / (constructionSiteResources.Count - 1);
+            
+            for (int i = 0; i < constructionSiteResources.Count; i++) {
+                float x = sitePosition.x;
+                float z = sitePosition.z;
+                if (transform.eulerAngles.y == 0 || transform.eulerAngles.y == 180) {
+                    z += -siteWidth / 2 + i * distance;
+                } else {  
+                    x += -siteWidth / 2 + i * distance;
+                }
+
+                GameObject resource = Instantiate(resourcePreview, new Vector3(x, sitePosition.y + height, z), transform.rotation);
+                resource.GetComponentInChildren<ResourceTextHandler>().InitializeText(constructionSiteResources.ElementAt(i).Value);
+                previewObjects.SetValue(resource, i);
+            }
+        }
+
         public void DecreaseResourceRequirement() {
             foreach (var resource in previewObjects) {
                 resource.GetComponentInChildren<ResourceTextHandler>().UpdateText();

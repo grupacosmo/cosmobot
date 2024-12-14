@@ -541,81 +541,13 @@ namespace Cosmobot
             ]
         },
         {
-            ""name"": ""BuildingPlacement"",
-            ""id"": ""6cf32048-e77c-4665-8a03-3c5d63b231b4"",
-            ""actions"": [
-                {
-                    ""name"": ""cancelPlacement"",
-                    ""type"": ""Button"",
-                    ""id"": ""480c38c9-721c-4092-8c55-9c5b232362db"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""confirmPlacement"",
-                    ""type"": ""Button"",
-                    ""id"": ""3503ef88-7009-4be4-964e-009a938eb457"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""rotatePlacement"",
-                    ""type"": ""Button"",
-                    ""id"": ""f83028df-c50b-40c4-a871-a7c5157a420d"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                }
-            ],
-            ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""84d3f752-ee1d-4101-8db6-9388ed07291d"",
-                    ""path"": ""<Keyboard>/g"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""cancelPlacement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""1074272c-97d5-42e6-9812-a7042f81b4bc"",
-                    ""path"": ""<Keyboard>/f"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""confirmPlacement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""e6997b68-26ce-45a1-a7fc-f120d3063d4d"",
-                    ""path"": ""<Keyboard>/r"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""rotatePlacement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                }
-            ]
-        },
-        {
             ""name"": ""BuildingInteraction"",
-            ""id"": ""ab4ccb98-d0b6-4c44-b0ab-04283a21de94"",
+            ""id"": ""966a9bec-b217-4391-8fb4-6643c585e3d4"",
             ""actions"": [
                 {
                     ""name"": ""giveResource"",
                     ""type"": ""Button"",
-                    ""id"": ""7fd521d4-77a3-41d3-a577-e512c251b556"",
+                    ""id"": ""8ef6afcb-3d36-435b-a1cb-7ebccf6f401c"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -625,7 +557,7 @@ namespace Cosmobot
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""f5db7ed9-1201-498a-93a5-5d74056dcbcf"",
+                    ""id"": ""1b9b868d-4fd5-4f2f-bbff-2d7b1c7f5e0c"",
                     ""path"": ""<Keyboard>/h"",
                     ""interactions"": """",
                     ""processors"": """",
@@ -671,11 +603,6 @@ namespace Cosmobot
             m_BuildingPlacement_confirmPlacement = m_BuildingPlacement.FindAction("confirmPlacement", throwIfNotFound: true);
             m_BuildingPlacement_rotatePlacement = m_BuildingPlacement.FindAction("rotatePlacement", throwIfNotFound: true);
             m_BuildingPlacement_startPlacementTemp = m_BuildingPlacement.FindAction("startPlacementTemp", throwIfNotFound: true);
-            // BuildingPlacement
-            m_BuildingPlacement = asset.FindActionMap("BuildingPlacement", throwIfNotFound: true);
-            m_BuildingPlacement_cancelPlacement = m_BuildingPlacement.FindAction("cancelPlacement", throwIfNotFound: true);
-            m_BuildingPlacement_confirmPlacement = m_BuildingPlacement.FindAction("confirmPlacement", throwIfNotFound: true);
-            m_BuildingPlacement_rotatePlacement = m_BuildingPlacement.FindAction("rotatePlacement", throwIfNotFound: true);
             // BuildingInteraction
             m_BuildingInteraction = asset.FindActionMap("BuildingInteraction", throwIfNotFound: true);
             m_BuildingInteraction_giveResource = m_BuildingInteraction.FindAction("giveResource", throwIfNotFound: true);
@@ -1147,68 +1074,6 @@ namespace Cosmobot
         }
         public BuildingPlacementActions @BuildingPlacement => new BuildingPlacementActions(this);
 
-        // BuildingPlacement
-        private readonly InputActionMap m_BuildingPlacement;
-        private List<IBuildingPlacementActions> m_BuildingPlacementActionsCallbackInterfaces = new List<IBuildingPlacementActions>();
-        private readonly InputAction m_BuildingPlacement_cancelPlacement;
-        private readonly InputAction m_BuildingPlacement_confirmPlacement;
-        private readonly InputAction m_BuildingPlacement_rotatePlacement;
-        public struct BuildingPlacementActions
-        {
-            private @DefaultInputActions m_Wrapper;
-            public BuildingPlacementActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
-            public InputAction @cancelPlacement => m_Wrapper.m_BuildingPlacement_cancelPlacement;
-            public InputAction @confirmPlacement => m_Wrapper.m_BuildingPlacement_confirmPlacement;
-            public InputAction @rotatePlacement => m_Wrapper.m_BuildingPlacement_rotatePlacement;
-            public InputActionMap Get() { return m_Wrapper.m_BuildingPlacement; }
-            public void Enable() { Get().Enable(); }
-            public void Disable() { Get().Disable(); }
-            public bool enabled => Get().enabled;
-            public static implicit operator InputActionMap(BuildingPlacementActions set) { return set.Get(); }
-            public void AddCallbacks(IBuildingPlacementActions instance)
-            {
-                if (instance == null || m_Wrapper.m_BuildingPlacementActionsCallbackInterfaces.Contains(instance)) return;
-                m_Wrapper.m_BuildingPlacementActionsCallbackInterfaces.Add(instance);
-                @cancelPlacement.started += instance.OnCancelPlacement;
-                @cancelPlacement.performed += instance.OnCancelPlacement;
-                @cancelPlacement.canceled += instance.OnCancelPlacement;
-                @confirmPlacement.started += instance.OnConfirmPlacement;
-                @confirmPlacement.performed += instance.OnConfirmPlacement;
-                @confirmPlacement.canceled += instance.OnConfirmPlacement;
-                @rotatePlacement.started += instance.OnRotatePlacement;
-                @rotatePlacement.performed += instance.OnRotatePlacement;
-                @rotatePlacement.canceled += instance.OnRotatePlacement;
-            }
-
-            private void UnregisterCallbacks(IBuildingPlacementActions instance)
-            {
-                @cancelPlacement.started -= instance.OnCancelPlacement;
-                @cancelPlacement.performed -= instance.OnCancelPlacement;
-                @cancelPlacement.canceled -= instance.OnCancelPlacement;
-                @confirmPlacement.started -= instance.OnConfirmPlacement;
-                @confirmPlacement.performed -= instance.OnConfirmPlacement;
-                @confirmPlacement.canceled -= instance.OnConfirmPlacement;
-                @rotatePlacement.started -= instance.OnRotatePlacement;
-                @rotatePlacement.performed -= instance.OnRotatePlacement;
-                @rotatePlacement.canceled -= instance.OnRotatePlacement;
-            }
-
-            public void RemoveCallbacks(IBuildingPlacementActions instance)
-            {
-                if (m_Wrapper.m_BuildingPlacementActionsCallbackInterfaces.Remove(instance))
-                    UnregisterCallbacks(instance);
-            }
-
-            public void SetCallbacks(IBuildingPlacementActions instance)
-            {
-                foreach (var item in m_Wrapper.m_BuildingPlacementActionsCallbackInterfaces)
-                    UnregisterCallbacks(item);
-                m_Wrapper.m_BuildingPlacementActionsCallbackInterfaces.Clear();
-                AddCallbacks(instance);
-            }
-        }
-        public BuildingPlacementActions @BuildingPlacement => new BuildingPlacementActions(this);
-
         // BuildingInteraction
         private readonly InputActionMap m_BuildingInteraction;
         private List<IBuildingInteractionActions> m_BuildingInteractionActionsCallbackInterfaces = new List<IBuildingInteractionActions>();
@@ -1292,12 +1157,6 @@ namespace Cosmobot
             void OnConfirmPlacement(InputAction.CallbackContext context);
             void OnRotatePlacement(InputAction.CallbackContext context);
             void OnStartPlacementTemp(InputAction.CallbackContext context);
-        }
-        public interface IBuildingPlacementActions
-        {
-            void OnCancelPlacement(InputAction.CallbackContext context);
-            void OnConfirmPlacement(InputAction.CallbackContext context);
-            void OnRotatePlacement(InputAction.CallbackContext context);
         }
         public interface IBuildingInteractionActions
         {
