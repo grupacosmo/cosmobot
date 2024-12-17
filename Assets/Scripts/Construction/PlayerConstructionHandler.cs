@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Linq;
 using Cosmobot.BuildingSystem;
+using Cosmobot.ItemSystem;
 using UnityEngine;
 
 namespace Cosmobot
@@ -52,9 +54,13 @@ namespace Cosmobot
 
             GameObject newSite = Instantiate(constructionSitePrefab, (Vector3)currentPlacementPosition, CurrentConstructionRotation);
             newSite.GetComponent<ConstructionSite>().Initialize(currentBuildingInfo);
-
             // should be set based on building type
-            newSite.GetComponent<ConstructionSite>().SetRequiredResources(new SerializableDictionary<string, int>{{"Iron Ore", 8}, {"Stone", 4}, {"Coal", 5}}); 
+            var requirements = new SerializableDictionary<ItemInfo, int>{
+                {ItemManager.Instance.Items.ElementAt(2), 5}, 
+                /*{ItemManager.Instance.Items.ElementAt(7), 3},
+                {ItemManager.Instance.Items.ElementAt(14), 8}*/
+                };
+            newSite.GetComponent<ConstructionSite>().SetRequiredResources(requirements);
 
             ExitPlacement();
         }
@@ -62,30 +68,10 @@ namespace Cosmobot
         private void GiveResource() {
             Ray looking = new Ray(cameraTransform.position, cameraTransform.forward);
             bool isLooking = Physics.Raycast(looking, out RaycastHit hit, maxBuildDistance, constructionSiteCollisionMask);
-            if (isLooking && hit.collider.gameObject.name == "Cube") { //TEMP
-                try
-                {
-                    SerializableDictionary<string, int> targetSiteNeededResources = hit.collider.gameObject.GetComponentInParent<ConstructionSite>().ConstructionSiteResources;
-                    foreach (var key in targetSiteNeededResources.ToList()) {
-                        if (targetSiteNeededResources[key.Key] >= 0) {
-                            targetSiteNeededResources[key.Key]--;
-                        }
-                    }
-                    hit.collider.gameObject.GetComponentInParent<ConstructionSite>().DecreaseResourceRequirement();
-
-                    bool isFinished = targetSiteNeededResources.Values.All(value => value == -1);
-
-                    if (isFinished) {
-                        GameObject finishedSite = Instantiate(finishedBuildingPrefab, hit.collider.gameObject.transform.position, hit.collider.gameObject.transform.rotation);
-                        hit.collider.gameObject.GetComponentInParent<ConstructionSite>().DestroyPreview();
-                        Destroy(hit.collider.gameObject);
-                    }
-                    
-                }
-                catch (System.NullReferenceException)
-                {
-                    Debug.LogWarning("Unable to access the building");
-                }
+            
+            if (isLooking && hit.collider.gameObject.name == "Resource(Clone)") { //TEMP
+                hit.collider.gameObject.GetComponentInParent<ConstructionSite>().DecreaseResourceRequirement(ItemManager.Instance.Items.ElementAt(2));
+                hit.collider.gameObject.GetComponentInParent<ConstructionSite>().IsReadyToBuild(finishedBuildingPrefab);
             }
         }
 

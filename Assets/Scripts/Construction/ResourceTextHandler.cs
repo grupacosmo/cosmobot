@@ -7,7 +7,6 @@ namespace Cosmobot
     {
         [SerializeField] private Transform text;
         [SerializeField] private TextMeshPro displyText;
-        [SerializeField] private int requiredResource;
         private new Camera camera;
         void Start()
         {
@@ -21,14 +20,12 @@ namespace Cosmobot
         }
 
         public void InitializeText(int resourceAmount) {
-            requiredResource = resourceAmount;
             displyText.text = resourceAmount.ToString();
-            UpdateText();
+            UpdateText(resourceAmount);
         }
 
-        public void UpdateText() {
-            if (requiredResource >= 0)
-                displyText.text = $"{requiredResource--}";
+        public void UpdateText(int newAmount) {
+            displyText.text = $"{newAmount}";
         }
     }
 }
