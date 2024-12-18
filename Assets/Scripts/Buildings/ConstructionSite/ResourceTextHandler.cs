@@ -6,7 +6,7 @@ namespace Cosmobot
     public class ResourceTextHandler : MonoBehaviour
     {
         [SerializeField] private Transform text;
-        [SerializeField] private TextMeshPro displyText;
+        [SerializeField] private TextMeshPro displayText;
         private new Camera camera;
         void Start()
         {
@@ -20,12 +20,12 @@ namespace Cosmobot
         }
 
         public void InitializeText(int resourceAmount) {
-            displyText.text = resourceAmount.ToString();
+            displayText.text = resourceAmount.ToString();
             UpdateText(resourceAmount);
         }
 
         public void UpdateText(int newAmount) {
-            displyText.text = $"{newAmount}";
+            displayText.text = $"{newAmount}";
         }
     }
 }

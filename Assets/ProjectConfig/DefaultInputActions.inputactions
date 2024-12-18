@@ -515,34 +515,6 @@
                     "isPartOfComposite": false
                 }
             ]
-        },
-        {
-            "name": "BuildingInteraction",
-            "id": "966a9bec-b217-4391-8fb4-6643c585e3d4",
-            "actions": [
-                {
-                    "name": "giveResource",
-                    "type": "Button",
-                    "id": "8ef6afcb-3d36-435b-a1cb-7ebccf6f401c",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "1b9b868d-4fd5-4f2f-bbff-2d7b1c7f5e0c",
-                    "path": "<Keyboard>/h",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "giveResource",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
         }
     ],
     "controlSchemes": []

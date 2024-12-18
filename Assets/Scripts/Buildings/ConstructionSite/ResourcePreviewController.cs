@@ -13,12 +13,8 @@ namespace Cosmobot
         }
 
         public void DecreaseRequirement(int amount) {
-            if (amount <= resourceRequirement && resourceRequirement - amount >= 0) {
-                resourceRequirement -= amount;
-                GetComponent<ResourceTextHandler>().UpdateText(resourceRequirement);
-            } else {
-                Debug.LogWarning("Resources exceed requirements");
-            }
+            resourceRequirement -= amount;
+            GetComponent<ResourceTextHandler>().UpdateText(resourceRequirement);
         }
     }
 }

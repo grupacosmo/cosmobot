@@ -1,21 +1,16 @@
-using System.Collections.Generic;
-using System.Linq;
 using Cosmobot.BuildingSystem;
-using Cosmobot.ItemSystem;
 using UnityEngine;
 
 namespace Cosmobot
 {
-    public class PlayerConstructionHandler : MonoBehaviour, DefaultInputActions.IBuildingPlacementActions, DefaultInputActions.IBuildingInteractionActions
+    public class PlayerConstructionHandler : MonoBehaviour, DefaultInputActions.IBuildingPlacementActions
     {
         [SerializeField] Transform cameraTransform;
         [SerializeField] ConstructionPreview constructionPreview;
         [SerializeField] LayerMask buildTargetingCollisionMask;
-        [SerializeField] LayerMask constructionSiteCollisionMask;
         [SerializeField] float maxBuildDistance = 20.0f;
         [SerializeField] float maxTerrainHeight = 100.0f;
         [SerializeField] GameObject constructionSitePrefab;
-        [SerializeField] GameObject finishedBuildingPrefab;
         [SerializeField] BuildingInfo initialBuilding; // TEMP
 
         private DefaultInputActions actions;
@@ -54,25 +49,8 @@ namespace Cosmobot
 
             GameObject newSite = Instantiate(constructionSitePrefab, (Vector3)currentPlacementPosition, CurrentConstructionRotation);
             newSite.GetComponent<ConstructionSite>().Initialize(currentBuildingInfo);
-            // should be set based on building type
-            var requirements = new SerializableDictionary<ItemInfo, int>{
-                {ItemManager.Instance.Items.ElementAt(2), 5}, 
-                /*{ItemManager.Instance.Items.ElementAt(7), 3},
-                {ItemManager.Instance.Items.ElementAt(14), 8}*/
-                };
-            newSite.GetComponent<ConstructionSite>().SetRequiredResources(requirements);
 
             ExitPlacement();
-        }
-
-        private void GiveResource() {
-            Ray looking = new Ray(cameraTransform.position, cameraTransform.forward);
-            bool isLooking = Physics.Raycast(looking, out RaycastHit hit, maxBuildDistance, constructionSiteCollisionMask);
-            
-            if (isLooking && hit.collider.gameObject.name == "Resource(Clone)") { //TEMP
-                hit.collider.gameObject.GetComponentInParent<ConstructionSite>().DecreaseResourceRequirement(ItemManager.Instance.Items.ElementAt(2));
-                hit.collider.gameObject.GetComponentInParent<ConstructionSite>().IsReadyToBuild(finishedBuildingPrefab);
-            }
         }
 
         // Exit placement mode
@@ -152,11 +130,9 @@ namespace Cosmobot
             {
                 actions = new DefaultInputActions();
                 actions.BuildingPlacement.SetCallbacks(this);
-                actions.BuildingInteraction.SetCallbacks(this);
             }
 
             actions.BuildingPlacement.Enable();
-            actions.BuildingInteraction.Enable();
         }
 
         public void OnCancelPlacement(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -180,12 +156,6 @@ namespace Cosmobot
         public void OnStartPlacementTemp(UnityEngine.InputSystem.InputAction.CallbackContext context)
         {
             InitiatePlacement(initialBuilding);
-        }
-
-        public void OnGiveResource(UnityEngine.InputSystem.InputAction.CallbackContext context)
-        {
-            if (context.performed)
-                GiveResource();
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cosmobot.ItemSystem;
 using UnityEngine;
 
 namespace Cosmobot.BuildingSystem
@@ -19,6 +20,7 @@ namespace Cosmobot.BuildingSystem
         [SerializeField]
         private SerializableDictionary<string, string> additionalData = new();
         [SerializeField]
+        private SerializableDictionary<ItemInfo, int> resourceRequirements = new();
         private Vector2Int gridSize = new(1,1);
 
         public string Id => id;
@@ -26,6 +28,7 @@ namespace Cosmobot.BuildingSystem
         public Texture2D Icon => icon;
         public GameObject Prefab => prefab;
         public IReadOnlyDictionary<string, string> AdditionalData => additionalData;
+        public IReadOnlyDictionary<ItemInfo, int> ResourceRequirements => resourceRequirements;
         public Vector2Int GridSize => gridSize;
 
         // Get building's grid size accounting for rotation; each rotation step is 90 degrees
@@ -36,7 +39,7 @@ namespace Cosmobot.BuildingSystem
 
         public override bool Equals(object obj) => Equals(obj as BuildingInfo);
 
-        public bool Equals(BuildingInfo other) => other != null && id == other.id;
+        public bool Equals(BuildingInfo other) => other is not null && id == other.id;
 
         public override int GetHashCode() => id.GetHashCode();
 
