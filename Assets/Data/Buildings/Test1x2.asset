@@ -21,8 +21,7 @@ MonoBehaviour:
     values: []
   resourceRequirements:
     keys:
-    - {fileID: 11400000, guid: f842c6917a63ac6a58da58e01cce72ec, type: 2}
-    - {fileID: 11400000, guid: 059b2551a72838889886b1a766ec008f, type: 2}
     - {fileID: 11400000, guid: 85a6b340d26e8e7b39516c393bdafd61, type: 2}
-    values: 020000000100000003000000
-  gridSize: {x: 1, y: 2}
+    - {fileID: 11400000, guid: 059b2551a72838889886b1a766ec008f, type: 2}
+    - {fileID: 11400000, guid: f842c6917a63ac6a58da58e01cce72ec, type: 2}
+    values: 030000000100000002000000

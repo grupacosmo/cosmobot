@@ -127,6 +127,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2055545887810521016, guid: 20631df0109e92d4892d2f63540ac1a2, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2055545887810521016, guid: 20631df0109e92d4892d2f63540ac1a2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -205,7 +209,6 @@ MonoBehaviour:
   constructionSiteResources:
     keys: []
     values: []
-  previewObjects: []
   buildingInfo: {fileID: 0}
 --- !u!114 &-3072977108597292026
 MonoBehaviour:
@@ -219,6 +222,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 127aae8425b24ea40802cdcf51450129, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  previewObjects: []
   resourcePreview: {fileID: 8049031691766240843, guid: 2648d271a4492304bac8ad48b4706f2f, type: 3}
 --- !u!4 &8064686758654593877 stripped
 Transform:

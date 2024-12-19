@@ -8,7 +8,7 @@ namespace Cosmobot
     {
         [SerializeField] private GameObject[] previewObjects;
         [SerializeField] private GameObject resourcePreview;
-
+        
         public GameObject[] PreviewObjects => previewObjects;
         public GameObject ResourcePreview => ResourcePreview;
 
@@ -18,27 +18,21 @@ namespace Cosmobot
 
         public GameObject CreateResourcePreview(SerializableDictionary<ItemInfo, int> resources, int previewCount) {
             Vector3 sitePosition = transform.position;
-            GameObject previewObject;
-            float height = 0.5f; // TEMP
-            if (resources.Count == 1) {
-                previewObject = Instantiate(resourcePreview, new Vector3(sitePosition.x, sitePosition.y + height, sitePosition.z), transform.rotation);
-                previewObject.GetComponentInChildren<ResourceTextHandler>().InitializeText(resources.ElementAt(0).Value);
-                return previewObject;
-            }
-            
-            float siteWidth = 
-                transform.eulerAngles.y == 0 || transform.eulerAngles.y == 180 ? GetComponentInChildren<MeshRenderer>().bounds.size.x : 
-                transform.eulerAngles.y == 90 || transform.eulerAngles.y == 270 ? GetComponentInChildren<MeshRenderer>().bounds.size.z : 0;
-            float distance = siteWidth / (resources.Count - 1);
+            float spacing = 0.6f;
+            float heightOffset = 0.5f;
+            float siteWidth = (resources.Count - 1) * spacing;
+            float startPosX = sitePosition.x - siteWidth / 2;
+            float startPosZ = sitePosition.z - siteWidth / 2;
             float x = sitePosition.x;
             float z = sitePosition.z;
-            if (transform.eulerAngles.y == 0 || transform.eulerAngles.y == 180) {
-                z += -siteWidth / 2 + previewCount * distance;
+
+            if (Mathf.Approximately(transform.eulerAngles.y, 0) || Mathf.Approximately(transform.eulerAngles.y, 180)) {
+                z = startPosZ + previewCount * spacing;
             } else {  
-                x += -siteWidth / 2 + previewCount * distance;
+                x = startPosX + previewCount * spacing;
             }
 
-            previewObject = Instantiate(resourcePreview, new Vector3(x, sitePosition.y + height, z), transform.rotation);
+            GameObject previewObject = Instantiate(resourcePreview, new Vector3(x, sitePosition.y + heightOffset, z), transform.rotation);
             previewObject.GetComponentInChildren<ResourceTextHandler>().InitializeText(resources.ElementAt(previewCount).Value);
             return previewObject;
         }

@@ -34,8 +34,9 @@ namespace Cosmobot
 
         public void DecreaseResourceRequirement(GameObject resourceToDecrease, int resourceAmount = 1) {
             GameObject previewToDecrease = constructionSiteResources[resourceToDecrease.GetComponent<Item>().ItemInfo];
-            if (previewToDecrease.GetComponent<ResourcePreviewController>().ResourceRequirement > 0) {
-                previewToDecrease.GetComponent<ResourcePreviewController>().DecreaseRequirement(resourceAmount);
+            ResourcePreviewController resourcePreviewController = previewToDecrease.GetComponent<ResourcePreviewController>();
+            if (resourcePreviewController.ResourceRequirement > 0) {
+                resourcePreviewController.DecreaseRequirement(resourceAmount);
                 resourceToDecrease.gameObject.transform.SetParent(gameObject.transform);
                 resourceToDecrease.gameObject.SetActive(false);
                 IsReadyToBuild(buildingInfo.Prefab);

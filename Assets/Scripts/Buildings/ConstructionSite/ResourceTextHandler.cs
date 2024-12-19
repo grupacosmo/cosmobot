@@ -8,6 +8,7 @@ namespace Cosmobot
         [SerializeField] private Transform text;
         [SerializeField] private TextMeshPro displayText;
         private new Camera camera;
+        
         void Start()
         {
             camera = Camera.main;
@@ -25,7 +26,7 @@ namespace Cosmobot
         }
 
         public void UpdateText(int newAmount) {
-            displayText.text = $"{newAmount}";
+            displayText.text = newAmount.ToString();
         }
     }
 }
