@@ -384,6 +384,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Battery
       objectReference: {fileID: 0}
+    - target: {fileID: 4671882545527242826, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
       propertyPath: itemInfo
       value: 
