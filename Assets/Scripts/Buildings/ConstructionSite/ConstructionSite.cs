@@ -32,13 +32,11 @@ namespace Cosmobot
             GetComponent<ConstructionSiteResourcePreview>().SetPreviewObjects(previewObjects);
         }
 
-        public void DecreaseResourceRequirement(GameObject resourceToDecrease, int resourceAmount = 1) {
-            GameObject previewToDecrease = constructionSiteResources[resourceToDecrease.GetComponent<Item>().ItemInfo];
+        public void DecreaseResourceRequirement(ItemInfo resourceToDecrease, int resourceAmount = 1) { // pass iteminfo instead of gameobject move gameobject to colision detection
+            GameObject previewToDecrease = constructionSiteResources[resourceToDecrease];
             ResourcePreviewController resourcePreviewController = previewToDecrease.GetComponent<ResourcePreviewController>();
             if (resourcePreviewController.ResourceRequirement > 0) {
                 resourcePreviewController.DecreaseRequirement(resourceAmount);
-                resourceToDecrease.gameObject.transform.SetParent(gameObject.transform);
-                resourceToDecrease.gameObject.SetActive(false);
                 IsReadyToBuild(buildingInfo.Prefab);
             }
         }

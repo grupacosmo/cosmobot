@@ -10,7 +10,8 @@ namespace Cosmobot
                 return;
             }
             
-            GetComponentInParent<ConstructionSite>().DecreaseResourceRequirement(col.gameObject);
+            GetComponentInParent<ConstructionSite>().DecreaseResourceRequirement(col.gameObject.GetComponent<Item>().ItemInfo);
+            Destroy(col.gameObject);
         }
     }
 }

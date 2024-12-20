@@ -23,16 +23,14 @@ namespace Cosmobot
             float siteWidth = (resources.Count - 1) * spacing;
             float startPosX = sitePosition.x - siteWidth / 2;
             float startPosZ = sitePosition.z - siteWidth / 2;
-            float x = sitePosition.x;
-            float z = sitePosition.z;
 
             if (Mathf.Approximately(transform.eulerAngles.y, 0) || Mathf.Approximately(transform.eulerAngles.y, 180)) {
-                z = startPosZ + previewCount * spacing;
+                sitePosition.z = startPosZ + previewCount * spacing;
             } else {  
-                x = startPosX + previewCount * spacing;
+                sitePosition.x = startPosX + previewCount * spacing;
             }
 
-            GameObject previewObject = Instantiate(resourcePreview, new Vector3(x, sitePosition.y + heightOffset, z), transform.rotation);
+            GameObject previewObject = Instantiate(resourcePreview, new Vector3(sitePosition.x, sitePosition.y + heightOffset, sitePosition.z), transform.rotation);
             previewObject.GetComponentInChildren<ResourceTextHandler>().InitializeText(resources.ElementAt(previewCount).Value);
             return previewObject;
         }
