@@ -22,6 +22,7 @@ namespace Cosmobot
         {
             transform.rotation = currentConstructionRotation; // TODO: put a tween/animation
         }
+
         public void SetGridPosition(Vector4 newPosition)
         {
             gridDisplayRenderer.material.SetVector("_Center", newPosition);
