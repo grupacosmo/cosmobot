@@ -9,28 +9,31 @@ Shader "Cosmobot/Unlit/GridDisplay"
         _Thickness ("Thickness", Float) = 0.05
         _Radius ("Radius", Float) = 3
         _FadeStrength ("Fade Strength", Range(0.01,1)) = 0.5
-        _Center ("Center", Vector) = (0,0,0)
+        _Center ("Center", Vector) = (0,0,0)    
     }
+
     SubShader
     {
-        Tags {"Queue"="Transparent" "RenderType"="Transparent" }
+        Tags {"Queue" = "Geometry-1" "RenderType" = "Transparent"}
         LOD 100
 
         ZWrite Off
-        Blend SrcAlpha OneMinusSrcAlpha
+        ZTest Always
         Cull Off
+        Blend SrcAlpha OneMinusSrcAlpha
 
         Pass
         {
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
 
-            #include "UnityCG.cginc"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
             struct appdata
             {
-                float4 vertex : POSITION;
+                float3 vertex : POSITION;
                 float2 uv : TEXCOORD0;
             };
 
@@ -38,7 +41,7 @@ Shader "Cosmobot/Unlit/GridDisplay"
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
-                float3 wPosition : TEXCOORD1;
+                float4 screenSpace : TEXCOORD1;
             };
 
             sampler2D _MainTex;
@@ -54,9 +57,9 @@ Shader "Cosmobot/Unlit/GridDisplay"
             v2f vert (appdata v)
             {
                 v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.vertex = TransformObjectToHClip(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                o.wPosition = mul(unity_ObjectToWorld, v.vertex);
+                o.screenSpace = ComputeScreenPos(o.vertex);
                 return o;
             }
 
@@ -78,14 +81,17 @@ Shader "Cosmobot/Unlit/GridDisplay"
                 return clamp(pow(1-x, 5), 0, 1);
             }
 
-            fixed4 frag (v2f i) : SV_Target
+            float4 frag (v2f i) : SV_Target
             {
-                fixed4 col;
-                col = tex2D(_MainTex, i.wPosition.xz) * _GridColor * isOnGrid(i.wPosition.xz);
-                col.a *= fadeCircle(i.wPosition.xz);
+                float4 col; 
+                float2 screenSpaceUV = i.screenSpace.xy / i.screenSpace.w;
+                float depth = SampleSceneDepth(screenSpaceUV);
+                float3 worldPos = ComputeWorldSpacePosition(screenSpaceUV, depth, UNITY_MATRIX_I_VP);
+                col = tex2D(_MainTex, worldPos.xz) * _GridColor * isOnGrid(worldPos.xz);
+                col.a *= fadeCircle(worldPos.xz);
                 return col;
             }
-            ENDCG
+            ENDHLSL
         }
     }
 }
