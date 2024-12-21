@@ -23,7 +23,7 @@ namespace Cosmobot
         void LateUpdate()
         {
             ProcessPlacement();
-        } 
+        }
 
         // Select a building and start scanning for placement position
         // TODO: hook this up to a state machine or something so it works with the rest of the player mechanics
@@ -94,10 +94,14 @@ namespace Cosmobot
             bool cameraRaySuccess = Physics.Raycast(cameraRay, out RaycastHit cameraRayHit, maxBuildDistance * 2, buildTargetingCollisionMask);
 
             if (cameraRaySuccess && Vector3.ProjectOnPlane(cameraTransform.position - cameraRayHit.point, Vector3.up).magnitude < maxBuildDistance) {
-                return new Vector3(cameraRayHit.point.x, 0, cameraRayHit.point.z);
+                Vector3 buildPoint = new Vector3(cameraRayHit.point.x, 0, cameraRayHit.point.z);
+                constructionPreview.SetGridPosition(new Vector4(buildPoint.x, 0, buildPoint.z));
+                return buildPoint;
             }
 
-            return Vector3.ProjectOnPlane(cameraTransform.position, Vector3.up) + Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up) * maxBuildDistance;
+            Vector3 buildPointDistant = Vector3.ProjectOnPlane(cameraTransform.position, Vector3.up) + Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up) * maxBuildDistance;
+            constructionPreview.SetGridPosition(new Vector4(buildPointDistant.x, 0, buildPointDistant.z));
+            return buildPointDistant;
         }
 
         private Vector3 SnapToGrid(Vector3 vec, bool centerX, bool centerZ) 

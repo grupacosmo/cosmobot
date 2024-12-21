@@ -5,6 +5,9 @@ namespace Cosmobot
 {
     public class ConstructionPreview : MonoBehaviour
     {
+        [SerializeField] MeshRenderer gridDisplayRenderer;
+        [SerializeField] Transform gridDisplayTransform;
+
         public void SetBuilding(BuildingInfo buildingInfo) 
         {
             transform.localScale = new Vector3(buildingInfo.GridSize.x * GlobalConstants.GRID_CELL_SIZE, 1, buildingInfo.GridSize.y * GlobalConstants.GRID_CELL_SIZE);
@@ -18,6 +21,12 @@ namespace Cosmobot
         public void SetRotation(Quaternion currentConstructionRotation)
         {
             transform.rotation = currentConstructionRotation; // TODO: put a tween/animation
-        }   
+        }
+
+        public void SetGridPosition(Vector4 newPosition)
+        {
+            gridDisplayRenderer.material.SetVector("_Center", newPosition);
+            gridDisplayTransform.position = newPosition;
+        }
     }
 }
