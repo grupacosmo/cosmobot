@@ -27,7 +27,6 @@ namespace Cosmobot
         {
             gridDisplayRenderer.material.SetVector("_Center", newPosition);
             gridDisplayTransform.position = newPosition;
-
         }
     }
 }
