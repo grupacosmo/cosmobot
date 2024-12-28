@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2701922033559905180}
   - component: {fileID: 8017346013706343520}
   - component: {fileID: 4816872180925417627}
-  - component: {fileID: -3622928567903783403}
+  - component: {fileID: 333833493849069190}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -152,7 +152,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 100
   currentHealth: 100
---- !u!114 &-3622928567903783403
+--- !u!114 &333833493849069190
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -161,15 +161,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 2840893973740745227}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29a1283c4cb969f4fb2a7c817a140496, type: 3}
+  m_Script: {fileID: 11500000, guid: 218b27b1b420b4745bea52c33b5ce56c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   health: {fileID: 4816872180925417627}
   state: 0
   target: {fileID: 0}
-  damage: 2
-  attackInterval: 3
+  damage: 1
+  attackInterval: 5
   speed: 3
+  attackRange: 2
+  wanderRadius: 5
   unblockForce: 5
 --- !u!1001 &1933429030775896927
 PrefabInstance:

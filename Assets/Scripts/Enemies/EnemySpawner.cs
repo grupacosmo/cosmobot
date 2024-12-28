@@ -1,29 +1,52 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cosmobot.Entity;
 using UnityEngine;
 
 namespace Cosmobot
 {
     public class EnemySpawner : MonoBehaviour
     {
+
+        public Health health;
         public GameObject Enemy;
         public int SpawnInterval;
         public int EnemyLimit;
         private float timer;
+
+        // Probably will be changed in future development
         public GameObject PotentialTarget;
         private List<GameObject> enemies = new List<GameObject>();
-        private int childId = 0;
 
+
+        void Start()
+        {
+            health = gameObject.GetComponent<Health>();
+            health.OnDeath += Death;
+        }
+
+        private void Death(Health source, float oldHealth, float damageValue)
+        {
+            RemoveNest();
+            Destroy(gameObject);
+        }
+
+        private void RemoveNest()
+        {
+            foreach (var enemy in enemies)
+            {
+                enemy.GetComponent<Enemy>().SetNest(null);
+            }
+        }
 
         void Update()
         {
             if (timer > SpawnInterval)
             {
-                SpawnEnemy(childId);
+                SpawnEnemy();
                 if (enemies.Count == EnemyLimit)
                 {
                     ReleaseEnemies();
-                    SpawnInterval = 100000;
                 }
                 timer = 0;
             }
@@ -33,22 +56,25 @@ namespace Cosmobot
             }
         }
 
+        // Releasing children to attack
         void ReleaseEnemies()
         {
             for (int i = 0; i < EnemyLimit; i++)
             {
-                enemies[i].GetComponent<EnemyBehaviour>().SetTarget(PotentialTarget);
+                if (enemies[i] != null)
+                {
+                    enemies[i].GetComponent<Enemy>().SetTarget(PotentialTarget);
+                }
             }
             Debug.Log("Enemies released");
             RemoveEnemy(null);
         }
 
-        void SpawnEnemy(int childId)
+        // Spawning a child
+        void SpawnEnemy()
         {
             GameObject e = Instantiate(Enemy, CreateSpawnPoint(), Quaternion.identity);
-            e.GetComponent<EnemyBehaviour>().SetNest(gameObject);
-            e.GetComponent<EnemyBehaviour>().id = childId;
-            this.childId++;
+            e.GetComponent<Enemy>().SetNest(gameObject);
             enemies.Add(e);
 
         }
@@ -87,9 +113,10 @@ namespace Cosmobot
         public void RemoveEnemy(GameObject enemy)
         {
             if (enemy == null)
-                enemies.RemoveRange(0, 5);
+                enemies.RemoveRange(0, EnemyLimit);
             else
                 enemies.Remove(enemy);
         }
+
     }
 }
