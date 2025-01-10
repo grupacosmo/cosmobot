@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -38,16 +39,29 @@ namespace Cosmobot
         {
             if (carryingItem)
             {
+                if (IsCarriedItemInvalid()) return;
+
                 Vector3 carryPosOffset = playerCamera.isFirstPerson ? carryPositionFirstPersonOffset : carryPositionThirdPersonOffset;
                 carryPosOffset = Quaternion.Euler(0, transform.rotation.eulerAngles.y, 0) * carryPosOffset;
 
                 var holdDistance = carryHoldingDistance * (playerCamera.isZoomed ? holdingDistanceZoomMultiplier : 1);
-
                 carryPosition = transform.position + cameraTransform.forward * holdDistance + carryPosOffset;
+                
                 Vector3 force = (carryPosition - carriedItemTransform.position) * carryForceMultiplier
                     - carriedItemBody.velocity;
                 carriedItemBody.AddForce(force, ForceMode.VelocityChange);
             }
+        }
+
+        private bool IsCarriedItemInvalid() 
+        {
+            if (carriedItemTransform == null) 
+            {
+                carriedItemBody = null;
+                carryingItem = false;
+                return true;
+            }
+            return false;
         }
 
         private void UpdateModel()
