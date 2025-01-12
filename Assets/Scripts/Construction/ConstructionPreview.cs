@@ -8,7 +8,6 @@ namespace Cosmobot
         [SerializeField] MeshRenderer gridDisplayRenderer;
         [SerializeField] Transform gridDisplayTransform;
         [SerializeField] LayerMask collisionMask;
-        [SerializeField] GameObject FloorObject;
 
         private bool isPlacementPositionValid = true;
         public bool IsPlacementPositionValid => isPlacementPositionValid;
