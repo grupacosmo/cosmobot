@@ -218,7 +218,6 @@ Transform:
   - {fileID: 1899838498}
   - {fileID: 1588946593}
   - {fileID: 616146024}
-  - {fileID: 498107856}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &167690435
@@ -1819,6 +1818,14 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+    - target: {fileID: 4713952467827898380, guid: ccbc01999b2ced4e8933ea7171bed4bc, type: 3}
+      propertyPath: FloorObject
+      value: 
+      objectReference: {fileID: 1712035135}
+    - target: {fileID: 4713952467827898380, guid: ccbc01999b2ced4e8933ea7171bed4bc, type: 3}
+      propertyPath: collisionMask.m_Bits
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7441757833244653461, guid: ccbc01999b2ced4e8933ea7171bed4bc, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

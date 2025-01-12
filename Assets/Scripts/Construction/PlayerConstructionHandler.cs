@@ -19,6 +19,7 @@ namespace Cosmobot
         private int currentConstructionRotationSteps = 0; // multiply by 90deg to get actual rotation
         private Quaternion CurrentConstructionRotation => Quaternion.Euler(0, currentConstructionRotationSteps * 90.0f, 0);
         private bool isPlacementActive = false;
+        private readonly float gridCellSizeOffset = 0.0006f;
 
         void LateUpdate()
         {
@@ -44,6 +45,11 @@ namespace Cosmobot
             if (currentPlacementPosition is null) {
                 Debug.LogWarning("Attempted to place building in impossible position");
                 ExitPlacement();
+                return;
+            }
+            if (constructionPreview.IsPlacementPositionValid == false)
+            {
+                Debug.LogWarning("Attempted to place building in invalid position!");
                 return;
             }
 
@@ -106,9 +112,9 @@ namespace Cosmobot
 
         private Vector3 SnapToGrid(Vector3 vec, bool centerX, bool centerZ) 
         {
-            vec /= GlobalConstants.GRID_CELL_SIZE;
+            vec /= GlobalConstants.GRID_CELL_SIZE + gridCellSizeOffset;
             Vector3 newVec = new Vector3(Mathf.Round(vec.x), 0, Mathf.Round(vec.z));
-            newVec *= GlobalConstants.GRID_CELL_SIZE;
+            newVec *= GlobalConstants.GRID_CELL_SIZE + gridCellSizeOffset;
 
             return newVec + new Vector3(centerX ? GlobalConstants.GRID_CELL_SIZE/2.0f : 0, 0, centerZ ? GlobalConstants.GRID_CELL_SIZE/2.0f : 0);
         }

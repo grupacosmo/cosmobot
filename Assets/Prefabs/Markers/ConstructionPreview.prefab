@@ -182,3 +182,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gridDisplayRenderer: {fileID: 8727646331338761082}
   gridDisplayTransform: {fileID: 2156137355047069462}
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 1
