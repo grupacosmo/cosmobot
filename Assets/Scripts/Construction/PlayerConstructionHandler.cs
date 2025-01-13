@@ -23,7 +23,6 @@ namespace Cosmobot
 
         void LateUpdate()
         {
-            IsPlacementPositionValid();
             ProcessPlacement();
         }
 
@@ -71,6 +70,8 @@ namespace Cosmobot
         private void ProcessPlacement() 
         {
             if (isPlacementActive == false) return;
+            
+            IsPlacementPositionValid();
 
             Vector2Int effectiveGridSize = currentBuildingInfo.GetEffectiveGridSize(currentConstructionRotationSteps);
             bool centerSnapX = effectiveGridSize.x % 2 == 1;
