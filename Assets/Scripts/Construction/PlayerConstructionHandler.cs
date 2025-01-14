@@ -19,7 +19,6 @@ namespace Cosmobot
         private int currentConstructionRotationSteps = 0; // multiply by 90deg to get actual rotation
         private Quaternion CurrentConstructionRotation => Quaternion.Euler(0, currentConstructionRotationSteps * 90.0f, 0);
         private bool isPlacementActive = false;
-        private bool isPlacementPositionValid = true;
 
         void LateUpdate()
         {
@@ -47,7 +46,7 @@ namespace Cosmobot
                 ExitPlacement();
                 return;
             }
-            if (isPlacementPositionValid == false)
+            if (IsPlacementPositionValid() == false)
             {
                 Debug.LogWarning("Attempted to place building in invalid position!");
                 return;
@@ -70,8 +69,6 @@ namespace Cosmobot
         private void ProcessPlacement() 
         {
             if (isPlacementActive == false) return;
-            
-            IsPlacementPositionValid();
 
             Vector2Int effectiveGridSize = currentBuildingInfo.GetEffectiveGridSize(currentConstructionRotationSteps);
             bool centerSnapX = effectiveGridSize.x % 2 == 1;
@@ -136,17 +133,16 @@ namespace Cosmobot
             return null;
         }
 
-        private void IsPlacementPositionValid()
+        private bool IsPlacementPositionValid()
         {
-            Ray objectRay = new Ray(constructionPreview.transform.position, Vector3.down);
+            if (currentPlacementPosition == null) return false;
+
+            Vector3 validCurrentPlacementPosition = new Vector3(currentPlacementPosition.Value.x, currentPlacementPosition.Value.y + 0.5f, currentPlacementPosition.Value.z);
+            Ray objectRay = new Ray(validCurrentPlacementPosition, Vector3.down);
             bool objectRaySuccess = Physics.Raycast(objectRay, out RaycastHit objectRayHit, 1f, buildTargetingCollisionMask);
-            if (objectRaySuccess && objectRayHit.transform != null && 
-                (objectRayHit.transform.gameObject.name == "Floor element" || objectRayHit.transform.gameObject.name == "Terrain")) // should be replaced later by a standard floor element prefab
-            {
-                isPlacementPositionValid = true;
-                return;
-            }
-            isPlacementPositionValid = false;
+            if (objectRaySuccess && objectRayHit.transform != null && (objectRayHit.transform.gameObject.name == "Floor element" || objectRayHit.transform.gameObject.name == "Terrain")) return true; // TEMP: should be replaced later by a standard floor element prefab
+
+            return false;
         }
 
         private void OnEnable()
