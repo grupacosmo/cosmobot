@@ -46,6 +46,11 @@ namespace Cosmobot
                 ExitPlacement();
                 return;
             }
+            if (IsPlacementPositionValid() == false)
+            {
+                Debug.LogWarning("Attempted to place building in invalid position!");
+                return;
+            }
 
             GameObject newSite = Instantiate(constructionSitePrefab, (Vector3)currentPlacementPosition, CurrentConstructionRotation);
             newSite.GetComponent<ConstructionSite>().Initialize(currentBuildingInfo);
@@ -126,6 +131,18 @@ namespace Cosmobot
             }
 
             return null;
+        }
+
+        private bool IsPlacementPositionValid()
+        {
+            if (currentPlacementPosition == null) return false;
+
+            Vector3 validCurrentPlacementPosition = new Vector3(currentPlacementPosition.Value.x, currentPlacementPosition.Value.y + 0.5f, currentPlacementPosition.Value.z);
+            Ray objectRay = new Ray(validCurrentPlacementPosition, Vector3.down);
+            bool objectRaySuccess = Physics.Raycast(objectRay, out RaycastHit objectRayHit, 1f, buildTargetingCollisionMask);
+            if (objectRaySuccess && objectRayHit.transform != null && (objectRayHit.transform.gameObject.name == "Floor element" || objectRayHit.transform.gameObject.name == "Terrain")) return true; // TEMP: should be replaced later by a standard floor element prefab
+
+            return false;
         }
 
         private void OnEnable()
