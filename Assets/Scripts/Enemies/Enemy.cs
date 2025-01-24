@@ -7,14 +7,15 @@ namespace Cosmobot
 {
     public abstract class Enemy : MonoBehaviour
     {
-        public Health health;
         private GameObject nest;
         private EnemySpawner enemySpawner;
-        public EnemyBehaviourStates state;
-        public GameObject target;
         private Health targetHealth;
         private Vector3 wanderTarget;
         private bool isAttacking = false;
+
+        public Health health;
+        public EnemyBehaviourStates state;
+        public GameObject target;
         public float damage;
         public float attackInterval;
         public float speed;
@@ -22,7 +23,7 @@ namespace Cosmobot
         public float wanderRadius;
         public float unblockForce;
 
-        void Start()
+        private void Start()
         {
             health = gameObject.GetComponent<Health>();
             health.OnDeath += Death;
@@ -37,8 +38,31 @@ namespace Cosmobot
             SetTarget((GameObject)health.LastDamageSource.Source);
         }
 
-        // Base method to move to a specified point
+        private void Death(Health source, float oldHealth, float damageValue)
+        {
+            enemySpawner?.RemoveEnemy(gameObject);
+            Destroy(gameObject);
+        }
 
+        private IEnumerator Hit()
+        {
+            isAttacking = true;
+            Health.TakeDamage(target, damage, new DamageSource(gameObject));
+            yield return new WaitForSeconds(attackInterval);
+            isAttacking = false;
+        }
+
+        // Anti stuck
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (!collision.gameObject.CompareTag("Untagged"))
+            {
+                Vector3 direction = (transform.position - collision.transform.position).normalized;
+                gameObject.GetComponent<Rigidbody>().AddForce(direction * unblockForce, ForceMode.Impulse);
+            }
+        }
+
+        // Base method to move to a specified point
         public virtual void MoveTo(Vector3 targetPosition)
         {
             Debug.Log("moving to " + targetPosition);
@@ -81,7 +105,6 @@ namespace Cosmobot
         // A method for wandering when there is no target
         public virtual void Wander()
         {
-
             if (wanderTarget == gameObject.transform.position)
             {
                 wanderTarget = RandomWanderingTarget();
@@ -97,7 +120,6 @@ namespace Cosmobot
                     wanderTarget = gameObject.transform.position;
                 }
             }
-
         }
 
         public void SetNest(GameObject spawner)
@@ -126,30 +148,5 @@ namespace Cosmobot
             target = null;
             targetHealth = null;
         }
-
-        void Death(Health source, float oldHealth, float damageValue)
-        {
-            enemySpawner?.RemoveEnemy(gameObject);
-            Destroy(gameObject);
-        }
-
-        IEnumerator Hit()
-        {
-            isAttacking = true;
-            Health.TakeDamage(target, damage, new DamageSource(gameObject));
-            yield return new WaitForSeconds(attackInterval);
-            isAttacking = false;
-        }
-
-        // Anti stuck
-        void OnCollisionEnter(Collision collision)
-        {
-            if (!collision.gameObject.CompareTag("Untagged"))
-            {
-                Vector3 direction = (transform.position - collision.transform.position).normalized;
-                gameObject.GetComponent<Rigidbody>().AddForce(direction * unblockForce, ForceMode.Impulse);
-            }
-        }
-
     }
 }

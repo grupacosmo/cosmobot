@@ -10,6 +10,7 @@ namespace Cosmobot
         public bool isAttacking = false;
         public float attackInterval = 2;
         public float damage = 50;
+
         private void OnTriggerStay(Collider other)
         {
             if (other.gameObject.tag == "Enemy")
@@ -21,7 +22,7 @@ namespace Cosmobot
             }
         }
 
-        IEnumerator Hit(GameObject target)
+        private IEnumerator Hit(GameObject target)
         {
             isAttacking = true;
             Health.TakeDamage(target, damage, new DamageSource(gameObject));
@@ -29,5 +30,4 @@ namespace Cosmobot
             isAttacking = false;
         }
     }
-
 }

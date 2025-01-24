@@ -6,7 +6,7 @@ namespace Cosmobot
 {
     public class TestEnemy : Enemy
     {
-        void Update()
+        private void Update()
         {
             switch (state)
             {

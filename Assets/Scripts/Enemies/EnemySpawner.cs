@@ -7,19 +7,17 @@ namespace Cosmobot
 {
     public class EnemySpawner : MonoBehaviour
     {
+        private float timer;
+        private List<GameObject> enemies = new List<GameObject>();
 
+        // Probably will be changed in future development
+        public GameObject PotentialTarget;
         public Health health;
         public GameObject Enemy;
         public int SpawnInterval;
         public int EnemyLimit;
-        private float timer;
 
-        // Probably will be changed in future development
-        public GameObject PotentialTarget;
-        private List<GameObject> enemies = new List<GameObject>();
-
-
-        void Start()
+        private void Start()
         {
             health = gameObject.GetComponent<Health>();
             health.OnDeath += Death;
@@ -39,7 +37,7 @@ namespace Cosmobot
             }
         }
 
-        void Update()
+        private void Update()
         {
             if (timer > SpawnInterval)
             {
@@ -57,7 +55,7 @@ namespace Cosmobot
         }
 
         // Releasing children to attack
-        void ReleaseEnemies()
+        private void ReleaseEnemies()
         {
             for (int i = 0; i < EnemyLimit; i++)
             {
@@ -71,7 +69,7 @@ namespace Cosmobot
         }
 
         // Spawning a child
-        void SpawnEnemy()
+        private void SpawnEnemy()
         {
             GameObject e = Instantiate(Enemy, CreateSpawnPoint(), Quaternion.identity);
             e.GetComponent<Enemy>().SetNest(gameObject);
@@ -79,7 +77,7 @@ namespace Cosmobot
 
         }
 
-        Vector3 CreateSpawnPoint()
+        private Vector3 CreateSpawnPoint()
         {
             Random.InitState((int)Time.time);
             int offset1 = 0;
@@ -113,10 +111,13 @@ namespace Cosmobot
         public void RemoveEnemy(GameObject enemy)
         {
             if (enemy == null)
+            {
                 enemies.RemoveRange(0, EnemyLimit);
+            }
             else
+            {
                 enemies.Remove(enemy);
+            }
         }
-
     }
 }
