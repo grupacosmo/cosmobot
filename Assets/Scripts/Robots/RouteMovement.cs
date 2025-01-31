@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Cosmobot
@@ -7,6 +8,7 @@ namespace Cosmobot
     public class RouteMovement : MonoBehaviour
     {
         #region start variables
+        public bool canMove;
         public float robotSpeed;
         public float gravity = 50;
         public float distanceToGround = 0.1f;
@@ -20,7 +22,7 @@ namespace Cosmobot
         public bool loopMode;
         public float arrivalThreshold;
         public int routeIndex = 0;
-        public Route[] route;
+        public List<Route> route = new List<Route>();
         private bool routeForward = true;
         // arrivalThreshold had been tested for 0.5f, but might not work correctly for higher velocities
         // (but i don't think we ever plan to set the velocity THAT high, we're talking about setting it to 999 speed)
@@ -87,7 +89,7 @@ namespace Cosmobot
 
         private void ProcessMovement()
         {
-            if (CheckIfArrived(route[routeIndex].waypoint))
+            if (route.Count is not 0 && CheckIfArrived(route[routeIndex].waypoint))
             {
                 UpdateRoute();
                 if (grabber)
@@ -96,14 +98,21 @@ namespace Cosmobot
                     TryGrab();
                 }
             }
-            var velocityDelta = CalculateVelocityDelta();
+
+            Vector3 velocityDelta;
+
+            if (canMove) velocityDelta = CalculateVelocityDelta();
+            else velocityDelta = Vector3.zero;
+
             velocityDelta -= gravity * Time.fixedDeltaTime * groundNormal;
             rb.AddForce(velocityDelta, ForceMode.VelocityChange);
         }
 
         private void ProcessRotation()
         {
-            direction = GetDirectionToPoint(transform.position, route[routeIndex].waypoint);
+            if (route.Count is not 0) direction = GetDirectionToPoint(transform.position, route[routeIndex].waypoint);
+            else direction = transform.forward;
+
             var rotation = Quaternion.LookRotation(direction);
             transform.rotation = rotation;
         }
@@ -119,7 +128,7 @@ namespace Cosmobot
         {
             if (routeForward)
             {
-                if (routeIndex == route.Length - 1)
+                if (routeIndex == route.Count - 1)
                 {
                     if (loopMode) routeIndex = -1;
                     else routeForward = false;
