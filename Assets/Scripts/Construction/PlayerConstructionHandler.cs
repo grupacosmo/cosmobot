@@ -23,7 +23,7 @@ namespace Cosmobot
         void LateUpdate()
         {
             ProcessPlacement();
-        } 
+        }
 
         // Select a building and start scanning for placement position
         // TODO: hook this up to a state machine or something so it works with the rest of the player mechanics
@@ -44,6 +44,11 @@ namespace Cosmobot
             if (currentPlacementPosition is null) {
                 Debug.LogWarning("Attempted to place building in impossible position");
                 ExitPlacement();
+                return;
+            }
+            if (IsPlacementPositionValid() == false)
+            {
+                Debug.LogWarning("Attempted to place building in invalid position!");
                 return;
             }
 
@@ -94,10 +99,14 @@ namespace Cosmobot
             bool cameraRaySuccess = Physics.Raycast(cameraRay, out RaycastHit cameraRayHit, maxBuildDistance * 2, buildTargetingCollisionMask);
 
             if (cameraRaySuccess && Vector3.ProjectOnPlane(cameraTransform.position - cameraRayHit.point, Vector3.up).magnitude < maxBuildDistance) {
-                return new Vector3(cameraRayHit.point.x, 0, cameraRayHit.point.z);
+                Vector3 buildPoint = new Vector3(cameraRayHit.point.x, 0, cameraRayHit.point.z);
+                constructionPreview.SetGridPosition(new Vector4(buildPoint.x, 0, buildPoint.z));
+                return buildPoint;
             }
 
-            return Vector3.ProjectOnPlane(cameraTransform.position, Vector3.up) + Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up) * maxBuildDistance;
+            Vector3 buildPointDistant = Vector3.ProjectOnPlane(cameraTransform.position, Vector3.up) + Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up) * maxBuildDistance;
+            constructionPreview.SetGridPosition(new Vector4(buildPointDistant.x, 0, buildPointDistant.z));
+            return buildPointDistant;
         }
 
         private Vector3 SnapToGrid(Vector3 vec, bool centerX, bool centerZ) 
@@ -122,6 +131,18 @@ namespace Cosmobot
             }
 
             return null;
+        }
+
+        private bool IsPlacementPositionValid()
+        {
+            if (currentPlacementPosition == null) return false;
+
+            Vector3 validCurrentPlacementPosition = new Vector3(currentPlacementPosition.Value.x, currentPlacementPosition.Value.y + 0.5f, currentPlacementPosition.Value.z);
+            Ray objectRay = new Ray(validCurrentPlacementPosition, Vector3.down);
+            bool objectRaySuccess = Physics.Raycast(objectRay, out RaycastHit objectRayHit, 1f, buildTargetingCollisionMask);
+            if (objectRaySuccess && objectRayHit.transform != null && (objectRayHit.transform.gameObject.name == "Floor element" || objectRayHit.transform.gameObject.name == "Terrain")) return true; // TEMP: should be replaced later by a standard floor element prefab
+
+            return false;
         }
 
         private void OnEnable()
