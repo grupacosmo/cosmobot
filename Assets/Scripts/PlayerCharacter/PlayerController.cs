@@ -36,8 +36,8 @@ namespace Cosmobot
         private Rigidbody rb;
 
         private DefaultInputActions actions;
-        private static readonly int Speed = Animator.StringToHash("speed");
-        private static readonly int Jump = Animator.StringToHash("jump");
+        private static readonly int AnimatorSpeed = Animator.StringToHash("speed");
+        private static readonly int AnimatorJump = Animator.StringToHash("jump");
 
         private void Start()
         {
@@ -70,14 +70,14 @@ namespace Cosmobot
             if (shouldJump)
             {
                 velocityDelta.y = jumpForce;
-                animator.SetTrigger(Jump);
+                animator.SetTrigger(AnimatorJump);
             }
             else
             {
                 velocityDelta -= gravity * Time.fixedDeltaTime * groundNormal;
             }
             rb.AddForce(velocityDelta, ForceMode.VelocityChange);
-            animator.SetFloat(Speed, new Vector2(rb.velocity.x, rb.velocity.z).sqrMagnitude);
+            animator.SetFloat(AnimatorSpeed, new Vector2(rb.velocity.x, rb.velocity.z).sqrMagnitude);
         }
 
         private Vector3 CalculateVelocityDelta()
