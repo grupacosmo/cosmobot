@@ -39,7 +39,7 @@ namespace Cosmobot
 
         private void Update()
         {
-            if (timer > SpawnInterval)
+            if (timer >= SpawnInterval)
             {
                 SpawnEnemy();
                 if (enemies.Count == EnemyLimit)
@@ -59,7 +59,7 @@ namespace Cosmobot
         {
             for (int i = 0; i < EnemyLimit; i++)
             {
-                if (enemies[i] != null)
+                if (enemies[i])
                 {
                     enemies[i].GetComponent<Enemy>().SetTarget(PotentialTarget);
                 }
@@ -110,7 +110,7 @@ namespace Cosmobot
 
         public void RemoveEnemy(GameObject enemy)
         {
-            if (enemy == null)
+            if (!enemy)
             {
                 enemies.RemoveRange(0, EnemyLimit);
             }

@@ -11,7 +11,7 @@ namespace Cosmobot
             switch (state)
             {
                 case EnemyBehaviourStates.ATTACK:
-                    if (target != null)
+                    if (target)
                     {
                         Attack();
                     }
@@ -22,7 +22,7 @@ namespace Cosmobot
                     break;
                 case EnemyBehaviourStates.REST:
                     Wander();
-                    if (target != null)
+                    if (target)
                     {
                         state = EnemyBehaviourStates.ATTACK;
                     }

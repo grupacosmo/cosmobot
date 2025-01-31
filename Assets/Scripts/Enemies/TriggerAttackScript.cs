@@ -13,7 +13,7 @@ namespace Cosmobot
 
         private void OnTriggerStay(Collider other)
         {
-            if (other.gameObject.tag == "Enemy")
+            if (other.gameObject.CompareTag(Tags.Enemy))
             {
                 if (!isAttacking)
                 {
