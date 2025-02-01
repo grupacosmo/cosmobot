@@ -22,6 +22,7 @@ namespace Cosmobot
 
         [SerializeField] private Transform cameraTransform;
         [SerializeField] private Transform groundCheckOrigin;
+        [SerializeField] private Animator animator;
         
         private Vector3 inputMove = Vector3.zero;
         private Vector3 inputDirection = Vector3.zero;
@@ -35,6 +36,8 @@ namespace Cosmobot
         private Rigidbody rb;
 
         private DefaultInputActions actions;
+        private static readonly int AnimatorSpeed = Animator.StringToHash("speed");
+        private static readonly int AnimatorJump = Animator.StringToHash("jump");
 
         private void Start()
         {
@@ -67,13 +70,14 @@ namespace Cosmobot
             if (shouldJump)
             {
                 velocityDelta.y = jumpForce;
+                animator.SetTrigger(AnimatorJump);
             }
             else
             {
                 velocityDelta -= gravity * Time.fixedDeltaTime * groundNormal;
             }
-
             rb.AddForce(velocityDelta, ForceMode.VelocityChange);
+            animator.SetFloat(AnimatorSpeed, new Vector2(rb.velocity.x, rb.velocity.z).sqrMagnitude);
         }
 
         private Vector3 CalculateVelocityDelta()
@@ -93,7 +97,7 @@ namespace Cosmobot
             var origin = groundCheckOrigin.position;
 
             Physics.SphereCast(origin, groundCheckRadius, Vector3.down, out var hitInfo, groundCheckDistance);
-            if (hitInfo.collider != null)
+            if (hitInfo.collider is not null)
             {
                 groundNormal = hitInfo.normal;
                 var floorAngleDegrees = Mathf.Acos(Vector3.Dot(Vector3.up, groundNormal)) * Mathf.Rad2Deg;
@@ -116,11 +120,9 @@ namespace Cosmobot
         {
             if (rotationMode == RotationMode.MovementDirection)
             {
-                if (inputDirection.magnitude > 0.01f)
-                {
-                    var toRotation = Quaternion.LookRotation(inputDirection);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, playerRotationSpeed * Time.deltaTime);
-                }
+                if (inputDirection.sqrMagnitude <= 0.01f) return;
+                var toRotation = Quaternion.LookRotation(inputDirection);
+                transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, playerRotationSpeed * Time.deltaTime);
             }
             else
             {
