@@ -11,7 +11,7 @@ namespace Cosmobot
         [SerializeField] float maxBuildDistance = 20.0f;
         [SerializeField] float maxTerrainHeight = 100.0f;
         [SerializeField] GameObject constructionSitePrefab;
-        [SerializeField] BuildingInfo initialBuilding; // TEMP
+        [SerializeField] Canvas BuildingSelectionUI;
 
         private DefaultInputActions actions;
         private Vector3? currentPlacementPosition;
@@ -22,8 +22,14 @@ namespace Cosmobot
 
         void LateUpdate()
         {
-            ProcessPlacement();
+            if (currentBuildingInfo != null)
+            {
+                InitiatePlacement(currentBuildingInfo);
+                ProcessPlacement();
+            }
         }
+
+        public void SetBuilding(BuildingInfo buildingInfo) { currentBuildingInfo = buildingInfo; }
 
         // Select a building and start scanning for placement position
         // TODO: hook this up to a state machine or something so it works with the rest of the player mechanics
@@ -74,7 +80,8 @@ namespace Cosmobot
             bool centerSnapX = effectiveGridSize.x % 2 == 1;
             bool centerSnapZ = effectiveGridSize.y % 2 == 1;
             Vector3 snappedBuildPoint = SnapToGrid(GetBuildPoint(), centerSnapX, centerSnapZ);
-            currentPlacementPosition = ScanBuildingPlacement(snappedBuildPoint, currentBuildingInfo.GridSize, CurrentConstructionRotation);
+            Vector2Int buildingDimensions = new Vector2Int((int)currentBuildingInfo.Prefab.transform.localScale.x, (int)currentBuildingInfo.Prefab.transform.localScale.z);
+            currentPlacementPosition = ScanBuildingPlacement(snappedBuildPoint, buildingDimensions, CurrentConstructionRotation);
 
             if (currentPlacementPosition is not null) 
             {
@@ -136,12 +143,13 @@ namespace Cosmobot
         private bool IsPlacementPositionValid()
         {
             if (currentPlacementPosition == null) return false;
-
             Vector3 validCurrentPlacementPosition = new Vector3(currentPlacementPosition.Value.x, currentPlacementPosition.Value.y + 0.5f, currentPlacementPosition.Value.z);
-            Ray objectRay = new Ray(validCurrentPlacementPosition, Vector3.down);
-            bool objectRaySuccess = Physics.Raycast(objectRay, out RaycastHit objectRayHit, 1f, buildTargetingCollisionMask);
-            if (objectRaySuccess && objectRayHit.transform != null && (objectRayHit.transform.gameObject.name == "Floor element" || objectRayHit.transform.gameObject.name == "Terrain")) return true; // TEMP: should be replaced later by a standard floor element prefab
-
+            Ray validObjectRay = new Ray(validCurrentPlacementPosition, Vector3.down);
+            Ray obstructedObjectRay = new Ray(currentPlacementPosition.Value, Vector3.down);
+            bool validObjectRaySuccess = Physics.Raycast(validObjectRay, out RaycastHit validObjectRayHit, 1f, buildTargetingCollisionMask);
+            bool obstructedObjectRaySuccess = Physics.Raycast(obstructedObjectRay, out RaycastHit obstructedObjectRayHit, 1f, buildTargetingCollisionMask);
+            if (obstructedObjectRaySuccess && obstructedObjectRayHit.transform != null && obstructedObjectRayHit.transform.gameObject.name == "Floor element") return false; // TEMP: "Floor element" and "Terrain" should be replaced later by a standard floor element prefab
+            if (validObjectRaySuccess && validObjectRayHit.transform != null && (validObjectRayHit.transform.gameObject.name == "Floor element" || validObjectRayHit.transform.gameObject.name == "Terrain")) return true;
             return false;
         }
 
@@ -176,7 +184,7 @@ namespace Cosmobot
 
         public void OnStartPlacementTemp(UnityEngine.InputSystem.InputAction.CallbackContext context)
         {
-            InitiatePlacement(initialBuilding);
+            BuildingSelectionUI.enabled = true;
         }
     }
 }
