@@ -103,7 +103,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.97, y: 1, z: 0.97}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &6264958322048247806
 PrefabInstance:
@@ -164,6 +164,10 @@ PrefabInstance:
     - target: {fileID: 2908835821414782796, guid: 20631df0109e92d4892d2f63540ac1a2, type: 3}
       propertyPath: m_Name
       value: TestBuilding2x2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908835821414782796, guid: 20631df0109e92d4892d2f63540ac1a2, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

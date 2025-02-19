@@ -8,6 +8,7 @@ namespace Cosmobot
         [SerializeField] Transform cameraTransform;
         [SerializeField] ConstructionPreview constructionPreview;
         [SerializeField] LayerMask buildTargetingCollisionMask;
+        [SerializeField] LayerMask buildingCollisionMask;
         [SerializeField] float maxBuildDistance = 20.0f;
         [SerializeField] float maxTerrainHeight = 100.0f;
         [SerializeField] GameObject constructionSitePrefab;
@@ -128,28 +129,41 @@ namespace Cosmobot
         // Returns the final placement position of the building, or null if no valid position is found
         private Vector3? ScanBuildingPlacement(Vector3 buildPoint, Vector2Int buildingGridSize, Quaternion buildingRotation) 
         {
-            Vector3 boxOrigin = new Vector3(buildPoint.x, maxTerrainHeight+1, buildPoint.z);
+            Vector3 boxOriginHigh = new Vector3(buildPoint.x, maxTerrainHeight+1, buildPoint.z);
+            Vector3 boxOriginLow = new Vector3(buildPoint.x, buildPoint.y-0.5f, buildPoint.z);
             Vector3 boxHalfExtents = new Vector3(buildingGridSize.x * GlobalConstants.GRID_CELL_SIZE * 0.5f, 1, buildingGridSize.y * GlobalConstants.GRID_CELL_SIZE * 0.5f);
 
-            if(Physics.BoxCast(boxOrigin, boxHalfExtents, Vector3.down, out RaycastHit result, buildingRotation, maxTerrainHeight*2, buildTargetingCollisionMask))
+            if (!Physics.BoxCast(boxOriginHigh, boxHalfExtents, Vector3.down, buildingRotation, maxTerrainHeight*2, buildingCollisionMask))
             {
-                Vector3 finalPlacementPosition = new Vector3(buildPoint.x, result.point.y, buildPoint.z);
-                return finalPlacementPosition;
+                bool boxHighSuccess = Physics.BoxCast(boxOriginHigh, boxHalfExtents, Vector3.down, out RaycastHit resultHigh, buildingRotation, maxTerrainHeight*2, buildTargetingCollisionMask);
+                bool boxLowSuccess = Physics.BoxCast(boxOriginLow, boxHalfExtents, Vector3.up, out RaycastHit resultLow, buildingRotation, maxTerrainHeight*2, buildTargetingCollisionMask);
+                //
+                if (boxLowSuccess)
+                {
+                    Vector3 newBoxOrigin = new Vector3(buildPoint.x, resultLow.point.y, buildPoint.z);
+                    if (Physics.BoxCast(newBoxOrigin, boxHalfExtents, Vector3.down, out RaycastHit newResultLow, buildingRotation, maxTerrainHeight*2, buildTargetingCollisionMask))
+                    {
+                        Vector3 finalPlacementPosition = new Vector3(buildPoint.x, newResultLow.point.y, buildPoint.z);
+                        return finalPlacementPosition;
+                    }
+                } 
+                if (boxHighSuccess && resultHigh.point.y > resultLow.point.y)
+                {
+                    Vector3 finalPlacementPosition = new Vector3(buildPoint.x, resultHigh.point.y, buildPoint.z);
+                    return finalPlacementPosition;
+                }
             }
-
             return null;
         }
 
         private bool IsPlacementPositionValid()
         {
             if (currentPlacementPosition == null) return false;
-            Vector3 validCurrentPlacementPosition = new Vector3(currentPlacementPosition.Value.x, currentPlacementPosition.Value.y + 0.5f, currentPlacementPosition.Value.z);
-            Ray validObjectRay = new Ray(validCurrentPlacementPosition, Vector3.down);
-            Ray obstructedObjectRay = new Ray(currentPlacementPosition.Value, Vector3.down);
-            bool validObjectRaySuccess = Physics.Raycast(validObjectRay, out RaycastHit validObjectRayHit, 1f, buildTargetingCollisionMask);
-            bool obstructedObjectRaySuccess = Physics.Raycast(obstructedObjectRay, out RaycastHit obstructedObjectRayHit, 1f, buildTargetingCollisionMask);
-            if (obstructedObjectRaySuccess && obstructedObjectRayHit.transform != null && obstructedObjectRayHit.transform.gameObject.name == "Floor element") return false; // TEMP: "Floor element" and "Terrain" should be replaced later by a standard floor element prefab
-            if (validObjectRaySuccess && validObjectRayHit.transform != null && (validObjectRayHit.transform.gameObject.name == "Floor element" || validObjectRayHit.transform.gameObject.name == "Terrain")) return true;
+
+            Vector3 validCurrentPlacementPosition = new Vector3(currentPlacementPosition.Value.x, currentPlacementPosition.Value.y + 1f, currentPlacementPosition.Value.z);
+            bool validObjectRaySuccess = Physics.BoxCast(validCurrentPlacementPosition, transform.localScale * 0.5f, Vector3.down, out RaycastHit hitInfo, transform.rotation, 1f ,buildTargetingCollisionMask);
+            if (validObjectRaySuccess && (hitInfo.collider.name == "Floor element" || hitInfo.collider.name == "Terrain")) return true; // TEMP: "Floor element" and "Terrain" should be replaced later by a standard floor element prefab
+
             return false;
         }
 

@@ -16,6 +16,8 @@ namespace Cosmobot
         public SerializableDictionary<ItemInfo, GameObject> ConstructionSiteResources => constructionSiteResources;
 
         void Start() {
+            BoxCollider prefabCollider = buildingInfo.Prefab.GetComponentInChildren<BoxCollider>();
+            prefabCollider.size = new Vector3(prefabCollider.size.x - colliderOffset, prefabCollider.size.y, prefabCollider.size.z - colliderOffset);
             tempCube.localScale = new Vector3(buildingInfo.Prefab.transform.localScale.x, 0.2f, buildingInfo.Prefab.transform.localScale.z);
             SetRequiredResources(buildingInfo.ResourceRequirements);
         }
