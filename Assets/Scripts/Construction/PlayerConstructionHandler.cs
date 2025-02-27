@@ -107,20 +107,20 @@ namespace Cosmobot
             bool cameraRaySuccess = Physics.Raycast(cameraRay, out RaycastHit cameraRayHit, maxBuildDistance * 2, buildTargetingCollisionMask);
 
             if (cameraRaySuccess && Vector3.ProjectOnPlane(cameraTransform.position - cameraRayHit.point, Vector3.up).magnitude < maxBuildDistance) {
-                Vector3 buildPoint = new Vector3(cameraRayHit.point.x, 0, cameraRayHit.point.z);
-                constructionPreview.SetGridPosition(new Vector4(buildPoint.x, 0, buildPoint.z));
+                Vector3 buildPoint = new Vector3(cameraRayHit.point.x, cameraRayHit.point.y, cameraRayHit.point.z);
+                constructionPreview.SetGridPosition(new Vector4(buildPoint.x, buildPoint.y, buildPoint.z));
                 return buildPoint;
             }
 
             Vector3 buildPointDistant = Vector3.ProjectOnPlane(cameraTransform.position, Vector3.up) + Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up) * maxBuildDistance;
-            constructionPreview.SetGridPosition(new Vector4(buildPointDistant.x, 0, buildPointDistant.z));
+            constructionPreview.SetGridPosition(new Vector4(buildPointDistant.x, buildPointDistant.y, buildPointDistant.z));
             return buildPointDistant;
         }
 
         private Vector3 SnapToGrid(Vector3 vec, bool centerX, bool centerZ) 
         {
             vec /= GlobalConstants.GRID_CELL_SIZE;
-            Vector3 newVec = new Vector3(Mathf.Round(vec.x), 0, Mathf.Round(vec.z));
+            Vector3 newVec = new Vector3(Mathf.Round(vec.x), Mathf.Round(vec.y), Mathf.Round(vec.z));
             newVec *= GlobalConstants.GRID_CELL_SIZE;
 
             return newVec + new Vector3(centerX ? GlobalConstants.GRID_CELL_SIZE/2.0f : 0, 0, centerZ ? GlobalConstants.GRID_CELL_SIZE/2.0f : 0);
@@ -129,30 +129,16 @@ namespace Cosmobot
         // Returns the final placement position of the building, or null if no valid position is found
         private Vector3? ScanBuildingPlacement(Vector3 buildPoint, Vector2Int buildingGridSize, Quaternion buildingRotation) 
         {
-            Vector3 boxOriginHigh = new Vector3(buildPoint.x, maxTerrainHeight+1, buildPoint.z);
-            Vector3 boxOriginLow = new Vector3(buildPoint.x, buildPoint.y-0.5f, buildPoint.z);
+            float boxOriginHeight = buildPoint.y + currentBuildingInfo.Prefab.transform.localScale.y * 3;
+            Vector3 boxOrigin = new Vector3(buildPoint.x, boxOriginHeight <= maxTerrainHeight ? boxOriginHeight : maxTerrainHeight, buildPoint.z);
             Vector3 boxHalfExtents = new Vector3(buildingGridSize.x * GlobalConstants.GRID_CELL_SIZE * 0.5f, 1, buildingGridSize.y * GlobalConstants.GRID_CELL_SIZE * 0.5f);
 
-            if (!Physics.BoxCast(boxOriginHigh, boxHalfExtents, Vector3.down, buildingRotation, maxTerrainHeight*2, buildingCollisionMask))
+            if(Physics.BoxCast(boxOrigin, boxHalfExtents, Vector3.down, out RaycastHit result, buildingRotation, maxTerrainHeight*2, buildTargetingCollisionMask))
             {
-                bool boxHighSuccess = Physics.BoxCast(boxOriginHigh, boxHalfExtents, Vector3.down, out RaycastHit resultHigh, buildingRotation, maxTerrainHeight*2, buildTargetingCollisionMask);
-                bool boxLowSuccess = Physics.BoxCast(boxOriginLow, boxHalfExtents, Vector3.up, out RaycastHit resultLow, buildingRotation, maxTerrainHeight*2, buildTargetingCollisionMask);
-                //
-                if (boxLowSuccess)
-                {
-                    Vector3 newBoxOrigin = new Vector3(buildPoint.x, resultLow.point.y, buildPoint.z);
-                    if (Physics.BoxCast(newBoxOrigin, boxHalfExtents, Vector3.down, out RaycastHit newResultLow, buildingRotation, maxTerrainHeight*2, buildTargetingCollisionMask))
-                    {
-                        Vector3 finalPlacementPosition = new Vector3(buildPoint.x, newResultLow.point.y, buildPoint.z);
-                        return finalPlacementPosition;
-                    }
-                } 
-                if (boxHighSuccess && resultHigh.point.y > resultLow.point.y)
-                {
-                    Vector3 finalPlacementPosition = new Vector3(buildPoint.x, resultHigh.point.y, buildPoint.z);
-                    return finalPlacementPosition;
-                }
+                Vector3 finalPlacementPosition = new Vector3(buildPoint.x, result.point.y, buildPoint.z);
+                return finalPlacementPosition;
             }
+
             return null;
         }
 
@@ -165,7 +151,7 @@ namespace Cosmobot
             if (validObjectRaySuccess && (hitInfo.collider.name == "Floor element" || hitInfo.collider.name == "Terrain")) return true; // TEMP: "Floor element" and "Terrain" should be replaced later by a standard floor element prefab
 
             return false;
-        }
+        }  
 
         private void OnEnable()
         {

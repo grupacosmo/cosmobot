@@ -3487,7 +3487,7 @@ MonoBehaviour:
     m_Bits: 1
   buildingCollisionMask:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 0
   maxBuildDistance: 10
   maxTerrainHeight: 100
   constructionSitePrefab: {fileID: 6571599839263284129, guid: 11c3bb8c65eb71bca9cff435f75bdc0b, type: 3}
@@ -4085,6 +4085,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 843979773}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!20 &849081675 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 3067474405274665699, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
+  m_PrefabInstance: {fileID: 756108755}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &855368310
 GameObject:
   m_ObjectHideFlags: 0
@@ -6880,6 +6885,7 @@ MonoBehaviour:
   Button2x2: {fileID: 1081283224}
   Button3x3: {fileID: 984417434}
   Player: {fileID: 756108756}
+  playerCamera: {fileID: 849081675}
   canvas: {fileID: 250576159}
 --- !u!1 &1776985801
 GameObject:

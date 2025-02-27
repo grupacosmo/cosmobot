@@ -10,7 +10,7 @@ namespace Cosmobot
         [SerializeField] private Transform tempCube;
         [SerializeField] private SerializableDictionary<ItemInfo, GameObject> constructionSiteResources = new();
         [SerializeField] private BuildingInfo buildingInfo;
-        private float colliderOffset = 0.01f;
+        private float colliderOffset = 0.05f;
         public Transform TempCube => tempCube;
         public BuildingInfo BuildingInfo => buildingInfo;
         public SerializableDictionary<ItemInfo, GameObject> ConstructionSiteResources => constructionSiteResources;

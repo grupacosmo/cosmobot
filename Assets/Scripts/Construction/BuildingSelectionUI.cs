@@ -34,9 +34,17 @@ namespace Cosmobot
             if (canvas.enabled == true){
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
+                Button1x1.interactable = true;
+                Button1x2.interactable = true;
+                Button2x2.interactable = true;
+                Button3x3.interactable = true;
             } else {
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
+                Button1x1.interactable = false;
+                Button1x2.interactable = false;
+                Button2x2.interactable = false;
+                Button3x3.interactable = false;
             }
         }
 
@@ -55,7 +63,6 @@ namespace Cosmobot
 
         public void ButtonClick(Button button)
         {
-            Debug.Log(BuildingInfoFiles.GetValue(button.name));
             Player.GetComponent<PlayerConstructionHandler>().SetBuilding(BuildingInfoFiles.GetValue(button.name));
             canvas.enabled = false;
         }
