@@ -29,5 +29,11 @@ namespace Cosmobot
                     break;
             }
         }
+        public override void MoveTo(Vector3 targetPosition)
+        {
+            Debug.Log("moving to " + targetPosition);
+            Vector3 direction = (targetPosition - transform.position).normalized;
+            transform.position += direction * speed * Time.deltaTime;
+        }
     }
 }

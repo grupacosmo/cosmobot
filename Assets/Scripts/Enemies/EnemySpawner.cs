@@ -16,6 +16,8 @@ namespace Cosmobot
         public GameObject Enemy;
         public int SpawnInterval;
         public int EnemyLimit;
+        public int MinSpawnRange;
+        public int MaxSpawnRange;
 
         private void Start()
         {
@@ -79,31 +81,9 @@ namespace Cosmobot
 
         private Vector3 CreateSpawnPoint()
         {
-            Random.InitState((int)Time.time);
-            int offset1 = 0;
-            int offset2 = 0;
-            switch (Random.Range(1, 3))
-            {
-                case 1:
-                    Random.InitState((int)Time.time);
-                    offset1 = Random.Range(5, 15);
-                    break;
-                case 2:
-                    Random.InitState((int)Time.time);
-                    offset1 = Random.Range(-5, -15);
-                    break;
-            }
-            switch (Random.Range(1, 3))
-            {
-                case 1:
-                    Random.InitState((int)Time.time);
-                    offset2 = Random.Range(5, 15);
-                    break;
-                case 2:
-                    Random.InitState((int)Time.time);
-                    offset2 = Random.Range(-5, -15);
-                    break;
-            }
+            System.Random random = new System.Random((int)Time.time);
+            int offset1 = random.Next(0, 2) == 0 ? random.Next(MinSpawnRange, MaxSpawnRange) : random.Next(-MaxSpawnRange, -MinSpawnRange);
+            int offset2 = random.Next(0, 2) == 0 ? random.Next(MinSpawnRange, MaxSpawnRange) : random.Next(-MaxSpawnRange, -MinSpawnRange);
             Vector3 spawnPosition = new Vector3(gameObject.transform.position.x + offset1, gameObject.transform.position.y, gameObject.transform.position.z + offset2);
             return spawnPosition;
         }

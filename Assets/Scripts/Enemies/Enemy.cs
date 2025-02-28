@@ -74,12 +74,8 @@ namespace Cosmobot
         }
 
         // Base method to move to a specified point
-        public virtual void MoveTo(Vector3 targetPosition)
-        {
-            Debug.Log("moving to " + targetPosition);
-            Vector3 direction = (targetPosition - transform.position).normalized;
-            transform.position += direction * speed * Time.deltaTime;
-        }
+        // For Acu1000's request made it abstract 
+        public abstract void MoveTo(Vector3 targetPosition);
 
         // Base method to attack a given target
         public virtual void Attack()
@@ -112,7 +108,6 @@ namespace Cosmobot
         // A method for wandering when there is no target
         public virtual void Wander()
         {
-
             Vector2 target2D = new Vector2(wanderTarget.x, wanderTarget.z);
             Vector2 position2D = new Vector2(transform.position.x, transform.position.z);
             if (Vector2.Distance(target2D, position2D) <= 1.0f)
@@ -138,7 +133,6 @@ namespace Cosmobot
 
         public void SetTarget(GameObject target)
         {
-
             this.target = target;
             targetHealth = target.GetComponent<Health>();
             if (targetHealth)

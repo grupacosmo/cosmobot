@@ -148,11 +148,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 154df0eea9eb53d468677069e0daad13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PotentialTarget: {fileID: 0}
   health: {fileID: -2071396687391651747}
   Enemy: {fileID: 2840893973740745227, guid: a0e907ef54ad0d540ba5b9d9aa0caae3, type: 3}
   SpawnInterval: 5
   EnemyLimit: 5
-  PotentialTarget: {fileID: 0}
+  MinSpawnRange: 5
+  MaxSpawnRange: 15
 --- !u!114 &-2071396687391651747
 MonoBehaviour:
   m_ObjectHideFlags: 0
