@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Cosmobot.BuildingSystem;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,43 +12,30 @@ namespace Cosmobot
     {
         [SerializeField] private string[] BuildingInfoDirectory = { };
         [SerializeField] private SerializableDictionary<string, BuildingInfo> BuildingInfoFiles;
-        [SerializeField] private Button Button1x1;
-        [SerializeField] private Button Button1x2;
-        [SerializeField] private Button Button2x2;
-        [SerializeField] private Button Button3x3;
+        [SerializeField] private SerializableDictionary<string, Button> ButtonInfo;
         [SerializeField] private GameObject Player;
         [SerializeField] private Canvas canvas;
 
         void Start()
         {   
             LoadBuildings();
-
-            Button1x1.onClick.AddListener(() => ButtonClick(Button1x1));
-            Button1x2.onClick.AddListener(() => ButtonClick(Button1x2));
-            Button2x2.onClick.AddListener(() => ButtonClick(Button2x2));
-            Button3x3.onClick.AddListener(() => ButtonClick(Button3x3));
-            canvas.enabled = false;
+            LoadButtons();
+            gameObject.SetActive(false);
         }
 
         void LateUpdate()
         {
-            if (canvas.enabled == true){
+            if (canvas.enabled == true) {
                 Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
-                Button1x1.interactable = true;
-                Button1x2.interactable = true;
-                Button2x2.interactable = true;
-                Button3x3.interactable = true;
-            } else {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-                Button1x1.interactable = false;
-                Button1x2.interactable = false;
-                Button2x2.interactable = false;
-                Button3x3.interactable = false;
             }
         }
 
+        void OnEnable()
+        {
+            EnableButtons();       
+        }
+        
         private void LoadBuildings()
         {
             List<BuildingInfo> buildings = 
@@ -61,10 +49,39 @@ namespace Cosmobot
             }
         }
 
+
+        private void LoadButtons()
+        {
+            foreach (KeyValuePair<string, Button> button in ButtonInfo)
+            {
+                button.Value.onClick.AddListener(() => ButtonClick(button.Value));
+                button.Value.GetComponentInChildren<TextMeshProUGUI>().text = button.Key;
+            }
+        }
+
         public void ButtonClick(Button button)
         {
             Player.GetComponent<PlayerConstructionHandler>().SetBuilding(BuildingInfoFiles.GetValue(button.name));
-            canvas.enabled = false;
+            DisableButtons();
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            gameObject.SetActive(false);
+        }
+
+        public void DisableButtons()
+        {
+            foreach (KeyValuePair<string, Button> button in ButtonInfo)
+            {
+                button.Value.interactable = false;
+            } 
+        }
+
+        public void EnableButtons()
+        {
+            foreach (KeyValuePair<string, Button> button in ButtonInfo)
+            {
+                button.Value.interactable = true;
+            }
         }
     }
 }

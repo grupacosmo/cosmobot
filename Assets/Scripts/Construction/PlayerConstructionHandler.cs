@@ -8,7 +8,6 @@ namespace Cosmobot
         [SerializeField] Transform cameraTransform;
         [SerializeField] ConstructionPreview constructionPreview;
         [SerializeField] LayerMask buildTargetingCollisionMask;
-        [SerializeField] LayerMask buildingCollisionMask;
         [SerializeField] float maxBuildDistance = 20.0f;
         [SerializeField] float maxTerrainHeight = 100.0f;
         [SerializeField] GameObject constructionSitePrefab;
@@ -81,8 +80,7 @@ namespace Cosmobot
             bool centerSnapX = effectiveGridSize.x % 2 == 1;
             bool centerSnapZ = effectiveGridSize.y % 2 == 1;
             Vector3 snappedBuildPoint = SnapToGrid(GetBuildPoint(), centerSnapX, centerSnapZ);
-            Vector2Int buildingDimensions = new Vector2Int((int)currentBuildingInfo.Prefab.transform.localScale.x, (int)currentBuildingInfo.Prefab.transform.localScale.z);
-            currentPlacementPosition = ScanBuildingPlacement(snappedBuildPoint, buildingDimensions, CurrentConstructionRotation);
+            currentPlacementPosition = ScanBuildingPlacement(snappedBuildPoint, currentBuildingInfo.GridSize, CurrentConstructionRotation);
 
             if (currentPlacementPosition is not null) 
             {
@@ -107,20 +105,20 @@ namespace Cosmobot
             bool cameraRaySuccess = Physics.Raycast(cameraRay, out RaycastHit cameraRayHit, maxBuildDistance * 2, buildTargetingCollisionMask);
 
             if (cameraRaySuccess && Vector3.ProjectOnPlane(cameraTransform.position - cameraRayHit.point, Vector3.up).magnitude < maxBuildDistance) {
-                Vector3 buildPoint = new Vector3(cameraRayHit.point.x, cameraRayHit.point.y, cameraRayHit.point.z);
-                constructionPreview.SetGridPosition(new Vector4(buildPoint.x, buildPoint.y, buildPoint.z));
+                Vector3 buildPoint = new Vector3(cameraRayHit.point.x, 0, cameraRayHit.point.z);
+                constructionPreview.SetGridPosition(new Vector4(buildPoint.x, 0, buildPoint.z));
                 return buildPoint;
             }
 
             Vector3 buildPointDistant = Vector3.ProjectOnPlane(cameraTransform.position, Vector3.up) + Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up) * maxBuildDistance;
-            constructionPreview.SetGridPosition(new Vector4(buildPointDistant.x, buildPointDistant.y, buildPointDistant.z));
+            constructionPreview.SetGridPosition(new Vector4(buildPointDistant.x, 0, buildPointDistant.z));
             return buildPointDistant;
         }
 
         private Vector3 SnapToGrid(Vector3 vec, bool centerX, bool centerZ) 
         {
             vec /= GlobalConstants.GRID_CELL_SIZE;
-            Vector3 newVec = new Vector3(Mathf.Round(vec.x), Mathf.Round(vec.y), Mathf.Round(vec.z));
+            Vector3 newVec = new Vector3(Mathf.Round(vec.x), 0, Mathf.Round(vec.z));
             newVec *= GlobalConstants.GRID_CELL_SIZE;
 
             return newVec + new Vector3(centerX ? GlobalConstants.GRID_CELL_SIZE/2.0f : 0, 0, centerZ ? GlobalConstants.GRID_CELL_SIZE/2.0f : 0);
@@ -129,8 +127,7 @@ namespace Cosmobot
         // Returns the final placement position of the building, or null if no valid position is found
         private Vector3? ScanBuildingPlacement(Vector3 buildPoint, Vector2Int buildingGridSize, Quaternion buildingRotation) 
         {
-            float boxOriginHeight = buildPoint.y + currentBuildingInfo.Prefab.transform.localScale.y * 3;
-            Vector3 boxOrigin = new Vector3(buildPoint.x, boxOriginHeight <= maxTerrainHeight ? boxOriginHeight : maxTerrainHeight, buildPoint.z);
+            Vector3 boxOrigin = new Vector3(buildPoint.x, maxTerrainHeight+1, buildPoint.z);
             Vector3 boxHalfExtents = new Vector3(buildingGridSize.x * GlobalConstants.GRID_CELL_SIZE * 0.5f, 1, buildingGridSize.y * GlobalConstants.GRID_CELL_SIZE * 0.5f);
 
             if(Physics.BoxCast(boxOrigin, boxHalfExtents, Vector3.down, out RaycastHit result, buildingRotation, maxTerrainHeight*2, buildTargetingCollisionMask))
@@ -146,12 +143,13 @@ namespace Cosmobot
         {
             if (currentPlacementPosition == null) return false;
 
-            Vector3 validCurrentPlacementPosition = new Vector3(currentPlacementPosition.Value.x, currentPlacementPosition.Value.y + 1f, currentPlacementPosition.Value.z);
-            bool validObjectRaySuccess = Physics.BoxCast(validCurrentPlacementPosition, transform.localScale * 0.5f, Vector3.down, out RaycastHit hitInfo, transform.rotation, 1f ,buildTargetingCollisionMask);
-            if (validObjectRaySuccess && (hitInfo.collider.name == "Floor element" || hitInfo.collider.name == "Terrain")) return true; // TEMP: "Floor element" and "Terrain" should be replaced later by a standard floor element prefab
+            Vector3 validCurrentPlacementPosition = new Vector3(currentPlacementPosition.Value.x, currentPlacementPosition.Value.y + 0.5f, currentPlacementPosition.Value.z);
+            Ray objectRay = new Ray(validCurrentPlacementPosition, Vector3.down);
+            bool objectRaySuccess = Physics.Raycast(objectRay, out RaycastHit objectRayHit, 1f, buildTargetingCollisionMask);
+            if (objectRaySuccess && objectRayHit.transform != null && (objectRayHit.transform.gameObject.name == "Floor element" || objectRayHit.transform.gameObject.name == "Terrain")) return true; // TEMP: should be replaced later by a standard floor element prefab
 
             return false;
-        }  
+        }
 
         private void OnEnable()
         {
@@ -184,7 +182,7 @@ namespace Cosmobot
 
         public void OnStartPlacementTemp(UnityEngine.InputSystem.InputAction.CallbackContext context)
         {
-            BuildingSelectionUI.enabled = true;
+            BuildingSelectionUI.gameObject.SetActive(true);
         }
     }
 }
