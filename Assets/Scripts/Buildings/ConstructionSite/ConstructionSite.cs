@@ -10,12 +10,15 @@ namespace Cosmobot
         [SerializeField] private Transform tempCube;
         [SerializeField] private SerializableDictionary<ItemInfo, GameObject> constructionSiteResources = new();
         [SerializeField] private BuildingInfo buildingInfo;
-        private float colliderOffset = 0.01f;
+        private float colliderOffset = 0.05f;
         public Transform TempCube => tempCube;
         public BuildingInfo BuildingInfo => buildingInfo;
         public SerializableDictionary<ItemInfo, GameObject> ConstructionSiteResources => constructionSiteResources;
 
         void Start() {
+            BoxCollider prefabCollider = buildingInfo.Prefab.GetComponentInChildren<BoxCollider>();
+            prefabCollider.size = new Vector3(prefabCollider.size.x - colliderOffset, prefabCollider.size.y, prefabCollider.size.z - colliderOffset);
+            tempCube.localScale = new Vector3(buildingInfo.Prefab.transform.localScale.x, 0.2f, buildingInfo.Prefab.transform.localScale.z);
             SetRequiredResources(buildingInfo.ResourceRequirements);
         }
 
@@ -47,7 +50,6 @@ namespace Cosmobot
             tempCube.localScale = new Vector3(buildingInfo.GridSize.x, 0.2f, buildingInfo.GridSize.y);
             BoxCollider buildingCollider = tempCube.GetComponent<BoxCollider>();
             buildingCollider.size = new Vector3(buildingCollider.size.x - colliderOffset, buildingCollider.size.y, buildingCollider.size.z - colliderOffset);
-            
         }
 
         public void FinishConstruction() {
