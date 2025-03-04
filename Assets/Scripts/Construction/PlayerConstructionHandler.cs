@@ -11,7 +11,7 @@ namespace Cosmobot
         [SerializeField] float maxBuildDistance = 20.0f;
         [SerializeField] float maxTerrainHeight = 100.0f;
         [SerializeField] GameObject constructionSitePrefab;
-        [SerializeField] BuildingInfo initialBuilding; // TEMP
+        [SerializeField] GameObject BuildingSelectionUI;
 
         private DefaultInputActions actions;
         private Vector3? currentPlacementPosition;
@@ -22,8 +22,14 @@ namespace Cosmobot
 
         void LateUpdate()
         {
-            ProcessPlacement();
+            if (currentBuildingInfo != null)
+            {
+                InitiatePlacement(currentBuildingInfo);
+                ProcessPlacement();
+            }
         }
+
+        public void SetBuilding(BuildingInfo buildingInfo) { currentBuildingInfo = buildingInfo; }
 
         // Select a building and start scanning for placement position
         // TODO: hook this up to a state machine or something so it works with the rest of the player mechanics
@@ -176,7 +182,10 @@ namespace Cosmobot
 
         public void OnStartPlacementTemp(UnityEngine.InputSystem.InputAction.CallbackContext context)
         {
-            InitiatePlacement(initialBuilding);
+            currentBuildingInfo = null;
+            currentPlacementPosition = null;
+            constructionPreview.gameObject.SetActive(false);
+            BuildingSelectionUI.gameObject.SetActive(true);
         }
     }
 }

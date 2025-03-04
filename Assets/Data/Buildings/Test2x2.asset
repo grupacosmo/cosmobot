@@ -19,4 +19,7 @@ MonoBehaviour:
   additionalData:
     keys: []
     values: []
-  gridSize: {x: 2, y: 2}
+  resourceRequirements:
+    keys:
+    - {fileID: 11400000, guid: 85a6b340d26e8e7b39516c393bdafd61, type: 2}
+    values: 01000000

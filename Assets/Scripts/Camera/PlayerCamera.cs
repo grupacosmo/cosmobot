@@ -31,6 +31,12 @@ namespace Cosmobot
         private Vector3 cameraOffset = Vector3.zero;
         private float defaultFov;
         private float zoomFov;
+        private bool isLocked = false;
+
+        public void ChangeLock(bool locked)
+        {
+            isLocked = locked;
+        }
 
         private void OnEnable()
         {
@@ -81,8 +87,11 @@ namespace Cosmobot
 
         private void Update()
         {
-            HandleInput();
-            UpdateFov();
+            if (isLocked == false)
+            {
+                HandleInput();
+                UpdateFov();
+            }
         }
 
         private void LateUpdate() => UpdateTransform();
