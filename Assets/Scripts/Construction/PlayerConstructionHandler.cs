@@ -11,7 +11,7 @@ namespace Cosmobot
         [SerializeField] float maxBuildDistance = 20.0f;
         [SerializeField] float maxTerrainHeight = 100.0f;
         [SerializeField] GameObject constructionSitePrefab;
-        [SerializeField] Canvas BuildingSelectionUI;
+        [SerializeField] GameObject BuildingSelectionUI;
 
         private DefaultInputActions actions;
         private Vector3? currentPlacementPosition;
@@ -182,6 +182,9 @@ namespace Cosmobot
 
         public void OnStartPlacementTemp(UnityEngine.InputSystem.InputAction.CallbackContext context)
         {
+            currentBuildingInfo = null;
+            currentPlacementPosition = null;
+            constructionPreview.gameObject.SetActive(false);
             BuildingSelectionUI.gameObject.SetActive(true);
         }
     }
