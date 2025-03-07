@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,23 +10,46 @@ namespace Cosmobot.ItemSystem
     [DefaultExecutionOrder(ExecutionOrder.ItemManager)]
     public class ItemManager : SingletonSystem<ItemManager>
     {
+        [SerializeField]
+        private string[] itemsDataDirectory = { };
 
         [SerializeField]
-        private string[] itemsDataDirectory = new string[] { };
+        private string craftingRecipesDataDirectory = "Assets/Scripts/ItemSystem/CraftingRecipes";
 
-        private List<ItemInfo> items = new List<ItemInfo>();
+        private List<CraftingRecipe> craftingRecipes;
+        private List<CraftingRecipeGroup> craftingRecipesGroups;
+
+        private List<ItemInfo> items = new();
 
         public IReadOnlyList<ItemInfo> Items => items.AsReadOnly();
+        public IReadOnlyList<CraftingRecipe> CraftingRecipes => craftingRecipes.AsReadOnly();
+        public IReadOnlyList<CraftingRecipeGroup> CraftingRecipesGroups => craftingRecipesGroups.AsReadOnly();
 
         public ItemInfo GetItem(string id)
         {
             return items.FirstOrDefault(item => item.Id == id);
         }
 
+        public CraftingRecipe? GetCraftingRecipe(string id)
+        {
+            foreach (var recipe in craftingRecipes)
+                if (recipe.Id == id)
+                    return recipe;
+
+            return null;
+        }
+
+        [CanBeNull]
+        public CraftingRecipeGroup GetCraftingRecipeGroup(string id)
+        {
+            return craftingRecipesGroups.FirstOrDefault(group => group.Id == id);
+        }
+
         protected override void SystemAwake()
         {
             ValidateDirectories();
             LoadItems();
+            LoadCraftingRecipes();
         }
 
         private void ValidateDirectories()
@@ -82,17 +106,46 @@ namespace Cosmobot.ItemSystem
             return $"{group.Key}: ${joined}";
         }
 
+        private void LoadCraftingRecipes()
+        {
+            CraftingRecipeSerializationObject deserializedObject =
+                CraftingRecipeSerializer.Deserialize(craftingRecipesDataDirectory);
+            if (deserializedObject is null)
+            {
+                Debug.LogError("Failed to load crafting recipes.");
+#if UNITY_EDITOR
+                EditorApplication.isPlaying = false;
+#else
+                // just for now
+                // TODO: replace with proper error handling
+                Application.Quit();
+#endif
+                return;
+            }
+
+            craftingRecipes = deserializedObject.Recipes;
+            Dictionary<string, CraftingRecipe> craftingRecipesMap = craftingRecipes.ToDictionary(r => r.Id, r => r);
+            craftingRecipesGroups = deserializedObject.Groups.Select(g =>
+            {
+                List<CraftingRecipe> recipes = g.Recipes.Select(rId => craftingRecipesMap[rId]).ToList();
+                return new CraftingRecipeGroup(g.Id, g.Name, recipes);
+            }).ToList();
+        }
+
         private class FieldComparer<T, R> : IEqualityComparer<T>
         {
             private readonly Func<T, R> selector;
+
             public FieldComparer(Func<T, R> selector)
             {
                 this.selector = selector;
             }
+
             public bool Equals(T x, T y)
             {
                 return selector(x).Equals(selector(y));
             }
+
             public int GetHashCode(T obj)
             {
                 return selector(obj).GetHashCode();

@@ -7,6 +7,7 @@ TagManager:
   - Item
   - UI
   - Enemy
+  - Robot
   layers:
   - Default
   - TransparentFX
@@ -17,9 +18,9 @@ TagManager:
   - Enemy
   - Player
   - FriendlyAttack
-  - 
-  - 
-  - 
+  - Interactive
+  - Item
+  - Building
   - 
   - 
   - 
