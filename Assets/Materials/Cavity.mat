@@ -111,7 +111,7 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EdgeMulitplier: 0.6
-    - _EdgeMultiplier: 1
+    - _EdgeMultiplier: 1.8
     - _EdgeThreshold: 0.1
     - _EnvironmentReflections: 1
     - _FalloffSpeed: 0.05
@@ -120,7 +120,7 @@ Material:
     - _Glossiness: 0
     - _GlossinessSource: 0
     - _GlossyReflections: 0
-    - _Intensity: 1
+    - _Intensity: 2.12
     - _Metallic: 0
     - _Mode: 0
     - _NormalTreshold: 0.01

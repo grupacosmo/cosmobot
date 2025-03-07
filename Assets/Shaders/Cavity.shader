@@ -37,9 +37,7 @@ Shader "Cosmobot/Effect/Cavity"
 
             float2 SampleSceneNormalBuffer(float2 uv, float3x3 viewMatrix)
             {
-                float3 normalWorldSpace = SampleSceneNormals(uv);
-                float3 normalViewSpace = (mul(viewMatrix, normalWorldSpace));
-                return normalViewSpace.xy;
+                return (mul(viewMatrix, SampleSceneNormals(uv))).xy;
             }
 
             float CalculateCurvature(float2 left, float2 right, float2 down, float2 up)
@@ -102,10 +100,11 @@ Shader "Cosmobot/Effect/Cavity"
                 
                 //SoftLight
                 float3 base = SampleSceneColor(i.texcoord);
-                float3 result1 = 2 * base * col.rgb + base * base * (1 - 2 * col.rgb);
+                /*float3 result1 = 2 * base * col.rgb + base * base * (1 - 2 * col.rgb);
                 float3 result2 = sqrt(base) * (2 * col.rgb - 1) + 2 * base * (1 - col.rgb);
                 float3 zeroOrOne = step(0.5, col.rgb);
-                col.rgb = result2 * zeroOrOne + (1 - zeroOrOne) * result1;
+                col.rgb = result2 * zeroOrOne + (1 - zeroOrOne) * result1;*/
+                col.rgb = base*(base-2*base*col.rgb+2*col.rgb);
                 col.rgb = lerp(base, col.rgb, _Intensity);
                 
                 return col;
