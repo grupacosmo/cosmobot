@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Cavity
-  m_Shader: {fileID: 4800000, guid: 38865471f9e3b54b58e638ff5be82c96, type: 3}
+  m_Shader: {fileID: 4800000, guid: 2f87beb7dd5e4fe4ab5ca373811ac808, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -104,24 +104,30 @@ Material:
     - _ClearCoatSmoothness: 0
     - _Cull: 2
     - _Cutoff: 0.5
+    - _DepthTreshold: 0.001
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EdgeThreshold: 0.1
     - _EnvironmentReflections: 1
+    - _FalloffSpeed: 0.05
+    - _FalloffTreshold: 10
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossinessSource: 0
     - _GlossyReflections: 0
     - _Metallic: 0
     - _Mode: 0
+    - _NormalTreshold: 0.01
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _Ridge: 1.47
     - _SampleGI: 0
     - _Shininess: 0
+    - _Size: 1
     - _Smoothness: 0.5
     - _SmoothnessSource: 0
     - _SmoothnessTextureChannel: 0
@@ -131,13 +137,15 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _UVSec: 0
+    - _Valley: 0.84
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
     - _Albedo: {r: 0.4392157, g: 0.7764706, b: 1, a: 1}
     - _BaseColor: {r: 1, g: 0, b: 0, a: 1}
-    - _Color: {r: 1, g: 0, b: 0, a: 1}
+    - _Color: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.627451}
     - _EdgeColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _LightDirection: {r: -1, g: 0.5, b: 1, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
