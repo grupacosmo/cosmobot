@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
-  m_Name: FullScreenPassRendererFeature
+  m_Name: Cavity
   m_EditorClassIdentifier: 
   m_Active: 1
   injectionPoint: 600
-  fetchColorBuffer: 1
-  requirements: -1
-  passMaterial: {fileID: 2100000, guid: cf56416b4fea30448945b4e5a543c8d8, type: 2}
+  fetchColorBuffer: 0
+  requirements: 6
+  passMaterial: {fileID: 2100000, guid: eb524acd093d30e90bc62a240b5971f7, type: 2}
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
