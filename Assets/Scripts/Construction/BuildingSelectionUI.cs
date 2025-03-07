@@ -16,40 +16,40 @@ namespace Cosmobot
         [SerializeField] private GameObject Player;
         [SerializeField] private Camera Camera;
         [SerializeField] private Button exitButton;
-        [SerializeField] private Button menuButton;
+        [SerializeField] private Button buildingButton;
+        [SerializeField] private GameObject buttonContainer;
 
         private PlayerCamera playerCamera;
+        private PlayerConstructionHandler playerConstructionHandler;
 
         void Start()
         {   
             LoadBuildings();
             LoadButtons();
-            exitButton.onClick.AddListener(() => Close());
+            exitButton.onClick.AddListener(Close);
             gameObject.SetActive(false);
             playerCamera = Camera.GetComponent<PlayerCamera>();
+            playerConstructionHandler = Player.GetComponent<PlayerConstructionHandler>();
         }
 
         void LateUpdate()
         {
             if (gameObject.activeSelf == true) {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
                 playerCamera.ChangeLock(true);
             }
         }
         
         private void LoadBuildings()
         {
-            List<BuildingInfo> buildings = 
+            IEnumerable<BuildingInfo> buildings = 
                 AssetDatabase.FindAssets("t:BuildingInfo", BuildingInfoDirectory)
                     .Select(guid => AssetDatabase.GUIDToAssetPath(guid))
-                    .Select(path => AssetDatabase.LoadAssetAtPath<BuildingInfo>(path))
-                    .ToList();
+                    .Select(path => AssetDatabase.LoadAssetAtPath<BuildingInfo>(path));
 
             foreach (BuildingInfo building in buildings)
             {
                 BuildingInfoFiles[building.name] = building;
-                Button button = Instantiate(menuButton);
+                Button button = Instantiate(buildingButton);
                 button.name = building.name;
                 ButtonInfo[building.name] = button;
             }
@@ -57,35 +57,33 @@ namespace Cosmobot
 
         private void LoadButtons()
         {
-            Transform buttonParent = gameObject.GetComponent<Image>().transform;
-            int buttonCount = 0;
-            float spacing = 80f;
-            float width = (buttonCount - 1) * spacing;
-            float startHeight = (buttonParent.transform.position.y - width) / 2;
             foreach (KeyValuePair<string, Button> button in ButtonInfo)
             {
-                float buttonHeight = startHeight + buttonCount * spacing;
-                button.Value.transform.SetParent(buttonParent);
-                button.Value.transform.position = new Vector3(buttonParent.transform.position.x, buttonHeight, buttonParent.transform.position.z);
+                button.Value.transform.SetParent(buttonContainer.transform);
                 button.Value.onClick.AddListener(() => ButtonClick(button.Value));
                 button.Value.GetComponentInChildren<TextMeshProUGUI>().text = button.Key;
-                buttonCount++;
             }
         }
 
         private void ButtonClick(Button button)
         {
-            Player.GetComponent<PlayerConstructionHandler>().SetBuilding(BuildingInfoFiles.GetValue(button.name));
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-            playerCamera.ChangeLock(false);
-            gameObject.SetActive(false);
+            playerConstructionHandler.SetBuilding(BuildingInfoFiles.GetValue(button.name));
+            Close();
         }
 
         private void Close()
         {
             playerCamera.ChangeLock(false);
             gameObject.SetActive(false);
+        }
+
+        void OnDestroy()
+        {
+            exitButton.onClick.RemoveListener(Close);
+            foreach (KeyValuePair<string, Button> button in ButtonInfo)
+            {
+                Destroy(button.Value);
+            }
         }
     }
 }

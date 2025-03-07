@@ -29,7 +29,10 @@ namespace Cosmobot
             }
         }
 
-        public void SetBuilding(BuildingInfo buildingInfo) { currentBuildingInfo = buildingInfo; }
+        public void SetBuilding(BuildingInfo buildingInfo) 
+        { 
+            currentBuildingInfo = buildingInfo; 
+        }
 
         // Select a building and start scanning for placement position
         // TODO: hook this up to a state machine or something so it works with the rest of the player mechanics

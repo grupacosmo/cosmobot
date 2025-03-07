@@ -36,6 +36,13 @@ namespace Cosmobot
         public void ChangeLock(bool locked)
         {
             isLocked = locked;
+            Cursor.visible = locked;
+            if (isLocked == false)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            } else {
+                Cursor.lockState = CursorLockMode.None;
+            }
         }
 
         private void OnEnable()
