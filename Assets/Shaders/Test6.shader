@@ -2,11 +2,12 @@ Shader "Unlit/CavityShaderT6"
 {
     Properties
     {
-        _Color ("Color", Color) = (1,1,1,1)
+        //_Color ("Color", Color) = (1,1,1,1)
         _Radius ("Radius", Range(0, 10)) = 1
         _AngleSens ("Angle Sensitivity", Range(1, 5)) = 2.5
         _EdgeMultiplier ("Edge Intensity Multiplier", Range(0, 10)) = 0.6
         _Sharpness ("Sharpness", Range(0, 1)) = 0.9
+        _Intensity ("Intensity", Range(0, 10)) = 1
     }
     SubShader
     {
@@ -23,8 +24,8 @@ Shader "Unlit/CavityShaderT6"
             #pragma fragment frag
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareNormalsTexture.hlsl"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareOpaqueTexture.hlsl"
 
             struct appdata
             {
@@ -42,6 +43,7 @@ Shader "Unlit/CavityShaderT6"
             float _AngleSens;
             float _EdgeMultiplier;
             float _Sharpness;
+            float _Intensity;
 
             v2f vert (appdata v)
             {
@@ -88,14 +90,14 @@ Shader "Unlit/CavityShaderT6"
                 float curvature = 0;
 
                 float sharp = clamp(1 - _Sharpness, 0.0001, 1);
-                
+
                 for(int i = -_Radius; i <= _Radius; i++)
                 {
                     for(int j = -_Radius; j <= _Radius; j++)
                     {
                         float2 offset = float2(i,j);
                         float2 uvOffset = offset / _ScreenParams.xy;
-                        float weight = 1 / (dot(offset, offset) + _Sharpness);
+                        float weight = 1 / (dot(offset, offset) + sharp);
                         weightTotal += weight;
                         curvature += weight * curavtureAtPoint(uv + uvOffset, viewMatrix);
                     }
@@ -107,14 +109,25 @@ Shader "Unlit/CavityShaderT6"
 
             float4 frag (v2f i) : SV_Target
             {
-                float4 col = (1,1,1,1);
+                float4 col = float4(1,1,1,1);
                 col.rgb = Curvature(i.screenSpace.xy / i.screenSpace.w);
                 
-                if(col.r > 0.49 && col.r < 0.51) col.a = 0;
+                //Base
+                // if(col.r > 0.49 && col.r < 0.51) col.a = 0;
+                //col.rgb *= _Color;
 
-                col *= _Color;
+                
+                //SoftLight
+                float3 base = SampleSceneColor(i.screenSpace.xy / i.screenSpace.w);
+                float3 result1 = 2 * base * col.rgb + base * base * (1 - 2 * col.rgb);
+                float3 result2 = sqrt(base) * (2 * col.rgb - 1) + 2 * base * (1 - col.rgb);
+                float3 zeroOrOne = step(0.5, col.rgb);
+                col.rgb = result2 * zeroOrOne + (1 - zeroOrOne) * result1;
+                col.rgb = lerp(base, col.rgb, _Intensity);
+                
                 return col;
             }
+
             ENDHLSL
         }
     }
