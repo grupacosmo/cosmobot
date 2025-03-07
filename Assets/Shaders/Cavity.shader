@@ -1,4 +1,4 @@
-Shader "Unlit/CavityShaderT6"
+Shader "Cosmobot/Effect/Cavity"
 {
     Properties
     {
