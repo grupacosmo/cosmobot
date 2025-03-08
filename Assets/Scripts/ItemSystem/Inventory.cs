@@ -14,9 +14,9 @@ namespace Cosmobot.ItemSystem
         public delegate void InventoryChanged(Inventory source, ItemInstance eventItem);
         
         [SerializeField]
-        public bool allowAddingItems;
+        public bool allowAddingItems = true;
         [SerializeField]
-        public bool allowRemovingItems;
+        public bool allowRemovingItems = true;
         
         [SerializeField]
         private int capacity;
@@ -44,6 +44,12 @@ namespace Cosmobot.ItemSystem
         // There is no GetItemInstance because we don't want callers to modify the item instance directly.
         // Instead, Class provides methods to interact with the inventory.
 
+        public Inventory(int capacity)
+        {
+            this.capacity = capacity;
+            items.Capacity = capacity;
+        }
+        
         public ItemInfo GetItemInfo(int index)
         {
             return items[index].ItemInfo;

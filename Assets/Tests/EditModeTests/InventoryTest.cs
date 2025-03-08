@@ -27,30 +27,18 @@ namespace Cosmobot
             return itemInfo;
         }
 
-        private Inventory CreateInventory(int capacity, bool allowAdding = true, bool allowRemoving = true)
-        {
-            Inventory inventory = new Inventory();
-            InventoryComponent ic = new GameObject("Inventory").AddComponent<InventoryComponent>();
-            ic.inventory = inventory;
-            SerializedObject serializedObject = new SerializedObject(ic);
-            serializedObject.FindProperty("inventory.capacity").intValue = capacity;
-            serializedObject.FindProperty("inventory.allowAddingItems").boolValue = allowAdding;
-            serializedObject.FindProperty("inventory.allowRemovingItems").boolValue = allowRemoving;
-            serializedObject.ApplyModifiedProperties();
-            return inventory;
-        }
-
         [Test]
         public void CreateInventoryAndItsEmpty()
         {
-            Inventory inventory = CreateInventory(10);
-            Assert.Zero(inventory.ItemCount);
+            Inventory inventory = new Inventory(10);
+            Assert.AreEqual(10, inventory.Capacity, "capacity");
+            Assert.Zero(inventory.ItemCount, "item count");
         }
 
         [Test]
         public void AddItemToInventoryAndAccessThem()
         {
-            Inventory inventory = CreateInventory(10);
+            Inventory inventory = new Inventory(10);
             
             Assert.True(inventory.AddItem(new ItemInstance(testItemInfoFoo)));
             Assert.AreEqual(1, inventory.ItemCount);
@@ -64,7 +52,7 @@ namespace Cosmobot
         [Test]
         public void AddItemToInventoryOverCapacityAndGetFalse()
         {
-            Inventory inventory = CreateInventory(2);
+            Inventory inventory = new Inventory(2);
             
             inventory.AddItem(new ItemInstance(testItemInfoFoo));
             inventory.AddItem(new ItemInstance(testItemInfoBar));
@@ -78,7 +66,7 @@ namespace Cosmobot
         [Test]
         public void AddItemToInventoryWithFilter()
         {
-            Inventory inventory = CreateInventory(10);
+            Inventory inventory = new Inventory(10);
             inventory.ItemFilter = instance => instance.Id == testItemInfoFoo.Id; 
             
             Assert.True(inventory.AddItem(new ItemInstance(testItemInfoFoo)));
@@ -92,7 +80,8 @@ namespace Cosmobot
         [Test]
         public void AddItemToInventoryWithLockedAddingAndGetFalse()
         {
-            Inventory inventory = CreateInventory(10, false);
+            Inventory inventory = new Inventory(10);
+            inventory.allowAddingItems = false;
             
             Assert.False(inventory.AddItem(new ItemInstance(testItemInfoFoo)));
             Assert.Zero(inventory.ItemCount);
@@ -101,7 +90,7 @@ namespace Cosmobot
         [Test]
         public void RemoveItemByInstanceFromInventory()
         {
-            Inventory inventory = CreateInventory(10);
+            Inventory inventory = new Inventory(10);
             ItemInstance itemInstance = new ItemInstance(testItemInfoFoo);
             inventory.AddItem(itemInstance);
             
@@ -112,7 +101,7 @@ namespace Cosmobot
         [Test]
         public void RemoveNonExitingItemByInstanceFromInventoryAndGetFalse()
         {
-            Inventory inventory = CreateInventory(10);
+            Inventory inventory = new Inventory(10);
             ItemInstance itemInstance = new ItemInstance(testItemInfoFoo);
             inventory.AddItem(itemInstance);
             
@@ -127,7 +116,7 @@ namespace Cosmobot
         [Test]
         public void RemoveFirstItemByIdFromInventory()
         {
-            Inventory inventory = CreateInventory(10);
+            Inventory inventory = new Inventory(10);
             ItemInstance ii1, ii2, ii3, ii4, ii5;
             inventory.AddItem(ii1 = new ItemInstance(CreateItemInfo("z1")));
             inventory.AddItem(ii2 = new ItemInstance(CreateItemInfo("z2")));
@@ -158,22 +147,22 @@ namespace Cosmobot
         [Test]
         public void RemoveFirstItemByIdWhenMultipleItemsWithSameId()
         {
-            Inventory inventory = CreateInventory(10);
-            ItemInstance ii1a, ii1b;
-            inventory.AddItem(ii1a = new ItemInstance(CreateItemInfo("z1")));
+            Inventory inventory = new Inventory(10);
+            ItemInstance ii1A, ii1B;
+            inventory.AddItem(ii1A = new ItemInstance(CreateItemInfo("z1")));
             inventory.AddItem(       new ItemInstance(CreateItemInfo("z2")));
-            inventory.AddItem(ii1b = new ItemInstance(CreateItemInfo("z1")));
+            inventory.AddItem(ii1B = new ItemInstance(CreateItemInfo("z1")));
             Assert.AreEqual(3,    inventory.ItemCount);
-            Assert.AreEqual(ii1a, inventory.RemoveFirstById("z1"));
+            Assert.AreEqual(ii1A, inventory.RemoveFirstById("z1"));
             Assert.AreEqual(2,    inventory.ItemCount);
-            Assert.AreEqual(ii1b, inventory.RemoveFirstById("z1"));
+            Assert.AreEqual(ii1B, inventory.RemoveFirstById("z1"));
             Assert.AreEqual(1,    inventory.ItemCount);
         }
         
         [Test]
         public void RemoveFirstByIdWhenNoneExisting()
         {
-            Inventory inventory = CreateInventory(10);
+            Inventory inventory = new Inventory(10);
             inventory.AddItem(new ItemInstance(CreateItemInfo("z1")));
             inventory.AddItem(new ItemInstance(CreateItemInfo("z2")));
             Assert.AreEqual(2, inventory.ItemCount);
@@ -184,7 +173,7 @@ namespace Cosmobot
         
         public void RemoveFirstByFilrerFromInventory()
         {
-            Inventory inventory = CreateInventory(10);
+            Inventory inventory = new Inventory(10);
             ItemInstance ii1, ii2, ii3, ii4, ii5;
             inventory.AddItem(ii1 = new ItemInstance(CreateItemInfo("z1")));
             inventory.AddItem(ii2 = new ItemInstance(CreateItemInfo("z2")));
@@ -215,7 +204,9 @@ namespace Cosmobot
         [Test]
         public void RemoveWithLockedRemovingAndGetFalse()
         {
-            Inventory inventory = CreateInventory(10, true, false);
+            Inventory inventory = new Inventory(10);
+            inventory.allowRemovingItems = false;
+            
             ItemInstance itemInstance = new ItemInstance(testItemInfoFoo);
             inventory.AddItem(itemInstance);
             
@@ -232,7 +223,7 @@ namespace Cosmobot
         [Test]
         public void HasAddedItem()
         {
-            Inventory inventory = CreateInventory(10);
+            Inventory inventory = new Inventory(10);
             ItemInstance itemInstance = new ItemInstance(testItemInfoFoo);
             inventory.AddItem(itemInstance);
             
@@ -246,7 +237,7 @@ namespace Cosmobot
         [Test]
         public void CountsAddedItemsById()
         {
-            Inventory inventory = CreateInventory(10);
+            Inventory inventory = new Inventory(10);
             inventory.AddItem(new ItemInstance(CreateItemInfo("z1")));
             inventory.AddItem(new ItemInstance(CreateItemInfo("z2")));
             inventory.AddItem(new ItemInstance(CreateItemInfo("z1")));
@@ -261,7 +252,7 @@ namespace Cosmobot
         [Test]
         public void ProcessItems() 
         {
-            Inventory inventory = CreateInventory(10);
+            Inventory inventory = new Inventory(10);
             inventory.AddItem(new ItemInstance(CreateItemInfo("z1")));
             inventory.AddItem(new ItemInstance(CreateItemInfo("z2")));
             inventory.AddItem(new ItemInstance(CreateItemInfo("z1")));
@@ -291,7 +282,7 @@ namespace Cosmobot
         [Test]
         public void ProcessFirstItem()
         {
-            Inventory inventory = CreateInventory(10);
+            Inventory inventory = new Inventory(10);
             inventory.AddItem(new ItemInstance(CreateItemInfo("z1")));
             inventory.AddItem(new ItemInstance(CreateItemInfo("z2")));
             inventory.AddItem(new ItemInstance(CreateItemInfo("z1")));
@@ -320,7 +311,7 @@ namespace Cosmobot
         [Test]
         public void FireEvents() 
         {
-            Inventory inventory = CreateInventory(50);
+            Inventory inventory = new Inventory(50);
             // leave some space for "AddItem" to work
             for(int i = 0 ; i < inventory.Capacity / 2; i++)
             {
@@ -330,9 +321,9 @@ namespace Cosmobot
             bool added = false;
             bool removed = false;
             bool processed = false;
-            inventory.OnItemAdded += (sender, item) => added = true;
-            inventory.OnItemRemoved += (sender, item) => removed = true;
-            inventory.OnItemProcessed += (sender, item) => processed = true;
+            inventory.OnItemAdded += (_, _) => added = true;
+            inventory.OnItemRemoved += (_, _) => removed = true;
+            inventory.OnItemProcessed += (_, _) => processed = true;
             
             Assert.False(added, "initial added");
             Assert.False(removed, "initial removed");
@@ -369,7 +360,7 @@ namespace Cosmobot
             Assert.True(processed, "processFirstItemWithId processed");
             
             int processCount = 0;
-            inventory.OnItemProcessed += (sender, item) => processCount++;
+            inventory.OnItemProcessed += (_, _) => processCount++;
             
             processed = false;
             inventory.ProcessAllItemsWithId(itemInstance.Id, _ => { });
