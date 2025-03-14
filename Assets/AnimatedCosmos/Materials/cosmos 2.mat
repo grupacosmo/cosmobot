@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: cosmos 2
+  m_Shader: {fileID: 4800000, guid: 109fe5176c3a71e46bd4d254b47fc9a1, type: 3}
+  m_ShaderKeywords: ANIMATION_ON ROT_ON USE_ANIMATION
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Detail1:
+        m_Texture: {fileID: 2800000, guid: 7b6c31754d5a2154b81d1c2fb08db7e3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Detail2:
+        m_Texture: {fileID: 2800000, guid: 265a663ad7c563941b313e2fa3a8504b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FogTex:
+        m_Texture: {fileID: 2800000, guid: 7b6c31754d5a2154b81d1c2fb08db7e3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 8900000, guid: 97a67a74dcaba114e9d10aac0960d233, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StarsTex:
+        m_Texture: {fileID: 2800000, guid: 265a663ad7c563941b313e2fa3a8504b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _AnimOn: 0
+    - _Animate: 1
+    - _Colorize: 0.152
+    - _D1Distort: 0.1
+    - _D1I: 1
+    - _D1Scale: 2
+    - _D1Size: 2
+    - _D1Speed: 5
+    - _D2Distort: 0.1
+    - _D2I: 0.89
+    - _D2Scale: 4
+    - _D2Size: 5
+    - _D2Speed: 3
+    - _FogDistort: 0
+    - _FogI: 1
+    - _FogSize: 1.67
+    - _FogSpeed: 5
+    - _RotOn: 1
+    - _StarDistort: 0
+    - _StarSize: 2
+    - _StarSpeed: 0
+    - _StarsI: 0.78
+    m_Colors:
+    - _Color: {r: 9.033217, g: 9.947725, b: 12.8526325, a: 3}
+    - _Rotation: {r: 33.63, g: 0, b: 0, a: 0}
