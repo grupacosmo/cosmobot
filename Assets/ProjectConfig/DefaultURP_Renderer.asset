@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Cavity
   m_EditorClassIdentifier: 
   m_Active: 1
-  injectionPoint: 600
+  injectionPoint: 450
   fetchColorBuffer: 0
   requirements: 6
   passMaterial: {fileID: 2100000, guid: eb524acd093d30e90bc62a240b5971f7, type: 2}
