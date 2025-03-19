@@ -50,28 +50,29 @@ namespace Cosmobot
         {
             jsEngine = new Engine();
 
-            jsEngine.SetValue("MoveForward", (Action)(() => {
-                ExecuteOnMainThread(() => StartCoroutine(MoveToPoint(transform.position + transform.forward))); //lambda of function to be executed on Unity thread
-                _taskCompletedEvent.WaitOne(); //waiting for unity thread
-                _taskCompletedEvent.Reset(); //reseting waiting signal
-                token.ThrowIfCancellationRequested(); //checking if thread was cancelled
-            }));                                                                             //REMEMBER ABOUT _taskCompletedEvent.Set(); WHEN UNITY TASK IS DONE!!!
+            //jsEngine.SetValue("MoveForward", (Action)(() => {
+            //    ExecuteOnMainThread(() => StartCoroutine(MoveToPoint(transform.position + transform.forward))); //lambda of function to be executed on Unity thread
+            //    _taskCompletedEvent.WaitOne(); //waiting for unity thread
+            //    _taskCompletedEvent.Reset(); //reseting waiting signal
+            //    token.ThrowIfCancellationRequested(); //checking if thread was cancelled
+            //}));                                                                             //REMEMBER ABOUT _taskCompletedEvent.Set(); WHEN UNITY TASK IS DONE!!!
 
-            jsEngine.SetValue("MoveToPoint", (Action)(() => {
-                ExecuteOnMainThread(() => StartCoroutine(MoveToPoint(target.position)));
-                _taskCompletedEvent.WaitOne();
-                _taskCompletedEvent.Reset();
-                token.ThrowIfCancellationRequested();
-            }));
+            //jsEngine.SetValue("MoveToPoint", (Action)(() => {
+            //    ExecuteOnMainThread(() => StartCoroutine(MoveToPoint(target.position)));
+            //    _taskCompletedEvent.WaitOne();
+            //    _taskCompletedEvent.Reset();
+            //    token.ThrowIfCancellationRequested();
+            //}));
 
-            jsEngine.SetValue("Seek", (Action)(() => {
-                ExecuteOnMainThread(() => StartCoroutine(Seek()));
-                _taskCompletedEvent.WaitOne();
-                _taskCompletedEvent.Reset();
-                token.ThrowIfCancellationRequested();
-            }));
+            //jsEngine.SetValue("Seek", (Action)(() => {
+            //    ExecuteOnMainThread(() => StartCoroutine(Seek()));
+            //    _taskCompletedEvent.WaitOne();
+            //    _taskCompletedEvent.Reset();
+            //    token.ThrowIfCancellationRequested();
+            //}));
 
-            jsEngine.SetValue("TurnLeft", (Action)(() => {
+            jsEngine.SetValue("TurnLeft", (Action)(() =>
+            {
                 ExecuteOnMainThread(TurnLeft);
                 _taskCompletedEvent.WaitOne();
                 _taskCompletedEvent.Reset();
@@ -85,19 +86,39 @@ namespace Cosmobot
                 token.ThrowIfCancellationRequested();
             }));
 
+            //jsEngine.SetValue("GetRobotSpeed", (Func<float>)(() => {
+            //    float returnValue = 0;
+            //    ExecuteOnMainThread(() => { returnValue = GetRobotSpeed(); });
+            //    _taskCompletedEvent.WaitOne();
+            //    _taskCompletedEvent.Reset();
+            //    token.ThrowIfCancellationRequested();
+            //    return returnValue;
+            //}));
+
+            jsEngine.SetValue("MoveForward", (Action)(() => { Wrap<object>((Action)(() => StartCoroutine(MoveToPoint(transform.position + transform.forward)))); }));
+
+            jsEngine.SetValue("Seek", (Action)(() => { Wrap<object>((Action)(() => StartCoroutine(Seek()))); }));
+
+            jsEngine.SetValue("MoveToPoint", (Action<float, float, float>)((x,y,z) => { Wrap<object>((Action<object[]>)((p) => StartCoroutine(MoveToPoint((Vector3)p[0]))), new Vector3(x,y,z)); }));
+                                                //  ^what js Function takes                ^return void         ^list of parameters                       ^where argument fit    ^list of arguments begin
+
+            jsEngine.SetValue("GetRobotSpeed", (Func<float>)(() => { return Wrap<float>((Func<float>)(GetRobotSpeed)); }));
+
+            jsEngine.SetValue("D5", (Func<float, float>)((x) => { return Wrap<float>((Func<object[], float>)((p) => d5((float)p[0])), x); }));
+
             try
             {
                 jsEngine.Execute(code);
             }
             catch (OperationCanceledException) 
             {
-                Debug.LogError("Operation was cancelled");
+                Debug.Log("Operation was cancelled");
                 jsEngine.Dispose();
                 jsEngine = null;
             }
             catch (System.Exception ex)
             {
-                Debug.LogError("Error: " + ex.Message);
+                Debug.LogError("JS Error: " + ex.Message);
                 jsEngine.Dispose();
                 jsEngine = null;
             }
@@ -107,12 +128,30 @@ namespace Cosmobot
             }
         }
 
+        public float d5(float x) { _taskCompletedEvent.Set(); return x + 5; } //temporary for testing
+
         public void ExecuteOnMainThread(Action action)
         {
             if(_mainThreadContext != null)
             {
                 _mainThreadContext.Post(_ => action(), null);
             }
+        }
+
+        private T Wrap<T>(Delegate function, params object[] parameters)
+        {
+            T returnValue = default(T);
+            if (function is Action action) ExecuteOnMainThread(action);
+            else if (function is Action<object[]> actionParam) ExecuteOnMainThread(() => actionParam(parameters));
+            else if (function is Func<T> func) ExecuteOnMainThread(() => { returnValue = func(); });
+            else if (function is Func<object[], T> funcParam) ExecuteOnMainThread(() => { returnValue = (T)funcParam(parameters); });
+            else Debug.LogError("Unsupported function");
+
+            _taskCompletedEvent.WaitOne();
+            _taskCompletedEvent.Reset();
+            _cancellationTokenSource.Token.ThrowIfCancellationRequested();
+
+            return returnValue;
         }
 
         void Update()
@@ -134,6 +173,12 @@ namespace Cosmobot
         {
             transform.Rotate(Vector3.up, -90);
             _taskCompletedEvent.Set();
+        }
+
+        public float GetRobotSpeed()
+        {
+            _taskCompletedEvent.Set();
+            return speed; //<-- pretend this is crazy unity calculation
         }
 
         public IEnumerator MoveToPoint(Vector3 to)

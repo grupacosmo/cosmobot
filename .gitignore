@@ -8,6 +8,8 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
+/[Aa]ssets/Plugins/*.dll
+/[Aa]ssets/Plugins/*.dll.meta
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
