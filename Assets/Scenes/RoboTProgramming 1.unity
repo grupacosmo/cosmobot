@@ -909,7 +909,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85a86ae9797945a439e2f25c1c67f23c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  code: "while(true)\n{\n\tMoveToPoint(1, 2, 3);\n}"
+  code: "while(true)\n{\n\tMoveToPoint(1,2,3);\n}"
   stop: 0
   target: {fileID: 1343472404}
   speed: 5
