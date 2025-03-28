@@ -515,6 +515,74 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Programming UI",
+            "id": "481ad216-a243-46fd-ab51-5d02a8b1eeae",
+            "actions": [
+                {
+                    "name": "Open",
+                    "type": "Button",
+                    "id": "69a47d2b-bfae-423e-9396-fda3f33a6526",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Close",
+                    "type": "Button",
+                    "id": "50a01139-7dfe-4b47-8930-fa5c2d83b03f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Write",
+                    "type": "Button",
+                    "id": "6482d7b1-07f7-4e34-a916-223fde0aa2f9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3ad36f94-da09-4b68-9540-1564dea20803",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Open",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c3f68a8f-9bf1-415e-89a4-e3883aad3b14",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Close",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "199b92c7-60f4-460f-a9df-01ef4922e27a",
+                    "path": "<Keyboard>/anyKey",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Write",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []

@@ -539,6 +539,74 @@ namespace Cosmobot
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Programming UI"",
+            ""id"": ""481ad216-a243-46fd-ab51-5d02a8b1eeae"",
+            ""actions"": [
+                {
+                    ""name"": ""Open"",
+                    ""type"": ""Button"",
+                    ""id"": ""69a47d2b-bfae-423e-9396-fda3f33a6526"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Close"",
+                    ""type"": ""Button"",
+                    ""id"": ""50a01139-7dfe-4b47-8930-fa5c2d83b03f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Write"",
+                    ""type"": ""Button"",
+                    ""id"": ""6482d7b1-07f7-4e34-a916-223fde0aa2f9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""3ad36f94-da09-4b68-9540-1564dea20803"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Open"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c3f68a8f-9bf1-415e-89a4-e3883aad3b14"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Close"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""199b92c7-60f4-460f-a9df-01ef4922e27a"",
+                    ""path"": ""<Keyboard>/anyKey"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Write"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -575,6 +643,11 @@ namespace Cosmobot
             m_BuildingPlacement_confirmPlacement = m_BuildingPlacement.FindAction("confirmPlacement", throwIfNotFound: true);
             m_BuildingPlacement_rotatePlacement = m_BuildingPlacement.FindAction("rotatePlacement", throwIfNotFound: true);
             m_BuildingPlacement_startPlacementTemp = m_BuildingPlacement.FindAction("startPlacementTemp", throwIfNotFound: true);
+            // Programming UI
+            m_ProgrammingUI = asset.FindActionMap("Programming UI", throwIfNotFound: true);
+            m_ProgrammingUI_Open = m_ProgrammingUI.FindAction("Open", throwIfNotFound: true);
+            m_ProgrammingUI_Close = m_ProgrammingUI.FindAction("Close", throwIfNotFound: true);
+            m_ProgrammingUI_Write = m_ProgrammingUI.FindAction("Write", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -1042,6 +1115,68 @@ namespace Cosmobot
             }
         }
         public BuildingPlacementActions @BuildingPlacement => new BuildingPlacementActions(this);
+
+        // Programming UI
+        private readonly InputActionMap m_ProgrammingUI;
+        private List<IProgrammingUIActions> m_ProgrammingUIActionsCallbackInterfaces = new List<IProgrammingUIActions>();
+        private readonly InputAction m_ProgrammingUI_Open;
+        private readonly InputAction m_ProgrammingUI_Close;
+        private readonly InputAction m_ProgrammingUI_Write;
+        public struct ProgrammingUIActions
+        {
+            private @DefaultInputActions m_Wrapper;
+            public ProgrammingUIActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
+            public InputAction @Open => m_Wrapper.m_ProgrammingUI_Open;
+            public InputAction @Close => m_Wrapper.m_ProgrammingUI_Close;
+            public InputAction @Write => m_Wrapper.m_ProgrammingUI_Write;
+            public InputActionMap Get() { return m_Wrapper.m_ProgrammingUI; }
+            public void Enable() { Get().Enable(); }
+            public void Disable() { Get().Disable(); }
+            public bool enabled => Get().enabled;
+            public static implicit operator InputActionMap(ProgrammingUIActions set) { return set.Get(); }
+            public void AddCallbacks(IProgrammingUIActions instance)
+            {
+                if (instance == null || m_Wrapper.m_ProgrammingUIActionsCallbackInterfaces.Contains(instance)) return;
+                m_Wrapper.m_ProgrammingUIActionsCallbackInterfaces.Add(instance);
+                @Open.started += instance.OnOpen;
+                @Open.performed += instance.OnOpen;
+                @Open.canceled += instance.OnOpen;
+                @Close.started += instance.OnClose;
+                @Close.performed += instance.OnClose;
+                @Close.canceled += instance.OnClose;
+                @Write.started += instance.OnWrite;
+                @Write.performed += instance.OnWrite;
+                @Write.canceled += instance.OnWrite;
+            }
+
+            private void UnregisterCallbacks(IProgrammingUIActions instance)
+            {
+                @Open.started -= instance.OnOpen;
+                @Open.performed -= instance.OnOpen;
+                @Open.canceled -= instance.OnOpen;
+                @Close.started -= instance.OnClose;
+                @Close.performed -= instance.OnClose;
+                @Close.canceled -= instance.OnClose;
+                @Write.started -= instance.OnWrite;
+                @Write.performed -= instance.OnWrite;
+                @Write.canceled -= instance.OnWrite;
+            }
+
+            public void RemoveCallbacks(IProgrammingUIActions instance)
+            {
+                if (m_Wrapper.m_ProgrammingUIActionsCallbackInterfaces.Remove(instance))
+                    UnregisterCallbacks(instance);
+            }
+
+            public void SetCallbacks(IProgrammingUIActions instance)
+            {
+                foreach (var item in m_Wrapper.m_ProgrammingUIActionsCallbackInterfaces)
+                    UnregisterCallbacks(item);
+                m_Wrapper.m_ProgrammingUIActionsCallbackInterfaces.Clear();
+                AddCallbacks(instance);
+            }
+        }
+        public ProgrammingUIActions @ProgrammingUI => new ProgrammingUIActions(this);
         public interface IPlayerMovementActions
         {
             void OnMovement(InputAction.CallbackContext context);
@@ -1080,6 +1215,12 @@ namespace Cosmobot
             void OnConfirmPlacement(InputAction.CallbackContext context);
             void OnRotatePlacement(InputAction.CallbackContext context);
             void OnStartPlacementTemp(InputAction.CallbackContext context);
+        }
+        public interface IProgrammingUIActions
+        {
+            void OnOpen(InputAction.CallbackContext context);
+            void OnClose(InputAction.CallbackContext context);
+            void OnWrite(InputAction.CallbackContext context);
         }
     }
 }
