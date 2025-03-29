@@ -12,8 +12,8 @@ namespace Cosmobot
     {
         private ManualResetEvent _taskCompletedEvent;
         private CancellationToken _cancellationToken;
-        private static SynchronizationContext _mainThreadContext;
-        private Wrapper wrapper;
+        private SynchronizationContext _mainThreadContext;
+        private Wrapper wrapper; 
 
         [SerializeField] private Transform target; //temporary for testing
         [SerializeField] private float speed = 1; //temporary for testing
@@ -96,7 +96,7 @@ namespace Cosmobot
             {
                 Vector3 dir = to - transform.position;
                 if (dir.magnitude <= 0.1) transform.position = to;
-                else transform.position += dir.normalized * speed * Time.deltaTime;
+                else transform.position += dir.normalized * speed * Time.deltaTime; 
                 yield return null;
             }
             _taskCompletedEvent.Set();

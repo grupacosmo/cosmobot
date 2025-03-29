@@ -23,7 +23,7 @@ namespace Cosmobot
         {
             return () => {
                 ExecuteOnMainThread(action);
-                _taskCompletedEvent.WaitOne();
+                WaitHandle.WaitAny(new [] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
             };
@@ -33,7 +33,7 @@ namespace Cosmobot
         {
             return (t) => {
                 ExecuteOnMainThread(() => action(t));
-                _taskCompletedEvent.WaitOne();
+                WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
             };
@@ -43,7 +43,7 @@ namespace Cosmobot
         {
             return (t1, t2) => {
                 ExecuteOnMainThread(() => action(t1, t2));
-                _taskCompletedEvent.WaitOne();
+                WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
             };
@@ -53,7 +53,7 @@ namespace Cosmobot
         {
             return (t1, t2, t3) => {
                 ExecuteOnMainThread(() => action(t1, t2, t3));
-                _taskCompletedEvent.WaitOne();
+                WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
             };
@@ -63,7 +63,7 @@ namespace Cosmobot
         {
             return (t1, t2, t3, t4) => {
                 ExecuteOnMainThread(() => action(t1, t2, t3, t4));
-                _taskCompletedEvent.WaitOne();
+                WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
             };
@@ -73,7 +73,7 @@ namespace Cosmobot
         {
             return (t1, t2, t3, t4, t5) => {
                 ExecuteOnMainThread(() => action(t1, t2, t3, t4, t5));
-                _taskCompletedEvent.WaitOne();
+                WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
             };
@@ -83,7 +83,7 @@ namespace Cosmobot
         {
             return (t1, t2, t3, t4, t5, t6) => {
                 ExecuteOnMainThread(() => action(t1, t2, t3, t4, t5, t6));
-                _taskCompletedEvent.WaitOne();
+                WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
             };
@@ -94,7 +94,7 @@ namespace Cosmobot
             return () => {
                 T tr = default;
                 ExecuteOnMainThread(() => { tr = action(); });
-                _taskCompletedEvent.WaitOne();
+                WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
                 return tr;
@@ -106,7 +106,7 @@ namespace Cosmobot
             return (t1) => {
                 TR tr = default;
                 ExecuteOnMainThread(() => { tr = action(t1); });
-                _taskCompletedEvent.WaitOne();
+                WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
                 return tr;
@@ -118,7 +118,7 @@ namespace Cosmobot
             return (t1, t2) => {
                 TR tr = default;
                 ExecuteOnMainThread(() => { tr = action(t1, t2); });
-                _taskCompletedEvent.WaitOne();
+                WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
                 return tr;
@@ -130,7 +130,7 @@ namespace Cosmobot
             return (t1, t2, t3) => {
                 TR tr = default;
                 ExecuteOnMainThread(() => { tr = action(t1, t2, t3); });
-                _taskCompletedEvent.WaitOne();
+                WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
                 return tr;
@@ -142,7 +142,7 @@ namespace Cosmobot
             return (t1, t2, t3, t4) => {
                 TR tr = default;
                 ExecuteOnMainThread(() => { tr = action(t1, t2, t3, t4); });
-                _taskCompletedEvent.WaitOne();
+                WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
                 return tr;
@@ -154,7 +154,7 @@ namespace Cosmobot
             return (t1, t2, t3, t4, t5) => {
                 TR tr = default;
                 ExecuteOnMainThread(() => { tr = action(t1, t2, t3, t4, t5); });
-                _taskCompletedEvent.WaitOne();
+                WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
                 return tr;
@@ -166,7 +166,7 @@ namespace Cosmobot
             return (t1, t2, t3, t4, t5, t6) => {
                 TR tr = default;
                 ExecuteOnMainThread(() => { tr = action(t1, t2, t3, t4, t5, t6); });
-                _taskCompletedEvent.WaitOne();
+                WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
                 return tr;
@@ -175,10 +175,7 @@ namespace Cosmobot
 
         private void ExecuteOnMainThread(Action action)
         {
-            if (_mainThreadContext != null)
-            {
-                _mainThreadContext.Post(_ => action(), null);
-            }
+            _mainThreadContext.Post(_ => action(), null);
         }
     }
 }

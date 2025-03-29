@@ -139,6 +139,7 @@ namespace Cosmobot
                 Vector3 dir = to - transform.position;
                 if (dir.magnitude <= 0.1) transform.position = to;
                 else transform.position += dir.normalized * speed * Time.deltaTime;
+                _cancellationTokenSource.Token.ThrowIfCancellationRequested();
                 yield return null;
             }
             _taskCompletedEvent.Set();
