@@ -84,13 +84,14 @@ namespace Cosmobot
             Thread.Sleep(100);
             while(RobotTaskManager.CountTasksReady() < RobotTaskManager.TaskList.Count)
             {
-                RobotTaskManager.allReady.WaitOne(); //not sure if this is a good approach ??
+                RobotTaskManager.allReady.WaitOne(milliStartSyncCheck); //not sure if this is a good approach ??
                 token.ThrowIfCancellationRequested();
                 Debug.Log($"{RobotTaskManager.CountTasksReady()}/{RobotTaskManager.TaskList.Count} Tasks ready");
             }
 
             try
             {
+                token.ThrowIfCancellationRequested();
                 jsEngine.Execute(code);
             }
             catch (OperationCanceledException)
@@ -103,8 +104,8 @@ namespace Cosmobot
             }
             finally
             {
-                RobotTaskManager.TaskList.Remove(task);
                 Debug.Log("Done");
+                RobotTaskManager.TaskList.Remove(task);
             }
         }
         /*
