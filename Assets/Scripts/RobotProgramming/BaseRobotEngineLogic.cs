@@ -17,6 +17,9 @@ namespace Cosmobot
 
         [SerializeField] private Transform target; //temporary for testing
         [SerializeField] private float speed = 1; //temporary for testing
+        [SerializeField] private badapple video;
+        [SerializeField] private Material White;
+        [SerializeField] private Material Black;
 
         public void SetupThread(ManualResetEvent taskEvent, CancellationToken token, SynchronizationContext threadContext)
         {
@@ -38,17 +41,44 @@ namespace Cosmobot
                 { "D5", wrapper.Wrap<float, float>((x) => d5(x))},
                 { "GetRobotPosition", wrapper.Wrap(GetRobotPosition)},
                 { "MoveInDirection", wrapper.Wrap<Vector3>((x) => MoveInDirection(x))},
-                { "Log", wrapper.Wrap<object>((x) => log(x))}
+                { "Log", wrapper.Wrap<object>((x) => log(x))},
+                { "isBlack", wrapper.Wrap<bool>(isBlack)},
+                { "ChangeBlack", wrapper.Wrap(ChangeBlack)},
+                { "ChangeWhite", wrapper.Wrap(ChangeWhite)}
             };
         }
-            
+        
+        //funny funny
+        public bool isBlack()
+        {
+            if (video.checkColor((transform.position.x + 15) / 31, (transform.position.z + 11) / 23))
+            {
+                _taskCompletedEvent.Set();
+                return false;
+            }
+            _taskCompletedEvent.Set();
+            return true;
+        }
+        
+        public void ChangeWhite()
+        {
+            gameObject.GetComponent<MeshRenderer>().material = White;
+            _taskCompletedEvent.Set();
+        }
+
+        public void ChangeBlack()
+        {
+            gameObject.GetComponent<Renderer>().material = Black;
+            _taskCompletedEvent.Set();
+        }
+
         //ROBOT FUNCTIONS
         public float d5(float x) { _taskCompletedEvent.Set(); return x + 5; } //temporary for testing
 
         public void log(object x)
         {
-            _taskCompletedEvent.Set();
             Debug.Log(x);
+            _taskCompletedEvent.Set();
         }
 
         public void TurnLeft()
@@ -96,7 +126,7 @@ namespace Cosmobot
             {
                 Vector3 dir = to - transform.position;
                 if (dir.magnitude <= 0.1) transform.position = to;
-                else transform.position += dir.normalized * speed * Time.deltaTime; 
+                else transform.position += dir.normalized * speed * Time.deltaTime;
                 yield return null;
             }
             _taskCompletedEvent.Set();

@@ -28,14 +28,13 @@ namespace Cosmobot
         int debugI = 0;
         void Start()
         {
-            //RobotTaskManager.TaskList.Clear();
             _taskCompletedEvent = new ManualResetEvent(false);
             _cancellationTokenSource = new CancellationTokenSource();
             _mainThreadContext = SynchronizationContext.Current;
+
             debugI = staticDebugI++;
-            string gameObjectName = gameObject.name; 
             engineLogicInterfaces = GetComponents<EngineLogicInterface>();
-            task = Task.Run(() => jsThread(gameObjectName, _cancellationTokenSource.Token));
+            task = Task.Run(() => jsThread(_cancellationTokenSource.Token));
             RobotTaskManager.TaskList.Add(task);
         }
 
@@ -57,9 +56,9 @@ namespace Cosmobot
             GUI.Label(pos, $"[{gameObject.name}] Task: {task.Status} {task.Exception}");
         }
 
-        private void jsThread(string objectName, CancellationToken token)
+        private void jsThread(CancellationToken token)
         {
-            Thread.CurrentThread.Name = $"jsEngine-{objectName}";
+            Thread.CurrentThread.Name = $"jsEngine-{debugI}";
 
             using Engine jsEngine = new Engine();
             
@@ -84,14 +83,13 @@ namespace Cosmobot
             Thread.Sleep(100);
             while(RobotTaskManager.CountTasksReady() < RobotTaskManager.TaskList.Count)
             {
-                RobotTaskManager.allReady.WaitOne(milliStartSyncCheck); //not sure if this is a good approach ??
+                RobotTaskManager.allReady.WaitOne(milliStartSyncCheck);
                 token.ThrowIfCancellationRequested();
                 Debug.Log($"{RobotTaskManager.CountTasksReady()}/{RobotTaskManager.TaskList.Count} Tasks ready");
             }
 
             try
             {
-                token.ThrowIfCancellationRequested();
                 jsEngine.Execute(code);
             }
             catch (OperationCanceledException)
@@ -109,11 +107,8 @@ namespace Cosmobot
             }
         }
         /*
-        #if UNITY_EDITOR
-        if(!Debug.isDebugBuild)
-        {
-            return;
-        }
+        #if DEBUG
+
         const string RobotApiTypesNamespace = "Cosmobot.Api.Types";
         private void ValidateFunction(string key)
         {

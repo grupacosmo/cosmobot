@@ -23,7 +23,7 @@ namespace Cosmobot
         {
             return () => {
                 ExecuteOnMainThread(action);
-                WaitHandle.WaitAny(new [] { _taskCompletedEvent, token.WaitHandle });
+                WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
             };
