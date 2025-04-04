@@ -22,20 +22,29 @@ namespace Cosmobot
 
         void LateUpdate()
         {
-            ProcessPlacement();
+            if (currentBuildingInfo != null)
+            {
+                InitiatePlacement(currentBuildingInfo);
+                ProcessPlacement();
+            }
+        }
+
+        public void SetBuilding(BuildingInfo buildingInfo)
+        {
+            currentBuildingInfo = buildingInfo;
         }
 
         // Select a building and start scanning for placement position
         // TODO: hook this up to a state machine or something so it works with the rest of the player mechanics
-        public void InitiatePlacement(BuildingInfo buildingInfo) 
+        public void InitiatePlacement(BuildingInfo buildingInfo)
         {
             currentBuildingInfo = buildingInfo;
             isPlacementActive = true;
             constructionPreview.SetBuilding(buildingInfo);
         }
-        
+
         // Place the construction plot
-        private void ExecutePlacement() 
+        private void ExecutePlacement()
         {
             if (isPlacementActive == false){
                 Debug.LogWarning("Attempted to place building outside of placement mode!");
@@ -59,14 +68,14 @@ namespace Cosmobot
         }
 
         // Exit placement mode
-        public void ExitPlacement() 
+        public void ExitPlacement()
         {
             currentBuildingInfo = null;
             isPlacementActive = false;
             constructionPreview.gameObject.SetActive(false);
         }
 
-        private void ProcessPlacement() 
+        private void ProcessPlacement()
         {
             if (isPlacementActive == false) return;
 
@@ -74,26 +83,27 @@ namespace Cosmobot
             bool centerSnapX = effectiveGridSize.x % 2 == 1;
             bool centerSnapZ = effectiveGridSize.y % 2 == 1;
             Vector3 snappedBuildPoint = SnapToGrid(GetBuildPoint(), centerSnapX, centerSnapZ);
-            currentPlacementPosition = ScanBuildingPlacement(snappedBuildPoint, currentBuildingInfo.GridSize, CurrentConstructionRotation);
+            Vector2Int buildingDimensions = new Vector2Int((int)currentBuildingInfo.Prefab.transform.localScale.x, (int)currentBuildingInfo.Prefab.transform.localScale.z);
+            currentPlacementPosition = ScanBuildingPlacement(snappedBuildPoint, buildingDimensions, CurrentConstructionRotation);
 
-            if (currentPlacementPosition is not null) 
+            if (currentPlacementPosition is not null)
             {
                 constructionPreview.gameObject.SetActive(true);
                 constructionPreview.SetPosition(currentPlacementPosition.Value);
             }
-            else 
+            else
             {
                 constructionPreview.gameObject.SetActive(false);
             }
         }
 
-        private void RotatePlacement(bool reverse = false) 
+        private void RotatePlacement(bool reverse = false)
         {
             currentConstructionRotationSteps = (currentConstructionRotationSteps + (reverse ? -1 : 1)) % 4;
             constructionPreview.SetRotation(CurrentConstructionRotation);
         }
 
-        private Vector3 GetBuildPoint() 
+        private Vector3 GetBuildPoint()
         {
             Ray cameraRay = new Ray(cameraTransform.position, cameraTransform.forward);
             bool cameraRaySuccess = Physics.Raycast(cameraRay, out RaycastHit cameraRayHit, maxBuildDistance * 2, buildTargetingCollisionMask);
@@ -109,7 +119,7 @@ namespace Cosmobot
             return buildPointDistant;
         }
 
-        private Vector3 SnapToGrid(Vector3 vec, bool centerX, bool centerZ) 
+        private Vector3 SnapToGrid(Vector3 vec, bool centerX, bool centerZ)
         {
             vec /= GlobalConstants.GRID_CELL_SIZE;
             Vector3 newVec = new Vector3(Mathf.Round(vec.x), 0, Mathf.Round(vec.z));
@@ -119,12 +129,27 @@ namespace Cosmobot
         }
 
         // Returns the final placement position of the building, or null if no valid position is found
-        private Vector3? ScanBuildingPlacement(Vector3 buildPoint, Vector2Int buildingGridSize, Quaternion buildingRotation) 
+        private Vector3? ScanBuildingPlacement(Vector3 buildPoint, Vector2Int buildingGridSize, Quaternion buildingRotation)
         {
-            Vector3 boxOrigin = new Vector3(buildPoint.x, maxTerrainHeight+1, buildPoint.z);
+            Ray cameraRay = new Ray(cameraTransform.position, cameraTransform.forward);
+            bool raySuccess = Physics.Raycast(cameraRay, out RaycastHit rayHit, maxBuildDistance * 2, buildTargetingCollisionMask);
+
+            Vector3 boxOriginHigh = new Vector3(buildPoint.x, maxTerrainHeight+1, buildPoint.z);
+            Vector3 boxOriginLow = new Vector3(buildPoint.x, raySuccess ? rayHit.point.y + 1 : gameObject.transform.position.y, buildPoint.z);
             Vector3 boxHalfExtents = new Vector3(buildingGridSize.x * GlobalConstants.GRID_CELL_SIZE * 0.5f, 1, buildingGridSize.y * GlobalConstants.GRID_CELL_SIZE * 0.5f);
 
-            if(Physics.BoxCast(boxOrigin, boxHalfExtents, Vector3.down, out RaycastHit result, buildingRotation, maxTerrainHeight*2, buildTargetingCollisionMask))
+            if (Physics.BoxCast(boxOriginLow, boxHalfExtents, Vector3.up, out RaycastHit resultLow, buildingRotation, maxTerrainHeight * 2, buildTargetingCollisionMask))
+            {
+                Vector3 newOriginHigh = new Vector3(buildPoint.x, resultLow.point.y, buildPoint.z);
+                bool newHitHigh = Physics.BoxCast(newOriginHigh, boxHalfExtents, Vector3.down, out RaycastHit newResultHigh, buildingRotation, maxTerrainHeight * 2, buildTargetingCollisionMask);
+                if (newHitHigh)
+                {
+                    Vector3 finalPlacementPosition = new Vector3(buildPoint.x, newResultHigh.point.y, buildPoint.z);
+                    return finalPlacementPosition;
+                }
+            }
+
+            if (Physics.BoxCast(boxOriginHigh, boxHalfExtents, Vector3.down, out RaycastHit result, buildingRotation, maxTerrainHeight*2, buildTargetingCollisionMask))
             {
                 Vector3 finalPlacementPosition = new Vector3(buildPoint.x, result.point.y, buildPoint.z);
                 return finalPlacementPosition;
@@ -158,7 +183,7 @@ namespace Cosmobot
 
         public void OnCancelPlacement(UnityEngine.InputSystem.InputAction.CallbackContext context)
         {
-            if (context.performed) 
+            if (context.performed)
                 ExitPlacement();
         }
 
