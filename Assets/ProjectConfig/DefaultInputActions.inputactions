@@ -539,9 +539,9 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Write",
+                    "name": "Save",
                     "type": "Button",
-                    "id": "6482d7b1-07f7-4e34-a916-223fde0aa2f9",
+                    "id": "df4461a5-da19-458a-890b-7c028e7d619b",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -572,15 +572,37 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "",
-                    "id": "199b92c7-60f4-460f-a9df-01ef4922e27a",
-                    "path": "<Keyboard>/anyKey",
+                    "name": "One Modifier",
+                    "id": "d12272b6-061d-4cac-947c-0953ff49d48e",
+                    "path": "OneModifier",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Write",
-                    "isComposite": false,
+                    "action": "Save",
+                    "isComposite": true,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "modifier",
+                    "id": "bd60582d-292f-4523-8cee-179f59035f1c",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Save",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "binding",
+                    "id": "144e4e41-b9af-46f8-b510-3a07d8f923fb",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Save",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }

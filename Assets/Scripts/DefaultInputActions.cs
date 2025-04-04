@@ -563,9 +563,9 @@ namespace Cosmobot
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Write"",
+                    ""name"": ""Save"",
                     ""type"": ""Button"",
-                    ""id"": ""6482d7b1-07f7-4e34-a916-223fde0aa2f9"",
+                    ""id"": ""df4461a5-da19-458a-890b-7c028e7d619b"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -596,15 +596,37 @@ namespace Cosmobot
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""199b92c7-60f4-460f-a9df-01ef4922e27a"",
-                    ""path"": ""<Keyboard>/anyKey"",
+                    ""name"": ""One Modifier"",
+                    ""id"": ""d12272b6-061d-4cac-947c-0953ff49d48e"",
+                    ""path"": ""OneModifier"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Write"",
-                    ""isComposite"": false,
+                    ""action"": ""Save"",
+                    ""isComposite"": true,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""modifier"",
+                    ""id"": ""bd60582d-292f-4523-8cee-179f59035f1c"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Save"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""binding"",
+                    ""id"": ""144e4e41-b9af-46f8-b510-3a07d8f923fb"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Save"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -647,7 +669,7 @@ namespace Cosmobot
             m_ProgrammingUI = asset.FindActionMap("Programming UI", throwIfNotFound: true);
             m_ProgrammingUI_Open = m_ProgrammingUI.FindAction("Open", throwIfNotFound: true);
             m_ProgrammingUI_Close = m_ProgrammingUI.FindAction("Close", throwIfNotFound: true);
-            m_ProgrammingUI_Write = m_ProgrammingUI.FindAction("Write", throwIfNotFound: true);
+            m_ProgrammingUI_Save = m_ProgrammingUI.FindAction("Save", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -1121,14 +1143,14 @@ namespace Cosmobot
         private List<IProgrammingUIActions> m_ProgrammingUIActionsCallbackInterfaces = new List<IProgrammingUIActions>();
         private readonly InputAction m_ProgrammingUI_Open;
         private readonly InputAction m_ProgrammingUI_Close;
-        private readonly InputAction m_ProgrammingUI_Write;
+        private readonly InputAction m_ProgrammingUI_Save;
         public struct ProgrammingUIActions
         {
             private @DefaultInputActions m_Wrapper;
             public ProgrammingUIActions(@DefaultInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @Open => m_Wrapper.m_ProgrammingUI_Open;
             public InputAction @Close => m_Wrapper.m_ProgrammingUI_Close;
-            public InputAction @Write => m_Wrapper.m_ProgrammingUI_Write;
+            public InputAction @Save => m_Wrapper.m_ProgrammingUI_Save;
             public InputActionMap Get() { return m_Wrapper.m_ProgrammingUI; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1144,9 +1166,9 @@ namespace Cosmobot
                 @Close.started += instance.OnClose;
                 @Close.performed += instance.OnClose;
                 @Close.canceled += instance.OnClose;
-                @Write.started += instance.OnWrite;
-                @Write.performed += instance.OnWrite;
-                @Write.canceled += instance.OnWrite;
+                @Save.started += instance.OnSave;
+                @Save.performed += instance.OnSave;
+                @Save.canceled += instance.OnSave;
             }
 
             private void UnregisterCallbacks(IProgrammingUIActions instance)
@@ -1157,9 +1179,9 @@ namespace Cosmobot
                 @Close.started -= instance.OnClose;
                 @Close.performed -= instance.OnClose;
                 @Close.canceled -= instance.OnClose;
-                @Write.started -= instance.OnWrite;
-                @Write.performed -= instance.OnWrite;
-                @Write.canceled -= instance.OnWrite;
+                @Save.started -= instance.OnSave;
+                @Save.performed -= instance.OnSave;
+                @Save.canceled -= instance.OnSave;
             }
 
             public void RemoveCallbacks(IProgrammingUIActions instance)
@@ -1220,7 +1242,7 @@ namespace Cosmobot
         {
             void OnOpen(InputAction.CallbackContext context);
             void OnClose(InputAction.CallbackContext context);
-            void OnWrite(InputAction.CallbackContext context);
+            void OnSave(InputAction.CallbackContext context);
         }
     }
 }

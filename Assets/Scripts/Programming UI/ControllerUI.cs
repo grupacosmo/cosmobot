@@ -12,6 +12,7 @@ namespace Cosmobot
     {
 
         private DefaultInputActions actions;
+        private PlayerCamera playerCamera;
 
         private Image UIImage;
         private TMP_InputField inputField;
@@ -30,7 +31,7 @@ namespace Cosmobot
             textArea.gameObject.SetActive(false);
             UIImage.enabled = false;
             inputField.enabled = false;
-            actions.ProgrammingUI.Write.Disable();
+            playerCamera = FindObjectOfType<PlayerCamera>();
         }
 
         // Update is called once per frame
@@ -63,8 +64,9 @@ namespace Cosmobot
             inputField.textComponent.enableWordWrapping = false;
             textArea.gameObject.SetActive(true);
             Time.timeScale = 0;
-            actions.ProgrammingUI.Write.Enable();
             inputField.ActivateInputField();
+            actions.PlayerCamera.Disable();
+            playerCamera.enabled = false;
         }
 
         public void OnClose(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -73,17 +75,19 @@ namespace Cosmobot
             inputField.enabled = false;
             textArea.gameObject.SetActive(false);
             Time.timeScale = 1;
-            actions.ProgrammingUI.Write.Disable();
-        }
+            playerCamera.enabled = true;
 
-        public void OnWrite(UnityEngine.InputSystem.InputAction.CallbackContext context)
-        {
-            //inputField.text += context.action.ToString();
         }
 
         public void IFOnDeselect(string arg0)
         {
             inputField.ActivateInputField();
         }
+
+        public void OnSave(UnityEngine.InputSystem.InputAction.CallbackContext context)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }
