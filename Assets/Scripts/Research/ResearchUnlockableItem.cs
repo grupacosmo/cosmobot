@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Cosmobot
 {
-    public class ResearchInfo : MonoBehaviour
+    public class ResearchUnlockableItem : MonoBehaviour
     {
         // Start is called before the first frame update
         void Start()

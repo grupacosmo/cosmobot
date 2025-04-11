@@ -626,12 +626,12 @@ MonoBehaviour:
   m_margin: {x: 9.064221, y: 1.322886, z: 6.012301, w: 2.5722795}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_renderer: {fileID: 647445961}
-  m_maskType: 0
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
+  m_hasFontAssetChanged: 0
+  m_renderer: {fileID: 647445961}
+  m_maskType: 0
 --- !u!23 &647445961
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -958,12 +958,12 @@ MonoBehaviour:
   m_margin: {x: 9.064221, y: 1.322886, z: 6.012301, w: 2.5722795}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_renderer: {fileID: 940018895}
-  m_maskType: 0
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
+  m_hasFontAssetChanged: 0
+  m_renderer: {fileID: 940018895}
+  m_maskType: 0
 --- !u!23 &940018895
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1547,6 +1547,10 @@ PrefabInstance:
     - target: {fileID: 7394801911693251629, guid: 71c22afd441ad3abf90f6116a84cfabb, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8151760752934561961, guid: 71c22afd441ad3abf90f6116a84cfabb, type: 3}
+      propertyPath: craftingRecipeGroupId
+      value: furnace
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
