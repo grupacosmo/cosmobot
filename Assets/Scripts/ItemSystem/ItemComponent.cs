@@ -57,23 +57,17 @@ namespace Cosmobot.ItemSystem
 
         public int? GetIntValue(string key)
         {
-            var value = GetValue(key);
-            if (value is not null && int.TryParse(value, out var result)) return result;
-            return null;
+            return SerializationUtils.TryParse(GetValue(key), out int result) ? result : null;
         }
 
         public float? GetFloatValue(string key)
         {
-            var value = GetValue(key);
-            if (value is not null && float.TryParse(value, out var result)) return result;
-            return null;
+            return SerializationUtils.TryParse(GetValue(key), out float result) ? result : null;
         }
 
         public bool? GetBoolValue(string key)
         {
-            var value = GetValue(key);
-            if (value is not null && bool.TryParse(value, out var result)) return result;
-            return null;
+            return SerializationUtils.TryParse(GetValue(key), out bool result) ? result : null;
         }
 
         public void SetValue(string key, string value)

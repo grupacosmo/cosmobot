@@ -18,7 +18,7 @@ namespace Cosmobot.ItemSystem
         public SerializableDictionary<string, string> ItemData
         {
             get => itemData;
-            set => itemData = value ?? throw new ArgumentNullException(nameof(value));
+            set => itemData = value ?? new SerializableDictionary<string, string>();
         }
 
         /// <summary>
@@ -81,23 +81,17 @@ namespace Cosmobot.ItemSystem
 
         public int? GetIntValue(string key)
         {
-            var value = GetValue(key);
-            if (value is not null && int.TryParse(value, out var result)) return result;
-            return null;
+            return SerializationUtils.TryParse(GetValue(key), out int result) ? result : null;
         }
 
         public float? GetFloatValue(string key)
         {
-            var value = GetValue(key);
-            if (value is not null && float.TryParse(value, out var result)) return result;
-            return null;
+            return SerializationUtils.TryParse(GetValue(key), out float result) ? result : null;
         }
 
         public bool? GetBoolValue(string key)
         {
-            var value = GetValue(key);
-            if (value is not null && bool.TryParse(value, out var result)) return result;
-            return null;
+            return SerializationUtils.TryParse(GetValue(key), out bool result) ? result : null;
         }
 
         public void SetValue(string key, string value)
@@ -107,17 +101,17 @@ namespace Cosmobot.ItemSystem
 
         public void SetIntValue(string key, int? value)
         {
-            SetValue(key, value.ToString());
+            SetValue(key, SerializationUtils.ToString(value));
         }
 
         public void SetFloatValue(string key, float? value)
         {
-            SetValue(key, value.ToString());
+            SetValue(key, SerializationUtils.ToString(value));
         }
 
         public void SetBoolValue(string key, bool? value)
         {
-            SetValue(key, value.ToString());
+            SetValue(key, SerializationUtils.ToString(value));
         }
         
     }

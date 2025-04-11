@@ -24,14 +24,7 @@ namespace Cosmobot
 
         private string ValueToString(T value)
         {
-            if (value is null) return null;
-            if (typeof(T) == typeof(bool))
-            {
-                var b = (bool)Convert.ChangeType(value, typeof(bool));
-                return b ? "true" : "false"; // i hate C#
-            }
-
-            return value.ToString();
+            return SerializationUtils.ToString(value);
         }
     }
 }
