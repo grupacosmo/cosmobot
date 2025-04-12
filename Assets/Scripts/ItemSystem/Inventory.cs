@@ -50,11 +50,43 @@ namespace Cosmobot.ItemSystem
             items.Capacity = capacity;
         }
         
+        public bool TryGetItem(int index, out ItemInfo item)
+        {
+            if (index < 0 || index >= items.Count)
+            {
+                item = null;
+                return false;
+            }
+
+            item = GetItemInfo(index);
+            return true;
+        }
+        
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="index"/> is less than 0 or <paramref name="index"/> is equal to or greater than
+        /// <see cref="ItemCount"/>
+        /// </exception>
         public ItemInfo GetItemInfo(int index)
         {
             return items[index].ItemInfo;
         }
 
+        public bool TryGetItemData(int index, out IReadOnlyDictionary<string, string> itemData)
+        {
+            if (index < 0 || index >= items.Count)
+            {
+                itemData = null;
+                return false;
+            }
+
+            itemData = GetItemData(index);
+            return true;
+        }
+        
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// <paramref name="index"/> is less than 0 or <paramref name="index"/> is equal to or greater than
+        /// <see cref="ItemCount"/>
+        /// </exception>
         public IReadOnlyDictionary<string, string> GetItemData(int index)
         {
             return items[index].ItemData;
