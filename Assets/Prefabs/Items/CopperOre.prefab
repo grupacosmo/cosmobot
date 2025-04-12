@@ -117,7 +117,7 @@ GameObject:
   - component: {fileID: 8401434707131471660}
   - component: {fileID: 678188504027488934}
   m_Layer: 0
-  m_Name: Copper Ore
+  m_Name: CopperOre
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -175,10 +175,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 869d2ebfad8479bb881a27510d8f90e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemInfo: {fileID: 11400000, guid: e5b25632b5123549e807f58b93a6fe85, type: 2}
-  ItemData:
-    keys: []
-    values: []
+  item:
+    itemInfo: {fileID: 11400000, guid: e5b25632b5123549e807f58b93a6fe85, type: 2}
+    itemData:
+      keys: []
+      values: []
 --- !u!1 &4974398331618079617
 GameObject:
   m_ObjectHideFlags: 0
