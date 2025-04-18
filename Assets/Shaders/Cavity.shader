@@ -55,6 +55,12 @@ Shader "Cosmobot/Effect/Cavity"
                 float2 axisX = float2(1.0 / _ScreenParams.x, 0);
                 float2 axisY = float2(0, 1.0 / _ScreenParams.y);
 
+                float3 normal3D = SampleSceneNormals(uv);
+                if(normal3D.x == 0 && normal3D.y == 0 && normal3D.z == 0)
+                {
+                    return 0.5; //is this faster?
+                }
+
                 float2 left = SampleSceneNormalBuffer(uv + axisX, viewMatrix);
                 float2 right = SampleSceneNormalBuffer(uv - axisX, viewMatrix);
                 float2 down = SampleSceneNormalBuffer(uv - axisY, viewMatrix);
@@ -91,6 +97,8 @@ Shader "Cosmobot/Effect/Cavity"
             {
                 float4 col = float4(1,1,1,1);
                 col.rgb = Curvature(i.texcoord);
+                
+                
                 
                 //Base
                 // if(col.r > 0.49 && col.r < 0.51) col.a = 0;
