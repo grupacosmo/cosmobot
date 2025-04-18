@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using Cosmobot.Api.Types;
 
 namespace Cosmobot
 {
     [DisallowMultipleComponent]
+    [RequireComponent(typeof(Programmable))]
     public class BaseRobotEngineLogic : MonoBehaviour, EngineLogicInterface
     {
         private ManualResetEvent _taskCompletedEvent;
@@ -17,9 +19,6 @@ namespace Cosmobot
 
         [SerializeField] private Transform target; //temporary for testing
         [SerializeField] private float speed = 1; //temporary for testing
-        [SerializeField] private badapple video;
-        [SerializeField] private Material White;
-        [SerializeField] private Material Black;
 
         public void SetupThread(ManualResetEvent taskEvent, CancellationToken token, SynchronizationContext threadContext)
         {
@@ -38,49 +37,12 @@ namespace Cosmobot
                 { "Seek", wrapper.Wrap(Seek)},
                 { "MoveToPoint", wrapper.Wrap<float, float, float>((x, y, z) => MoveToPoint(x, y, z))},
                 { "GetRobotSpeed", wrapper.Wrap(GetRobotSpeed)},
-                { "D5", wrapper.Wrap<float, float>((x) => d5(x))},
                 { "GetRobotPosition", wrapper.Wrap(GetRobotPosition)},
-                { "MoveInDirection", wrapper.Wrap<Vector3>((x) => MoveInDirection(x))},
-                { "Log", wrapper.Wrap<object>((x) => log(x))},
-                { "isBlack", wrapper.Wrap<bool>(isBlack)},
-                { "ChangeBlack", wrapper.Wrap(ChangeBlack)},
-                { "ChangeWhite", wrapper.Wrap(ChangeWhite)}
+                { "MoveInDirection", wrapper.Wrap<Vector3>((x) => MoveInDirection(x))}
             };
-        }
-        
-        //funny funny
-        public bool isBlack()
-        {
-            if (video.checkColor((transform.position.x + 15) / 31, (transform.position.z + 11) / 23))
-            {
-                _taskCompletedEvent.Set();
-                return false;
-            }
-            _taskCompletedEvent.Set();
-            return true;
-        }
-        
-        public void ChangeWhite()
-        {
-            gameObject.GetComponent<MeshRenderer>().material = White;
-            _taskCompletedEvent.Set();
-        }
-
-        public void ChangeBlack()
-        {
-            gameObject.GetComponent<Renderer>().material = Black;
-            _taskCompletedEvent.Set();
         }
 
         //ROBOT FUNCTIONS
-        public float d5(float x) { _taskCompletedEvent.Set(); return x + 5; } //temporary for testing
-
-        public void log(object x)
-        {
-            Debug.Log(x);
-            _taskCompletedEvent.Set();
-        }
-
         public void TurnLeft()
         {
             transform.Rotate(Vector3.up, -90);
@@ -99,7 +61,7 @@ namespace Cosmobot
             return speed;
         }
 
-        public Vector3 GetRobotPosition()
+        public Vec3 GetRobotPosition()
         {
             _taskCompletedEvent.Set();
             return transform.position;

@@ -5,9 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using Jint;
-using Unity.Collections.LowLevel.Unsafe;
-using Unity.Profiling;
-using UnityEditor;
+using System.Reflection;
 
 namespace Cosmobot
 {
@@ -68,12 +66,16 @@ namespace Cosmobot
                 var functions = logicInterface.GetFunctions();
                 foreach (var function in functions)
                 {
-                    //TODO: Check if this function is safe here
-                    //ValidateFunction()
+                    #if DEBUG
+                    ValidateFunction(function.Key, function.Value, logicInterface.GetType().Name);
+                    #endif
                     if (jsEngine.Global.HasProperty(function.Key))
                     {
-                        Debug.LogError("Duplicate key: " + function.Key + " in Interface: " + logicInterface.GetType().Name);
-                    }else
+                        RobotTaskManager.TaskList.Remove(task);
+                        Debug.LogError($"Duplicate key: {function.Key} in Interface: {logicInterface.GetType().Name}");
+                        throw new Exception($"Duplicate key: {function.Key} in Interface: {logicInterface.GetType().Name}");
+                    }
+                    else
                     {
                         jsEngine.SetValue(function.Key, function.Value);
                     }
@@ -83,13 +85,14 @@ namespace Cosmobot
             Thread.Sleep(100);
             while(RobotTaskManager.CountTasksReady() < RobotTaskManager.TaskList.Count)
             {
-                RobotTaskManager.allReady.WaitOne(milliStartSyncCheck);
+                WaitHandle.WaitAny(new[] { RobotTaskManager.allReady, token.WaitHandle }, milliStartSyncCheck);
                 token.ThrowIfCancellationRequested();
                 Debug.Log($"{RobotTaskManager.CountTasksReady()}/{RobotTaskManager.TaskList.Count} Tasks ready");
             }
 
             try
             {
+                token.ThrowIfCancellationRequested();
                 jsEngine.Execute(code);
             }
             catch (OperationCanceledException)
@@ -106,20 +109,21 @@ namespace Cosmobot
                 RobotTaskManager.TaskList.Remove(task);
             }
         }
-        /*
-        #if DEBUG
 
+        #if DEBUG
         const string RobotApiTypesNamespace = "Cosmobot.Api.Types";
-        private void ValidateFunction(string key)
+        private void ValidateFunction(string key, Delegate value, string name)
         {
-            if (type.IsPrimitive || type.Namespace == RobotApiTypesNamespace)
+            Type type = value.Method.ReturnType;
+            if (type == typeof(void) || type.IsPrimitive || type.Namespace == RobotApiTypesNamespace)
             {
                 return;
             }
-
-            UnityEditor.isPlaying = false;
-            throw new Exception("fuck you");
+            
+            Debug.LogError($"Method returns disallowed type! Method: {type} {key} in {name}");
+            RobotTaskManager.TaskList.Remove(task);
+            throw new Exception($"Method returns disallowed type! Method: {type} {key} in {name}");
+        }
         #endif
-        }*/
     }
 }
