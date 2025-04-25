@@ -21,7 +21,7 @@ namespace Cosmobot
         private static SynchronizationContext _mainThreadContext; //for handing Unity functions to main thread
 
         private int milliStartSyncCheck = 1000;
-        Task task;
+        Thread task;
 
         static int staticDebugI;
         int debugI = 0;
@@ -31,10 +31,14 @@ namespace Cosmobot
             _cancellationTokenSource = new CancellationTokenSource();
             _mainThreadContext = SynchronizationContext.Current;
 
+            task = new Thread(() => jsThread(_cancellationTokenSource.Token));
+            task.IsBackground = true;
+            task.Start();
+            RobotTaskManager.TaskList.Add(task);
+
             debugI = staticDebugI++;
             engineLogicInterfaces = GetComponents<EngineLogicInterface>();
-            task = Task.Run(() => jsThread(_cancellationTokenSource.Token));
-            RobotTaskManager.TaskList.Add(task);
+           
         }
 
         private void OnDestroy()
@@ -53,7 +57,8 @@ namespace Cosmobot
             int x = (h * debugI) / 1000 * w + 10;
             Rect pos = new Rect(x, y, w, h);
             GUI.Label(pos, $"[{gameObject.name}] Task: {task.Status} {task.Exception}");
-        }*/
+        }
+        */
 
         private void jsThread(CancellationToken token)
         {
@@ -83,13 +88,14 @@ namespace Cosmobot
                 }
             }
 
+            /*
             Thread.Sleep(100);
             while(RobotTaskManager.CountTasksReady() < RobotTaskManager.TaskList.Count)
             {
                 WaitHandle.WaitAny(new[] { RobotTaskManager.allReady, token.WaitHandle }, milliStartSyncCheck);
                 token.ThrowIfCancellationRequested();
                 Debug.Log($"{RobotTaskManager.CountTasksReady()}/{RobotTaskManager.TaskList.Count} Tasks ready");
-            }
+            }*/
 
             try
             {

@@ -14,7 +14,7 @@ namespace Cosmobot
     {
         public ConcurrentQueue<Action> CQ = new ConcurrentQueue<Action>();
         private Action currAction;
-
+        private ManualResetEvent _taskCompletedEvent;
 
 
         void Update()
