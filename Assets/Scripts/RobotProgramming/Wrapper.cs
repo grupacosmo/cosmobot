@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Cosmobot
 {
-    public class Wrapper
+    public class Wrapper : MonoBehaviour
     {
         private ManualResetEvent _taskCompletedEvent;
         private CancellationToken token;
@@ -176,6 +176,7 @@ namespace Cosmobot
         private void ExecuteOnMainThread(Action action)
         {
             _mainThreadContext.Post(_ => action(), null);
+            //CQ.Enqueue(action);
         }
     }
 }

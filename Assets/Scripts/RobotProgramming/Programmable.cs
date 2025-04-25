@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Jint;
 using System.Reflection;
+using System.Collections.Concurrent;
 
 namespace Cosmobot
 {
@@ -43,7 +44,7 @@ namespace Cosmobot
             staticDebugI = 0;
             RobotTaskManager.TaskList.Clear();
         }
-
+        /*
         void OnGUI()
         {
             int h = 60; 
@@ -52,7 +53,7 @@ namespace Cosmobot
             int x = (h * debugI) / 1000 * w + 10;
             Rect pos = new Rect(x, y, w, h);
             GUI.Label(pos, $"[{gameObject.name}] Task: {task.Status} {task.Exception}");
-        }
+        }*/
 
         private void jsThread(CancellationToken token)
         {
