@@ -77,3 +77,8 @@ crashlytics-build.properties
 
 # Auto-generated script
 Assets/Scripts/DefaultInputActions.cs
+
+
+#dlls
+Assets/Plugins/*.dll
+Assets/Plugins/*.dll.meta
