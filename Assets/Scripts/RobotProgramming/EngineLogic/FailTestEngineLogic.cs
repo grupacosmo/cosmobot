@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using Cosmobot.Api.Types;
+using System.Collections.Concurrent;
 
 namespace Cosmobot
 {
@@ -17,12 +18,11 @@ namespace Cosmobot
         private SynchronizationContext _mainThreadContext;
         private Wrapper wrapper;
 
-        public void SetupThread(ManualResetEvent taskEvent, CancellationToken token, SynchronizationContext threadContext)
+        public void SetupThread(ManualResetEvent taskEvent, CancellationToken token, ConcurrentQueue<Action> commandQueue)
         {
             _taskCompletedEvent = taskEvent;
             _cancellationToken = token;
-            _mainThreadContext = threadContext;
-            wrapper = new Wrapper(_taskCompletedEvent, _cancellationToken, _mainThreadContext);
+            wrapper = new Wrapper(_taskCompletedEvent, _cancellationToken, commandQueue);
         }
 
         public Dictionary<string, Delegate> GetFunctions()

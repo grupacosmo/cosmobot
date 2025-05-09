@@ -18,9 +18,9 @@ namespace Cosmobot
 
         private ManualResetEvent _taskCompletedEvent; //for waiting for Unity thread
         private CancellationTokenSource _cancellationTokenSource; //for thread killing
-        private static SynchronizationContext _mainThreadContext; //for handing Unity functions to main thread
+        private ConcurrentQueue<Action> _commandQueue = new ConcurrentQueue<Action>();
+        private Action currentCommand;
 
-        private int milliStartSyncCheck = 1000;
         Thread task;
 
         static int staticDebugI;
@@ -29,24 +29,30 @@ namespace Cosmobot
         {
             _taskCompletedEvent = new ManualResetEvent(false);
             _cancellationTokenSource = new CancellationTokenSource();
-            _mainThreadContext = SynchronizationContext.Current;
 
             task = new Thread(() => jsThread(_cancellationTokenSource.Token));
             task.IsBackground = true;
             task.Start();
-            RobotTaskManager.TaskList.Add(task);
 
             debugI = staticDebugI++;
             engineLogicInterfaces = GetComponents<EngineLogicInterface>();
            
         }
 
+        private void Update()
+        {
+            if(_commandQueue.TryDequeue(out currentCommand))
+            {
+                currentCommand();
+            }
+        }
+
         private void OnDestroy()
         {
             StopAllCoroutines();
+            _commandQueue.Clear();
             _cancellationTokenSource?.Cancel();
             staticDebugI = 0;
-            RobotTaskManager.TaskList.Clear();
         }
         /*
         void OnGUI()
@@ -68,7 +74,7 @@ namespace Cosmobot
             
             foreach(EngineLogicInterface logicInterface in engineLogicInterfaces)
             {
-                logicInterface.SetupThread(_taskCompletedEvent, token, _mainThreadContext);
+                logicInterface.SetupThread(_taskCompletedEvent, token, _commandQueue);
                 var functions = logicInterface.GetFunctions();
                 foreach (var function in functions)
                 {
@@ -77,7 +83,6 @@ namespace Cosmobot
                     #endif
                     if (jsEngine.Global.HasProperty(function.Key))
                     {
-                        RobotTaskManager.TaskList.Remove(task);
                         Debug.LogError($"Duplicate key: {function.Key} in Interface: {logicInterface.GetType().Name}");
                         throw new Exception($"Duplicate key: {function.Key} in Interface: {logicInterface.GetType().Name}");
                     }
@@ -87,15 +92,6 @@ namespace Cosmobot
                     }
                 }
             }
-
-            /*
-            Thread.Sleep(100);
-            while(RobotTaskManager.CountTasksReady() < RobotTaskManager.TaskList.Count)
-            {
-                WaitHandle.WaitAny(new[] { RobotTaskManager.allReady, token.WaitHandle }, milliStartSyncCheck);
-                token.ThrowIfCancellationRequested();
-                Debug.Log($"{RobotTaskManager.CountTasksReady()}/{RobotTaskManager.TaskList.Count} Tasks ready");
-            }*/
 
             try
             {
@@ -113,7 +109,6 @@ namespace Cosmobot
             finally
             {
                 Debug.Log("Done");
-                RobotTaskManager.TaskList.Remove(task);
             }
         }
 
@@ -128,7 +123,6 @@ namespace Cosmobot
             }
             
             Debug.LogError($"Method returns disallowed type! Method: {type} {key} in {name}");
-            RobotTaskManager.TaskList.Remove(task);
             throw new Exception($"Method returns disallowed type! Method: {type} {key} in {name}");
         }
         #endif

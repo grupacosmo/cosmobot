@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -10,19 +11,19 @@ namespace Cosmobot
     {
         private ManualResetEvent _taskCompletedEvent;
         private CancellationToken token;
-        private SynchronizationContext _mainThreadContext;
+        private ConcurrentQueue<Action> _commandQueue;
 
-        public Wrapper(ManualResetEvent taskEvent, CancellationToken cancelToken, SynchronizationContext threadContext)
+        public Wrapper(ManualResetEvent taskEvent, CancellationToken cancelToken, ConcurrentQueue<Action> commandQueue)
         {
             _taskCompletedEvent = taskEvent;
             token = cancelToken;
-            _mainThreadContext = threadContext;
+            _commandQueue = commandQueue;
         }
 
         public Action Wrap(Action action)
         {
             return () => {
-                ExecuteOnMainThread(action);
+                _commandQueue.Enqueue(action);
                 WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
@@ -32,7 +33,7 @@ namespace Cosmobot
         public Action<T> Wrap<T>(Action<T> action)
         {
             return (t) => {
-                ExecuteOnMainThread(() => action(t));
+                _commandQueue.Enqueue(() => action(t));
                 WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
@@ -42,7 +43,7 @@ namespace Cosmobot
         public Action<T1, T2> Wrap<T1, T2>(Action<T1, T2> action)
         {
             return (t1, t2) => {
-                ExecuteOnMainThread(() => action(t1, t2));
+                _commandQueue.Enqueue(() => action(t1, t2));
                 WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
@@ -52,7 +53,7 @@ namespace Cosmobot
         public Action<T1, T2, T3> Wrap<T1, T2, T3>(Action<T1, T2, T3> action)
         {
             return (t1, t2, t3) => {
-                ExecuteOnMainThread(() => action(t1, t2, t3));
+                _commandQueue.Enqueue(() => action(t1, t2, t3));
                 WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
@@ -62,7 +63,7 @@ namespace Cosmobot
         public Action<T1, T2, T3, T4> Wrap<T1, T2, T3, T4>(Action<T1, T2, T3, T4> action)
         {
             return (t1, t2, t3, t4) => {
-                ExecuteOnMainThread(() => action(t1, t2, t3, t4));
+                _commandQueue.Enqueue(() => action(t1, t2, t3, t4));
                 WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
@@ -72,7 +73,7 @@ namespace Cosmobot
         public Action<T1, T2, T3, T4, T5> Wrap<T1, T2, T3, T4, T5>(Action<T1, T2, T3, T4, T5> action)
         {
             return (t1, t2, t3, t4, t5) => {
-                ExecuteOnMainThread(() => action(t1, t2, t3, t4, t5));
+                _commandQueue.Enqueue(() => action(t1, t2, t3, t4, t5));
                 WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
@@ -82,7 +83,7 @@ namespace Cosmobot
         public Action<T1, T2, T3, T4, T5, T6> Wrap<T1, T2, T3, T4, T5, T6>(Action<T1, T2, T3, T4, T5, T6> action)
         {
             return (t1, t2, t3, t4, t5, t6) => {
-                ExecuteOnMainThread(() => action(t1, t2, t3, t4, t5, t6));
+                _commandQueue.Enqueue(() => action(t1, t2, t3, t4, t5, t6));
                 WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
@@ -93,7 +94,7 @@ namespace Cosmobot
         {
             return () => {
                 T tr = default;
-                ExecuteOnMainThread(() => { tr = action(); });
+                _commandQueue.Enqueue(() => { tr = action(); });
                 WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
@@ -105,7 +106,7 @@ namespace Cosmobot
         {
             return (t1) => {
                 TR tr = default;
-                ExecuteOnMainThread(() => { tr = action(t1); });
+                _commandQueue.Enqueue(() => { tr = action(t1); });
                 WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
@@ -117,7 +118,7 @@ namespace Cosmobot
         {
             return (t1, t2) => {
                 TR tr = default;
-                ExecuteOnMainThread(() => { tr = action(t1, t2); });
+                _commandQueue.Enqueue(() => { tr = action(t1, t2); });
                 WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
@@ -129,7 +130,7 @@ namespace Cosmobot
         {
             return (t1, t2, t3) => {
                 TR tr = default;
-                ExecuteOnMainThread(() => { tr = action(t1, t2, t3); });
+                _commandQueue.Enqueue(() => { tr = action(t1, t2, t3); });
                 WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
@@ -141,7 +142,7 @@ namespace Cosmobot
         {
             return (t1, t2, t3, t4) => {
                 TR tr = default;
-                ExecuteOnMainThread(() => { tr = action(t1, t2, t3, t4); });
+                _commandQueue.Enqueue(() => { tr = action(t1, t2, t3, t4); });
                 WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
@@ -153,7 +154,7 @@ namespace Cosmobot
         {
             return (t1, t2, t3, t4, t5) => {
                 TR tr = default;
-                ExecuteOnMainThread(() => { tr = action(t1, t2, t3, t4, t5); });
+                _commandQueue.Enqueue(() => { tr = action(t1, t2, t3, t4, t5); });
                 WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
@@ -165,20 +166,12 @@ namespace Cosmobot
         {
             return (t1, t2, t3, t4, t5, t6) => {
                 TR tr = default;
-                ExecuteOnMainThread(() => { tr = action(t1, t2, t3, t4, t5, t6); });
+                _commandQueue.Enqueue(() => { tr = action(t1, t2, t3, t4, t5, t6); });
                 WaitHandle.WaitAny(new[] { _taskCompletedEvent, token.WaitHandle });
                 _taskCompletedEvent.Reset();
                 token.ThrowIfCancellationRequested();
                 return tr;
             };
-        }
-
-        private void ExecuteOnMainThread(Action action)
-        {
-            if(!Application.exitCancellationToken.IsCancellationRequested)
-            {
-                _mainThreadContext.Post(_ => action(), null);
-            }
         }
     }
 }
