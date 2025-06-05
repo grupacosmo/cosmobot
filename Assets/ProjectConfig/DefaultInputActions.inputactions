@@ -224,7 +224,7 @@
                     "name": "Toggle",
                     "type": "Button",
                     "id": "46a81420-c1a6-435b-aeff-bdfb512c6404",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -300,7 +300,7 @@
                     "name": "interact",
                     "type": "Button",
                     "id": "54f766f1-c186-4d62-ac28-82127740a46f",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -436,7 +436,7 @@
                     "name": "cancelPlacement",
                     "type": "Button",
                     "id": "480c38c9-721c-4092-8c55-9c5b232362db",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
