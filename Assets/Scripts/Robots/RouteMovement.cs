@@ -65,10 +65,10 @@ namespace Cosmobot
 
             var inputDirection = Quaternion.LookRotation(direction);
 
-            var velocity = rb.velocity;
+            var velocity = rb.linearVelocity;
             var targetVelocity = direction * robotSpeed + new Vector3(0, velocity.y, 0);
             return Vector3.MoveTowards(velocity, targetVelocity,
-                50 * Time.fixedDeltaTime) - rb.velocity;
+                50 * Time.fixedDeltaTime) - rb.linearVelocity;
         }
 
         private void GroundCheck()
@@ -76,7 +76,7 @@ namespace Cosmobot
             var origin = groundCheckOrigin.position;
 
             Physics.SphereCast(origin, groundCheckRadius, Vector3.down, out var hitInfo, groundCheckDistance);
-            if (hitInfo.collider != null && rb.velocity.y < 0.01)
+            if (hitInfo.collider != null && rb.linearVelocity.y < 0.01)
             {
                 groundNormal = hitInfo.normal;
                 var floorAngleDegrees = Mathf.Acos(Vector3.Dot(Vector3.up, groundNormal)) * Mathf.Rad2Deg;

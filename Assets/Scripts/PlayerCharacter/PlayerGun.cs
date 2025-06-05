@@ -48,7 +48,7 @@ namespace Cosmobot
                 carryPosition = transform.position + cameraTransform.forward * holdDistance + carryPosOffset;
                 
                 Vector3 force = (carryPosition - carriedItemTransform.position) * carryForceMultiplier
-                    - carriedItemBody.velocity;
+                    - carriedItemBody.linearVelocity;
                 carriedItemBody.AddForce(force, ForceMode.VelocityChange);
             }
         }
