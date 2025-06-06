@@ -10,7 +10,7 @@ namespace Cosmobot
 
         public void SetBuilding(BuildingInfo buildingInfo) 
         {
-            transform.localScale = new Vector3(buildingInfo.GridSize.x * GlobalConstants.GRID_CELL_SIZE, 1, buildingInfo.GridSize.y * GlobalConstants.GRID_CELL_SIZE);
+            transform.localScale = new Vector3(buildingInfo.Prefab.transform.localScale.x * GlobalConstants.GRID_CELL_SIZE, 1, buildingInfo.Prefab.transform.localScale.z * GlobalConstants.GRID_CELL_SIZE);
         }
 
         public void SetPosition(Vector3 newPosition) 

@@ -67,10 +67,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 869d2ebfad8479bb881a27510d8f90e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemInfo: {fileID: 11400000, guid: 1166367e3c8d355cea370e3c4a1a2aa9, type: 2}
-  ItemData:
-    keys: []
-    values: []
+  item:
+    itemInfo: {fileID: 11400000, guid: 1166367e3c8d355cea370e3c4a1a2aa9, type: 2}
+    itemData:
+      keys: []
+      values: []
 --- !u!1 &3227536825718541607
 GameObject:
   m_ObjectHideFlags: 0

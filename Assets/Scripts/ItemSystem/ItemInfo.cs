@@ -28,18 +28,21 @@ namespace Cosmobot.ItemSystem
         public GameObject InstantiateItem(Vector3 position, Quaternion rotation)
         {
             GameObject instantiatedObject = Instantiate(Prefab, position, rotation);
-            Item item = instantiatedObject.GetComponent<Item>();
-            if (!item)
+            ItemComponent itemComponent = instantiatedObject.GetComponent<ItemComponent>();
+            if (!itemComponent)
             {
                 throw new InvalidOperationException(
-                    $"Prefab of item '{id}' does not have '{nameof(Item)}' script attached!");
+                    $"Prefab of item '{id}' does not have '{nameof(ItemComponent)}' script attached!");
             }
-            if (item.ItemInfo != this)
+            if (itemComponent.ItemInfo != this)
             {
                 throw new InvalidOperationException(
-                    $"Prefab of item '{id}' has different ItemInfo setup! (found '{item.ItemInfo.Id}')");
+                    $"Prefab of item '{id}' has different ItemInfo setup! (found '{itemComponent.ItemInfo.Id}')");
             }
-            item.ItemData = new SerializableDictionary<string, string>(additionalData);
+            foreach (KeyValuePair<string,string> keyValuePair in additionalData)
+            {
+                itemComponent.ItemData[keyValuePair.Key] = keyValuePair.Value;
+            }
             return instantiatedObject;
         }
 
