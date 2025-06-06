@@ -1,0 +1,31 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; background-color: rgb(204, 204, 204);">
+        <ui:VisualElement name="MenuBar" style="flex-grow: 0; flex-direction: row; border-bottom-width: 1px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);">
+            <ui:VisualElement name="MenuBarLeft" style="flex-grow: 1; flex-direction: row;">
+                <ui:Button text="Save" name="MenuSaveBt" />
+            </ui:VisualElement>
+            <ui:VisualElement name="MenuBarRight" style="flex-grow: 0; flex-direction: row;">
+                <ui:Button text="Run" name="MenuRunBt" enable-rich-text="true" emoji-fallback-support="true" />
+                <ui:Button text="Stop" name="MenuStopBt" enabled="false" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="Container" style="flex-grow: 1; flex-direction: row;">
+            <ui:VisualElement name="FileListContainer" style="flex-grow: 0; border-right-width: 1px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);">
+                <ui:VisualElement style="flex-grow: 0; flex-direction: row;">
+                    <ui:Label text="File Name" style="font-size: 10px; flex-grow: 1;" />
+                    <ui:Label text="Is Main" style="font-size: 10px; -unity-text-align: upper-right; flex-direction: row;" />
+                </ui:VisualElement>
+                <ui:ListView name="FileList" header-title="Files" item-template="project://database/Assets/UI/RobotProgramming/ScriptEditorFileListEntry.uxml?fileID=9197481963319205126&amp;guid=c50685aba4254c0c9bf903115f13cdc8&amp;type=3" show-add-remove-footer="true" show-border="false" reorderable="true" style="flex-grow: 1;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="CodeContainer" style="flex-grow: 1;">
+                <ui:VisualElement style="flex-grow: 8; flex-basis: 80%;">
+                    <ui:Label text="Editing: File Name (99 lines, 2137 characters)" name="CodeStats" />
+                    <ui:TextField vertical-scroller-visibility="AlwaysVisible" multiline="true" name="CodeInput" style="flex-grow: 1; flex-shrink: 1;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-grow: 2; flex-shrink: 0; flex-basis: 20%;">
+                    <ui:TextField multiline="true" readonly="true" vertical-scroller-visibility="AlwaysVisible" name="ConsoleOutput" style="flex-grow: 1;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

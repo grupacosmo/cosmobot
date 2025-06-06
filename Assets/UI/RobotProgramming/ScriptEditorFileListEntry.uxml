@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; flex-direction: row;">
+        <ui:Label text="File Name" name="FileName" selectable="false" style="flex-grow: 1; flex-direction: row; -unity-text-align: middle-left;" />
+        <ui:RadioButton value="false" name="IsMainRBt" tooltip="Select to set as robot starting/main script" />
+    </ui:VisualElement>
+</ui:UXML>
