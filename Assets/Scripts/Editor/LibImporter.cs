@@ -26,7 +26,15 @@ namespace Cosmobot.Editor
         [MenuItem("Cosmo/Import Libs")]
         public static void OpenLibImporter()
         {
-            ImportLibs(LibFile);
+            try {
+                ImportLibs(LibFile);
+                EditorUtility.ClearProgressBar();
+            }
+            catch
+            {
+                EditorUtility.ClearProgressBar();
+                throw;
+            }
         }
         
         public static void ImportLibs(string assetPath)
@@ -39,6 +47,7 @@ namespace Cosmobot.Editor
                 if (libToImportAsset == null)
                 {
                     Debug.LogError($"LibImporter: Asset is not a valid LibToImportAsset, skipping import. {assetPath}");
+                    EditorUtility.ClearProgressBar();
                     return;
                 }
             }
@@ -46,6 +55,7 @@ namespace Cosmobot.Editor
             {
                 Debug.LogError($"LibImporter: Error reading {assetPath}: {e.Message}");
                 Debug.LogException(e);
+                EditorUtility.ClearProgressBar();
                 return;
             }
             
