@@ -54,6 +54,7 @@ Assets/TextMesh Pro.meta
 
 # Unity3D generated file on crash reports
 sysinfo.txt
+mono_crash.*.blob
 
 # Builds
 *.apk
@@ -78,3 +79,8 @@ crashlytics-build.properties
 
 # Auto-generated script
 Assets/Scripts/DefaultInputActions.cs
+
+
+#dlls
+Assets/Plugins/*.dll
+Assets/Plugins/*.dll.meta

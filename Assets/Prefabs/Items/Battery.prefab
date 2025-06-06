@@ -393,6 +393,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 5279402d783a7cd6ab3e69233e367baa, type: 2}
     - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: item.itemInfo
+      value: 
+      objectReference: {fileID: 11400000, guid: 5279402d783a7cd6ab3e69233e367baa, type: 2}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
       propertyPath: ItemData.keys.Array.size
       value: 3
       objectReference: {fileID: 0}
@@ -422,6 +426,38 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
       propertyPath: ItemData.values.Array.data[2]
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: item.itemData.keys.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: item.itemData.values.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: item.itemData.keys.Array.data[0]
+      value: MaxCharge
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: item.itemData.keys.Array.data[1]
+      value: Charge
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: item.itemData.keys.Array.data[2]
+      value: TransferRate
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: item.itemData.values.Array.data[0]
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: item.itemData.values.Array.data[1]
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: item.itemData.values.Array.data[2]
       value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []

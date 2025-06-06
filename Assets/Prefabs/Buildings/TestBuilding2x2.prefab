@@ -59,6 +59,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -164,6 +167,10 @@ PrefabInstance:
     - target: {fileID: 2908835821414782796, guid: 20631df0109e92d4892d2f63540ac1a2, type: 3}
       propertyPath: m_Name
       value: TestBuilding2x2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2908835821414782796, guid: 20631df0109e92d4892d2f63540ac1a2, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

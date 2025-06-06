@@ -6,11 +6,12 @@ namespace Cosmobot
     public class ConstructionSiteItemCollision : MonoBehaviour
     {
         void OnCollisionEnter(Collision col) {
-            if (col.gameObject.GetComponent<Item>() is null) {
+            ItemComponent itemComponent = col.gameObject.GetComponent<ItemComponent>();
+            if (itemComponent is null) {
                 return;
             }
             
-            ItemInfo collisionItemInfo = col.gameObject.GetComponent<Item>().ItemInfo;
+            ItemInfo collisionItemInfo = itemComponent.ItemInfo;
             ConstructionSite constructionSite = GetComponentInParent<ConstructionSite>();
             if (constructionSite.ConstructionSiteResources.ContainsKey(collisionItemInfo) ) {
                 if (constructionSite.ConstructionSiteResources.GetValue(collisionItemInfo).GetComponent<ResourcePreviewController>().ResourceRequirement > 0) {
