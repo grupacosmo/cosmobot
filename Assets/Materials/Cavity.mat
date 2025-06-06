@@ -120,7 +120,7 @@ Material:
     - _Glossiness: 0
     - _GlossinessSource: 0
     - _GlossyReflections: 0
-    - _Intensity: 2.12
+    - _Intensity: 5
     - _Metallic: 0
     - _Mode: 0
     - _NormalTreshold: 0.01
@@ -155,3 +155,4 @@ Material:
     - _LightDirection: {r: -1, g: 0.5, b: 1, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
