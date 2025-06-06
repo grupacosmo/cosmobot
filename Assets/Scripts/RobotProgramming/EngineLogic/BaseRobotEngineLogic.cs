@@ -15,7 +15,6 @@ namespace Cosmobot
     {
         private ManualResetEvent _taskCompletedEvent;
         private CancellationToken _cancellationToken;
-        private SynchronizationContext _mainThreadContext;
         private Wrapper wrapper; 
 
         [SerializeField] private Transform target; //temporary for testing
@@ -110,5 +109,49 @@ namespace Cosmobot
             }
             _taskCompletedEvent.Set();
         }
+
+        /*
+        
+        item find()
+        List<item> findAll()
+
+        pickup(item?)
+        drop()
+
+        collect(item?)
+        insert()
+
+        dig()
+        build(building)
+
+        goto(object)
+        goToPosition(vec3)
+        moveForward(float)
+        moveBackwards(float)
+        TurnLeft(float)
+        TurnRight(float)
+
+        wait(float)
+
+        useBuilding(building?)
+
+        attack(enemy?)
+
+        log(string)
+        logWarning(string)
+        logError(string)
+
+        dance()
+
+        repair(object?)
+        disassemble(object?)
+
+        activate(object?)
+        deactivate(object?)
+
+        building.setParameter?
+        // if object is too far return error
+
+        */
     }
 }

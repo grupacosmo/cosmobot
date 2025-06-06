@@ -19,7 +19,6 @@ namespace Cosmobot
         private ManualResetEvent _taskCompletedEvent; //for waiting for Unity thread
         private CancellationTokenSource _cancellationTokenSource; //for thread killing
         private ConcurrentQueue<Action> _commandQueue = new ConcurrentQueue<Action>();
-        private Action currentCommand;
 
         Thread task;
 
@@ -41,7 +40,7 @@ namespace Cosmobot
 
         private void Update()
         {
-            if(_commandQueue.TryDequeue(out currentCommand))
+            if(_commandQueue.TryDequeue(out Action currentCommand))
             {
                 currentCommand();
             }

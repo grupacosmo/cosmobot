@@ -15,7 +15,6 @@ namespace Cosmobot
     {
         private ManualResetEvent _taskCompletedEvent;
         private CancellationToken _cancellationToken;
-        private SynchronizationContext _mainThreadContext;
         private Wrapper wrapper;
 
         public void SetupThread(ManualResetEvent taskEvent, CancellationToken token, ConcurrentQueue<Action> commandQueue)
