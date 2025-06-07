@@ -14,7 +14,6 @@ Shader "Cosmobot/Effect/Cavity"
         Tags { "RenderType"="Transparent" "Queue"="Transparent" }
         LOD 100
         ZWrite Off
-        Cull Off
         Blend SrcAlpha OneMinusSrcAlpha
 
         Pass
@@ -58,7 +57,7 @@ Shader "Cosmobot/Effect/Cavity"
                 float3 normal3D = SampleSceneNormals(uv);
                 if(normal3D.x == 0 && normal3D.y == 0 && normal3D.z == 0)
                 {
-                    return 0.5; //is this faster?
+                    return 0.5;
                 }
 
                 float2 left = SampleSceneNormalBuffer(uv + axisX, viewMatrix);
