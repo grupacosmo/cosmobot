@@ -120,7 +120,7 @@ Material:
     - _Glossiness: 0
     - _GlossinessSource: 0
     - _GlossyReflections: 0
-    - _Intensity: 5
+    - _Intensity: 2
     - _Metallic: 0
     - _Mode: 0
     - _NormalTreshold: 0.01
