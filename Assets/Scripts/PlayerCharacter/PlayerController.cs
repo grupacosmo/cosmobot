@@ -77,7 +77,7 @@ namespace Cosmobot
                 velocityDelta -= gravity * Time.fixedDeltaTime * groundNormal;
             }
             rb.AddForce(velocityDelta, ForceMode.VelocityChange);
-            animator.SetFloat(AnimatorSpeed, new Vector2(rb.velocity.x, rb.velocity.z).sqrMagnitude);
+            animator.SetFloat(AnimatorSpeed, new Vector2(rb.linearVelocity.x, rb.linearVelocity.z).sqrMagnitude);
         }
 
         private Vector3 CalculateVelocityDelta()
@@ -86,9 +86,9 @@ namespace Cosmobot
             cameraForward.y = 0f;
             inputDirection = Quaternion.LookRotation(cameraForward) * inputMove;
 
-            var targetVelocity = inputDirection * moveSpeed + new Vector3(0, rb.velocity.y, 0);
-            var velocityDelta = Vector3.MoveTowards(rb.velocity, targetVelocity,
-                acceleration * Time.fixedDeltaTime) - rb.velocity;
+            var targetVelocity = inputDirection * moveSpeed + new Vector3(0, rb.linearVelocity.y, 0);
+            var velocityDelta = Vector3.MoveTowards(rb.linearVelocity, targetVelocity,
+                acceleration * Time.fixedDeltaTime) - rb.linearVelocity;
             return velocityDelta;
         }
 
