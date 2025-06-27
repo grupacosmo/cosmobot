@@ -31,7 +31,7 @@ namespace Cosmobot
         public Dictionary<string, Delegate> GetFunctions()
         {
             return new Dictionary<string, Delegate>() {
-                { "isBlack", wrapper.Wrap<bool>(isBlack)},
+                { "isBlack", wrapper.Wrap(isBlack)},
                 { "ChangeBlack", wrapper.Wrap(ChangeBlack)},
                 { "ChangeWhite", wrapper.Wrap(ChangeWhite)}
             };

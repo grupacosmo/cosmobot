@@ -7,6 +7,7 @@ using UnityEngine;
 using Jint;
 using System.Reflection;
 using System.Collections.Concurrent;
+using UnityEditor;
 
 namespace Cosmobot
 {
@@ -53,17 +54,6 @@ namespace Cosmobot
             _cancellationTokenSource?.Cancel();
             staticDebugI = 0;
         }
-        /*
-        void OnGUI()
-        {
-            int h = 60; 
-            int w = 500; 
-            int y = (h * debugI) % 1000;
-            int x = (h * debugI) / 1000 * w + 10;
-            Rect pos = new Rect(x, y, w, h);
-            GUI.Label(pos, $"[{gameObject.name}] Task: {task.Status} {task.Exception}");
-        }
-        */
 
         private void jsThread(CancellationToken token)
         {

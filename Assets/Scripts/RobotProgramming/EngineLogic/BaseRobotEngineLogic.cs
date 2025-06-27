@@ -34,10 +34,10 @@ namespace Cosmobot
                 { "TurnRight", wrapper.Wrap(TurnRight)},
                 { "MoveForward", wrapper.Wrap(MoveForward)},
                 { "Seek", wrapper.Wrap(Seek)},
-                { "MoveToPoint", wrapper.Wrap<float, float, float>((x, y, z) => MoveToPoint(x, y, z))},
+                { "MoveToPoint", wrapper.Wrap<float, float, float>(MoveToPoint)},
                 { "GetRobotSpeed", wrapper.Wrap(GetRobotSpeed)},
                 { "GetRobotPosition", wrapper.Wrap(GetRobotPosition)},
-                { "MoveInDirection", wrapper.Wrap<Vector3>((x) => MoveInDirection(x))}
+                { "MoveInDirection", wrapper.Wrap<Vector3>(MoveInDirection)}
             };
         }
 
