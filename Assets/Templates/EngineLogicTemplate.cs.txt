@@ -10,27 +10,26 @@ namespace Cosmobot
 {
     [DisallowMultipleComponent]
     //[RequireComponent(typeof(BaseRobotEngineLogic))]
-    public class #SCRIPTNAME# : MonoBehaviour, EngineLogicInterface
+    public class #SCRIPTNAME# : MonoBehaviour, IEngineLogic
     {
-        private ManualResetEvent _taskCompletedEvent;
-        private CancellationToken _cancellationToken;
+        private ManualResetEvent taskCompletedEvent;
+        private CancellationToken cancellationToken;
         private Wrapper wrapper;
 
-        public void SetupThread(ManualResetEvent taskEvent, CancellationToken token, ConcurrentQueue<Action> commandQueue)
+        public void SetupThread(
+            ManualResetEvent taskEvent, CancellationToken token, ConcurrentQueue<Action> commandQueue)
         {
-            _taskCompletedEvent = taskEvent;
-            _cancellationToken = token;
-            wrapper = new Wrapper(_taskCompletedEvent, _cancellationToken, commandQueue);
+            taskCompletedEvent = taskEvent;
+            cancellationToken = token;
+            wrapper = new Wrapper(taskCompletedEvent, cancellationToken, commandQueue);
         }
 
         public Dictionary<string, Delegate> GetFunctions()
         {
             //Expose robot's ingame functions here
-            return new Dictionary<string, Delegate>() {
-                //{ "ExampleFunctionARG", wrapper.Wrap<ArgumentTypes>(ExampleFunctionARG)},
-                //{ "ExampleFunctionR", wrapper.Wrap(ExampleFunctionR)},
-                //{ "ExampleFunctionR_ARG", wrapper.Wrap<ReturnType, ArgumentTypes>(ExampleFunctionR_ARG)},
-                //{ "InGameFunctionName", wrapper.Wrap(csFunctionName)},
+            return new Dictionary<string, Delegate>()
+            {
+                //{ "ExampleFunctionARG", wrapper.Wrap(ExampleFunctionARG)},
                 //{ ... },
             };
         }
@@ -40,51 +39,11 @@ namespace Cosmobot
         // functions must only return void, primitives or types in Cosmobot.Api.Types
         // functions also must have a unique name
         // (!)remember to expose functions ingame in Dictionary above
-        // (!)remember to call "_taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
-        void ExampleFunctionARG(int x, int y, int z)
+        // (!)remember to call "taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
+        void ExampleFunctionARG()
         {
-            _taskCompletedEvent.Set();
+            taskCompletedEvent.Set();
         }
 
-        int ExampleFunctionR()
-        {
-            _taskCompletedEvent.Set();
-            return 0;
-        }
-
-        int ExampleFunctionR_ARG(int x, int y, int z)
-        {
-            _taskCompletedEvent.Set();
-            return 0;
-        }
-
-        //This will not work
-        Vector3 ApiTypesExampleBad()
-        {
-            _taskCompletedEvent.Set();
-            return Vector3.zero;
-        }
-
-        //This is okay
-        Vec3 ApiTypesExampleCorrect()
-        {
-            _taskCompletedEvent.Set();
-            return Vector3.zero;
-        }
-
-        //Coroutine implementation example
-        void CoroutineExample()
-        {
-            StartCoroutine(CoroutineExampleCoroutine());
-        }
-
-        public IEnumerator CoroutineExampleCoroutine()
-        {
-            if (Time.frameCount == 1)
-            {
-                yield return null;
-            }
-            _taskCompletedEvent.Set();
-        }
     }
 }

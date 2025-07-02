@@ -4,7 +4,7 @@ namespace Cosmobot.Api.Types
 {
     public struct Vec3
     {
-        float x, y, z;
+        public float x, y, z;
 
         public Vec3(float x, float y, float z)
         {
@@ -26,7 +26,7 @@ namespace Cosmobot.Api.Types
 
     public struct Vec2
     {
-        float x, y;
+        public float x, y;
 
         public Vec2(float x, float y)
         {

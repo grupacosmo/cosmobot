@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 using Cosmobot.Api.Types;
 using System.Collections.Concurrent;
@@ -11,10 +10,10 @@ namespace Cosmobot
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Programmable))]
-    public class BaseRobotEngineLogic : MonoBehaviour, EngineLogicInterface
+    public class BaseRobotEngineLogic : MonoBehaviour, IEngineLogic
     {
-        private ManualResetEvent _taskCompletedEvent;
-        private CancellationToken _cancellationToken;
+        private ManualResetEvent taskCompletedEvent;
+        private CancellationToken cancellationToken;
         private Wrapper wrapper; 
 
         [SerializeField] private Transform target; //temporary for testing
@@ -22,14 +21,14 @@ namespace Cosmobot
 
         public void SetupThread(ManualResetEvent taskEvent, CancellationToken token, ConcurrentQueue<Action> commandQueue)
         {
-            _taskCompletedEvent = taskEvent;
-            _cancellationToken = token;
-            wrapper = new Wrapper(_taskCompletedEvent, _cancellationToken, commandQueue);
+            taskCompletedEvent = taskEvent;
+            cancellationToken = token;
+            wrapper = new Wrapper(taskCompletedEvent, cancellationToken, commandQueue);
         }
 
         public Dictionary<string, Delegate> GetFunctions()
         {
-            return new Dictionary<string, Delegate>() {
+            return new Dictionary<string, Delegate>() { // TODO: implement in #91 - Robots API 
                 { "TurnLeft", wrapper.Wrap(TurnLeft)},
                 { "TurnRight", wrapper.Wrap(TurnRight)},
                 { "MoveForward", wrapper.Wrap(MoveForward)},
@@ -45,24 +44,24 @@ namespace Cosmobot
         public void TurnLeft()
         {
             transform.Rotate(Vector3.up, -90);
-            _taskCompletedEvent.Set();
+            taskCompletedEvent.Set();
         }
 
         public void TurnRight()
         {
             transform.Rotate(Vector3.up, -90);
-            _taskCompletedEvent.Set();
+            taskCompletedEvent.Set();
         }
 
         public float GetRobotSpeed()
         {
-            _taskCompletedEvent.Set();
+            taskCompletedEvent.Set();
             return speed;
         }
 
         public Vec3 GetRobotPosition()
         {
-            _taskCompletedEvent.Set();
+            taskCompletedEvent.Set();
             return transform.position;
         }
 
@@ -90,7 +89,7 @@ namespace Cosmobot
                 else transform.position += dir.normalized * speed * Time.deltaTime;
                 yield return null;
             }
-            _taskCompletedEvent.Set();
+            taskCompletedEvent.Set();
         }
 
         public void Seek()
@@ -107,10 +106,11 @@ namespace Cosmobot
                 else transform.position += dir.normalized * speed * Time.deltaTime;
                 yield return null;
             }
-            _taskCompletedEvent.Set();
+            taskCompletedEvent.Set();
         }
 
         /*
+        issue: #91 - Robots API
         
         item find()
         List<item> findAll()

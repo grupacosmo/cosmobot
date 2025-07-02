@@ -11,7 +11,7 @@ namespace Cosmobot
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(BaseRobotEngineLogic))]
-    public class FailTestEngineLogic : MonoBehaviour, EngineLogicInterface
+    public class FailTestEngineLogic : MonoBehaviour, IEngineLogic
     {
         private ManualResetEvent _taskCompletedEvent;
         private CancellationToken _cancellationToken;

@@ -1,25 +1,27 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 using Jint;
-using System.Reflection;
 using System.Collections.Concurrent;
-using UnityEditor;
 
 namespace Cosmobot
 {
+    /// <summary>
+    /// Base class for programmable devices (eg. robots).
+    ///
+    /// Attaches to a GameObject and allows it to be programmed using JavaScript.
+    /// Automatically searches for components implementing the EngineLogicInterface,
+    /// which provide methods that can be called from the JavaScript code.
+    /// </summary>
     public class Programmable : MonoBehaviour
     {
-        private EngineLogicInterface[] engineLogicInterfaces;
+        private IEngineLogic[] engineLogicInterfaces;
         [TextArea(10, 20)]
         [SerializeField] private string code;
 
-        private ManualResetEvent _taskCompletedEvent; //for waiting for Unity thread
-        private CancellationTokenSource _cancellationTokenSource; //for thread killing
-        private ConcurrentQueue<Action> _commandQueue = new ConcurrentQueue<Action>();
+        private ManualResetEvent taskCompletedEvent; //for waiting for Unity thread
+        private CancellationTokenSource cancellationTokenSource; //for thread killing
+        private ConcurrentQueue<Action> commandQueue = new ConcurrentQueue<Action>();
 
         Thread task;
 
@@ -27,21 +29,21 @@ namespace Cosmobot
         int debugI = 0;
         void Start()
         {
-            _taskCompletedEvent = new ManualResetEvent(false);
-            _cancellationTokenSource = new CancellationTokenSource();
+            taskCompletedEvent = new ManualResetEvent(false);
+            cancellationTokenSource = new CancellationTokenSource();
 
-            task = new Thread(() => jsThread(_cancellationTokenSource.Token));
+            task = new Thread(() => jsThread(cancellationTokenSource.Token));
             task.IsBackground = true;
             task.Start();
 
             debugI = staticDebugI++;
-            engineLogicInterfaces = GetComponents<EngineLogicInterface>();
+            engineLogicInterfaces = GetComponents<IEngineLogic>();
            
         }
 
         private void Update()
         {
-            if(_commandQueue.TryDequeue(out Action currentCommand))
+            if(commandQueue.TryDequeue(out Action currentCommand))
             {
                 currentCommand();
             }
@@ -50,8 +52,8 @@ namespace Cosmobot
         private void OnDestroy()
         {
             StopAllCoroutines();
-            _commandQueue.Clear();
-            _cancellationTokenSource?.Cancel();
+            commandQueue.Clear();
+            cancellationTokenSource?.Cancel();
             staticDebugI = 0;
         }
 
@@ -61,9 +63,9 @@ namespace Cosmobot
 
             using Engine jsEngine = new Engine();
             
-            foreach(EngineLogicInterface logicInterface in engineLogicInterfaces)
+            foreach(IEngineLogic logicInterface in engineLogicInterfaces)
             {
-                logicInterface.SetupThread(_taskCompletedEvent, token, _commandQueue);
+                logicInterface.SetupThread(taskCompletedEvent, token, commandQueue);
                 var functions = logicInterface.GetFunctions();
                 foreach (var function in functions)
                 {
