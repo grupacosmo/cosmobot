@@ -48,7 +48,7 @@ namespace Cosmobot
 
         public void ChangeWhite()
         {
-            gameObject.GetComponent<MeshRenderer>().material = white;
+            gameObject.GetComponent<Renderer>().material = white;
             taskCompletedEvent.Set();
         }
 
