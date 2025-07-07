@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
-using Cosmobot.Api.Types;
 using System.Collections.Concurrent;
 
 namespace Cosmobot
@@ -13,18 +10,18 @@ namespace Cosmobot
     [RequireComponent(typeof(BaseRobotEngineLogic))]
     public class FailTestEngineLogic : MonoBehaviour, IEngineLogic
     {
-        private ManualResetEvent _taskCompletedEvent;
-        private CancellationToken _cancellationToken;
-        private Wrapper wrapper;
+        private ManualResetEvent taskCompletedEvent;
+        private CancellationToken cancellationToken;
+        private ProgrammableFunctionWrapper wrapper;
 
         public void SetupThread(ManualResetEvent taskEvent, CancellationToken token, ConcurrentQueue<Action> commandQueue)
         {
-            _taskCompletedEvent = taskEvent;
-            _cancellationToken = token;
-            wrapper = new Wrapper(_taskCompletedEvent, _cancellationToken, commandQueue);
+            taskCompletedEvent = taskEvent;
+            cancellationToken = token;
+            wrapper = new ProgrammableFunctionWrapper(taskCompletedEvent, cancellationToken, commandQueue);
         }
 
-        public Dictionary<string, Delegate> GetFunctions()
+        public IReadOnlyDictionary<string, Delegate> GetFunctions()
         {
             return new Dictionary<string, Delegate>() {
                 { "VectorTest", wrapper.Wrap(TestFun)},
@@ -34,21 +31,21 @@ namespace Cosmobot
         }
 
         //ROBOT FUNCTIONS
-        public void TurnLeft()
+        private void TurnLeft()
         {
             transform.Rotate(Vector3.up, -90);
-            _taskCompletedEvent.Set();
+            taskCompletedEvent.Set();
         }
 
-        public void TurnRight()
+        private void TurnRight()
         {
             transform.Rotate(Vector3.up, -90);
-            _taskCompletedEvent.Set();
+            taskCompletedEvent.Set();
         }
 
-        Vector3 TestFun()
+        private Vector3 TestFun()
         {
-            _taskCompletedEvent.Set();
+            taskCompletedEvent.Set();
             return Vector3.one;
         }
     }

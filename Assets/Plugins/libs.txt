@@ -1,3 +1,0 @@
-- jint https://www.nuget.org/packages/Jint
-  - Acornima https://www.nuget.org/packages/Acornima/
-    - System.Runtime.CompilerServices.Unsafe https://www.nuget.org/packages/System.Runtime.CompilerServices.Unsafe/

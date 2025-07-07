@@ -14,7 +14,7 @@ namespace Cosmobot
     {
         private ManualResetEvent taskCompletedEvent;
         private CancellationToken cancellationToken;
-        private Wrapper wrapper; 
+        private ProgrammableFunctionWrapper wrapper; 
 
         [SerializeField] private Transform target; //temporary for testing
         [SerializeField] private float speed = 1; //temporary for testing
@@ -23,10 +23,10 @@ namespace Cosmobot
         {
             taskCompletedEvent = taskEvent;
             cancellationToken = token;
-            wrapper = new Wrapper(taskCompletedEvent, cancellationToken, commandQueue);
+            wrapper = new ProgrammableFunctionWrapper(taskCompletedEvent, cancellationToken, commandQueue);
         }
 
-        public Dictionary<string, Delegate> GetFunctions()
+        public IReadOnlyDictionary<string, Delegate> GetFunctions()
         {
             return new Dictionary<string, Delegate>() { // TODO: implement in #91 - Robots API 
                 { "TurnLeft", wrapper.Wrap(TurnLeft)},
@@ -49,7 +49,7 @@ namespace Cosmobot
 
         public void TurnRight()
         {
-            transform.Rotate(Vector3.up, -90);
+            transform.Rotate(Vector3.up, 90);
             taskCompletedEvent.Set();
         }
 
@@ -86,9 +86,10 @@ namespace Cosmobot
             {
                 Vector3 dir = to - transform.position;
                 if (dir.magnitude <= 0.1) transform.position = to;
-                else transform.position += dir.normalized * speed * Time.deltaTime;
+                else transform.position += speed * Time.deltaTime * dir.normalized;
                 yield return null;
             }
+            
             taskCompletedEvent.Set();
         }
 

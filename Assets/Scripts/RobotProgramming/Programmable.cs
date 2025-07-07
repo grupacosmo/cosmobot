@@ -27,12 +27,13 @@ namespace Cosmobot
 
         static int staticDebugI;
         int debugI = 0;
+        
         void Start()
         {
             taskCompletedEvent = new ManualResetEvent(false);
             cancellationTokenSource = new CancellationTokenSource();
 
-            task = new Thread(() => jsThread(cancellationTokenSource.Token));
+            task = new Thread(() => JsThread(cancellationTokenSource.Token));
             task.IsBackground = true;
             task.Start();
 
@@ -43,7 +44,7 @@ namespace Cosmobot
 
         private void Update()
         {
-            if(commandQueue.TryDequeue(out Action currentCommand))
+            if (commandQueue.TryDequeue(out Action currentCommand))
             {
                 currentCommand();
             }
@@ -57,7 +58,7 @@ namespace Cosmobot
             staticDebugI = 0;
         }
 
-        private void jsThread(CancellationToken token)
+        private void JsThread(CancellationToken token)
         {
             Thread.CurrentThread.Name = $"jsEngine-{debugI}";
 
@@ -105,6 +106,7 @@ namespace Cosmobot
 
         #if DEBUG
         const string RobotApiTypesNamespace = "Cosmobot.Api.Types";
+        
         private void ValidateFunction(string key, Delegate value, string name)
         {
             Type type = value.Method.ReturnType;

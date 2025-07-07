@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Video;
 
 namespace Cosmobot
 {
-    public class badapple : MonoBehaviour
+    public class GoodApple : MonoBehaviour
     {
         public RenderTexture renderTexture;
         public bool start;
@@ -29,12 +27,12 @@ namespace Cosmobot
             texture.Apply();
         }
 
-        public bool checkColor(float x, float y)
+        public bool CheckColor(float x, float y)
         {
             Color pixelColor = texture.GetPixel((int)(x * renderTexture.width), (int)(y * renderTexture.height));
             
             if (pixelColor.grayscale <= 0.5) return false;
-            else return true;
+            return true;
         }
     }
 }

@@ -4,13 +4,13 @@ using System.Threading;
 
 namespace Cosmobot
 {
-    public class Wrapper
+    public class ProgrammableFunctionWrapper
     {
         private ManualResetEvent taskCompletedEvent;
         private CancellationToken token;
         private ConcurrentQueue<Action> commandQueue;
 
-        public Wrapper(ManualResetEvent taskEvent, CancellationToken cancelToken, ConcurrentQueue<Action> commandQueue)
+        public ProgrammableFunctionWrapper(ManualResetEvent taskEvent, CancellationToken cancelToken, ConcurrentQueue<Action> commandQueue)
         {
             taskCompletedEvent = taskEvent;
             token = cancelToken;
@@ -142,6 +142,7 @@ namespace Cosmobot
                 return tr;
             };
         }
+        
         private void WaitForSync()
         {
             WaitHandle.WaitAny(new[] { taskCompletedEvent, token.WaitHandle });
