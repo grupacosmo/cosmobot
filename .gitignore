@@ -74,7 +74,9 @@ crashlytics-build.properties
 
 # Editors
 .vs/
-.vscode/
+.vscode/*
+.vscode/**/
+!.vscode/tasks.json
 .idea/
 
 # Auto-generated script
