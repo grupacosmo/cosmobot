@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using Cosmobot.Entity;
 using UnityEngine;
@@ -9,18 +7,18 @@ namespace Cosmobot
     [RequireComponent(typeof(TurretStats))]
     public class Tracking : MonoBehaviour
     {
-
-        public Health target { get; private set; } = null;
-        private TurretStats turretStats;
-        private HashSet<Health> targetsList = new();
+        private readonly HashSet<Health> targetsList = new();
+        private Quaternion defaultRotation;
+        private bool goMaxAngle  ;
         private Vector3 lastKnownPosition = Vector3.zero;
         private Quaternion lookAtRotation;
-        private Quaternion defaultRotation;
         private Quaternion maxAngleRotation;
         private Quaternion minAngleRotation;
-        private bool goMaxAngle = false;
+        private TurretStats turretStats;
 
-        void Start()
+        public Health target { get; private set; }
+
+        private void Start()
         {
             turretStats = GetComponent<TurretStats>();
             defaultRotation = transform.rotation;
@@ -28,12 +26,7 @@ namespace Cosmobot
             minAngleRotation = Quaternion.AngleAxis(turretStats.angleRange / 2 * -1, Vector3.up);
         }
 
-        private void Death(Health source, float oldHealth, float damageValue)
-        {
-            RemoveTargetFromList(source);
-        }
-
-        void Update()
+        private void Update()
         {
             ChooseTarget();
             if (target)
@@ -44,6 +37,30 @@ namespace Cosmobot
             {
                 IdleScanning();
             }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.gameObject.CompareTag("Enemy"))
+            {
+                if (UpdateTargetRange(other.gameObject.GetComponent<Health>()))
+                {
+                    AddTargetToList(other.gameObject.GetComponent<Health>());
+                }
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.gameObject.CompareTag("Enemy"))
+            {
+                RemoveTargetFromList(other.gameObject.GetComponent<Health>());
+            }
+        }
+
+        private void Death(Health source, float oldHealth, float damageValue)
+        {
+            RemoveTargetFromList(source);
         }
 
         private void IdleScanning()
@@ -67,9 +84,11 @@ namespace Cosmobot
                     RemoveTargetFromList(target);
                 }
             }
+
             if (transform.rotation != lookAtRotation)
             {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, lookAtRotation, turretStats.speed * Time.deltaTime);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, lookAtRotation,
+                    turretStats.speed * Time.deltaTime);
             }
         }
 
@@ -79,7 +98,7 @@ namespace Cosmobot
         }
 
         /// <summary>
-        /// Chooses which enemy in range should be targeted based on distance (shortest distance)
+        ///     Chooses which enemy in range should be targeted based on distance (shortest distance)
         /// </summary>
         private void ChooseTarget()
         {
@@ -94,12 +113,14 @@ namespace Cosmobot
                     closestTarget = potentialTarget;
                 }
             }
+
             Health oldTarget = target;
             SetTarget(closestTarget);
             if (oldTarget)
             {
                 oldTarget.OnDeath -= Death;
             }
+
             if (target)
             {
                 target.OnDeath += Death;
@@ -119,10 +140,12 @@ namespace Cosmobot
         private bool UpdateTargetRange(Health target)
         {
             UpdateTargetPosition(target);
-            if (Quaternion.Angle(defaultRotation, lookAtRotation) <= turretStats.angleRange / 2 && Quaternion.Angle(defaultRotation, lookAtRotation) >= turretStats.angleRange / 2 * -1)
+            if (Quaternion.Angle(defaultRotation, lookAtRotation) <= turretStats.angleRange / 2
+                && Quaternion.Angle(defaultRotation, lookAtRotation) >= turretStats.angleRange / 2 * -1)
             {
                 return true;
             }
+
             return false;
         }
 
@@ -134,7 +157,8 @@ namespace Cosmobot
 
         private void IdleScanningMin()
         {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, minAngleRotation, turretStats.speed * Time.deltaTime);
+            transform.rotation =
+                Quaternion.RotateTowards(transform.rotation, minAngleRotation, turretStats.speed * Time.deltaTime);
             if (transform.rotation == minAngleRotation)
             {
                 goMaxAngle = true;
@@ -143,29 +167,11 @@ namespace Cosmobot
 
         private void IdleScanningMax()
         {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, maxAngleRotation, turretStats.speed * Time.deltaTime);
+            transform.rotation =
+                Quaternion.RotateTowards(transform.rotation, maxAngleRotation, turretStats.speed * Time.deltaTime);
             if (transform.rotation == maxAngleRotation)
             {
                 goMaxAngle = false;
-            }
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.gameObject.CompareTag("Enemy"))
-            {
-                if (UpdateTargetRange(other.gameObject.GetComponent<Health>()))
-                {
-                    AddTargetToList(other.gameObject.GetComponent<Health>());
-                }
-            }
-        }
-
-        private void OnTriggerExit(Collider other)
-        {
-            if (other.gameObject.CompareTag("Enemy"))
-            {
-                RemoveTargetFromList(other.gameObject.GetComponent<Health>());
             }
         }
     }

@@ -3,8 +3,8 @@ using System;
 namespace Cosmobot
 {
     /// <summary>
-    /// Allows to access values in a <c>SerializableDictionary&ltstring, string&gt</c> with a specified type by using
-    /// [] operator. Values are converted to the specified type when getting them and to string when setting them.
+    ///     Allows to access values in a <c>SerializableDictionary&ltstring, string&gt</c> with a specified type by using
+    ///     [] operator. Values are converted to the specified type when getting them and to string when setting them.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class ValueAccessor<T>

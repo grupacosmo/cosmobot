@@ -1,36 +1,39 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting.YamlDotNet.Core.Tokens;
-using UnityEngine.InputSystem;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Cosmobot
 {
     public class RobotRoutingTool : MonoBehaviour
     {
-        [Header("HOW TO USE:\nF - switch to new robot\nLeft MB - add waypoint\nRight MB - set route\nF1/F2 - swap grab/release modes\n")]
+        [Header(
+            "HOW TO USE:\nF - switch to new robot\nLeft MB - add waypoint\nRight MB - set route\nF1/F2 - swap grab/release modes\n")]
         public bool isOn;
+
         public float maxPointDistance = 20f;
-        public GameObject currentRobot = null;
+        public GameObject currentRobot  ;
 
         [Header("Waypoint Modes")]
         public bool resetModesAtWaypoints;
+
         public bool grabAtWaypoint;
         public bool releaseAtWaypoint;
 
         [Header("Route")]
         public List<Route> currentRoute = new List<Route>();
+
         public LayerMask floorLayer;
         public string robotTag;
 
         [Header("Route Preview")]
         public bool clearRoutePreviewAfterApplying;
-        private LineRenderer lineRenderer;
 
         [SerializeField]
         private LayerMask robotSelectorMask;
 
-        void Start()
+        private LineRenderer lineRenderer;
+
+        private void Start()
         {
             lineRenderer = GetComponent<LineRenderer>();
         }

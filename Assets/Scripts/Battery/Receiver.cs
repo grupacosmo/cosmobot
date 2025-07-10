@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Cosmobot
@@ -8,7 +6,12 @@ namespace Cosmobot
     public class Receiver : MonoBehaviour, IEnergyReceiver
     {
         private ReceiverStats receiverStats;
-        
+
+        private void Start()
+        {
+            receiverStats = GetComponent<ReceiverStats>();
+        }
+
         public float CollectEnergy(float amount)
         {
             float rest = 0;
@@ -21,12 +24,8 @@ namespace Cosmobot
             {
                 receiverStats.currentCapacity += amount;
             }
-            return rest;
-        }
 
-        void Start()
-        {
-            receiverStats = GetComponent<ReceiverStats>();
+            return rest;
         }
     }
 }

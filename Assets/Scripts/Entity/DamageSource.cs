@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 namespace Cosmobot.Entity
@@ -6,7 +5,7 @@ namespace Cosmobot.Entity
     public struct DamageSource
     {
         public static readonly DamageSource Empty = new DamageSource(null, "null");
-        public Object Source { get; private set; }
+        public Object Source { get; }
         public string Name { get; private set; }
 
         public bool IsEmpty => Source == null;

@@ -7,7 +7,7 @@ namespace Cosmobot.ItemSystem
         public readonly string Id;
         public readonly string Name;
         public readonly IReadOnlyList<CraftingRecipe> Recipes;
-        
+
         public CraftingRecipeGroup(string id, string name, List<CraftingRecipe> recipes)
         {
             Id = id;

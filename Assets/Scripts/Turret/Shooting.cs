@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using Cosmobot.Entity;
 using UnityEngine;
 
@@ -9,19 +7,19 @@ namespace Cosmobot
     [RequireComponent(typeof(Tracking), typeof(TurretStats), typeof(ParticleSystem))]
     public class Shooting : MonoBehaviour
     {
+        private bool canFire = true;
         private ParticleSystem particleSystem;
         private Tracking tracking;
         private TurretStats turretStats;
-        private bool canFire = true;
 
-        void Start()
+        private void Start()
         {
             tracking = GetComponent<Tracking>();
             particleSystem = GetComponent<ParticleSystem>();
             turretStats = GetComponent<TurretStats>();
         }
 
-        void Update()
+        private void Update()
         {
             if (canFire && tracking.target != null)
             {

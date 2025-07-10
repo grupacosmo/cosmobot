@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Cosmobot
@@ -19,6 +17,7 @@ namespace Cosmobot
                     {
                         state = EnemyBehaviourStates.REST;
                     }
+
                     break;
                 case EnemyBehaviourStates.REST:
                     Wander();
@@ -26,9 +25,11 @@ namespace Cosmobot
                     {
                         state = EnemyBehaviourStates.ATTACK;
                     }
+
                     break;
             }
         }
+
         public override void MoveTo(Vector3 targetPosition)
         {
             Debug.Log("moving to " + targetPosition);

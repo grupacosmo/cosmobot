@@ -6,13 +6,14 @@ namespace Cosmobot
     [RequireComponent(typeof(Collider))]
     public class TestInteraction : MonoBehaviour, IInteractable
     {
-        private int i=0;
-        private int j=0;
+        private int i;
         private bool isInteractionPossible = true;
-        public string Prompt {get; private set;} = "Press 'E' to interact";
+        private int j;
+        public string Prompt { get; private set; } = "Press 'E' to interact";
+
         public void Use()
         {
-            if(isInteractionPossible)
+            if (isInteractionPossible)
             {
                 StartCoroutine(InteractionPossible());
             }
@@ -20,7 +21,6 @@ namespace Cosmobot
             {
                 StartCoroutine(InteractionImpossible());
             }
-            
         }
 
         private IEnumerator InteractionImpossible()

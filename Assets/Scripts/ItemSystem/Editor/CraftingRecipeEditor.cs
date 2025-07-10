@@ -1,7 +1,7 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using JetBrains.Annotations;
 using UnityEditor;
@@ -12,23 +12,29 @@ namespace Cosmobot.ItemSystem.Editor
     public class CraftingRecipeEditor : EditorWindow
     {
         private const string PrefsKeyFilePath = "cosmos_crafting_recipe_editor_file_path";
-        
-        private CraftingRecipeSerializationObject serializationObject = null;
-        [CanBeNull] private string filePath = null;
-        
-        private RecipeEditorTab selectedTab = RecipeEditorTab.Recipes;
-
-        private Vector2 recipeListScrollPosition = Vector2.zero;
-        private Vector2 recipeInputScrollPosition = Vector2.zero;
-        private Vector2 recipeOutputScrollPosition = Vector2.zero;
-        private Vector2 groupListScrollPosition = Vector2.zero;
-        private Vector2 groupRecipesInListScrollPosition = Vector2.zero;
-        private Vector2 groupRecipesAvailableListScrollPosition = Vector2.zero;
-        
-        private bool recipeSelected = false;
-        private int selectedRecipeIndex = -1;
 
         private const float ListWidthPercent = 0.3f;
+        private CraftingRecipeSerializationGroup currentGroup;
+
+        [CanBeNull]
+        private string filePath  ;
+
+        private Vector2 groupListScrollPosition = Vector2.zero;
+        private Vector2 groupRecipesAvailableListScrollPosition = Vector2.zero;
+        private Vector2 groupRecipesInListScrollPosition = Vector2.zero;
+
+        private bool groupSelected  ;
+        private Vector2 recipeInputScrollPosition = Vector2.zero;
+
+        private Vector2 recipeListScrollPosition = Vector2.zero;
+        private Vector2 recipeOutputScrollPosition = Vector2.zero;
+
+        private bool recipeSelected  ;
+        private int selectedRecipeIndex = -1;
+
+        private RecipeEditorTab selectedTab = RecipeEditorTab.Recipes;
+
+        private CraftingRecipeSerializationObject serializationObject  ;
         private float DetailWidth => position.width * (1 - ListWidthPercent);
 
         // do not use when recipeSelected is false
@@ -38,10 +44,13 @@ namespace Cosmobot.ItemSystem.Editor
             set => serializationObject.Recipes[selectedRecipeIndex] = value;
         }
 
-        private bool groupSelected = false;
-        private CraftingRecipeSerializationGroup currentGroup;
-        
-        
+        public void OnGUI()
+        {
+            OnTitleBarGUI();
+            OnEditorGUI();
+        }
+
+
         [MenuItem("Cosmo/Crafting Recipe Editor")]
         private static void ShowWindow()
         {
@@ -49,26 +58,21 @@ namespace Cosmobot.ItemSystem.Editor
             window.Show();
         }
 
-        public void OnGUI()
-        {
-            OnTitleBarGUI();
-            OnEditorGUI();
-        }
-        
         private void OnTitleBarGUI()
         {
             GUILayout.BeginHorizontal(EditorStyles.toolbar);
             GUILayout.Label("Crafting Recipe Editor", EditorStyles.largeLabel);
-            
+
             if (GUILayout.Button(SelectFileButtonText(), EditorStyles.toolbarButton))
             {
                 Open();
             }
-            
+
             if (GUILayout.Button("Save", EditorStyles.toolbarButton))
             {
                 Save();
             }
+
             GUILayout.EndHorizontal();
         }
 
@@ -80,12 +84,12 @@ namespace Cosmobot.ItemSystem.Editor
                 GUILayout.Label("No file selected");
                 return;
             }
-            
-            selectedTab = (RecipeEditorTab) GUILayout.SelectionGrid(
-                (int)selectedTab, new []{"Recipes", "Groups"}, 2, EditorStyles.toolbarButton);
+
+            selectedTab = (RecipeEditorTab)GUILayout.SelectionGrid(
+                (int)selectedTab, new[] { "Recipes", "Groups" }, 2, EditorStyles.toolbarButton);
 
             GUILayout.Space(10);
-            switch(selectedTab)
+            switch (selectedTab)
             {
                 case RecipeEditorTab.Recipes: OnRecipeGUI(); break;
                 case RecipeEditorTab.Groups: OnGroupsGUI(); break;
@@ -97,11 +101,41 @@ namespace Cosmobot.ItemSystem.Editor
             }
         }
 
+        #region GuiHelpers
+
+        // ========================================
+        // GUI Helpers
+        // ========================================
+
+        private void TwoColumnGUI(float split, float availableWidth, Action onLeftColumnGUI, Action onRightColumnGUI)
+        {
+            float listRectWidth = availableWidth * split;
+            float detailRectWidth = availableWidth - listRectWidth - 1;
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginVertical(GUILayout.Width(listRectWidth));
+            onLeftColumnGUI();
+            EditorGUILayout.EndVertical();
+
+            EditorGUILayout.Space(1);
+
+            EditorGUILayout.BeginVertical(GUILayout.Width(detailRectWidth));
+            onRightColumnGUI();
+            EditorGUILayout.EndVertical();
+            Rect lastRect = GUILayoutUtility.GetLastRect();
+            EditorGUI.DrawRect(new Rect(lastRect.x - 2, lastRect.y, 2, lastRect.height), Color.black);
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        #endregion
+
         #region RecipeGUI
+
         // ========================================
         // Recipe GUI
         // ========================================
-        
+
         private void OnRecipeGUI()
         {
             TwoColumnGUI(ListWidthPercent, position.width, OnRecipeListGUI, OnRecipeDetailGUI);
@@ -110,9 +144,9 @@ namespace Cosmobot.ItemSystem.Editor
         private void OnRecipeListGUI()
         {
             GUILayout.Label("Recipes", EditorStyles.boldLabel);
-            
+
             recipeListScrollPosition = GUILayout.BeginScrollView(recipeListScrollPosition);
-            for (int i = 0 ; i < serializationObject.Recipes.Count; i++)
+            for (int i = 0; i < serializationObject.Recipes.Count; i++)
             {
                 CraftingRecipe recipe = serializationObject.Recipes[i];
                 string buttonName = $"{recipe.Name} ({recipe.Id})";
@@ -124,9 +158,9 @@ namespace Cosmobot.ItemSystem.Editor
                     recipeSelected = true;
                 }
             }
-            
+
             EditorGUILayout.EndScrollView();
-            
+
             if (GUILayout.Button("Add recipe"))
             {
                 AddNewRecipe();
@@ -146,12 +180,13 @@ namespace Cosmobot.ItemSystem.Editor
             currentRecipe.Id = EditorGUILayout.TextField("ID", currentRecipe.Id);
             currentRecipe.Name = EditorGUILayout.TextField("Name", currentRecipe.Name);
             currentRecipe.EnergyCost = EditorGUILayout.IntField("Energy Cost", currentRecipe.EnergyCost);
-            
+
             TwoColumnGUI(0.5f, DetailWidth,
-                () => OnRecipeDetailItemListGUI(currentRecipe.Ingredients, "Ingredients", ref recipeInputScrollPosition),
+                () => OnRecipeDetailItemListGUI(currentRecipe.Ingredients, "Ingredients",
+                    ref recipeInputScrollPosition),
                 () => OnRecipeDetailItemListGUI(currentRecipe.Result, "Result", ref recipeOutputScrollPosition)
             );
-            
+
             CurrentRecipe = currentRecipe;
         }
 
@@ -168,8 +203,10 @@ namespace Cosmobot.ItemSystem.Editor
                 {
                     list.RemoveAt(i);
                 }
+
                 EditorGUILayout.EndHorizontal();
             }
+
             EditorGUILayout.EndScrollView();
             if (GUILayout.Button("Add " + label))
             {
@@ -180,10 +217,11 @@ namespace Cosmobot.ItemSystem.Editor
         #endregion
 
         #region GroupsGUI
+
         // ========================================
         // Groups GUI
         // ========================================
-        
+
         private void OnGroupsGUI()
         {
             TwoColumnGUI(0.25f, position.width, OnGroupsListGUI, OnGroupsDetailGUI);
@@ -205,12 +243,12 @@ namespace Cosmobot.ItemSystem.Editor
                     groupSelected = true;
                 }
             }
-            
+
             if (GUILayout.Button("Add Group"))
             {
                 AddNewGroup();
             }
-            
+
             GUILayout.EndScrollView();
         }
 
@@ -239,7 +277,7 @@ namespace Cosmobot.ItemSystem.Editor
         private void OnGroupsDetailRecipeSelectorInListGUI()
         {
             float lineHeight = EditorGUIUtility.singleLineHeight;
-            
+
             GUILayout.Label("Recipes in group", EditorStyles.boldLabel);
             groupRecipesInListScrollPosition = EditorGUILayout.BeginScrollView(groupRecipesInListScrollPosition);
             for (int i = 0; i < currentGroup.Recipes.Count; i++)
@@ -250,22 +288,25 @@ namespace Cosmobot.ItemSystem.Editor
                 {
                     currentGroup.Recipes.RemoveAt(i);
                 }
+
                 EditorGUILayout.EndHorizontal();
             }
+
             EditorGUILayout.EndScrollView();
         }
-        
+
         private void OnGroupsDetailRecipeSelectorAvailableListGUI()
         {
             float lineHeight = EditorGUIUtility.singleLineHeight;
-            
+
             GUILayout.Label("Available recipes", EditorStyles.boldLabel);
-            groupRecipesAvailableListScrollPosition = EditorGUILayout.BeginScrollView(groupRecipesAvailableListScrollPosition);
-            IEnumerable<string> availableRecipes = 
+            groupRecipesAvailableListScrollPosition =
+                EditorGUILayout.BeginScrollView(groupRecipesAvailableListScrollPosition);
+            IEnumerable<string> availableRecipes =
                 serializationObject.Recipes
-                    .Select(r=>r.Id)
+                    .Select(r => r.Id)
                     .Except(currentGroup.Recipes);
-            
+
             foreach (string recipe in availableRecipes)
             {
                 EditorGUILayout.BeginHorizontal();
@@ -273,54 +314,28 @@ namespace Cosmobot.ItemSystem.Editor
                 {
                     currentGroup.Recipes.Add(recipe);
                 }
-                
+
                 EditorGUILayout.LabelField(recipe);
                 EditorGUILayout.EndHorizontal();
             }
+
             EditorGUILayout.EndScrollView();
         }
 
         #endregion
-        
-        #region GuiHelpers
-        // ========================================
-        // GUI Helpers
-        // ========================================
-        
-        private void TwoColumnGUI(float split, float availableWidth, Action onLeftColumnGUI, Action onRightColumnGUI)
-        {
-            float listRectWidth = availableWidth * split;
-            float detailRectWidth = availableWidth - listRectWidth - 1;
-            
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.BeginVertical(GUILayout.Width(listRectWidth));
-            onLeftColumnGUI();
-            EditorGUILayout.EndVertical();
-            
-            EditorGUILayout.Space(1);
-            
-            EditorGUILayout.BeginVertical(GUILayout.Width(detailRectWidth));
-            onRightColumnGUI();
-            EditorGUILayout.EndVertical();
-            Rect lastRect = GUILayoutUtility.GetLastRect();
-            EditorGUI.DrawRect(new Rect(lastRect.x-2, lastRect.y, 2, lastRect.height), Color.black);
-            
-            EditorGUILayout.EndHorizontal();
-        }  
 
-        #endregion
-        
         #region AssetManagment
+
         // ========================================
         // Asset Management
         // ========================================
-        
+
         private void Open()
         {
             filePath = EditorPrefs.GetString(PrefsKeyFilePath);
             filePath = EditorUtility.SaveFilePanel(
                 "Choose Crafting Recipe File", filePath ?? "", "recipes.json", "json");
-            
+
             if (string.IsNullOrEmpty(filePath)) return;
             if (!File.Exists(filePath))
             {
@@ -328,7 +343,7 @@ namespace Cosmobot.ItemSystem.Editor
             }
 
             serializationObject = CraftingRecipeSerializer.Deserialize(filePath);
-            
+
             // save filePath in editor config
             EditorPrefs.SetString(PrefsKeyFilePath, filePath);
         }
@@ -340,18 +355,21 @@ namespace Cosmobot.ItemSystem.Editor
                 Debug.LogError("Cannot save null serialization object");
                 return;
             }
-            
+
             CraftingRecipeSerializer.Serialize(filePath, serializationObject);
         }
 
-        private string SelectFileButtonText() => filePath is null ? "Select file" : Path.GetFileName(filePath);
-        
+        private string SelectFileButtonText()
+        {
+            return filePath is null ? "Select file" : Path.GetFileName(filePath);
+        }
+
         private void AddNewRecipe()
         {
             CraftingRecipe currentRecipe = new();
             currentRecipe.Ingredients = new List<string>();
             currentRecipe.Result = new List<string>();
-            
+
             serializationObject.Recipes.Add(currentRecipe);
             selectedRecipeIndex = serializationObject.Recipes.Count - 1;
             recipeSelected = true;
@@ -365,10 +383,10 @@ namespace Cosmobot.ItemSystem.Editor
             currentGroup = group;
             groupSelected = true;
         }
-        
+
         #endregion
     }
-    
+
     internal enum RecipeEditorTab
     {
         Recipes,

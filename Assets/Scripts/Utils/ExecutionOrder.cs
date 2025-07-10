@@ -1,10 +1,9 @@
 namespace Cosmobot
 {
     /// <summary>
-    /// Constants for the execution order of scripts.
-    /// 
-    /// - Use the most descriptive name possible. 
-    /// - Use other constants to define the order.
+    ///     Constants for the execution order of scripts.
+    ///     - Use the most descriptive name possible.
+    ///     - Use other constants to define the order.
     /// </summary>
     public static class ExecutionOrder
     {

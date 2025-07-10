@@ -10,7 +10,7 @@ namespace Cosmobot
         public Vector2Int GridSize => buildingInfo.GridSize;
 
         // Remove the building, without destruction effects or dropping resources, etc.
-        public void Despawn() 
+        public void Despawn()
         {
             Destroy(gameObject);
         }

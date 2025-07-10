@@ -12,32 +12,51 @@ namespace Cosmobot
             CameraDirection
         }
 
-        [SerializeField] private float moveSpeed;
-        [SerializeField] private float acceleration;
-        [SerializeField] private float jumpForce;
-        [SerializeField] private float gravity;
-        [SerializeField] private float maxFloorAngleDegrees;
-        [SerializeField] private float playerRotationSpeed;
-        [SerializeField] private RotationMode rotationMode;
+        private static readonly int AnimatorSpeed = Animator.StringToHash("speed");
+        private static readonly int AnimatorJump = Animator.StringToHash("jump");
 
-        [SerializeField] private Transform cameraTransform;
-        [SerializeField] private Transform groundCheckOrigin;
-        [SerializeField] private Animator animator;
-        
-        private Vector3 inputMove = Vector3.zero;
+        [SerializeField]
+        private float moveSpeed;
+
+        [SerializeField]
+        private float acceleration;
+
+        [SerializeField]
+        private float jumpForce;
+
+        [SerializeField]
+        private float gravity;
+
+        [SerializeField]
+        private float maxFloorAngleDegrees;
+
+        [SerializeField]
+        private float playerRotationSpeed;
+
+        [SerializeField]
+        private RotationMode rotationMode;
+
+        [SerializeField]
+        private Transform cameraTransform;
+
+        [SerializeField]
+        private Transform groundCheckOrigin;
+
+        [SerializeField]
+        private Animator animator;
+
+        private DefaultInputActions actions;
+        private float groundCheckDistance;
+        private float groundCheckRadius;
+        private Vector3 groundNormal = Vector3.up;
         private Vector3 inputDirection = Vector3.zero;
         private bool inputJump;
 
+        private Vector3 inputMove = Vector3.zero;
+
         private bool isGrounded;
-        private Vector3 groundNormal = Vector3.up;
-        private float groundCheckRadius;
-        private float groundCheckDistance;
 
         private Rigidbody rb;
-
-        private DefaultInputActions actions;
-        private static readonly int AnimatorSpeed = Animator.StringToHash("speed");
-        private static readonly int AnimatorJump = Animator.StringToHash("jump");
 
         private void Start()
         {
@@ -61,6 +80,33 @@ namespace Cosmobot
             ProcessMovement();
         }
 
+        private void OnEnable()
+        {
+            if (actions is null)
+            {
+                actions = new DefaultInputActions();
+                actions.PlayerMovement.SetCallbacks(this);
+            }
+
+            actions.PlayerMovement.Enable();
+        }
+
+        private void OnDisable()
+        {
+            actions.PlayerMovement.Disable();
+        }
+
+        public void OnMovement(InputAction.CallbackContext context)
+        {
+            var inputMoveRaw = context.action.ReadValue<Vector2>();
+            inputMove = new Vector3(inputMoveRaw.x, 0, inputMoveRaw.y);
+        }
+
+        public void OnJump(InputAction.CallbackContext context)
+        {
+            inputJump = context.performed;
+        }
+
         private void ProcessMovement()
         {
             var velocityDelta = CalculateVelocityDelta();
@@ -76,6 +122,7 @@ namespace Cosmobot
             {
                 velocityDelta -= gravity * Time.fixedDeltaTime * groundNormal;
             }
+
             rb.AddForce(velocityDelta, ForceMode.VelocityChange);
             animator.SetFloat(AnimatorSpeed, new Vector2(rb.linearVelocity.x, rb.linearVelocity.z).sqrMagnitude);
         }
@@ -110,7 +157,7 @@ namespace Cosmobot
 
             if (!isGrounded) groundNormal = Vector3.up;
         }
-        
+
         public void SetRotationMode(RotationMode mode)
         {
             rotationMode = mode;
@@ -122,40 +169,14 @@ namespace Cosmobot
             {
                 if (inputDirection.sqrMagnitude <= 0.01f) return;
                 var toRotation = Quaternion.LookRotation(inputDirection);
-                transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, playerRotationSpeed * Time.deltaTime);
+                transform.rotation =
+                    Quaternion.Slerp(transform.rotation, toRotation, playerRotationSpeed * Time.deltaTime);
             }
             else
             {
                 var faceDirection = new Vector3(cameraTransform.forward.x, 0, cameraTransform.forward.z).normalized;
                 transform.rotation = Quaternion.LookRotation(faceDirection);
             }
-        }
-
-        public void OnMovement(InputAction.CallbackContext context)
-        {
-            var inputMoveRaw = context.action.ReadValue<Vector2>();
-            inputMove = new Vector3(inputMoveRaw.x, 0, inputMoveRaw.y);
-        }
-
-        public void OnJump(InputAction.CallbackContext context)
-        {
-            inputJump = context.performed;
-        }
-
-        private void OnEnable()
-        {
-            if (actions is null)
-            {
-                actions = new DefaultInputActions();
-                actions.PlayerMovement.SetCallbacks(this);
-            }
-
-            actions.PlayerMovement.Enable();
-        }
-
-        private void OnDisable()
-        {
-            actions.PlayerMovement.Disable();
         }
     }
 }

@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Cosmobot
@@ -9,9 +6,9 @@ namespace Cosmobot
     {
         [SerializeField]
         private float clickInterval = 1f;
-        private IInteractable target;
 
         private float currentClickInterval = 1f;
+        private IInteractable target;
 
         private void Awake()
         {

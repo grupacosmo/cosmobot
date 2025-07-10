@@ -6,25 +6,24 @@ namespace Cosmobot.Entity
 {
     public class HealthBar : MonoBehaviour
     {
-
         [Tooltip("Number of decimal places to display in the health text.")]
-        public int accuracy = 0;
+        public int accuracy  ;
+
+        [SerializeField]
+        private Slider uiHealthBar;
+
+        [SerializeField]
+        private TMP_Text uiHealthText;
+
+
+        [SerializeField]
+        private Health targetHealth;
 
         public Health TargetHealth
         {
             get => targetHealth;
             set => SetTargetHealth(value);
         }
-
-        [SerializeField]
-        private Slider uiHealthBar;
-        [SerializeField]
-
-        private TMP_Text uiHealthText;
-
-
-        [SerializeField]
-        private Health targetHealth;
 
         private void Start()
         {
@@ -34,7 +33,6 @@ namespace Cosmobot.Entity
                     this))
             {
                 enabled = false;
-                return;
             }
         }
 
@@ -70,7 +68,7 @@ namespace Cosmobot.Entity
 
         private void SetTargetHealth(Health value)
         {
-            if (targetHealth == value || value == null)  return;
+            if (targetHealth == value || value == null) return;
             if (targetHealth != null && enabled)
             {
                 targetHealth.OnHealthChange -= OnHealthChange;
@@ -78,7 +76,8 @@ namespace Cosmobot.Entity
             }
 
             targetHealth = value;
-            if (enabled) {
+            if (enabled)
+            {
                 targetHealth.OnHealthChange += OnHealthChange;
                 targetHealth.OnReset += OnHealthChange;
                 UpdateUI();

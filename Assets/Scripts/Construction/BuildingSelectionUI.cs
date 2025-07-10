@@ -10,20 +10,35 @@ namespace Cosmobot
 {
     public class BuildingSelectionUI : MonoBehaviour
     {
-        [SerializeField] private string[] BuildingInfoDirectory = { };
-        [SerializeField] private SerializableDictionary<string, BuildingInfo> BuildingInfoFiles;
-        [SerializeField] private SerializableDictionary<string, Button> ButtonInfo;
-        [SerializeField] private GameObject Player;
-        [SerializeField] private Camera Camera;
-        [SerializeField] private Button exitButton;
-        [SerializeField] private Button buildingButton;
-        [SerializeField] private GameObject buttonContainer;
+        [SerializeField]
+        private string[] BuildingInfoDirectory = { };
+
+        [SerializeField]
+        private SerializableDictionary<string, BuildingInfo> BuildingInfoFiles;
+
+        [SerializeField]
+        private SerializableDictionary<string, Button> ButtonInfo;
+
+        [SerializeField]
+        private GameObject Player;
+
+        [SerializeField]
+        private Camera Camera;
+
+        [SerializeField]
+        private Button exitButton;
+
+        [SerializeField]
+        private Button buildingButton;
+
+        [SerializeField]
+        private GameObject buttonContainer;
 
         private PlayerCamera playerCamera;
         private PlayerConstructionHandler playerConstructionHandler;
 
-        void Start()
-        {   
+        private void Start()
+        {
             LoadBuildings();
             LoadButtons();
             exitButton.onClick.AddListener(Close);
@@ -32,16 +47,26 @@ namespace Cosmobot
             playerConstructionHandler = Player.GetComponent<PlayerConstructionHandler>();
         }
 
-        void LateUpdate()
+        private void LateUpdate()
         {
-            if (gameObject.activeSelf == true) {
+            if (gameObject.activeSelf)
+            {
                 playerCamera.ChangeLock(true);
             }
         }
-        
+
+        private void OnDestroy()
+        {
+            exitButton.onClick.RemoveListener(Close);
+            foreach (KeyValuePair<string, Button> button in ButtonInfo)
+            {
+                Destroy(button.Value);
+            }
+        }
+
         private void LoadBuildings()
         {
-            IEnumerable<BuildingInfo> buildings = 
+            IEnumerable<BuildingInfo> buildings =
                 AssetDatabase.FindAssets("t:BuildingInfo", BuildingInfoDirectory)
                     .Select(guid => AssetDatabase.GUIDToAssetPath(guid))
                     .Select(path => AssetDatabase.LoadAssetAtPath<BuildingInfo>(path));
@@ -75,15 +100,6 @@ namespace Cosmobot
         {
             playerCamera.ChangeLock(false);
             gameObject.SetActive(false);
-        }
-
-        void OnDestroy()
-        {
-            exitButton.onClick.RemoveListener(Close);
-            foreach (KeyValuePair<string, Button> button in ButtonInfo)
-            {
-                Destroy(button.Value);
-            }
         }
     }
 }

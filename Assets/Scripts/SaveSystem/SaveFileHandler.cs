@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using System.IO;
 using Newtonsoft.Json;
 using UnityEngine;
@@ -12,7 +11,7 @@ namespace Cosmobot
 
         public SaveFileHandler(string save_file_name)
         {
-            this.saveFilePath = Path.Combine(
+            saveFilePath = Path.Combine(
                 Application.persistentDataPath,
                 save_file_name + ".json"
             );
@@ -27,7 +26,7 @@ namespace Cosmobot
                 File.WriteAllText(saveFilePath, JsonConvert.SerializeObject(game_data));
                 Debug.Log("Save file path: " + saveFilePath);
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Debug.LogError($"Failed to create save file due to:  + {e.Message} {e.StackTrace}");
             }
@@ -42,13 +41,14 @@ namespace Cosmobot
                     string json = File.ReadAllText(saveFilePath);
                     return JsonConvert.DeserializeObject<GameData>(json);
                 }
-                catch (System.Exception e)
+                catch (Exception e)
                 {
                     Debug.LogError(
                         $"Failed to load save file due to:  + {e.Message} {e.StackTrace}"
                     );
                 }
             }
+
             return null;
         }
     }

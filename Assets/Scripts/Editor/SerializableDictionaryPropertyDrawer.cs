@@ -44,7 +44,8 @@ namespace Cosmobot.Editor
             float deleteButtonWidth = 20;
             float halfWidth = (listRect.width - deleteButtonWidth - HPadding) / 2;
             float keyWidth = halfWidth - HPadding * 2;
-            float valueWidth = halfWidth - HPadding * 2; ;
+            float valueWidth = halfWidth - HPadding * 2;
+            ;
 
             GUI.Box(listRect, GUIContent.none);
             listRect.y += LineHeight / 2;
@@ -115,7 +116,5 @@ namespace Cosmobot.Editor
             float fullLineHeight = LineHeight;
             return fullLineHeight * (keys.arraySize + additionalLines);
         }
-
     }
-
 }

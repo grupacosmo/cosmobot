@@ -12,7 +12,25 @@ namespace Cosmobot.ItemSystem
 
         [SerializeField]
         private SerializableDictionary<string, string> itemData;
-        
+
+        public ItemInstance(ItemInfo itemInfo)
+        {
+            this.itemInfo = itemInfo;
+            ItemData = new SerializableDictionary<string, string>();
+
+            foreach (var additionalField in itemInfo.AdditionalData)
+                ItemData.TryAdd(additionalField.Key, additionalField.Value);
+        }
+
+        /// <summary>
+        ///     This constructor is for serialization purposes only.
+        /// </summary>
+        [Obsolete("This constructor is for serialization purposes only.")]
+        public ItemInstance()
+        {
+            ItemData = new SerializableDictionary<string, string>();
+        }
+
         public ItemInfo ItemInfo => itemInfo;
 
         public SerializableDictionary<string, string> ItemData
@@ -49,27 +67,9 @@ namespace Cosmobot.ItemSystem
         public ValueAccessor<bool> BoolValue => new(itemData);
 
         public SerializableDictionary<string, string> StringValue => itemData;
-        
+
         public string Id => itemInfo.Id;
 
-        public ItemInstance(ItemInfo itemInfo)
-        {
-            this.itemInfo = itemInfo;
-            ItemData = new SerializableDictionary<string, string>();
-
-            foreach (var additionalField in itemInfo.AdditionalData)
-                ItemData.TryAdd(additionalField.Key, additionalField.Value);
-        }
-        
-        /// <summary>
-        /// This constructor is for serialization purposes only.
-        /// </summary>
-        [Obsolete("This constructor is for serialization purposes only.")]
-        public ItemInstance()
-        {
-            ItemData = new SerializableDictionary<string, string>();
-        }
-        
 
         /// <summary>
         ///     Returns the value of the given key, or null if the key does not exist.
@@ -113,6 +113,5 @@ namespace Cosmobot.ItemSystem
         {
             SetValue(key, SerializationUtils.ToString(value));
         }
-        
     }
 }

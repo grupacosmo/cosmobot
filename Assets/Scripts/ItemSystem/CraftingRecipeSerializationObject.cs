@@ -1,8 +1,9 @@
+using System;
 using System.Collections.Generic;
 
 namespace Cosmobot.ItemSystem
 {
-    [System.Serializable]
+    [Serializable]
     public class CraftingRecipeSerializationObject
     {
         public List<CraftingRecipe> Recipes;

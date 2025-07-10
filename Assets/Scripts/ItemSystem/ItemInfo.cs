@@ -7,15 +7,18 @@ namespace Cosmobot.ItemSystem
     [CreateAssetMenu(fileName = "ItemInfo", menuName = "Cosmobot/ItemSystem/ItemInfo", order = 1)]
     public class ItemInfo : ScriptableObject, IEquatable<ItemInfo>
     {
-
         [SerializeField]
         private string id;
+
         [SerializeField]
         private string displayName;
+
         [SerializeField]
         private Texture2D icon;
+
         [SerializeField]
         private GameObject prefab;
+
         [SerializeField]
         private SerializableDictionary<string, string> additionalData = new();
 
@@ -24,6 +27,11 @@ namespace Cosmobot.ItemSystem
         public Texture2D Icon => icon;
         public GameObject Prefab => prefab;
         public IReadOnlyDictionary<string, string> AdditionalData => additionalData;
+
+        public bool Equals(ItemInfo other)
+        {
+            return other != null && id == other.id;
+        }
 
         public GameObject InstantiateItem(Vector3 position, Quaternion rotation)
         {
@@ -34,23 +42,30 @@ namespace Cosmobot.ItemSystem
                 throw new InvalidOperationException(
                     $"Prefab of item '{id}' does not have '{nameof(ItemComponent)}' script attached!");
             }
+
             if (itemComponent.ItemInfo != this)
             {
                 throw new InvalidOperationException(
                     $"Prefab of item '{id}' has different ItemInfo setup! (found '{itemComponent.ItemInfo.Id}')");
             }
-            foreach (KeyValuePair<string,string> keyValuePair in additionalData)
+
+            foreach (KeyValuePair<string, string> keyValuePair in additionalData)
             {
                 itemComponent.ItemData[keyValuePair.Key] = keyValuePair.Value;
             }
+
             return instantiatedObject;
         }
 
-        public override bool Equals(object obj) => Equals(obj as ItemInfo);
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as ItemInfo);
+        }
 
-        public bool Equals(ItemInfo other) => other != null && id == other.id;
-
-        public override int GetHashCode() => id.GetHashCode();
+        public override int GetHashCode()
+        {
+            return id.GetHashCode();
+        }
 
         public static bool operator ==(ItemInfo left, ItemInfo right)
         {
@@ -58,6 +73,9 @@ namespace Cosmobot.ItemSystem
             return left is not null && right is not null && left.Equals(right);
         }
 
-        public static bool operator !=(ItemInfo left, ItemInfo right) => !(left == right);
+        public static bool operator !=(ItemInfo left, ItemInfo right)
+        {
+            return !(left == right);
+        }
     }
 }

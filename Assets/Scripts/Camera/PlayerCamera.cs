@@ -6,43 +6,78 @@ namespace Cosmobot
     [RequireComponent(typeof(Camera))]
     public class PlayerCamera : MonoBehaviour, DefaultInputActions.IPlayerCameraActions
     {
+        [SerializeField]
+        private Vector2 sensitivity;
+
+        [SerializeField]
+        private float zoomSensitivityMultiplier;
+
+        [SerializeField]
+        private Vector3 thirdPersonCameraOffset;
+
+        [SerializeField]
+        private float rotationClampTop;
+
+        [SerializeField]
+        private float rotationClampBottom;
+
+        [SerializeField]
+        private float wallCollisionOffset;
+
+        [SerializeField]
+        private float zoomMagnification;
+
+        [SerializeField]
+        private float zoomSpeed;
+
+        [SerializeField]
+        private LayerMask cameraCollisionLayer;
+
+        [SerializeField]
+        private Transform cameraOrigin;
+
+        [SerializeField]
+        private GameObject playerModel;
+
+        private DefaultInputActions actions;
+
+        private new Camera camera;
+        private Vector3 cameraOffset = Vector3.zero;
+        private float defaultFov;
+        private bool isLocked  ;
+        private float xInput;
+        private float xRotation;
+        private float yInput;
+        private float yRotation;
+        private float zoomFov;
         public bool IsFirstPerson { get; private set; } = true;
         public bool IsZoomed { get; private set; }
 
-        [SerializeField] private Vector2 sensitivity;
-        [SerializeField] private float zoomSensitivityMultiplier;
-        [SerializeField] private Vector3 thirdPersonCameraOffset;
-        [SerializeField] private float rotationClampTop;
-        [SerializeField] private float rotationClampBottom;
-        [SerializeField] private float wallCollisionOffset;
-        [SerializeField] private float zoomMagnification;
-        [SerializeField] private float zoomSpeed;
-        [SerializeField] private LayerMask cameraCollisionLayer;
-
-        [SerializeField] private Transform cameraOrigin;
-        [SerializeField] private GameObject playerModel;
-
-        private new Camera camera;
-        private DefaultInputActions actions;
-        private float xRotation;
-        private float yRotation;
-        private float xInput;
-        private float yInput;
-        private Vector3 cameraOffset = Vector3.zero;
-        private float defaultFov;
-        private float zoomFov;
-        private bool isLocked = false;
-
-        public void ChangeLock(bool locked)
+        private void Start()
         {
-            isLocked = locked;
-            Cursor.visible = locked;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+            transform.position = cameraOrigin.position;
+
+            camera = GetComponent<Camera>();
+            defaultFov = camera.fieldOfView;
+            zoomFov = defaultFov / zoomMagnification;
+
+            SwitchCameraView();
+        }
+
+        private void Update()
+        {
             if (isLocked == false)
             {
-                Cursor.lockState = CursorLockMode.Locked;
-            } else {
-                Cursor.lockState = CursorLockMode.None;
+                HandleInput();
+                UpdateFov();
             }
+        }
+
+        private void LateUpdate()
+        {
+            UpdateTransform();
         }
 
         private void OnEnable()
@@ -79,29 +114,19 @@ namespace Cosmobot
             if (context.canceled) IsZoomed = false;
         }
 
-        private void Start()
+        public void ChangeLock(bool locked)
         {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-            transform.position = cameraOrigin.position;
-
-            camera = GetComponent<Camera>();
-            defaultFov = camera.fieldOfView;
-            zoomFov = defaultFov / zoomMagnification;
-
-            SwitchCameraView();
-        }
-
-        private void Update()
-        {
+            isLocked = locked;
+            Cursor.visible = locked;
             if (isLocked == false)
             {
-                HandleInput();
-                UpdateFov();
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.None;
             }
         }
-
-        private void LateUpdate() => UpdateTransform();
 
 
         private void HandleInput()
@@ -122,8 +147,8 @@ namespace Cosmobot
             var cameraDistance = cameraOffset.magnitude;
             var mask = cameraCollisionLayer;
             transform.position =
-                Physics.SphereCast(cameraRotationCenterPosition, wallCollisionOffset, 
-                        rayDirection, out var hit, cameraDistance + wallCollisionOffset, mask)
+                Physics.SphereCast(cameraRotationCenterPosition, wallCollisionOffset,
+                    rayDirection, out var hit, cameraDistance + wallCollisionOffset, mask)
                     ? hit.point + hit.normal * wallCollisionOffset
                     : rayDirection + cameraRotationCenterPosition;
         }
@@ -148,6 +173,5 @@ namespace Cosmobot
             float targetFov = IsZoomed ? zoomFov : defaultFov;
             camera.fieldOfView = Mathf.MoveTowards(camera.fieldOfView, targetFov, zoomSpeed * Time.deltaTime);
         }
-
     }
 }

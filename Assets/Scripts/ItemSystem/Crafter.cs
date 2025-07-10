@@ -76,8 +76,8 @@ namespace Cosmobot.ItemSystem
             CraftingRecipe? recipeOp = GetCraftingRecipeForItemsInSlot();
             if (recipeOp is null)
             {
-                Debug.Log("No recipe found for the items in the input slot or the output slots are not " +
-                          "enough to hold the result items");
+                Debug.Log("No recipe found for the items in the input slot or the output slots are not "
+                          + "enough to hold the result items");
                 return;
             }
 

@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace Cosmobot.Entity
 {
-
     [RequireComponent(typeof(Health))]
     public class Dummy : MonoBehaviour
     {

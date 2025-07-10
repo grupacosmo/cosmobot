@@ -1,43 +1,16 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 namespace Cosmobot
 {
     public class Grabber : MonoBehaviour
     {
         public bool automaticGrabMode;
-        public GameObject grabbedItem = null;
-        public GameObject lastItem = null;
-
-        #region grab
-        [Header("Grab")]
-        public Vector3 grabOffset;
-        public float grabDistance;
-        #endregion grab
-
-        #region release
-        [Header("Release")]
-        public float releaseDistance;
-        public float releaseResetTime = 15f;
-        public LayerMask releaseExcludedLayer;
-        #endregion release
+        public GameObject grabbedItem  ;
+        public GameObject lastItem  ;
 
         private Coroutine resetCoroutine;
         private RouteMovement routeMovement;
-
-        private IEnumerator ResetLastItemCoroutine()
-        {
-            yield return new WaitForSeconds(releaseResetTime);
-            lastItem = null;
-            resetCoroutine = StartCoroutine(ResetLastItemCoroutine());
-        }
-
-        private void ResetTimer()
-        {
-            if (resetCoroutine is not null) StopCoroutine(resetCoroutine);
-
-            resetCoroutine = StartCoroutine(ResetLastItemCoroutine());
-        }
 
         public void Start()
         {
@@ -64,6 +37,20 @@ namespace Cosmobot
             }
         }
 
+        private IEnumerator ResetLastItemCoroutine()
+        {
+            yield return new WaitForSeconds(releaseResetTime);
+            lastItem = null;
+            resetCoroutine = StartCoroutine(ResetLastItemCoroutine());
+        }
+
+        private void ResetTimer()
+        {
+            if (resetCoroutine is not null) StopCoroutine(resetCoroutine);
+
+            resetCoroutine = StartCoroutine(ResetLastItemCoroutine());
+        }
+
         public void MoveGrabbedItem()
         {
             if (grabbedItem) grabbedItem.transform.position = transform.position + grabOffset;
@@ -87,7 +74,10 @@ namespace Cosmobot
                         itemRigidbody.isKinematic = true;
                     }
                 }
-                else grabbedItem = item;
+                else
+                {
+                    grabbedItem = item;
+                }
 
                 Debug.Log("Grabbing item: SUCCESSFUL");
             }
@@ -110,9 +100,9 @@ namespace Cosmobot
                     }
 
                     Vector3 facingDirection = routeMovement.transform.forward;
-                    grabbedItem.transform.position = new Vector3(pos.x, hit.point.y, pos.z) + facingDirection * releaseDistance;
+                    grabbedItem.transform.position =
+                        new Vector3(pos.x, hit.point.y, pos.z) + facingDirection * releaseDistance;
                     grabbedItem.transform.rotation = Quaternion.identity;
-
 
 
                     ResetTimer();
@@ -124,7 +114,7 @@ namespace Cosmobot
             }
         }
 
-        GameObject GetNearestItem()
+        private GameObject GetNearestItem()
         {
             float nearestDistance = float.MaxValue;
             GameObject nearestItem = null;
@@ -146,5 +136,24 @@ namespace Cosmobot
 
             return nearestItem;
         }
+
+        #region grab
+
+        [Header("Grab")]
+        public Vector3 grabOffset;
+
+        public float grabDistance;
+
+        #endregion grab
+
+        #region release
+
+        [Header("Release")]
+        public float releaseDistance;
+
+        public float releaseResetTime = 15f;
+        public LayerMask releaseExcludedLayer;
+
+        #endregion release
     }
 }

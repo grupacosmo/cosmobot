@@ -5,9 +5,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using UnityEditor;
-using UnityEditor.AssetImporters;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Debug = UnityEngine.Debug;
 
 namespace Cosmobot.Editor
@@ -19,14 +17,17 @@ namespace Cosmobot.Editor
         private const string LibFolder = "Plugins";
         private const string LibFile = "Assets/Plugins/Libs.json";
         private const string NugetPackageLibDir = "lib";
+
         private const string ProgressBarName = "Lib Importer";
+
         // will take first found
         private static readonly string[] nugetPackageLibStandardsDirs = { "netstandard2.1", "netstandard2.0" };
-        
+
         [MenuItem("Cosmo/Import Libs")]
         public static void OpenLibImporter()
         {
-            try {
+            try
+            {
                 ImportLibs(LibFile);
                 EditorUtility.ClearProgressBar();
             }
@@ -36,7 +37,7 @@ namespace Cosmobot.Editor
                 throw;
             }
         }
-        
+
         public static void ImportLibs(string assetPath)
         {
             EditorUtility.DisplayProgressBar(ProgressBarName, "Reading lib file", 0f);
@@ -58,13 +59,14 @@ namespace Cosmobot.Editor
                 EditorUtility.ClearProgressBar();
                 return;
             }
-            
+
             List<LibToImport> libs = libToImportAsset.nuget ?? new List<LibToImport>();
             int progress = 1;
             Debug.Log("Detected libs: " + string.Join(", ", libs));
             foreach (LibToImport libToImport in libs)
             {
-                EditorUtility.DisplayProgressBar(ProgressBarName, $"Importing libs {libToImport.name} {progress}/{libs.Count}", progress / (libs.Count + 1f));
+                EditorUtility.DisplayProgressBar(ProgressBarName,
+                    $"Importing libs {libToImport.name} {progress}/{libs.Count}", progress / (libs.Count + 1f));
                 try
                 {
                     ProcessLib(libToImport);
@@ -77,6 +79,7 @@ namespace Cosmobot.Editor
 
                 progress++;
             }
+
             EditorUtility.ClearProgressBar();
         }
 
@@ -88,11 +91,12 @@ namespace Cosmobot.Editor
                 Debug.Log($"{libToImport.name} already in correct version");
                 return;
             }
+
             Uri downloadUri = CreateNugetDownloadUri(libToImport.name, libToImport.version);
             string downloadTargetPath = Path.GetTempFileName();
             using WebClient client = new WebClient();
             client.DownloadFile(downloadUri, downloadTargetPath);
-            
+
             ZipArchive archive = ZipFile.Open(downloadTargetPath, ZipArchiveMode.Read);
             ZipArchiveEntry libEntry = null;
             foreach (string nugetLibStandard in nugetPackageLibStandardsDirs)
@@ -100,12 +104,14 @@ namespace Cosmobot.Editor
                 if (libEntry is not null) break; // take first
                 libEntry = archive.GetEntry($"{NugetPackageLibDir}/{nugetLibStandard}/{libToImport.name}.dll");
             }
+
             if (libEntry is null)
             {
                 string standards = string.Join(',', nugetPackageLibStandardsDirs);
                 Debug.LogWarning($"LibImporter: Lib {libToImport.name} zip does not contain {standards} library.");
                 return;
             }
+
             libEntry.ExtractToFile(dllPath, true);
             Debug.Log("LibImporter: Downloaded and extracted " + libToImport.name + " to " + dllPath);
         }
@@ -117,29 +123,33 @@ namespace Cosmobot.Editor
             {
                 return true;
             }
+
             FileVersionInfo info = FileVersionInfo.GetVersionInfo(libPath);
             return $"{info.ProductMajorPart}.{info.ProductMinorPart}.{info.ProductBuildPart}" != version;
         }
+
         private static Uri CreateNugetDownloadUri(string name, string version)
         {
             return new Uri($"{NugetAddres}/{name}/{version}");
         }
     }
-    
+
     [Serializable]
     public class LibToImportAsset
     {
         [SerializeField]
         public List<LibToImport> nuget;
     }
+
     [Serializable]
     public class LibToImport
     {
         [SerializeField]
         public string name;
+
         [SerializeField]
         public string version;
-        
+
         public override string ToString()
         {
             return $"{name} {version}";

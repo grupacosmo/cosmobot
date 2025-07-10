@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,19 +7,13 @@ namespace Cosmobot
     {
         [SerializeField]
         private Transform player;
+
         [SerializeField]
         private GameObject minimap;
-        DefaultInputActions actions;
 
-        public void OnToggle(InputAction.CallbackContext context)
-        {
-            if (context.performed)
-            {
-                minimap.SetActive(!minimap.activeSelf);
-            }
-        }
+        private DefaultInputActions actions;
 
-        void LateUpdate()
+        private void LateUpdate()
         {
             Vector3 position = player.position;
             position.y = transform.position.y;
@@ -31,19 +23,28 @@ namespace Cosmobot
         }
 
 
-        void OnEnable()
+        private void OnEnable()
         {
             if (actions == null)
             {
                 actions = new DefaultInputActions();
                 actions.Minimap.SetCallbacks(this);
             }
+
             actions.Minimap.Enable();
         }
 
-        void OnDisable()
+        private void OnDisable()
         {
             actions.Minimap.Disable();
+        }
+
+        public void OnToggle(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            {
+                minimap.SetActive(!minimap.activeSelf);
+            }
         }
     }
 }
