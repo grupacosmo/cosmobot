@@ -13,6 +13,5 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
-          cache: true
       - name: Check code format
         run: dotnet format cosmobot.sln --include Assets/Scripts/ --verify-no-changes --severity warn
