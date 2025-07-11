@@ -6,7 +6,7 @@ namespace Cosmobot.ItemSystem
     [Serializable]
     public class CraftingRecipeSerializationObject
     {
-        public List<CraftingRecipe> Recipes;
-        public List<CraftingRecipeSerializationGroup> Groups;
+        public List<CraftingRecipe> recipes;
+        public List<CraftingRecipeSerializationGroup> groups;
     }
 }

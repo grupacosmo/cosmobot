@@ -11,7 +11,7 @@ namespace Cosmobot.ItemSystem
     {
         public delegate void InventoryChanged(Inventory source, ItemInstance eventItem);
 
-        private static readonly Predicate<ItemInstance> AllowAllFilter = _ => true;
+        private static readonly Predicate<ItemInstance> allowAllFilter = _ => true;
 
         [SerializeField]
         public bool allowAddingItems = true;
@@ -24,7 +24,7 @@ namespace Cosmobot.ItemSystem
 
         private readonly List<ItemInstance> items = new();
 
-        private Predicate<ItemInstance> itemFilter = AllowAllFilter;
+        private Predicate<ItemInstance> itemFilter = allowAllFilter;
 
         // There is no GetItemInstance because we don't want callers to modify the item instance directly.
         // Instead, Class provides methods to interact with the inventory.
@@ -44,7 +44,7 @@ namespace Cosmobot.ItemSystem
         public Predicate<ItemInstance> ItemFilter
         {
             get => itemFilter;
-            set => itemFilter = value ?? AllowAllFilter;
+            set => itemFilter = value ?? allowAllFilter;
         }
 
         public event InventoryChanged OnItemAdded;

@@ -1,8 +1,8 @@
 using System;
-using System.Threading;
-using UnityEngine;
-using Jint;
 using System.Collections.Concurrent;
+using System.Threading;
+using Jint;
+using UnityEngine;
 
 namespace Cosmobot
 {
@@ -106,7 +106,7 @@ namespace Cosmobot
 
 #if DEBUG
         const string RobotApiTypesNamespace = "Cosmobot.Api.Types";
-        
+
         private void ValidateFunction(string key, Delegate value, string name)
         {
             Type type = value.Method.ReturnType;
@@ -114,7 +114,7 @@ namespace Cosmobot
             {
                 return;
             }
-            
+
             Debug.LogError($"Method returns disallowed type! Method: {type} {key} in {name}");
             throw new Exception($"Method returns disallowed type! Method: {type} {key} in {name}");
         }

@@ -83,14 +83,14 @@ namespace Cosmobot.ItemSystem
 
             CraftingRecipe recipe = recipeOp.Value;
 
-            if (recipe.EnergyCost > 0 && !((IEnergyInterface)energyInterface).TryTransferEnergyOut(recipe.EnergyCost))
+            if (recipe.energyCost > 0 && !((IEnergyInterface)energyInterface).TryTransferEnergyOut(recipe.energyCost))
             {
                 Debug.Log("Not enough energy to craft the item");
                 return;
             }
 
             int outputSlotIndex = 0;
-            foreach (string resultItemId in recipe.Result)
+            foreach (string resultItemId in recipe.result)
             {
                 ItemInfo resultItem = ItemManager.Instance.GetItem(resultItemId);
                 resultItem.InstantiateItem(outputSlots[outputSlotIndex].position, Quaternion.identity);
@@ -110,11 +110,11 @@ namespace Cosmobot.ItemSystem
             bool energyInterfaceNotAvailable = energyInterface is null;
             foreach (var recipe in craftingRecipeGroup.Recipes)
             {
-                if (recipe.Result.Count > outputSlots.Count) continue;
-                if (recipe.EnergyCost > 0 && energyInterfaceNotAvailable) continue;
+                if (recipe.result.Count > outputSlots.Count) continue;
+                if (recipe.energyCost > 0 && energyInterfaceNotAvailable) continue;
 
                 var itemsIdsInInputSlot = ItemsInInputSlot.Select(iis => iis.ItemInfo.Id);
-                if (recipe.Ingredients.OrderBy(x => x).SequenceEqual(itemsIdsInInputSlot.OrderBy(x => x)))
+                if (recipe.ingredients.OrderBy(x => x).SequenceEqual(itemsIdsInInputSlot.OrderBy(x => x)))
                     return recipe;
             }
 

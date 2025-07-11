@@ -63,8 +63,8 @@ namespace Cosmobot
             }
 
             Debug.Log("Game saved");
-            SaveFileHandler File_handler = new SaveFileHandler(save_file_name);
-            File_handler.Save(gameData);
+            SaveFileHandler file_handler = new SaveFileHandler(save_file_name);
+            file_handler.Save(gameData);
         }
     }
 }

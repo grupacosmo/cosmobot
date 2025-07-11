@@ -63,7 +63,7 @@ namespace Cosmobot.Entity
             uiHealthText.text =
                 targetHealth.CurrentHealth.ToString($"F{accuracy}")
                 + " / "
-                + targetHealth.MaxHealth.ToString($"F{accuracy}");
+                + targetHealth.maxHealth.ToString($"F{accuracy}");
         }
 
         private void SetTargetHealth(Health value)

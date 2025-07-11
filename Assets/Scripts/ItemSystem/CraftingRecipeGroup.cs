@@ -10,9 +10,9 @@ namespace Cosmobot.ItemSystem
 
         public CraftingRecipeGroup(string id, string name, List<CraftingRecipe> recipes)
         {
-            Id = id;
-            Name = name;
-            Recipes = recipes.AsReadOnly();
+            this.Id = id;
+            this.Name = name;
+            this.Recipes = recipes.AsReadOnly();
         }
     }
 }

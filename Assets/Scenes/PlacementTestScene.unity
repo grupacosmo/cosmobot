@@ -963,7 +963,7 @@ MonoBehaviour:
   maxBuildDistance: 10
   maxTerrainHeight: 100
   constructionSitePrefab: {fileID: 6571599839263284129, guid: 11c3bb8c65eb71bca9cff435f75bdc0b, type: 3}
-  BuildingSelectionUI: {fileID: 3709464934322433764}
+  buildingSelectionUI: {fileID: 3709464934322433764}
 --- !u!4 &1206252142 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7577094790283547248, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
@@ -2042,11 +2042,11 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6298237145738746592, guid: 68deae0805aff708196c645faa861dc7, type: 3}
-      propertyPath: Camera
+      propertyPath: camera
       value: 
       objectReference: {fileID: 2030957879}
     - target: {fileID: 6298237145738746592, guid: 68deae0805aff708196c645faa861dc7, type: 3}
-      propertyPath: Player
+      propertyPath: player
       value: 
       objectReference: {fileID: 1206252140}
     - target: {fileID: 6521496035671230963, guid: 68deae0805aff708196c645faa861dc7, type: 3}

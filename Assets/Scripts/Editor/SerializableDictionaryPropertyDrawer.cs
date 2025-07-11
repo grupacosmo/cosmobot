@@ -112,9 +112,9 @@ namespace Cosmobot.Editor
 
             SerializedProperty keys = property.FindPropertyRelative(PropKeys);
 
-            const int additionalLines = 4; // label, header row, button, top-down margin
+            const int AdditionalLines = 4; // label, header row, button, top-down margin
             float fullLineHeight = LineHeight;
-            return fullLineHeight * (keys.arraySize + additionalLines);
+            return fullLineHeight * (keys.arraySize + AdditionalLines);
         }
     }
 }

@@ -7,13 +7,13 @@ namespace Cosmobot.ItemSystem
     public struct CraftingRecipe
     {
         /// <summary> Internal ID </summary>
-        public string Id;
+        public string id;
 
         /// <summary> Display name </summary>
-        public string Name;
+        public string name;
 
-        public List<string> Ingredients;
-        public List<string> Result;
-        public int EnergyCost;
+        public List<string> ingredients;
+        public List<string> result;
+        public int energyCost;
     }
 }

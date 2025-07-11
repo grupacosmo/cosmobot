@@ -16,7 +16,7 @@ namespace Cosmobot
         private Quaternion minAngleRotation;
         private TurretStats turretStats;
 
-        public Health target { get; private set; }
+        public Health Target { get; private set; }
 
         private void Start()
         {
@@ -29,7 +29,7 @@ namespace Cosmobot
         private void Update()
         {
             ChooseTarget();
-            if (target)
+            if (Target)
             {
                 UpdateTarget();
             }
@@ -77,11 +77,11 @@ namespace Cosmobot
 
         private void UpdateTarget()
         {
-            if (lastKnownPosition != target.transform.position)
+            if (lastKnownPosition != Target.transform.position)
             {
-                if (!UpdateTargetRange(target))
+                if (!UpdateTargetRange(Target))
                 {
-                    RemoveTargetFromList(target);
+                    RemoveTargetFromList(Target);
                 }
             }
 
@@ -94,7 +94,7 @@ namespace Cosmobot
 
         private void SetTarget(Health newTarget)
         {
-            target = newTarget;
+            Target = newTarget;
         }
 
         /// <summary>
@@ -114,16 +114,16 @@ namespace Cosmobot
                 }
             }
 
-            Health oldTarget = target;
+            Health oldTarget = Target;
             SetTarget(closestTarget);
             if (oldTarget)
             {
                 oldTarget.OnDeath -= Death;
             }
 
-            if (target)
+            if (Target)
             {
-                target.OnDeath += Death;
+                Target.OnDeath += Death;
             }
         }
 

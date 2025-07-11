@@ -25,7 +25,7 @@ namespace Cosmobot
         private GameObject constructionSitePrefab;
 
         [SerializeField]
-        private GameObject BuildingSelectionUI;
+        private GameObject buildingSelectionUI;
 
         private DefaultInputActions actions;
         private BuildingInfo currentBuildingInfo;
@@ -79,7 +79,7 @@ namespace Cosmobot
             currentBuildingInfo = null;
             currentPlacementPosition = null;
             constructionPreview.gameObject.SetActive(false);
-            BuildingSelectionUI.gameObject.SetActive(true);
+            buildingSelectionUI.gameObject.SetActive(true);
         }
 
         public void SetBuilding(BuildingInfo buildingInfo)

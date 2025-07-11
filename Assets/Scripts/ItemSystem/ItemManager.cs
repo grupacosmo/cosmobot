@@ -33,7 +33,7 @@ namespace Cosmobot.ItemSystem
         public CraftingRecipe? GetCraftingRecipe(string id)
         {
             foreach (var recipe in craftingRecipes)
-                if (recipe.Id == id)
+                if (recipe.id == id)
                     return recipe;
 
             return null;
@@ -123,12 +123,12 @@ namespace Cosmobot.ItemSystem
                 return;
             }
 
-            craftingRecipes = deserializedObject.Recipes;
-            Dictionary<string, CraftingRecipe> craftingRecipesMap = craftingRecipes.ToDictionary(r => r.Id, r => r);
-            craftingRecipesGroups = deserializedObject.Groups.Select(g =>
+            craftingRecipes = deserializedObject.recipes;
+            Dictionary<string, CraftingRecipe> craftingRecipesMap = craftingRecipes.ToDictionary(r => r.id, r => r);
+            craftingRecipesGroups = deserializedObject.groups.Select(g =>
             {
-                List<CraftingRecipe> recipes = g.Recipes.Select(rId => craftingRecipesMap[rId]).ToList();
-                return new CraftingRecipeGroup(g.Id, g.Name, recipes);
+                List<CraftingRecipe> recipes = g.recipes.Select(rId => craftingRecipesMap[rId]).ToList();
+                return new CraftingRecipeGroup(g.id, g.name, recipes);
             }).ToList();
         }
 

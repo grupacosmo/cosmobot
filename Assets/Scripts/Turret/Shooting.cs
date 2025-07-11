@@ -21,12 +21,12 @@ namespace Cosmobot
 
         private void Update()
         {
-            if (canFire && tracking.target != null)
+            if (canFire && tracking.Target != null)
             {
                 Ray ray = new Ray(transform.position, transform.forward);
                 if (Physics.Raycast(ray, out RaycastHit hit))
                 {
-                    if (hit.collider.gameObject == tracking.target.gameObject)
+                    if (hit.collider.gameObject == tracking.Target.gameObject)
                     {
                         StartCoroutine(Shoot(hit.collider.gameObject));
                     }

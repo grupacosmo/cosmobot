@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
-using UnityEngine;
 using Cosmobot.Api.Types;
-using System.Collections.Concurrent;
+using UnityEngine;
 
 namespace Cosmobot
 {
@@ -14,7 +14,7 @@ namespace Cosmobot
     {
         private ManualResetEvent taskCompletedEvent;
         private CancellationToken cancellationToken;
-        private ProgrammableFunctionWrapper wrapper; 
+        private ProgrammableFunctionWrapper wrapper;
 
         [SerializeField] private Transform target; //temporary for testing
         [SerializeField] private float speed = 1; //temporary for testing
@@ -89,7 +89,7 @@ namespace Cosmobot
                 else transform.position += speed * Time.deltaTime * dir.normalized;
                 yield return null;
             }
-            
+
             taskCompletedEvent.Set();
         }
 

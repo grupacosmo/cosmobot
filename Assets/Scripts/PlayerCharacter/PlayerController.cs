@@ -12,8 +12,8 @@ namespace Cosmobot
             CameraDirection
         }
 
-        private static readonly int AnimatorSpeed = Animator.StringToHash("speed");
-        private static readonly int AnimatorJump = Animator.StringToHash("jump");
+        private static readonly int animatorSpeed = Animator.StringToHash("speed");
+        private static readonly int animatorJump = Animator.StringToHash("jump");
 
         [SerializeField]
         private float moveSpeed;
@@ -116,7 +116,7 @@ namespace Cosmobot
             if (shouldJump)
             {
                 velocityDelta.y = jumpForce;
-                animator.SetTrigger(AnimatorJump);
+                animator.SetTrigger(animatorJump);
             }
             else
             {
@@ -124,7 +124,7 @@ namespace Cosmobot
             }
 
             rb.AddForce(velocityDelta, ForceMode.VelocityChange);
-            animator.SetFloat(AnimatorSpeed, new Vector2(rb.linearVelocity.x, rb.linearVelocity.z).sqrMagnitude);
+            animator.SetFloat(animatorSpeed, new Vector2(rb.linearVelocity.x, rb.linearVelocity.z).sqrMagnitude);
         }
 
         private Vector3 CalculateVelocityDelta()

@@ -12,13 +12,13 @@ namespace Cosmobot.Entity
     {
         public delegate void HealthEvent(Health source, float oldHealth, float damageValue);
 
-        public float MaxHealth;
+        public float maxHealth;
 
         [SerializeField]
         protected float currentHealth;
 
         public float CurrentHealth => currentHealth;
-        public float CurrentHealthPercentage => currentHealth / MaxHealth;
+        public float CurrentHealthPercentage => currentHealth / maxHealth;
         public bool IsDead => currentHealth <= 0;
 
         /// <summary> Can be <see cref="DamageSource.Empty"> </summary>
@@ -26,8 +26,8 @@ namespace Cosmobot.Entity
 
         private void OnValidate()
         {
-            if (MaxHealth < 0) MaxHealth = 0;
-            currentHealth = Mathf.Clamp(currentHealth, 0, MaxHealth);
+            if (maxHealth < 0) maxHealth = 0;
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         }
 
         public event HealthEvent OnHealthChange;
@@ -44,7 +44,7 @@ namespace Cosmobot.Entity
             }
 
             float oldHealth = currentHealth;
-            currentHealth = Mathf.Clamp(currentHealth - damage, 0, MaxHealth);
+            currentHealth = Mathf.Clamp(currentHealth - damage, 0, maxHealth);
             LastDamageSource = damageSource;
 
             OnHealthChange?.Invoke(this, oldHealth, damage);
@@ -53,7 +53,7 @@ namespace Cosmobot.Entity
 
         public virtual void ResetHealth(bool clearEventListeners = false)
         {
-            currentHealth = MaxHealth;
+            currentHealth = maxHealth;
             LastDamageSource = DamageSource.Empty;
             if (clearEventListeners)
             {

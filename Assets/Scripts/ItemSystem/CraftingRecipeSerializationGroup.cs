@@ -7,11 +7,11 @@ namespace Cosmobot.ItemSystem
     public class CraftingRecipeSerializationGroup
     {
         /// <summary> Internal ID </summary>
-        public string Id;
+        public string id;
 
         /// <summary> Display name </summary>
-        public string Name;
+        public string name;
 
-        public List<string> Recipes;
+        public List<string> recipes;
     }
 }

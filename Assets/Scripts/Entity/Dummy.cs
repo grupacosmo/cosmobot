@@ -15,7 +15,7 @@ namespace Cosmobot.Entity
         private void OnEnable()
         {
             health.OnHealthChange += OnHealthChange;
-            health.TakeDamage(-health.MaxHealth, new DamageSource(this));
+            health.TakeDamage(-health.maxHealth, new DamageSource(this));
         }
 
         private void OnDisable()

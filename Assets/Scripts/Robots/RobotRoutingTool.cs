@@ -52,7 +52,7 @@ namespace Cosmobot
             }
         }
 
-        private void addWaypoint(Vector3 waypoint)
+        private void AddWaypoint(Vector3 waypoint)
         {
             var length = currentRoute.Count;
             Route newWaypoint = new Route();
@@ -90,7 +90,7 @@ namespace Cosmobot
                 if (currentRobot == null) return;
 
                 var waypoint = GetLookedAtPointCoordinates();
-                if (waypoint != Vector3.zero) addWaypoint(waypoint);
+                if (waypoint != Vector3.zero) AddWaypoint(waypoint);
             }
         }
 
