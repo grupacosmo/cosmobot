@@ -209,7 +209,7 @@ MonoBehaviour:
   constructionSiteResources:
     keys: []
     values: []
-  buildingInfo: {fileID: 0}
+  buildingData: {fileID: 0}
 --- !u!114 &-3072977108597292026
 MonoBehaviour:
   m_ObjectHideFlags: 0

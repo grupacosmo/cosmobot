@@ -14,21 +14,21 @@ namespace Cosmobot
         private SerializableDictionary<ItemInfo, GameObject> constructionSiteResources = new();
 
         [SerializeField]
-        private BuildingInfo buildingInfo;
+        private BuildingInfo buildingData;
 
         private readonly float colliderOffset = 0.01f;
         public Transform TempCube => tempCube;
-        public BuildingInfo BuildingInfo => buildingInfo;
+        public BuildingInfo BuildingData => buildingData;
         public SerializableDictionary<ItemInfo, GameObject> ConstructionSiteResources => constructionSiteResources;
 
         private void Start()
         {
-            BoxCollider prefabCollider = buildingInfo.Prefab.GetComponentInChildren<BoxCollider>();
+            BoxCollider prefabCollider = buildingData.Prefab.GetComponentInChildren<BoxCollider>();
             prefabCollider.size = new Vector3(prefabCollider.size.x - colliderOffset, prefabCollider.size.y,
                 prefabCollider.size.z - colliderOffset);
-            tempCube.localScale = new Vector3(buildingInfo.Prefab.transform.localScale.x, 0.2f,
-                buildingInfo.Prefab.transform.localScale.z);
-            SetRequiredResources(buildingInfo.ResourceRequirements);
+            tempCube.localScale = new Vector3(buildingData.Prefab.transform.localScale.x, 0.2f,
+                buildingData.Prefab.transform.localScale.z);
+            SetRequiredResources(buildingData.ResourceRequirements);
         }
 
         public void SetRequiredResources(IReadOnlyDictionary<ItemInfo, int> requiredResources)
@@ -57,14 +57,14 @@ namespace Cosmobot
             if (resourcePreviewController.ResourceRequirement > 0)
             {
                 resourcePreviewController.DecreaseRequirement(resourceAmount);
-                IsReadyToBuild(buildingInfo.Prefab);
+                IsReadyToBuild(buildingData.Prefab);
             }
         }
 
-        public void Initialize(BuildingInfo newBuildingInfo)
+        public void Initialize(BuildingInfo newbuildingData)
         {
-            buildingInfo = newBuildingInfo;
-            tempCube.localScale = new Vector3(buildingInfo.GridSize.x, 0.2f, buildingInfo.GridSize.y);
+            buildingData = newbuildingData;
+            tempCube.localScale = new Vector3(buildingData.GridSize.x, 0.2f, buildingData.GridSize.y);
             BoxCollider buildingCollider = tempCube.GetComponent<BoxCollider>();
             buildingCollider.size = new Vector3(buildingCollider.size.x - colliderOffset, buildingCollider.size.y,
                 buildingCollider.size.z - colliderOffset);
@@ -72,7 +72,7 @@ namespace Cosmobot
 
         public void FinishConstruction()
         {
-            Instantiate(buildingInfo.Prefab, transform.position, transform.rotation); // TODO: set instantiation parent
+            Instantiate(buildingData.Prefab, transform.position, transform.rotation); // TODO: set instantiation parent
             Despawn();
         }
 

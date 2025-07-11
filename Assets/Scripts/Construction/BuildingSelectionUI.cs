@@ -23,7 +23,7 @@ namespace Cosmobot
         private GameObject player;
 
         [SerializeField]
-        private Camera camera;
+        private Camera mainCamera;
 
         [SerializeField]
         private Button exitButton;
@@ -43,7 +43,7 @@ namespace Cosmobot
             LoadButtons();
             exitButton.onClick.AddListener(Close);
             gameObject.SetActive(false);
-            playerCamera = camera.GetComponent<PlayerCamera>();
+            playerCamera = mainCamera.GetComponent<PlayerCamera>();
             playerConstructionHandler = player.GetComponent<PlayerConstructionHandler>();
         }
 

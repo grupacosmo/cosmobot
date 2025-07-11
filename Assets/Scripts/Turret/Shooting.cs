@@ -8,14 +8,14 @@ namespace Cosmobot
     public class Shooting : MonoBehaviour
     {
         private bool canFire = true;
-        private ParticleSystem particleSystem;
+        private ParticleSystem particleSys;
         private Tracking tracking;
         private TurretStats turretStats;
 
         private void Start()
         {
             tracking = GetComponent<Tracking>();
-            particleSystem = GetComponent<ParticleSystem>();
+            particleSys = GetComponent<ParticleSystem>();
             turretStats = GetComponent<TurretStats>();
         }
 
@@ -37,11 +37,11 @@ namespace Cosmobot
         public IEnumerator Shoot(GameObject target)
         {
             canFire = false;
-            particleSystem.Play();
+            particleSys.Play();
             Health.TakeDamage(target, turretStats.power, new DamageSource(gameObject));
             yield return new WaitForSeconds(turretStats.fireRate);
             canFire = true;
-            particleSystem.Stop();
+            particleSys.Stop();
         }
     }
 }

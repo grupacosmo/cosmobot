@@ -28,7 +28,7 @@ namespace Cosmobot
 
         private List<ISaveableData> GetSaveableObjects()
         {
-            return FindObjectsOfType<MonoBehaviour>().OfType<ISaveableData>().ToList();
+            return FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<ISaveableData>().ToList();
         }
 
         public void LoadGame(string save_file_name = DefaultSaveFileName)
