@@ -7,7 +7,6 @@ using System.Collections.Concurrent;
 namespace Cosmobot
 {
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(BaseRobotEngineLogic))]
     public class FailTestEngineLogic : MonoBehaviour, IEngineLogic
     {
         private ManualResetEvent taskCompletedEvent;
