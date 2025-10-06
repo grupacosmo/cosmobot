@@ -56,7 +56,7 @@ namespace Cosmobot.Api.Types
         public ItemComponent itemComponent;
         public Vec2? position { get; }
 
-        public Item(ItemComponent itemComponent, Vec2 position)
+        public Item(ItemComponent itemComponent, Vec2? position)
         {
             this.itemComponent = itemComponent;
             this.position = position;

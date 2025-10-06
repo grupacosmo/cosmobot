@@ -22,6 +22,7 @@ namespace Cosmobot
         private BaseEngineLogic baseLogic;
         [SerializeField] private float searchRange;
         [SerializeField] private float reachRange;
+        private int itemLayer = 10;
 
         void Start()
         {
@@ -47,6 +48,7 @@ namespace Cosmobot
                 { "FindClosestItem", wrapper.Wrap<string, Item?>(FindClosestItem)},
                 { "FindAllItems", wrapper.Wrap<string, List<Item>>(FindAllItems)},
                 { "PickupItem", wrapper.Wrap<Item>(PickupItem)},
+                { "DropItem", wrapper.Wrap<string>(DropItem)},
             };
         }
 
@@ -58,7 +60,7 @@ namespace Cosmobot
         // (!)remember to call "taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
         Item? FindItem(string type = "")
         {
-            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 10);
+            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << itemLayer);
 
             if (objects.Length == 0)
             {
@@ -101,7 +103,7 @@ namespace Cosmobot
 
         Item? FindClosestItem(string type = "")
         {
-            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 10);
+            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << itemLayer);
 
             if (objects.Length == 0)
             {
@@ -137,7 +139,7 @@ namespace Cosmobot
 
         List<Item> FindAllItems(string type = "")
         {
-            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 10);
+            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << itemLayer);
             List<Item> items = new List<Item>();
 
             foreach (Collider collider in objects)
@@ -160,19 +162,58 @@ namespace Cosmobot
 
         void PickupItem(Item item)
         {
+            if(!item.itemComponent)
+            {
+                baseLogic.LogError("Item doesn't exist anymore");
+                taskCompletedEvent.Set();
+                return;
+            }
+
             Vector2 pos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.z);
             if(Vector2.Distance(pos, item.position.Value) <= reachRange)
             {
-                if(inventoryComponent.inventory.AddItem(item.itemComponent.item))
+                if(inventoryComponent.inventory.AddItem(item.itemComponent.Item))
                 {
+                    item.itemComponent.Dispose();
                     taskCompletedEvent.Set();
                     return;
                 }
 
-                baseLogic.LogError("Couldn't add item to invetory");
+                baseLogic.LogError("Couldn't add item to inventory");
+                taskCompletedEvent.Set();
+                return;
             }
 
             baseLogic.LogError("Item is too far");
+            taskCompletedEvent.Set();
+        }
+
+        void DropItem(string itemId = "")
+        {
+            if (string.IsNullOrEmpty(itemId))
+            {
+                ItemInstance temp = inventoryComponent.inventory.RemoveLatest();
+                if (temp is not null)
+                {
+                    Instantiate(temp.ItemInfo.Prefab, transform.position + Vector3.forward, Quaternion.identity);
+                    taskCompletedEvent.Set();
+                    return;
+                }
+                baseLogic.Log("No items to be dropped");
+                taskCompletedEvent.Set();
+                return;
+            }
+
+            ItemInstance item = inventoryComponent.inventory.RemoveFirstById(itemId);
+            if (item is not null)
+            {
+                Instantiate(item.ItemInfo.Prefab, transform.position + Vector3.forward, Quaternion.identity);
+                taskCompletedEvent.Set();
+                return;
+            }
+            baseLogic.Log("No such item in inventory");
+            taskCompletedEvent.Set();
+            return;
         }
     }
 }

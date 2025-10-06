@@ -155,7 +155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   searchRange: 10
-  reachRange: 0
+  reachRange: 10
 --- !u!114 &24800179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,7 +183,7 @@ MonoBehaviour:
   inventory:
     allowAddingItems: 1
     allowRemovingItems: 1
-    capacity: 1
+    capacity: 2
 --- !u!114 &24800181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,9 +196,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  code: 'let a = FindItem("Copper Ore");
+  code: 'let a = FindItem("");
 
-    Log(a)'
+    PickupItem(a);
+
+    PickupItem(a);
+
+    Wait(1);
+
+    DropItem();
+
+    Wait(1);
+
+    DropItem();
+
+    Wait(1);
+
+    DropItem("copper-ore");'
 --- !u!65 &24800182
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -308,7 +322,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &586230987
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -573,9 +587,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1225400869901911583, guid: c04cc4750f51256c2a65b82b07c0e960, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1862692014303423458, guid: c04cc4750f51256c2a65b82b07c0e960, type: 3}
       propertyPath: m_Name
       value: CopperOre
+      objectReference: {fileID: 0}
+    - target: {fileID: 1862692014303423458, guid: c04cc4750f51256c2a65b82b07c0e960, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 3516543481110741587, guid: c04cc4750f51256c2a65b82b07c0e960, type: 3}
       propertyPath: m_LocalPosition.x
@@ -615,6 +637,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3516543481110741587, guid: c04cc4750f51256c2a65b82b07c0e960, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4974398331618079617, guid: c04cc4750f51256c2a65b82b07c0e960, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4994288226137352484, guid: c04cc4750f51256c2a65b82b07c0e960, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7583933128689869246, guid: c04cc4750f51256c2a65b82b07c0e960, type: 3}
+      propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

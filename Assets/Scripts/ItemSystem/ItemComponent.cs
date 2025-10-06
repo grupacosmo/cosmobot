@@ -7,7 +7,15 @@ namespace Cosmobot.ItemSystem
     public class ItemComponent : MonoBehaviour
     {
         [SerializeField]
-        public ItemInstance item { get; private set; }
+        private ItemInstance item;
+        public ItemInstance Item
+        {
+            get => item;
+            private set
+            {
+                item = value;
+            }
+        }
 
         public ItemInfo ItemInfo => item.ItemInfo;
 
@@ -99,6 +107,11 @@ namespace Cosmobot.ItemSystem
         public void SetBoolValue(string key, bool? value)
         {
             SetValue(key, value.ToString());
+        }
+
+        public void Dispose()
+        {
+            Destroy(gameObject);
         }
     }
 }
