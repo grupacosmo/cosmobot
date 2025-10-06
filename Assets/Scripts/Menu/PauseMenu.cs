@@ -5,7 +5,7 @@ namespace Cosmobot
 {
     public class PauseMenu : MonoBehaviour
     {
-        public static bool IsGamePaused = false;
+        public static bool IsGamePaused  ;
 
         public GameObject pauseMenuUi;
 
@@ -31,7 +31,7 @@ namespace Cosmobot
             IsGamePaused = false;
         }
 
-        void Pause()
+        private void Pause()
         {
             pauseMenuUi.SetActive(true);
             Time.timeScale = 0f;

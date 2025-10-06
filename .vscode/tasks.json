@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "process",
+      "label": "🧹 Format C# Assets/Scripts (cosmobot)",
+      "command": "dotnet",
+      "args": ["format", "cosmobot.sln", "--include", "Assets/Scripts/"],
+      "echoCommand": true,
+      "options": {
+        "cwd": "${workspaceFolder}"
+      }
+    }
+  ]
+}

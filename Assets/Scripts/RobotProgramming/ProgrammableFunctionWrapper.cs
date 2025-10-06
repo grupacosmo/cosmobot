@@ -19,15 +19,17 @@ namespace Cosmobot
 
         public Action Wrap(Action action)
         {
-            return () => {
+            return () =>
+            {
                 commandQueue.Enqueue(action);
                 WaitForSync();
             };
         }
-        
+
         public Action<T> Wrap<T>(Action<T> action)
         {
-            return (t) => {
+            return (t) =>
+            {
                 commandQueue.Enqueue(() => action(t));
                 WaitForSync();
             };
@@ -35,7 +37,8 @@ namespace Cosmobot
 
         public Action<T1, T2> Wrap<T1, T2>(Action<T1, T2> action)
         {
-            return (t1, t2) => {
+            return (t1, t2) =>
+            {
                 commandQueue.Enqueue(() => action(t1, t2));
                 WaitForSync();
             };
@@ -43,7 +46,8 @@ namespace Cosmobot
 
         public Action<T1, T2, T3> Wrap<T1, T2, T3>(Action<T1, T2, T3> action)
         {
-            return (t1, t2, t3) => {
+            return (t1, t2, t3) =>
+            {
                 commandQueue.Enqueue(() => action(t1, t2, t3));
                 WaitForSync();
             };
@@ -51,7 +55,8 @@ namespace Cosmobot
 
         public Action<T1, T2, T3, T4> Wrap<T1, T2, T3, T4>(Action<T1, T2, T3, T4> action)
         {
-            return (t1, t2, t3, t4) => {
+            return (t1, t2, t3, t4) =>
+            {
                 commandQueue.Enqueue(() => action(t1, t2, t3, t4));
                 WaitForSync();
             };
@@ -59,7 +64,8 @@ namespace Cosmobot
 
         public Action<T1, T2, T3, T4, T5> Wrap<T1, T2, T3, T4, T5>(Action<T1, T2, T3, T4, T5> action)
         {
-            return (t1, t2, t3, t4, t5) => {
+            return (t1, t2, t3, t4, t5) =>
+            {
                 commandQueue.Enqueue(() => action(t1, t2, t3, t4, t5));
                 WaitForSync();
             };
@@ -67,7 +73,8 @@ namespace Cosmobot
 
         public Action<T1, T2, T3, T4, T5, T6> Wrap<T1, T2, T3, T4, T5, T6>(Action<T1, T2, T3, T4, T5, T6> action)
         {
-            return (t1, t2, t3, t4, t5, t6) => {
+            return (t1, t2, t3, t4, t5, t6) =>
+            {
                 commandQueue.Enqueue(() => action(t1, t2, t3, t4, t5, t6));
                 WaitForSync();
             };
@@ -75,7 +82,8 @@ namespace Cosmobot
 
         public Func<T> Wrap<T>(Func<T> action)
         {
-            return () => {
+            return () =>
+            {
                 T tr = default;
                 commandQueue.Enqueue(() => { tr = action(); });
                 WaitForSync();
@@ -85,7 +93,8 @@ namespace Cosmobot
 
         public Func<T1, TR> Wrap<T1, TR>(Func<T1, TR> action)
         {
-            return (t1) => {
+            return (t1) =>
+            {
                 TR tr = default;
                 commandQueue.Enqueue(() => { tr = action(t1); });
                 WaitForSync();
@@ -95,7 +104,8 @@ namespace Cosmobot
 
         public Func<T1, T2, TR> Wrap<T1, T2, TR>(Func<T1, T2, TR> action)
         {
-            return (t1, t2) => {
+            return (t1, t2) =>
+            {
                 TR tr = default;
                 commandQueue.Enqueue(() => { tr = action(t1, t2); });
                 WaitForSync();
@@ -105,7 +115,8 @@ namespace Cosmobot
 
         public Func<T1, T2, T3, TR> Wrap<T1, T2, T3, TR>(Func<T1, T2, T3, TR> action)
         {
-            return (t1, t2, t3) => {
+            return (t1, t2, t3) =>
+            {
                 TR tr = default;
                 commandQueue.Enqueue(() => { tr = action(t1, t2, t3); });
                 WaitForSync();
@@ -115,7 +126,8 @@ namespace Cosmobot
 
         public Func<T1, T2, T3, T4, TR> Wrap<T1, T2, T3, T4, TR>(Func<T1, T2, T3, T4, TR> action)
         {
-            return (t1, t2, t3, t4) => {
+            return (t1, t2, t3, t4) =>
+            {
                 TR tr = default;
                 commandQueue.Enqueue(() => { tr = action(t1, t2, t3, t4); });
                 WaitForSync();
@@ -125,7 +137,8 @@ namespace Cosmobot
 
         public Func<T1, T2, T3, T4, T5, TR> Wrap<T1, T2, T3, T4, T5, TR>(Func<T1, T2, T3, T4, T5, TR> action)
         {
-            return (t1, t2, t3, t4, t5) => {
+            return (t1, t2, t3, t4, t5) =>
+            {
                 TR tr = default;
                 commandQueue.Enqueue(() => { tr = action(t1, t2, t3, t4, t5); });
                 WaitForSync();
@@ -135,14 +148,15 @@ namespace Cosmobot
 
         public Func<T1, T2, T3, T4, T5, T6, TR> Wrap<T1, T2, T3, T4, T5, T6, TR>(Func<T1, T2, T3, T4, T5, T6, TR> action)
         {
-            return (t1, t2, t3, t4, t5, t6) => {
+            return (t1, t2, t3, t4, t5, t6) =>
+            {
                 TR tr = default;
                 commandQueue.Enqueue(() => { tr = action(t1, t2, t3, t4, t5, t6); });
                 WaitForSync();
                 return tr;
             };
         }
-        
+
         private void WaitForSync()
         {
             WaitHandle.WaitAny(new[] { taskCompletedEvent, token.WaitHandle });

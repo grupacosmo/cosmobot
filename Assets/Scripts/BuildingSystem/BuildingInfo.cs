@@ -5,23 +5,28 @@ using UnityEngine;
 
 namespace Cosmobot.BuildingSystem
 {
-     [CreateAssetMenu(fileName = "BuildingInfo", menuName = "Cosmobot/BuildingSystem/BuildingInfo", order = 1)]
+    [CreateAssetMenu(fileName = "BuildingInfo", menuName = "Cosmobot/BuildingSystem/BuildingInfo", order = 1)]
     public class BuildingInfo : ScriptableObject, IEquatable<BuildingInfo>
     {
-
         [SerializeField]
         private string id;
+
         [SerializeField]
         private string displayName;
+
         [SerializeField]
         private Texture2D icon;
+
         [SerializeField]
         private GameObject prefab;
+
         [SerializeField]
         private SerializableDictionary<string, string> additionalData = new();
+
         [SerializeField]
         private SerializableDictionary<ItemInfo, int> resourceRequirements = new();
-        private Vector2Int gridSize = new(1,1);
+
+        private Vector2Int gridSize = new(1, 1);
 
         public string Id => id;
         public string DisplayName => displayName;
@@ -31,17 +36,26 @@ namespace Cosmobot.BuildingSystem
         public IReadOnlyDictionary<ItemInfo, int> ResourceRequirements => resourceRequirements;
         public Vector2Int GridSize => gridSize;
 
+        public bool Equals(BuildingInfo other)
+        {
+            return other is not null && id == other.id;
+        }
+
         // Get building's grid size accounting for rotation; each rotation step is 90 degrees
-        public Vector2Int GetEffectiveGridSize(int rotationSteps) 
+        public Vector2Int GetEffectiveGridSize(int rotationSteps)
         {
             return rotationSteps % 2 == 0 ? gridSize : new(gridSize.y, gridSize.x);
         }
 
-        public override bool Equals(object obj) => Equals(obj as BuildingInfo);
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as BuildingInfo);
+        }
 
-        public bool Equals(BuildingInfo other) => other is not null && id == other.id;
-
-        public override int GetHashCode() => id.GetHashCode();
+        public override int GetHashCode()
+        {
+            return id.GetHashCode();
+        }
 
         public static bool operator ==(BuildingInfo left, BuildingInfo right)
         {
@@ -49,6 +63,9 @@ namespace Cosmobot.BuildingSystem
             return left is not null && right is not null && left.Equals(right);
         }
 
-        public static bool operator !=(BuildingInfo left, BuildingInfo right) => !(left == right);
+        public static bool operator !=(BuildingInfo left, BuildingInfo right)
+        {
+            return !(left == right);
+        }
     }
 }

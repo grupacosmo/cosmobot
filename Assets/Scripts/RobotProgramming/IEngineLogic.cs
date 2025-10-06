@@ -23,7 +23,7 @@ namespace Cosmobot
         /// </summary>
         /// <returns> <c>jsFunctionName -> FunctionToCall</c> dictionary </returns>
         IReadOnlyDictionary<string, Delegate> GetFunctions();
-        
+
         /// <summary>
         /// Used to provide implementing class with necessary data to run programming environment.
         ///

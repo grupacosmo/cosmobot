@@ -1,28 +1,45 @@
-using System.Collections;
 using System.Collections.Generic;
 using Cosmobot.Entity;
 using UnityEngine;
+using Random = System.Random;
 
 namespace Cosmobot
 {
     public class EnemySpawner : MonoBehaviour
     {
-        private float timer;
-        private List<GameObject> enemies = new List<GameObject>();
-
         // Probably will be changed in future development
-        public GameObject PotentialTarget;
+        public GameObject potentialTarget;
         public Health health;
-        public GameObject Enemy;
-        public int SpawnInterval;
-        public int EnemyLimit;
-        public int MinSpawnRange;
-        public int MaxSpawnRange;
+        public GameObject enemy;
+        public int spawnInterval;
+        public int enemyLimit;
+        public int minSpawnRange;
+        public int maxSpawnRange;
+        private readonly List<GameObject> enemies = new List<GameObject>();
+        private float timer;
 
         private void Start()
         {
             health = gameObject.GetComponent<Health>();
             health.OnDeath += Death;
+        }
+
+        private void Update()
+        {
+            if (timer >= spawnInterval)
+            {
+                SpawnEnemy();
+                if (enemies.Count == enemyLimit)
+                {
+                    ReleaseEnemies();
+                }
+
+                timer = 0;
+            }
+            else
+            {
+                timer += Time.deltaTime;
+            }
         }
 
         private void Death(Health source, float oldHealth, float damageValue)
@@ -39,33 +56,17 @@ namespace Cosmobot
             }
         }
 
-        private void Update()
-        {
-            if (timer >= SpawnInterval)
-            {
-                SpawnEnemy();
-                if (enemies.Count == EnemyLimit)
-                {
-                    ReleaseEnemies();
-                }
-                timer = 0;
-            }
-            else
-            {
-                timer += Time.deltaTime;
-            }
-        }
-
         // Releasing children to attack
         private void ReleaseEnemies()
         {
-            for (int i = 0; i < EnemyLimit; i++)
+            for (int i = 0; i < enemyLimit; i++)
             {
                 if (enemies[i])
                 {
-                    enemies[i].GetComponent<Enemy>().SetTarget(PotentialTarget);
+                    enemies[i].GetComponent<Enemy>().SetTarget(potentialTarget);
                 }
             }
+
             Debug.Log("Enemies released");
             RemoveEnemy(null);
         }
@@ -73,18 +74,22 @@ namespace Cosmobot
         // Spawning a child
         private void SpawnEnemy()
         {
-            GameObject e = Instantiate(Enemy, CreateSpawnPoint(), Quaternion.identity);
+            GameObject e = Instantiate(enemy, CreateSpawnPoint(), Quaternion.identity);
             e.GetComponent<Enemy>().SetNest(gameObject);
             enemies.Add(e);
-
         }
 
         private Vector3 CreateSpawnPoint()
         {
-            System.Random random = new System.Random((int)Time.time);
-            int offset1 = random.Next(0, 2) == 0 ? random.Next(MinSpawnRange, MaxSpawnRange) : random.Next(-MaxSpawnRange, -MinSpawnRange);
-            int offset2 = random.Next(0, 2) == 0 ? random.Next(MinSpawnRange, MaxSpawnRange) : random.Next(-MaxSpawnRange, -MinSpawnRange);
-            Vector3 spawnPosition = new Vector3(gameObject.transform.position.x + offset1, gameObject.transform.position.y, gameObject.transform.position.z + offset2);
+            Random random = new Random((int)Time.time);
+            int offset1 = random.Next(0, 2) == 0
+                ? random.Next(minSpawnRange, maxSpawnRange)
+                : random.Next(-maxSpawnRange, -minSpawnRange);
+            int offset2 = random.Next(0, 2) == 0
+                ? random.Next(minSpawnRange, maxSpawnRange)
+                : random.Next(-maxSpawnRange, -minSpawnRange);
+            Vector3 spawnPosition = new Vector3(gameObject.transform.position.x + offset1,
+                gameObject.transform.position.y, gameObject.transform.position.z + offset2);
             return spawnPosition;
         }
 
@@ -92,7 +97,7 @@ namespace Cosmobot
         {
             if (!enemy)
             {
-                enemies.RemoveRange(0, EnemyLimit);
+                enemies.RemoveRange(0, enemyLimit);
             }
             else
             {

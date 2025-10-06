@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,9 +7,14 @@ namespace Cosmobot
 {
     public class DataSaveManager : SingletonSystem<DataSaveManager>
     {
+        private const string DefaultSaveFileName = "save_file";
         private GameData gameData;
 
-        private const string DefaultSaveFileName = "save_file";
+        // this can be removed it this behaviour is not intended
+        private void OnApplicationQuit()
+        {
+            SaveGame();
+        }
 
         public void OnSceneUnloaded(Scene scene)
         {
@@ -20,20 +23,20 @@ namespace Cosmobot
 
         public void NewGame()
         {
-            this.gameData = new GameData();
+            gameData = new GameData();
         }
 
         private List<ISaveableData> GetSaveableObjects()
         {
-            return FindObjectsOfType<MonoBehaviour>().OfType<ISaveableData>().ToList();
+            return FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<ISaveableData>().ToList();
         }
 
         public void LoadGame(string save_file_name = DefaultSaveFileName)
         {
             SaveFileHandler fileHandler = new SaveFileHandler(save_file_name);
-            this.gameData = fileHandler.Load();
+            gameData = fileHandler.Load();
 
-            if (this.gameData == null)
+            if (gameData == null)
             {
                 Debug.Log("No game data found, starting new game");
                 NewGame();
@@ -45,6 +48,7 @@ namespace Cosmobot
             {
                 saveableObject.LoadData(gameData);
             }
+
             Debug.Log("Game loaded");
         }
 
@@ -57,15 +61,10 @@ namespace Cosmobot
                     Debug.Log("Failed to save " + saveableObject);
                 }
             }
-            Debug.Log("Game saved");
-            SaveFileHandler File_handler = new SaveFileHandler(save_file_name);
-            File_handler.Save(gameData);
-        }
 
-        // this can be removed it this behaviour is not intended
-        private void OnApplicationQuit()
-        {
-            SaveGame();
+            Debug.Log("Game saved");
+            SaveFileHandler file_handler = new SaveFileHandler(save_file_name);
+            file_handler.Save(gameData);
         }
     }
 }

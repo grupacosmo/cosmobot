@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -5,28 +6,19 @@ using UnityEngine;
 
 namespace Cosmobot
 {
-    [System.Serializable]
+    [Serializable]
     public class SerializableDictionary<TKey, TValue> :
         IDictionary<TKey, TValue>,
         IReadOnlyDictionary<TKey, TValue>
     {
         [SerializeField]
         private List<TKey> keys = new();
+
         [SerializeField]
         private List<TValue> values = new();
-        public ICollection<TKey> Keys => keys.AsReadOnly();
-
-        public ICollection<TValue> Values => values.AsReadOnly();
-
-        public int Count => keys.Count;
-
-        public bool IsReadOnly => false;
-
-        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => keys.AsReadOnly();
-
-        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => values.AsReadOnly();
 
         public SerializableDictionary() { }
+
         public SerializableDictionary(IDictionary<TKey, TValue> dictionary)
         {
             foreach (KeyValuePair<TKey, TValue> pair in dictionary)
@@ -35,20 +27,13 @@ namespace Cosmobot
             }
         }
 
+        public ICollection<TKey> Keys => keys.AsReadOnly();
 
-        public TValue GetValue(TKey key)
-        {
-            if (TryGetValue(key, out TValue value))
-            {
-                return value;
-            }
-            throw new KeyNotFoundException($"Key '{key}' not found in dictionary!");
-        }
+        public ICollection<TValue> Values => values.AsReadOnly();
 
-        public bool ContainsValue(TValue value)
-        {
-            return values.Contains(value);
-        }
+        public int Count => keys.Count;
+
+        public bool IsReadOnly => false;
 
         public TValue this[TKey key]
         {
@@ -84,6 +69,7 @@ namespace Cosmobot
                 values.RemoveAt(keyIndex);
                 return true;
             }
+
             return false;
         }
 
@@ -95,6 +81,7 @@ namespace Cosmobot
                 value = values[keyIndex];
                 return true;
             }
+
             value = default;
             return false;
         }
@@ -117,9 +104,9 @@ namespace Cosmobot
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
-            if (array is null) throw new System.ArgumentNullException(nameof(array));
-            if (arrayIndex < 0) throw new System.ArgumentOutOfRangeException(nameof(arrayIndex));
-            if (array.Length - arrayIndex < Count) throw new System.ArgumentException("Array is too small!");
+            if (array is null) throw new ArgumentNullException(nameof(array));
+            if (arrayIndex < 0) throw new ArgumentOutOfRangeException(nameof(arrayIndex));
+            if (array.Length - arrayIndex < Count) throw new ArgumentException("Array is too small!");
 
             for (int i = 0; i < Count; i++)
             {
@@ -142,5 +129,24 @@ namespace Cosmobot
             return GetEnumerator();
         }
 
+        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => keys.AsReadOnly();
+
+        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => values.AsReadOnly();
+
+
+        public TValue GetValue(TKey key)
+        {
+            if (TryGetValue(key, out TValue value))
+            {
+                return value;
+            }
+
+            throw new KeyNotFoundException($"Key '{key}' not found in dictionary!");
+        }
+
+        public bool ContainsValue(TValue value)
+        {
+            return values.Contains(value);
+        }
     }
 }

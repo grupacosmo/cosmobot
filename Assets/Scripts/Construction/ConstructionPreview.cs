@@ -5,15 +5,20 @@ namespace Cosmobot
 {
     public class ConstructionPreview : MonoBehaviour
     {
-        [SerializeField] MeshRenderer gridDisplayRenderer;
-        [SerializeField] Transform gridDisplayTransform;
+        [SerializeField]
+        private MeshRenderer gridDisplayRenderer;
 
-        public void SetBuilding(BuildingInfo buildingInfo) 
+        [SerializeField]
+        private Transform gridDisplayTransform;
+
+        public void SetBuilding(BuildingInfo buildingInfo)
         {
-            transform.localScale = new Vector3(buildingInfo.Prefab.transform.localScale.x * GlobalConstants.GRID_CELL_SIZE, 1, buildingInfo.Prefab.transform.localScale.z * GlobalConstants.GRID_CELL_SIZE);
+            transform.localScale =
+                new Vector3(buildingInfo.Prefab.transform.localScale.x * GlobalConstants.GRID_CELL_SIZE, 1,
+                    buildingInfo.Prefab.transform.localScale.z * GlobalConstants.GRID_CELL_SIZE);
         }
 
-        public void SetPosition(Vector3 newPosition) 
+        public void SetPosition(Vector3 newPosition)
         {
             transform.position = newPosition + new Vector3(0, 0.5f, 0);
         }

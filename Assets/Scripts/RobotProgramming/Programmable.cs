@@ -1,8 +1,8 @@
 using System;
-using System.Threading;
-using UnityEngine;
-using Jint;
 using System.Collections.Concurrent;
+using System.Threading;
+using Jint;
+using UnityEngine;
 
 namespace Cosmobot
 {
@@ -27,7 +27,7 @@ namespace Cosmobot
 
         static int staticDebugI;
         int debugI = 0;
-        
+
         void Start()
         {
             taskCompletedEvent = new ManualResetEvent(false);
@@ -39,7 +39,7 @@ namespace Cosmobot
 
             debugI = staticDebugI++;
             engineLogicInterfaces = GetComponents<IEngineLogic>();
-           
+
         }
 
         private void Update()
@@ -63,16 +63,16 @@ namespace Cosmobot
             Thread.CurrentThread.Name = $"jsEngine-{debugI}";
 
             using Engine jsEngine = new Engine();
-            
-            foreach(IEngineLogic logicInterface in engineLogicInterfaces)
+
+            foreach (IEngineLogic logicInterface in engineLogicInterfaces)
             {
                 logicInterface.SetupThread(taskCompletedEvent, token, commandQueue);
                 var functions = logicInterface.GetFunctions();
                 foreach (var function in functions)
                 {
-                    #if DEBUG
+#if DEBUG
                     ValidateFunction(function.Key, function.Value, logicInterface.GetType().Name);
-                    #endif
+#endif
                     if (jsEngine.Global.HasProperty(function.Key))
                     {
                         Debug.LogError($"Duplicate key: {function.Key} in Interface: {logicInterface.GetType().Name}");
@@ -104,9 +104,9 @@ namespace Cosmobot
             }
         }
 
-        #if DEBUG
+#if DEBUG
         const string RobotApiTypesNamespace = "Cosmobot.Api.Types";
-        
+
         private void ValidateFunction(string key, Delegate value, string name)
         {
             Type type = value.Method.ReturnType;
@@ -114,10 +114,10 @@ namespace Cosmobot
             {
                 return;
             }
-            
+
             Debug.LogError($"Method returns disallowed type! Method: {type} {key} in {name}");
             throw new Exception($"Method returns disallowed type! Method: {type} {key} in {name}");
         }
-        #endif
+#endif
     }
 }

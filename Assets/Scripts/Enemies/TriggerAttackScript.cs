@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using Cosmobot.Entity;
 using UnityEngine;
 
@@ -7,7 +6,7 @@ namespace Cosmobot
 {
     public class TriggerAttackScript : MonoBehaviour
     {
-        public bool isAttacking = false;
+        public bool isAttacking  ;
         public float attackInterval = 2;
         public float damage = 50;
 

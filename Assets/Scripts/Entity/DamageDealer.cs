@@ -2,22 +2,12 @@ using UnityEngine;
 
 namespace Cosmobot.Entity
 {
-
     /// <summary>
-    /// Test helper class
+    ///     Test helper class
     /// </summary>
     public class DamageDealer : MonoBehaviour
     {
         public Health target;
-        public void DealDamage(float damage)
-        {
-            target.TakeDamage(damage, new DamageSource(this));
-        }
-
-        public void ResetHealth()
-        {
-            target.ResetHealth();
-        }
 
         private void OnEnable()
         {
@@ -31,6 +21,16 @@ namespace Cosmobot.Entity
             target.OnHealthChange -= OnHealthChange;
             target.OnDeath -= OnDeath;
             target.OnReset -= OnReset;
+        }
+
+        public void DealDamage(float damage)
+        {
+            target.TakeDamage(damage, new DamageSource(this));
+        }
+
+        public void ResetHealth()
+        {
+            target.ResetHealth();
         }
 
         private void OnHealthChange(Health source, float oldHealth, float damageVale)

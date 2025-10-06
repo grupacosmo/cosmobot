@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,28 +6,16 @@ namespace Cosmobot
     [RequireComponent(typeof(ProviderStats))]
     public class Provider : MonoBehaviour, IEnergyProvider
     {
-        private ProviderStats providerStats;
-        private List<IEnergyReceiver> receivers = new();
+        private readonly List<IEnergyReceiver> receivers = new();
         private float currentTransferTime;
+        private ProviderStats providerStats;
 
-        public void TransferEnergy()
-        {
-            if (receivers.Count > 0)
-            {
-                float transferAmount = providerStats.maxEnergyPerSecond / receivers.Count;
-                foreach (IEnergyReceiver receiver in receivers)
-                {
-                    providerStats.currentCapacity = providerStats.currentCapacity - transferAmount + receiver.CollectEnergy(transferAmount);
-                }
-            }
-        }
-
-        void Start()
+        private void Start()
         {
             providerStats = GetComponent<ProviderStats>();
         }
 
-        void Update()
+        private void Update()
         {
             currentTransferTime += Time.deltaTime;
             if (currentTransferTime > 1f)
@@ -51,6 +38,19 @@ namespace Cosmobot
             if (other.TryGetComponent(out IEnergyReceiver encounteredReceiver))
             {
                 receivers.Remove(encounteredReceiver);
+            }
+        }
+
+        public void TransferEnergy()
+        {
+            if (receivers.Count > 0)
+            {
+                float transferAmount = providerStats.maxEnergyPerSecond / receivers.Count;
+                foreach (IEnergyReceiver receiver in receivers)
+                {
+                    providerStats.currentCapacity =
+                        providerStats.currentCapacity - transferAmount + receiver.CollectEnergy(transferAmount);
+                }
             }
         }
     }

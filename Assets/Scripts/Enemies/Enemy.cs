@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using Cosmobot.Entity;
 using UnityEngine;
 
@@ -7,12 +6,6 @@ namespace Cosmobot
 {
     public abstract class Enemy : MonoBehaviour
     {
-        private GameObject nest;
-        private EnemySpawner enemySpawner;
-        private Health targetHealth;
-        private Vector3 wanderTarget;
-        private bool isAttacking = false;
-
         public Health health;
         public EnemyBehaviourStates state;
         public GameObject target;
@@ -22,6 +15,11 @@ namespace Cosmobot
         public float attackRange;
         public float wanderRadius;
         public float unblockForce;
+        private EnemySpawner enemySpawner;
+        private bool isAttacking;
+        private GameObject nest;
+        private Health targetHealth;
+        private Vector3 wanderTarget;
 
         private void Start()
         {
@@ -32,15 +30,22 @@ namespace Cosmobot
             wanderTarget = gameObject.transform.position;
         }
 
+        private void OnDestroy()
+        {
+            enemySpawner?.RemoveEnemy(gameObject);
+        }
+
+        // Anti stuck
+        private void OnCollisionEnter(Collision collision)
+        {
+            Vector3 direction = (transform.position - collision.transform.position).normalized;
+            gameObject.GetComponent<Rigidbody>().AddForce(direction * unblockForce, ForceMode.Impulse);
+        }
+
         // If enemy takes damage, source of that damage becomes it's target
         private void OnDamage(Health source, float oldHealth, float damageValue)
         {
             SetTarget((GameObject)health.LastDamageSource.Source);
-        }
-
-        private void OnDestroy()
-        {
-            enemySpawner?.RemoveEnemy(gameObject);
         }
 
         private void Death(Health source, float oldHealth, float damageValue)
@@ -55,13 +60,6 @@ namespace Cosmobot
             Health.TakeDamage(target, damage, new DamageSource(gameObject));
             yield return new WaitForSeconds(attackInterval);
             isAttacking = false;
-        }
-
-        // Anti stuck
-        private void OnCollisionEnter(Collision collision)
-        {
-            Vector3 direction = (transform.position - collision.transform.position).normalized;
-            gameObject.GetComponent<Rigidbody>().AddForce(direction * unblockForce, ForceMode.Impulse);
         }
 
         private void PerformAttack()
@@ -86,6 +84,7 @@ namespace Cosmobot
                 state = EnemyBehaviourStates.REST;
                 return;
             }
+
             if (Vector3.Distance(transform.position, target.transform.position) < attackRange)
             {
                 PerformAttack();
@@ -114,6 +113,7 @@ namespace Cosmobot
             {
                 wanderTarget = RandomWanderingTarget();
             }
+
             MoveTo(wanderTarget);
         }
 

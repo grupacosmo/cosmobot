@@ -7,9 +7,8 @@ namespace Cosmobot.ItemSystem.Editor
     [CustomEditor(typeof(ItemInfo))]
     public class ItemInfoInspector : UnityEditor.Editor
     {
-        private ItemInfo itemInfo;
-
         private static string[] declaredConstants;
+        private ItemInfo itemInfo;
 
 
         private void OnEnable()

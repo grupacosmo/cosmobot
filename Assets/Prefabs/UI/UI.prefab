@@ -445,15 +445,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc5d54161d85810b896d077973ca0c37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BuildingInfoDirectory: []
-  BuildingInfoFiles:
+  buildingInfoDirectory: []
+  buildingInfoFiles:
     keys: []
     values: []
-  ButtonInfo:
+  buttonInfo:
     keys: []
     values: []
-  Player: {fileID: 0}
-  Camera: {fileID: 0}
+  player: {fileID: 0}
+  mainCamera: {fileID: 0}
   exitButton: {fileID: 6460498311277513055}
   buildingButton: {fileID: 4850097370049181107, guid: a32de6e86f8a950dd93d29d87489a5dc, type: 3}
   buttonContainer: {fileID: 5237726769141549948}
