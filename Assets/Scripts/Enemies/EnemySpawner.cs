@@ -35,8 +35,7 @@ namespace Cosmobot
                 }
 
                 timer = 0;
-            }
-            else
+            } else
             {
                 timer += Time.deltaTime;
             }
