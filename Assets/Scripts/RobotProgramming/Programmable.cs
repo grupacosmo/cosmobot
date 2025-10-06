@@ -3,6 +3,7 @@ using System.Threading;
 using UnityEngine;
 using Jint;
 using System.Collections.Concurrent;
+using Codice.Client.BaseCommands;
 
 namespace Cosmobot
 {
@@ -110,11 +111,33 @@ namespace Cosmobot
         private void ValidateFunction(string key, Delegate value, string name)
         {
             Type type = value.Method.ReturnType;
+
+            Type underNullableType = Nullable.GetUnderlyingType(type);
+            if (underNullableType != null)
+            {
+                type = underNullableType;
+            }
+
+            if (type.IsGenericType)
+            {
+                Type[] argsTypes = type.GetGenericArguments();
+                foreach (var arg in argsTypes)
+                {
+                    if (arg == typeof(void) || arg.IsPrimitive || arg.Namespace == RobotApiTypesNamespace)
+                    {
+                        continue;
+                    }
+                    Debug.LogError($"Method returns disallowed type argument in generic type! Method: {arg} in {type.GetGenericTypeDefinition()} {key} in {name}");
+                    throw new Exception($"Method returns disallowed type argument in generic type! Method: {arg} in {type.GetGenericTypeDefinition()} {key} in {name}");
+                }
+                return;
+            }
+
             if (type == typeof(void) || type.IsPrimitive || type.Namespace == RobotApiTypesNamespace)
             {
                 return;
             }
-            
+
             Debug.LogError($"Method returns disallowed type! Method: {type} {key} in {name}");
             throw new Exception($"Method returns disallowed type! Method: {type} {key} in {name}");
         }

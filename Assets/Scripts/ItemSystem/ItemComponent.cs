@@ -6,8 +6,8 @@ namespace Cosmobot.ItemSystem
 {
     public class ItemComponent : MonoBehaviour
     {
-        [SerializeField] 
-        private ItemInstance item;
+        [SerializeField]
+        public ItemInstance item { get; private set; }
 
         public ItemInfo ItemInfo => item.ItemInfo;
 
@@ -42,9 +42,20 @@ namespace Cosmobot.ItemSystem
 
         public SerializableDictionary<string, string> StringValue => item.StringValue;
 
+#if UNITY_ENGINE
         private void Awake()
         {
             ComponentUtils.RequireNotNull(item, "'item' is not set.", this);
+        }
+#endif
+
+        void Init(ItemInstance initValue)
+        {
+            if (item is not null)
+            {
+                throw new InvalidOperationException("Can't re initialise ItemComponent that is already initialised");
+            }
+            item = initValue;
         }
 
         /// <summary>

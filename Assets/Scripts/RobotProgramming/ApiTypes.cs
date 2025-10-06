@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Cosmobot.ItemSystem;
+using UnityEngine;
 
 namespace Cosmobot.Api.Types
 {
@@ -42,6 +43,23 @@ namespace Cosmobot.Api.Types
         public static implicit operator Vector2(Vec2 v)
         {
             return new Vector2(v.x, v.y);
+        }
+    }
+
+    public interface Entity
+    {
+        Vec2? position { get; }
+    }
+
+    public struct Item : Entity
+    {
+        public ItemComponent itemComponent;
+        public Vec2? position { get; }
+
+        public Item(ItemComponent itemComponent, Vec2 position)
+        {
+            this.itemComponent = itemComponent;
+            this.position = position;
         }
     }
 }
