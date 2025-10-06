@@ -1,2 +1,2 @@
 dotnet tool restore
-dotnet tool run dotnet-format --folder --include Assets/Scripts/ --verify-no-changes --severity warn -v d
+dotnet tool run dotnet-format Formatting.csproj --include Assets/Scripts/ --verify-no-changes --severity warn -v d --fix-style warn

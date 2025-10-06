@@ -16,7 +16,7 @@ namespace Cosmobot
         public float wanderRadius;
         public float unblockForce;
         private EnemySpawner enemySpawner;
-        private bool isAttacking  ;
+        private bool isAttacking;
         private GameObject nest;
         private Health targetHealth;
         private Vector3 wanderTarget;

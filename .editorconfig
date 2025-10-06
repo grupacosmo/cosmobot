@@ -246,14 +246,30 @@ dotnet_naming_style.instance_field_style.required_prefix =
 dotnet_naming_style.instance_field_style.required_suffix =
 dotnet_naming_style.instance_field_style.word_separator = 
 
-# Locals and parameters are camelCase
+# Locals are camelCase
 dotnet_naming_rule.locals_should_be_camel_case.severity = warning
-dotnet_naming_rule.locals_should_be_camel_case.symbols = locals_and_parameters
-dotnet_naming_rule.locals_should_be_camel_case.style = camel_case_style
+dotnet_naming_rule.locals_should_be_camel_case.symbols = locals
+dotnet_naming_rule.locals_should_be_camel_case.style = local_camel_case_style
 
-dotnet_naming_symbols.locals_and_parameters.applicable_kinds = parameter, local
+dotnet_naming_symbols.locals.applicable_kinds = local
 
-dotnet_naming_style.camel_case_style.capitalization = camel_case
+dotnet_naming_style.local_camel_case_style.capitalization = camel_case
+dotnet_naming_style.local_camel_case_style.required_prefix = 
+dotnet_naming_style.local_camel_case_style.required_suffix =
+dotnet_naming_style.local_camel_case_style.word_separator = 
+
+# Parameters are camelCase and can be unused (prefix _)
+# But optional prefix is not possible in .editorconfig, so we disable this rule
+dotnet_naming_rule.params_and_unused_params.severity = none
+dotnet_naming_rule.params_and_unused_params.symbols = parameters
+dotnet_naming_rule.params_and_unused_params.style = params_and_unused_params_style
+
+dotnet_naming_symbols.parameters.applicable_kinds = parameter
+
+dotnet_naming_style.params_and_unused_params_style.capitalization = camel_case
+dotnet_naming_style.params_and_unused_params_style.required_prefix = # optional "_"
+dotnet_naming_style.params_and_unused_params_style.required_suffix =
+dotnet_naming_style.params_and_unused_params_style.word_separator = 
 
 # Local functions are PascalCase
 dotnet_naming_rule.local_functions_should_be_pascal_case.severity = warning
@@ -285,3 +301,16 @@ dotnet_naming_rule.members_should_be_pascal_case.style = pascal_case_style
 dotnet_naming_symbols.all_members.applicable_kinds = *
 
 dotnet_naming_style.pascal_case_style.capitalization = pascal_case
+
+
+### Additional suppressions ###
+[*.cs]
+# Enforce removal of unnecessary suppression (works only on "#pragma warning disable" and not on the list below)
+dotnet_diagnostic.IDE0079.severity = error
+
+# Suppress "The member 'xxxx' does not hide an accessible member. The new keyword is not required."
+# Use only for Unity's MonoBehaviour component fields like "camera", "rigidbody", etc.
+# Please remove files from the list below when they are no longer needed
+[Assets/Scripts/Buildings/ConstructionSite/ResourceTextHandler.cs,
+ Assets/Scripts/Camera/PlayerCamera.cs]
+dotnet_diagnostic.CS0109.severity = none
