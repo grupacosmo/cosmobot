@@ -24,4 +24,4 @@ jobs:
       - name: Restore dotnet format tool
         run: dotnet tool restore
       - name: Check code format
-        run: dotnet tool run dotnet-format --folder --include Assets/Scripts/ --verify-no-changes --severity warn -v d --check
+        run: dotnet tool run dotnet-format Formatting.csproj --include Assets/Scripts/ --verify-no-changes --severity warn -v d --check --fix-style warn
