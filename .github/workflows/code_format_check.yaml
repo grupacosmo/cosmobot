@@ -3,6 +3,14 @@ name: Code Format Check
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - "**/*.cs"
+      - ".editorconfig"
+      - ".gitattributes"
+      - '.github/workflows/code_format_check.yaml'
+
+permissions:
+  contents: read
 
 jobs:
   format-check:
@@ -13,5 +21,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
+      -name: Restore dotnet format tool
+        run: dotnet tool restore
       - name: Check code format
-        run: dotnet format cosmobot.sln --include Assets/Scripts/ --verify-no-changes --severity warn
+        run: dotnet tool run dotnet-format --folder --include Assets/Scripts/ --verify-no-changes --severity warn -v d --check
