@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
-      -name: Restore dotnet format tool
+      - name: Restore dotnet format tool
         run: dotnet tool restore
       - name: Check code format
         run: dotnet tool run dotnet-format --folder --include Assets/Scripts/ --verify-no-changes --severity warn -v d --check
