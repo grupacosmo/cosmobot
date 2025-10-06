@@ -83,6 +83,9 @@ crashlytics-build.properties
 Assets/Scripts/DefaultInputActions.cs
 
 
-#dlls
+# dlls
 Assets/Plugins/*.dll
 Assets/Plugins/*.dll.meta
+
+# Allow Formatting.csproj for formatting check check
+!Formatting.csproj
