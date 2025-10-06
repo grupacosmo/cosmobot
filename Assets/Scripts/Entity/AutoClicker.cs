@@ -8,7 +8,7 @@ namespace Cosmobot
         private float clickInterval = 1f;
 
         private float currentClickInterval = 1f;
-        public IInteractable target { get; set; }
+        public IInteractable target;
 
         private void Awake()
         {

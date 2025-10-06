@@ -17,7 +17,7 @@ namespace Cosmobot.Entity
         [SerializeField]
         protected float currentHealth;
 
-    public float CurrentHealth => currentHealth;
+        public float CurrentHealth => currentHealth;
         public float CurrentHealthPercentage => currentHealth / maxHealth;
         public bool IsDead => currentHealth <= 0;
 
