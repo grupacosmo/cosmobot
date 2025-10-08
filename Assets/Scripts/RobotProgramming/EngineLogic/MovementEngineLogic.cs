@@ -1,12 +1,13 @@
+using Codice.CM.Common;
+using Cosmobot.Api.Types;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
-using Cosmobot.Api.Types;
 
-namespace Cosmobot
+namespace Cosmobot.Api
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(BaseEngineLogic))]
@@ -17,6 +18,9 @@ namespace Cosmobot
         private ProgrammableFunctionWrapper wrapper;
 
         private BaseEngineLogic baseLogic;
+
+        [SerializeField] private float speed;
+        [SerializeField] private float turningSpeed;
 
         private void Start()
         {
@@ -35,8 +39,12 @@ namespace Cosmobot
             //Expose robot's ingame functions here
             return new Dictionary<string, Delegate>()
             {
-                //{ "ExampleFunctionARG", wrapper.Wrap(ExampleFunctionARG)},
-                //{ ... },
+                { "MoveToObject", wrapper.Wrap<Types.Entity>(MoveToObject)},
+                { "MoveToPosition", wrapper.Wrap<float, float>(MoveToPosition)},
+                { "MoveForward", wrapper.Wrap<float>(MoveForward)},
+                { "TurnRight", wrapper.Wrap<float>(TurnRight)},
+                { "TurnLeft", wrapper.Wrap<float>(TurnLeft)},
+                { "TurnFacing", wrapper.Wrap<float>(TurnFacing)},
             };
         }
 
@@ -46,8 +54,66 @@ namespace Cosmobot
         // functions also must have a unique name
         // (!)remember to expose functions ingame in Dictionary above
         // (!)remember to call "taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
-        void ExampleFunctionARG()
+        void MoveToObject(Types.Entity obj)
         {
+            Vector3 facingOffset = transform.position - obj.position;
+
+            StartCoroutine(MoveToPointCoroutine(obj.position + facingOffset.normalized));
+        }
+
+        void MoveToPosition(float x, float y)
+        {
+            Vec2 to = new Vec2(x, y);
+            StartCoroutine(MoveToPointCoroutine(to));
+        }
+
+        void MoveForward(float distance)
+        {
+            StartCoroutine(MoveToPointCoroutine(transform.position + transform.forward * distance));
+        }
+
+        IEnumerator MoveToPointCoroutine(Vec3 to)
+        {
+            transform.LookAt(to);
+
+            while (transform.position != to)
+            {
+                Vector3 dir = to - transform.position;
+                if (dir.magnitude <= 0.1) transform.position = to;
+                else transform.position += speed * Time.deltaTime * dir.normalized;
+                yield return null;
+            }
+
+            taskCompletedEvent.Set();
+        }
+
+        void TurnRight(float degrees)
+        {
+            StartCoroutine(TurnCoroutine(degrees));
+        }
+
+        void TurnLeft(float degrees)
+        {
+            StartCoroutine(TurnCoroutine(-degrees));
+        }
+
+        void TurnFacing(float degrees)
+        {
+            Quaternion targetRotation = Quaternion.Euler(0, degrees, 0);
+            StartCoroutine(TurnCoroutine(Vector3.Angle(transform.forward, targetRotation * Vector3.forward)));
+        }
+
+        IEnumerator TurnCoroutine(float degrees)
+        {
+            Quaternion targetRotation = transform.rotation * Quaternion.Euler(Vector3.up *  degrees);
+            
+            while (transform.rotation != targetRotation)
+            {
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turningSpeed * Time.deltaTime);
+                yield return null;
+            }
+
+            transform.rotation = targetRotation;
             taskCompletedEvent.Set();
         }
     }

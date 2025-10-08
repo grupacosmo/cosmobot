@@ -6,7 +6,7 @@ using System.Threading;
 using UnityEngine;
 using Cosmobot.Api.Types;
 
-namespace Cosmobot
+namespace Cosmobot.Api
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(BaseEngineLogic))]
@@ -51,7 +51,7 @@ namespace Cosmobot
         {
             // This will throw an error as construction system might need reworking, 
             // also team not sure if robot should be able to initialize builds
-            Vector3 inFront = transform.position + Vector3.forward;
+            Vector3 inFront = transform.position + transform.forward;
 
             inFront.x -= inFront.x % GlobalConstants.GRID_CELL_SIZE + 0.5f;
             inFront.y = 0;

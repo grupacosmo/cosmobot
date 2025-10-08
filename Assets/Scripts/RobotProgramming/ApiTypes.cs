@@ -23,6 +23,11 @@ namespace Cosmobot.Api.Types
         {
             return new Vector3(v.x, v.y, v.z);
         }
+
+        public static implicit operator Vec3(Vec2 v)
+        {
+            return new Vec3(v.x, 0, v.y);
+        }
     }
 
     public struct Vec2
@@ -40,23 +45,33 @@ namespace Cosmobot.Api.Types
             return new Vec2(v.x, v.y);
         }
 
+        public static implicit operator Vec2(Vector3 v)
+        {
+            return new Vec2(v.x, v.z);
+        }
+
         public static implicit operator Vector2(Vec2 v)
         {
             return new Vector2(v.x, v.y);
+        }
+
+        public static implicit operator Vector3(Vec2 v)
+        {
+            return new Vector3(v.x, 0, v.y);
         }
     }
 
     public interface Entity
     {
-        Vec2? position { get; }
+        Vec2 position { get; }
     }
 
     public struct Item : Entity
     {
         public ItemComponent itemComponent;
-        public Vec2? position { get; }
+        public Vec2 position { get; }
 
-        public Item(ItemComponent itemComponent, Vec2? position)
+        public Item(ItemComponent itemComponent, Vec2 position)
         {
             this.itemComponent = itemComponent;
             this.position = position;

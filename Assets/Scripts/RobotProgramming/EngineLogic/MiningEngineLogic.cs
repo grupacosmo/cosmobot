@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-namespace Cosmobot
+namespace Cosmobot.Api
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(BaseEngineLogic))]
@@ -58,7 +58,7 @@ namespace Cosmobot
                 GameObject material = deposit.Mine();
                 if(material != null)
                 {
-                    Instantiate(material, transform.position + Vector3.forward, Quaternion.identity);
+                    Instantiate(material, transform.position + transform.forward, Quaternion.identity);
                     taskCompletedEvent.Set();
                     return;
                 }

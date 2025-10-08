@@ -7,7 +7,7 @@ using UnityEngine;
 using Cosmobot.Api.Types;
 using Cosmobot.ItemSystem;
 
-namespace Cosmobot
+namespace Cosmobot.Api
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(BaseEngineLogic))]
@@ -170,7 +170,7 @@ namespace Cosmobot
             }
 
             Vector2 pos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.z);
-            if(Vector2.Distance(pos, item.position.Value) <= reachRange)
+            if(Vector2.Distance(pos, item.position) <= reachRange)
             {
                 if(inventoryComponent.inventory.AddItem(item.itemComponent.Item))
                 {
@@ -195,7 +195,7 @@ namespace Cosmobot
                 ItemInstance temp = inventoryComponent.inventory.RemoveLatest();
                 if (temp != null)
                 {
-                    Instantiate(temp.ItemInfo.Prefab, transform.position + Vector3.forward, Quaternion.identity);
+                    Instantiate(temp.ItemInfo.Prefab, transform.position + transform.forward, Quaternion.identity);
                     taskCompletedEvent.Set();
                     return;
                 }
@@ -207,7 +207,7 @@ namespace Cosmobot
             ItemInstance item = inventoryComponent.inventory.RemoveFirstById(itemId);
             if (item != null)
             {
-                Instantiate(item.ItemInfo.Prefab, transform.position + Vector3.forward, Quaternion.identity);
+                Instantiate(item.ItemInfo.Prefab, transform.position + transform.forward, Quaternion.identity);
                 taskCompletedEvent.Set();
                 return;
             }

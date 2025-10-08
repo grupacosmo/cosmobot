@@ -6,7 +6,7 @@ using System.Threading;
 using UnityEngine;
 using Cosmobot.Api.Types;
 
-namespace Cosmobot
+namespace Cosmobot.Api
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(BaseEngineLogic))]
