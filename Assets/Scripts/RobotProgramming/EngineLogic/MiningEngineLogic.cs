@@ -1,16 +1,17 @@
+using Cosmobot.Api.Types;
+using Cosmobot.ItemSystem;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
-using Cosmobot.Api.Types;
 
 namespace Cosmobot
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(BaseEngineLogic))]
-    public class #SCRIPTNAME# : MonoBehaviour, IEngineLogic
+    public class MiningEngineLogic : MonoBehaviour, IEngineLogic
     {
         private ManualResetEvent taskCompletedEvent;
         private CancellationToken cancellationToken;
@@ -35,8 +36,7 @@ namespace Cosmobot
             //Expose robot's ingame functions here
             return new Dictionary<string, Delegate>()
             {
-                //{ "ExampleFunctionARG", wrapper.Wrap(ExampleFunctionARG)},
-                //{ ... },
+                { "Dig", wrapper.Wrap(Dig)},
             };
         }
 
@@ -46,8 +46,27 @@ namespace Cosmobot
         // functions also must have a unique name
         // (!)remember to expose functions ingame in Dictionary above
         // (!)remember to call "taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
-        void ExampleFunctionARG()
+        void Dig()
         {
+            RaycastHit hit;
+            Physics.Raycast(transform.position, Vector3.down, out hit, 1);
+
+            MaterialDeposit deposit;
+
+            if(deposit = hit.collider.gameObject.GetComponent<MaterialDeposit>())
+            {
+                GameObject material = deposit.Mine();
+                if(material != null)
+                {
+                    Instantiate(material, transform.position + Vector3.forward, Quaternion.identity);
+                    taskCompletedEvent.Set();
+                    return;
+                }
+                baseLogic.LogError("Gathered material was null");
+                taskCompletedEvent.Set();
+                return;
+            }
+            baseLogic.Log("There's no material deposit here");
             taskCompletedEvent.Set();
         }
     }

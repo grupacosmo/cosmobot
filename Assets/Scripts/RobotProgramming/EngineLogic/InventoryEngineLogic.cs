@@ -24,7 +24,7 @@ namespace Cosmobot
         [SerializeField] private float reachRange;
         private int itemLayer = 10;
 
-        void Start()
+        private void Start()
         {
             inventoryComponent = gameObject.GetComponent<InventoryComponent>();
             baseLogic = gameObject.GetComponent<BaseEngineLogic>();
@@ -71,7 +71,7 @@ namespace Cosmobot
             if (string.IsNullOrEmpty(type))
             {
                 ItemComponent itemComponent = objects[0].GetComponent<ItemComponent>();
-                if (!itemComponent)
+                if (itemComponent == null)
                 {
                     taskCompletedEvent.Set();
                     return null;
@@ -86,7 +86,7 @@ namespace Cosmobot
             {
                 ItemComponent itemComponent = collider.GetComponent<ItemComponent>();
 
-                if (!itemComponent)
+                if (itemComponent == null)
                     continue;
 
                 if (itemComponent.ItemInfo.Id == type)
@@ -118,7 +118,7 @@ namespace Cosmobot
             {
                 ItemComponent itemComponent = collider.GetComponent<ItemComponent>();
 
-                if (!itemComponent)
+                if (itemComponent == null)
                     continue;
 
                 if (itemComponent.ItemInfo.Id == type || string.IsNullOrEmpty(type))
@@ -146,7 +146,7 @@ namespace Cosmobot
             {
                 ItemComponent itemComponent = collider.GetComponent<ItemComponent>();
 
-                if (!itemComponent)
+                if (itemComponent == null)
                     continue;
 
                 if (itemComponent.ItemInfo.Id == type || string.IsNullOrEmpty(type))
@@ -162,7 +162,7 @@ namespace Cosmobot
 
         void PickupItem(Item item)
         {
-            if(!item.itemComponent)
+            if(item.itemComponent == null)
             {
                 baseLogic.LogError("Item doesn't exist anymore");
                 taskCompletedEvent.Set();
@@ -193,7 +193,7 @@ namespace Cosmobot
             if (string.IsNullOrEmpty(itemId))
             {
                 ItemInstance temp = inventoryComponent.inventory.RemoveLatest();
-                if (temp is not null)
+                if (temp != null)
                 {
                     Instantiate(temp.ItemInfo.Prefab, transform.position + Vector3.forward, Quaternion.identity);
                     taskCompletedEvent.Set();
@@ -205,7 +205,7 @@ namespace Cosmobot
             }
 
             ItemInstance item = inventoryComponent.inventory.RemoveFirstById(itemId);
-            if (item is not null)
+            if (item != null)
             {
                 Instantiate(item.ItemInfo.Prefab, transform.position + Vector3.forward, Quaternion.identity);
                 taskCompletedEvent.Set();

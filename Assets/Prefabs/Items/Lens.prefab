@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3516543481110741587}
   - component: {fileID: 8401434707131471660}
   - component: {fileID: 678188504027488934}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Lens
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -130,6 +130,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
