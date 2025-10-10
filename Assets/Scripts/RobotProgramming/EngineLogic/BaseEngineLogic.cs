@@ -77,6 +77,7 @@ namespace Cosmobot.Api
 
         public IEnumerator DanceCoroutine()
         {
+            // This probably will be an animation in the future
             for (int i = 0; i < 3; ++i)
             {
                 Quaternion q = transform.rotation;

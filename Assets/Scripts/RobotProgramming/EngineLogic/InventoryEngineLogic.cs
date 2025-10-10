@@ -22,7 +22,6 @@ namespace Cosmobot.Api
         private BaseEngineLogic baseLogic;
         [SerializeField] private float searchRange;
         [SerializeField] private float reachRange;
-        private int itemLayer = 10;
 
         private void Start()
         {
@@ -60,7 +59,7 @@ namespace Cosmobot.Api
         // (!)remember to call "taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
         Item? FindItem(string type = "")
         {
-            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << itemLayer);
+            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << GlobalConstants.ITEM_LAYER);
 
             if (objects.Length == 0)
             {
@@ -103,7 +102,7 @@ namespace Cosmobot.Api
 
         Item? FindClosestItem(string type = "")
         {
-            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << itemLayer);
+            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << GlobalConstants.ITEM_LAYER);
 
             if (objects.Length == 0)
             {
@@ -139,7 +138,7 @@ namespace Cosmobot.Api
 
         List<Item> FindAllItems(string type = "")
         {
-            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << itemLayer);
+            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << GlobalConstants.ITEM_LAYER);
             List<Item> items = new List<Item>();
 
             foreach (Collider collider in objects)

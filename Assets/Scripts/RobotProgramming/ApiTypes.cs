@@ -77,4 +77,16 @@ namespace Cosmobot.Api.Types
             this.position = position;
         }
     }
+
+    public struct Hostile : Entity
+    {
+        public Enemy enemyComponent;
+        public Vec2 position { get; }
+
+        public Hostile(Enemy enemyComponent, Vec2 position)
+        {
+            this.enemyComponent = enemyComponent;
+            this.position = position;
+        }
+    }
 }
