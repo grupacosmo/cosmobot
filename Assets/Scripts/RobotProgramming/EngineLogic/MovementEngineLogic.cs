@@ -57,7 +57,6 @@ namespace Cosmobot.Api
         void MoveToObject(Types.Entity obj)
         {
             Vector3 facingOffset = transform.position - obj.position;
-
             StartCoroutine(MoveToPointCoroutine(obj.position + facingOffset.normalized));
         }
 
@@ -74,7 +73,7 @@ namespace Cosmobot.Api
 
         IEnumerator MoveToPointCoroutine(Vec3 to)
         {
-            transform.LookAt(to);
+            yield return TurnCoroutine(Vector3.Angle(to - transform.position, transform.forward), false);
 
             while (transform.position != to)
             {
@@ -89,21 +88,21 @@ namespace Cosmobot.Api
 
         void TurnRight(float degrees)
         {
-            StartCoroutine(TurnCoroutine(degrees));
+            StartCoroutine(TurnCoroutine(degrees, true));
         }
 
         void TurnLeft(float degrees)
         {
-            StartCoroutine(TurnCoroutine(-degrees));
+            StartCoroutine(TurnCoroutine(-degrees, true));
         }
 
         void TurnFacing(float degrees)
         {
             Quaternion targetRotation = Quaternion.Euler(0, degrees, 0);
-            StartCoroutine(TurnCoroutine(Vector3.Angle(transform.forward, targetRotation * Vector3.forward)));
+            StartCoroutine(TurnCoroutine(Vector3.Angle(transform.forward, targetRotation * Vector3.forward), true));
         }
 
-        IEnumerator TurnCoroutine(float degrees)
+        IEnumerator TurnCoroutine(float degrees, bool completeEvent)
         {
             Quaternion targetRotation = transform.rotation * Quaternion.Euler(Vector3.up *  degrees);
             
@@ -114,7 +113,7 @@ namespace Cosmobot.Api
             }
 
             transform.rotation = targetRotation;
-            taskCompletedEvent.Set();
+            if(completeEvent) taskCompletedEvent.Set();
         }
     }
 }

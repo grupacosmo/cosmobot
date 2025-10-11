@@ -51,22 +51,25 @@ namespace Cosmobot.Api
             RaycastHit hit;
             Physics.Raycast(transform.position, Vector3.down, out hit, 1);
 
-            MaterialDeposit deposit;
+            MaterialDeposit deposit = hit.collider.gameObject.GetComponent<MaterialDeposit>();
 
-            if(deposit = hit.collider.gameObject.GetComponent<MaterialDeposit>())
+            if(deposit == null)
             {
-                GameObject material = deposit.Mine();
-                if(material != null)
-                {
-                    Instantiate(material, transform.position + transform.forward, Quaternion.identity);
-                    taskCompletedEvent.Set();
-                    return;
-                }
-                baseLogic.LogError("Gathered material was null");
+                baseLogic.Log("There's no material deposit here");
                 taskCompletedEvent.Set();
                 return;
             }
-            baseLogic.Log("There's no material deposit here");
+
+            GameObject material = deposit.Mine();
+            if (material == null)
+            {
+                baseLogic.LogError("Gathered material was null");
+                taskCompletedEvent.Set();
+                return;
+                
+            }
+
+            Instantiate(material, transform.position + transform.forward, Quaternion.identity);
             taskCompletedEvent.Set();
         }
     }

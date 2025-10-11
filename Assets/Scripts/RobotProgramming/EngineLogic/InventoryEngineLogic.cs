@@ -67,20 +67,6 @@ namespace Cosmobot.Api
                 return null;
             }
 
-            if (string.IsNullOrEmpty(type))
-            {
-                ItemComponent itemComponent = objects[0].GetComponent<ItemComponent>();
-                if (itemComponent == null)
-                {
-                    taskCompletedEvent.Set();
-                    return null;
-                }
-
-                taskCompletedEvent.Set();
-                Vector2 pos = new Vector2(objects[0].transform.position.x, objects[0].transform.position.z);
-                return new Item(itemComponent, pos);
-            }
-
             foreach (Collider collider in objects)
             {
                 ItemComponent itemComponent = collider.GetComponent<ItemComponent>();
@@ -88,10 +74,10 @@ namespace Cosmobot.Api
                 if (itemComponent == null)
                     continue;
 
-                if (itemComponent.ItemInfo.Id == type)
+                if (string.IsNullOrEmpty(type) || itemComponent.ItemInfo.Id == type)
                 {
                     taskCompletedEvent.Set();
-                    Vector2 pos = new Vector2(objects[0].transform.position.x, objects[0].transform.position.z);
+                    Vector2 pos = new Vector2(collider.transform.position.x, collider.transform.position.z);
                     return new Item(itemComponent, pos);
                 }
             }
@@ -120,7 +106,7 @@ namespace Cosmobot.Api
                 if (itemComponent == null)
                     continue;
 
-                if (itemComponent.ItemInfo.Id == type || string.IsNullOrEmpty(type))
+                if (string.IsNullOrEmpty(type) || itemComponent.ItemInfo.Id == type)
                 {
                     float currentDist = Vector3.Distance(transform.position, collider.transform.position);
                     if (currentDist < distance)
@@ -148,7 +134,7 @@ namespace Cosmobot.Api
                 if (itemComponent == null)
                     continue;
 
-                if (itemComponent.ItemInfo.Id == type || string.IsNullOrEmpty(type))
+                if (string.IsNullOrEmpty(type) || itemComponent.ItemInfo.Id == type)
                 {
                     Vector2 pos = new Vector2(collider.transform.position.x, collider.transform.position.z);
                     items.Add(new Item(itemComponent, pos));
@@ -169,21 +155,21 @@ namespace Cosmobot.Api
             }
 
             Vector2 pos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.z);
-            if(Vector2.Distance(pos, item.position) <= reachRange)
+            if(Vector2.Distance(pos, item.position) > reachRange)
             {
-                if(inventoryComponent.inventory.AddItem(item.itemComponent.Item))
-                {
-                    item.itemComponent.Dispose();
-                    taskCompletedEvent.Set();
-                    return;
-                }
-
-                baseLogic.LogError("Couldn't add item to inventory");
+                baseLogic.LogError("Item is too far");
                 taskCompletedEvent.Set();
                 return;
             }
 
-            baseLogic.LogError("Item is too far");
+            if (inventoryComponent.inventory.AddItem(item.itemComponent.Item))
+            {
+                item.itemComponent.Dispose();
+                taskCompletedEvent.Set();
+                return;
+            }
+
+            baseLogic.LogError("Couldn't add item to inventory");
             taskCompletedEvent.Set();
         }
 
@@ -192,25 +178,27 @@ namespace Cosmobot.Api
             if (string.IsNullOrEmpty(itemId))
             {
                 ItemInstance temp = inventoryComponent.inventory.RemoveLatest();
-                if (temp != null)
+                if (temp == null)
                 {
-                    Instantiate(temp.ItemInfo.Prefab, transform.position + transform.forward, Quaternion.identity);
+                    baseLogic.Log("No items to be dropped");
                     taskCompletedEvent.Set();
                     return;
                 }
-                baseLogic.Log("No items to be dropped");
+                
+                Instantiate(temp.ItemInfo.Prefab, transform.position + transform.forward, Quaternion.identity);
                 taskCompletedEvent.Set();
                 return;
             }
 
             ItemInstance item = inventoryComponent.inventory.RemoveFirstById(itemId);
-            if (item != null)
+            if (item == null)
             {
-                Instantiate(item.ItemInfo.Prefab, transform.position + transform.forward, Quaternion.identity);
+                baseLogic.Log("No such item in inventory");
                 taskCompletedEvent.Set();
                 return;
             }
-            baseLogic.Log("No such item in inventory");
+
+            Instantiate(item.ItemInfo.Prefab, transform.position + transform.forward, Quaternion.identity);
             taskCompletedEvent.Set();
             return;
         }
