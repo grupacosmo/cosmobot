@@ -1,10 +1,10 @@
-using Cosmobot.Api.Types;
-using Cosmobot.ItemSystem;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
+using Cosmobot.Api.Types;
+using Cosmobot.ItemSystem;
 using UnityEngine;
 
 namespace Cosmobot.Api
@@ -53,7 +53,7 @@ namespace Cosmobot.Api
 
             MaterialDeposit deposit = hit.collider.gameObject.GetComponent<MaterialDeposit>();
 
-            if(deposit == null)
+            if (deposit == null)
             {
                 baseLogic.Log("There's no material deposit here");
                 taskCompletedEvent.Set();
@@ -66,7 +66,7 @@ namespace Cosmobot.Api
                 baseLogic.LogError("Gathered material was null");
                 taskCompletedEvent.Set();
                 return;
-                
+
             }
 
             Instantiate(material, transform.position + transform.forward, Quaternion.identity);

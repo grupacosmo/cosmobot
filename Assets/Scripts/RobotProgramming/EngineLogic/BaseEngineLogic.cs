@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
-using UnityEngine;
 using Cosmobot.Api.Types;
+using UnityEngine;
 
 namespace Cosmobot.Api
 {
@@ -82,7 +82,7 @@ namespace Cosmobot.Api
             {
                 Quaternion q = transform.rotation;
                 float spin = 0;
-                while(spin < 720)
+                while (spin < 720)
                 {
                     transform.Rotate(Vector3.up, Time.deltaTime * 400);
                     spin += Time.deltaTime * 400;

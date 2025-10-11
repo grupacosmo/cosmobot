@@ -63,31 +63,31 @@ namespace Cosmobot.Api.Types
 
     public abstract class Entity
     {
-        public Vec2 position { get; protected set; }
-        internal abstract bool isValid { get; }
+        public Vec2 Position { get; protected set; }
+        internal abstract bool IsValid { get; }
     }
 
     public class Item : Entity
     {
         internal ItemComponent itemComponent;
-        internal override bool isValid => itemComponent != null;
+        internal override bool IsValid => itemComponent != null;
 
         public Item(ItemComponent itemComponent, Vec2 position)
         {
             this.itemComponent = itemComponent;
-            this.position = position;
+            this.Position = position;
         }
     }
 
     public class Hostile : Entity
     {
         internal Enemy enemyComponent;
-        internal override bool isValid => enemyComponent != null;
+        internal override bool IsValid => enemyComponent != null;
 
         public Hostile(Enemy enemyComponent, Vec2 position)
         {
             this.enemyComponent = enemyComponent;
-            this.position = position;
+            this.Position = position;
         }
     }
 }

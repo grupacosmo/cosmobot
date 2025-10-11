@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
-using UnityEngine;
 using Cosmobot.Api.Types;
 using Cosmobot.ItemSystem;
+using UnityEngine;
 
 namespace Cosmobot.Api
 {
@@ -147,7 +147,7 @@ namespace Cosmobot.Api
 
         void PickupItem(Item item)
         {
-            if(item == null || item.itemComponent == null || !item.isValid)
+            if (item == null || item.itemComponent == null || !item.IsValid)
             {
                 baseLogic.LogError("Item doesn't exist anymore");
                 taskCompletedEvent.Set();
@@ -155,7 +155,7 @@ namespace Cosmobot.Api
             }
 
             Vector2 pos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.z);
-            if(Vector2.Distance(pos, item.position) > reachRange)
+            if (Vector2.Distance(pos, item.Position) > reachRange)
             {
                 baseLogic.LogError("Item is too far");
                 taskCompletedEvent.Set();
@@ -184,7 +184,7 @@ namespace Cosmobot.Api
                     taskCompletedEvent.Set();
                     return;
                 }
-                
+
                 Instantiate(temp.ItemInfo.Prefab, transform.position + transform.forward, Quaternion.identity);
                 taskCompletedEvent.Set();
                 return;

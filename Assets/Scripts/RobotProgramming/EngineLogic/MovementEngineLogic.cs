@@ -1,10 +1,10 @@
-using Codice.CM.Common;
-using Cosmobot.Api.Types;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
+using Codice.CM.Common;
+using Cosmobot.Api.Types;
 using UnityEngine;
 
 namespace Cosmobot.Api
@@ -56,15 +56,15 @@ namespace Cosmobot.Api
         // (!)remember to call "taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
         void MoveToObject(Types.Entity obj)
         {
-            if (!obj.isValid)
+            if (!obj.IsValid)
             {
                 baseLogic.LogError("Item doesn't exist anymore");
                 taskCompletedEvent.Set();
                 return;
             }
 
-            Vector3 facingOffset = transform.position - obj.position;
-            StartCoroutine(MoveToPointCoroutine(obj.position + facingOffset.normalized));
+            Vector3 facingOffset = transform.position - obj.Position;
+            StartCoroutine(MoveToPointCoroutine(obj.Position + facingOffset.normalized));
         }
 
         void MoveToPosition(float x, float y)
@@ -112,7 +112,7 @@ namespace Cosmobot.Api
         IEnumerator TurnCoroutine(float degrees, bool completeEvent)
         {
             Quaternion targetRotation = transform.rotation * Quaternion.Euler(Vector3.up *  degrees);
-            
+
             while (transform.rotation != targetRotation)
             {
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turningSpeed * Time.deltaTime);
@@ -120,7 +120,7 @@ namespace Cosmobot.Api
             }
 
             transform.rotation = targetRotation;
-            if(completeEvent) taskCompletedEvent.Set();
+            if (completeEvent) taskCompletedEvent.Set();
         }
     }
 }
