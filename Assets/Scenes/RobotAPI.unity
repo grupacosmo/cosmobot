@@ -354,6 +354,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   code: 'let a = FindItem("");
 
+    Log(a.itemComponent);
+
     PickupItem(a);
 
     PickupItem(a);
@@ -566,23 +568,23 @@ MonoBehaviour:
 
     TurnLeft(45);
 
-    Wait(5);
+    Wait(1);
 
     TurnFacing(0);
 
-    Wait(2);
+    Wait(1);
 
     TurnFacing(90);
 
-    Wait(2);
+    Wait(1);
 
     TurnFacing(180);
 
-    Wait(2);
+    Wait(1);
 
     TurnFacing(270);
 
-    Wait(2);
+    Wait(1);
 
     MoveToObject(a);'
 --- !u!65 &226238873

@@ -56,6 +56,13 @@ namespace Cosmobot.Api
         // (!)remember to call "taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
         void MoveToObject(Types.Entity obj)
         {
+            if (!obj.isValid)
+            {
+                baseLogic.LogError("Item doesn't exist anymore");
+                taskCompletedEvent.Set();
+                return;
+            }
+
             Vector3 facingOffset = transform.position - obj.position;
             StartCoroutine(MoveToPointCoroutine(obj.position + facingOffset.normalized));
         }

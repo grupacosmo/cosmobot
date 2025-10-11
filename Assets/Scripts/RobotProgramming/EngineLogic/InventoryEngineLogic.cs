@@ -43,8 +43,8 @@ namespace Cosmobot.Api
             {
                 //{ "ExampleFunctionARG", wrapper.Wrap(ExampleFunctionARG)},
                 //{ ... },
-                { "FindItem", wrapper.Wrap<string, Item?>(FindItem)},
-                { "FindClosestItem", wrapper.Wrap<string, Item?>(FindClosestItem)},
+                { "FindItem", wrapper.Wrap<string, Item>(FindItem)},
+                { "FindClosestItem", wrapper.Wrap<string, Item>(FindClosestItem)},
                 { "FindAllItems", wrapper.Wrap<string, List<Item>>(FindAllItems)},
                 { "PickupItem", wrapper.Wrap<Item>(PickupItem)},
                 { "DropItem", wrapper.Wrap<string>(DropItem)},
@@ -57,7 +57,7 @@ namespace Cosmobot.Api
         // functions also must have a unique name
         // (!)remember to expose functions ingame in Dictionary above
         // (!)remember to call "taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
-        Item? FindItem(string type = "")
+        Item FindItem(string type = "")
         {
             Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << GlobalConstants.ITEM_LAYER);
 
@@ -86,7 +86,7 @@ namespace Cosmobot.Api
             return null;
         }
 
-        Item? FindClosestItem(string type = "")
+        Item FindClosestItem(string type = "")
         {
             Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << GlobalConstants.ITEM_LAYER);
 
@@ -96,7 +96,7 @@ namespace Cosmobot.Api
                 return null;
             }
 
-            Item? closest = null;
+            Item closest = null;
             float distance = searchRange;
 
             foreach (Collider collider in objects)
@@ -147,7 +147,7 @@ namespace Cosmobot.Api
 
         void PickupItem(Item item)
         {
-            if(item.itemComponent == null)
+            if(item == null || item.itemComponent == null || !item.isValid)
             {
                 baseLogic.LogError("Item doesn't exist anymore");
                 taskCompletedEvent.Set();

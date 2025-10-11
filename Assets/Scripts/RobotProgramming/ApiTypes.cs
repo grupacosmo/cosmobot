@@ -61,15 +61,16 @@ namespace Cosmobot.Api.Types
         }
     }
 
-    public interface Entity
+    public abstract class Entity
     {
-        Vec2 position { get; }
+        public Vec2 position { get; protected set; }
+        internal abstract bool isValid { get; }
     }
 
-    public struct Item : Entity
+    public class Item : Entity
     {
-        public ItemComponent itemComponent;
-        public Vec2 position { get; }
+        internal ItemComponent itemComponent;
+        internal override bool isValid => itemComponent != null;
 
         public Item(ItemComponent itemComponent, Vec2 position)
         {
@@ -78,10 +79,10 @@ namespace Cosmobot.Api.Types
         }
     }
 
-    public struct Hostile : Entity
+    public class Hostile : Entity
     {
-        public Enemy enemyComponent;
-        public Vec2 position { get; }
+        internal Enemy enemyComponent;
+        internal override bool isValid => enemyComponent != null;
 
         public Hostile(Enemy enemyComponent, Vec2 position)
         {
