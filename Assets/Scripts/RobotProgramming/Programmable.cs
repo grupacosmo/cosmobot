@@ -27,6 +27,7 @@ namespace Cosmobot
 
         static int staticDebugI;
         int debugI = 0;
+        string objectName;
 
         void Start()
         {
@@ -39,7 +40,7 @@ namespace Cosmobot
 
             debugI = staticDebugI++;
             engineLogicInterfaces = GetComponents<IEngineLogic>();
-
+            objectName = gameObject.name;
         }
 
         private void Update()
@@ -96,7 +97,7 @@ namespace Cosmobot
             }
             catch (System.Exception ex)
             {
-                Debug.LogError("Error: " + ex.Message);
+                Debug.LogError("Error: " + ex.Message + " " + objectName);
             }
             finally
             {

@@ -552,7 +552,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  code: 'let a = FindItem("");
+  code: 'let a = FindItem();
 
     MoveToPosition(0,0);
 

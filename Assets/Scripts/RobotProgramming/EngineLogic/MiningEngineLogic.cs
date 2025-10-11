@@ -66,7 +66,6 @@ namespace Cosmobot.Api
                 baseLogic.LogError("Gathered material was null");
                 taskCompletedEvent.Set();
                 return;
-
             }
 
             Instantiate(material, transform.position + transform.forward, Quaternion.identity);

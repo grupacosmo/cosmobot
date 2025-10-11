@@ -76,9 +76,10 @@ namespace Cosmobot.Api
 
                 if (string.IsNullOrEmpty(type) || itemComponent.ItemInfo.Id == type)
                 {
-                    taskCompletedEvent.Set();
                     Vector2 pos = new Vector2(collider.transform.position.x, collider.transform.position.z);
-                    return new Item(itemComponent, pos);
+                    Item item = new Item(itemComponent, pos);
+                    taskCompletedEvent.Set();
+                    return item;
                 }
             }
 
