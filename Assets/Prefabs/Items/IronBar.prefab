@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 40806099096637522}
   - component: {fileID: 7414545746193006543}
   - component: {fileID: 8928227105661989265}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: IronBar
   m_TagString: Item
   m_Icon: {fileID: 0}

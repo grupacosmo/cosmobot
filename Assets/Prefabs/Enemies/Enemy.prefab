@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8017346013706343520}
   - component: {fileID: 4816872180925417627}
   - component: {fileID: 333833493849069190}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -63,6 +63,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

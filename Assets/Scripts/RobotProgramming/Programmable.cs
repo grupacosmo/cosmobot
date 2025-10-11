@@ -27,6 +27,7 @@ namespace Cosmobot
 
         static int staticDebugI;
         int debugI = 0;
+        string objectName;
 
         void Start()
         {
@@ -39,7 +40,7 @@ namespace Cosmobot
 
             debugI = staticDebugI++;
             engineLogicInterfaces = GetComponents<IEngineLogic>();
-
+            objectName = gameObject.name;
         }
 
         private void Update()
@@ -96,7 +97,7 @@ namespace Cosmobot
             }
             catch (System.Exception ex)
             {
-                Debug.LogError("Error: " + ex.Message);
+                Debug.LogError("Error: " + ex.Message + " " + objectName);
             }
             finally
             {
@@ -110,6 +111,28 @@ namespace Cosmobot
         private void ValidateFunction(string key, Delegate value, string name)
         {
             Type type = value.Method.ReturnType;
+
+            Type underNullableType = Nullable.GetUnderlyingType(type);
+            if (underNullableType != null)
+            {
+                type = underNullableType;
+            }
+
+            if (type.IsGenericType)
+            {
+                Type[] argsTypes = type.GetGenericArguments();
+                foreach (var arg in argsTypes)
+                {
+                    if (arg == typeof(void) || arg.IsPrimitive || arg.Namespace == RobotApiTypesNamespace)
+                    {
+                        continue;
+                    }
+                    Debug.LogError($"Method returns disallowed type argument in generic type! Method: {arg} in {type.GetGenericTypeDefinition()} {key} in {name}");
+                    throw new Exception($"Method returns disallowed type argument in generic type! Method: {arg} in {type.GetGenericTypeDefinition()} {key} in {name}");
+                }
+                return;
+            }
+
             if (type == typeof(void) || type.IsPrimitive || type.Namespace == RobotApiTypesNamespace)
             {
                 return;

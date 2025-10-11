@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Cosmobot.ItemSystem;
+using UnityEngine;
 
 namespace Cosmobot.Api.Types
 {
@@ -22,6 +23,11 @@ namespace Cosmobot.Api.Types
         {
             return new Vector3(v.x, v.y, v.z);
         }
+
+        public static implicit operator Vec3(Vec2 v)
+        {
+            return new Vec3(v.x, 0, v.y);
+        }
     }
 
     public struct Vec2
@@ -39,9 +45,49 @@ namespace Cosmobot.Api.Types
             return new Vec2(v.x, v.y);
         }
 
+        public static implicit operator Vec2(Vector3 v)
+        {
+            return new Vec2(v.x, v.z);
+        }
+
         public static implicit operator Vector2(Vec2 v)
         {
             return new Vector2(v.x, v.y);
+        }
+
+        public static implicit operator Vector3(Vec2 v)
+        {
+            return new Vector3(v.x, 0, v.y);
+        }
+    }
+
+    public abstract class Entity
+    {
+        public Vec2 Position { get; protected set; }
+        internal abstract bool IsValid { get; }
+    }
+
+    public class Item : Entity
+    {
+        internal ItemComponent itemComponent;
+        internal override bool IsValid => itemComponent != null;
+
+        public Item(ItemComponent itemComponent, Vec2 position)
+        {
+            this.itemComponent = itemComponent;
+            this.Position = position;
+        }
+    }
+
+    public class Hostile : Entity
+    {
+        internal Enemy enemyComponent;
+        internal override bool IsValid => enemyComponent != null;
+
+        public Hostile(Enemy enemyComponent, Vec2 position)
+        {
+            this.enemyComponent = enemyComponent;
+            this.Position = position;
         }
     }
 }

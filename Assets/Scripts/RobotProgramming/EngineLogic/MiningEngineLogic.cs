@@ -3,14 +3,15 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
-using UnityEngine;
 using Cosmobot.Api.Types;
+using Cosmobot.ItemSystem;
+using UnityEngine;
 
 namespace Cosmobot.Api
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(BaseEngineLogic))]
-    public class #SCRIPTNAME# : MonoBehaviour, IEngineLogic
+    public class MiningEngineLogic : MonoBehaviour, IEngineLogic
     {
         private ManualResetEvent taskCompletedEvent;
         private CancellationToken cancellationToken;
@@ -35,8 +36,7 @@ namespace Cosmobot.Api
             //Expose robot's ingame functions here
             return new Dictionary<string, Delegate>()
             {
-                //{ "ExampleFunctionARG", wrapper.Wrap(ExampleFunctionARG)},
-                //{ ... },
+                { "Dig", wrapper.Wrap(Dig)},
             };
         }
 
@@ -46,8 +46,29 @@ namespace Cosmobot.Api
         // functions also must have a unique name
         // (!)remember to expose functions ingame in Dictionary above
         // (!)remember to call "taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
-        void ExampleFunctionARG()
+        void Dig()
         {
+            RaycastHit hit;
+            Physics.Raycast(transform.position, Vector3.down, out hit, 1);
+
+            MaterialDeposit deposit = hit.collider.gameObject.GetComponent<MaterialDeposit>();
+
+            if (deposit == null)
+            {
+                baseLogic.Log("There's no material deposit here");
+                taskCompletedEvent.Set();
+                return;
+            }
+
+            GameObject material = deposit.Mine();
+            if (material == null)
+            {
+                baseLogic.LogError("Gathered material was null");
+                taskCompletedEvent.Set();
+                return;
+            }
+
+            Instantiate(material, transform.position + transform.forward, Quaternion.identity);
             taskCompletedEvent.Set();
         }
     }

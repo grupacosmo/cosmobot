@@ -114,6 +114,22 @@ namespace Cosmobot.ItemSystem
         }
 
         [CanBeNull]
+        public ItemInstance RemoveLatest()
+        {
+            if (!allowRemovingItems) return null;
+
+            if (items.Any())
+            {
+                ItemInstance item = items.Last();
+                items.RemoveAt(items.Count - 1);
+                OnItemRemoved?.Invoke(this, item);
+                return item;
+            }
+
+            return null;
+        }
+
+        [CanBeNull]
         public ItemInstance RemoveFirstById(string id)
         {
             if (!allowRemovingItems) return null;
