@@ -20,7 +20,7 @@ namespace Cosmobot.ItemSystem
         public ItemInfo ItemInfo => item.ItemInfo;
 
         public SerializableDictionary<string, string> ItemData => item.StringValue;
-        
+
         /// <summary>
         ///     <c>ItemData</c> accessor that treats the values as integers.
         ///     Will throw if the value is not a valid integer or if the key does not exist when

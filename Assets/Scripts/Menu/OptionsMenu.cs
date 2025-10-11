@@ -11,20 +11,20 @@ namespace Cosmobot
 
         public TMP_Dropdown resolutionDropdown;
 
-        private Resolution[] _resolutions;
+        private Resolution[] resolutions;
 
         private void Start()
         {
-            _resolutions = Screen.resolutions;
+            resolutions = Screen.resolutions;
             resolutionDropdown.ClearOptions();
             List<string> options = new List<string>();
             int currentResolutionIndex = 0;
-            for (int i = 0; i < _resolutions.Length; i++)
+            for (int i = 0; i < resolutions.Length; i++)
             {
-                options.Add(_resolutions[i].width + " x " + _resolutions[i].height + " @ " +
-                            _resolutions[i].refreshRateRatio + "hz");
-                if (_resolutions[i].width == Screen.currentResolution.width
-                    && _resolutions[i].height == Screen.currentResolution.height)
+                options.Add(resolutions[i].width + " x " + resolutions[i].height + " @ "
+                            + resolutions[i].refreshRateRatio + "hz");
+                if (resolutions[i].width == Screen.currentResolution.width
+                    && resolutions[i].height == Screen.currentResolution.height)
                 {
                     currentResolutionIndex = i;
                 }
@@ -37,7 +37,7 @@ namespace Cosmobot
 
         public void SetResolution(int resolutionIndex)
         {
-            Resolution resolution = _resolutions[resolutionIndex];
+            Resolution resolution = resolutions[resolutionIndex];
             Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
         }
 

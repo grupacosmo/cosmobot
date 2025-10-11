@@ -1,50 +1,59 @@
+using System;
 using UnityEngine;
 
 namespace Cosmobot.Entity
 {
     /// <summary>
-    /// - OnHealthChange event is triggered when the health changes even if it's zero or negative.
-    /// - OnDeath event is triggered when the health reaches zero or negative.
-    /// - OnHealthChange is triggered before OnDeath in the same frame.
+    ///     - OnHealthChange event is triggered when the health changes even if it's zero or negative.
+    ///     - OnDeath event is triggered when the health reaches zero or negative.
+    ///     - OnHealthChange is triggered before OnDeath in the same frame.
     /// </summary>
     public class Health : MonoBehaviour
     {
         public delegate void HealthEvent(Health source, float oldHealth, float damageValue);
 
-        public float CurrentHealth => currentHealth;
-        public float CurrentHealthPercentage => currentHealth / MaxHealth;
-        public bool IsDead => currentHealth <= 0;
-        /// <summary> Can be <see cref="DamageSource.Empty"> </summary>
-        public DamageSource LastDamageSource { get; private set; }
-
-        public float MaxHealth;
-        public event HealthEvent OnHealthChange;
-        public event HealthEvent OnDeath;
-        public event HealthEvent OnReset;
+        public float maxHealth;
 
         [SerializeField]
         protected float currentHealth;
+
+        public float CurrentHealth => currentHealth;
+        public float CurrentHealthPercentage => currentHealth / maxHealth;
+        public bool IsDead => currentHealth <= 0;
+
+        /// <summary> Can be <see cref="DamageSource.Empty"> </summary>
+        public DamageSource LastDamageSource { get; private set; }
+
+        private void OnValidate()
+        {
+            if (maxHealth < 0) maxHealth = 0;
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        }
+
+        public event HealthEvent OnHealthChange;
+        public event HealthEvent OnDeath;
+        public event HealthEvent OnReset;
 
         public virtual void TakeDamage(float damage, DamageSource damageSource)
         {
             if (IsDead) return;
             if (damageSource.IsEmpty)
             {
-                throw new System.ArgumentException(
+                throw new ArgumentException(
                     "Damage source cannot be empty.", nameof(damageSource));
             }
 
             float oldHealth = currentHealth;
-            currentHealth = Mathf.Clamp(currentHealth - damage, 0, MaxHealth);
+            currentHealth = Mathf.Clamp(currentHealth - damage, 0, maxHealth);
             LastDamageSource = damageSource;
-            
+
             OnHealthChange?.Invoke(this, oldHealth, damage);
             if (IsDead) OnDeath?.Invoke(this, oldHealth, damage);
         }
 
         public virtual void ResetHealth(bool clearEventListeners = false)
         {
-            currentHealth = MaxHealth;
+            currentHealth = maxHealth;
             LastDamageSource = DamageSource.Empty;
             if (clearEventListeners)
             {
@@ -58,8 +67,8 @@ namespace Cosmobot.Entity
         }
 
         /// <summary>
-        /// If the target has a Health component, it will take damage and return true, 
-        /// otherwise it will return false.
+        ///     If the target has a Health component, it will take damage and return true,
+        ///     otherwise it will return false.
         /// </summary>
         public static bool TakeDamage(GameObject target, float damage, DamageSource damageSource)
         {
@@ -68,12 +77,5 @@ namespace Cosmobot.Entity
             health.TakeDamage(damage, damageSource);
             return true;
         }
-
-        void OnValidate()
-        {
-            if (MaxHealth < 0) MaxHealth = 0;
-            currentHealth = Mathf.Clamp(currentHealth, 0, MaxHealth);
-        }
     }
-
 }

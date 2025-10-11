@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -38,13 +38,12 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
-  m_GIWorkflowMode: 1
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -67,9 +66,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -295,6 +291,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -360,15 +359,15 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4624738770888553929, guid: aac98467c783c7640b7a05a48e43803a, type: 3}
-      propertyPath: MaxSpawnRange
+      propertyPath: maxSpawnRange
       value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 4624738770888553929, guid: aac98467c783c7640b7a05a48e43803a, type: 3}
-      propertyPath: MinSpawnRange
+      propertyPath: minSpawnRange
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4624738770888553929, guid: aac98467c783c7640b7a05a48e43803a, type: 3}
-      propertyPath: PotentialTarget
+      propertyPath: potentialTarget
       value: 
       objectReference: {fileID: 2067494117}
     - target: {fileID: 6725312170722900823, guid: aac98467c783c7640b7a05a48e43803a, type: 3}
@@ -377,7 +376,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6725312170722900823, guid: aac98467c783c7640b7a05a48e43803a, type: 3}
       propertyPath: m_TagString
-      value: Enemy
+      value: enemy
       objectReference: {fileID: 0}
     - target: {fileID: 7749690925008687063, guid: aac98467c783c7640b7a05a48e43803a, type: 3}
       propertyPath: m_LocalPosition.x
@@ -450,9 +449,8 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 899723165}
   m_Enabled: 1
-  serializedVersion: 10
+  serializedVersion: 11
   m_Type: 1
-  m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
   m_Range: 10
@@ -502,8 +500,12 @@ Light:
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
+  m_ForceVisible: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+  m_LightUnit: 1
+  m_LuxAtDistance: 1
+  m_EnableSpotReflector: 1
 --- !u!4 &899723167
 Transform:
   m_ObjectHideFlags: 0
@@ -673,12 +675,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!1 &2067494117
 GameObject:
   m_ObjectHideFlags: 0
@@ -739,6 +741,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -800,7 +805,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8339b0bc1ee850ff4adc6685a95e39e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 100
+  maxHealth: 100
   currentHealth: 100
 --- !u!114 &2067494123
 MonoBehaviour:

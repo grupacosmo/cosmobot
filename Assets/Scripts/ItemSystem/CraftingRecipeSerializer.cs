@@ -1,7 +1,8 @@
-using System.Collections.Generic;
+using System;
+using System.IO;
 using JetBrains.Annotations;
-using UnityEngine;
 using UnityEditor;
+using UnityEngine;
 
 namespace Cosmobot.ItemSystem
 {
@@ -10,13 +11,13 @@ namespace Cosmobot.ItemSystem
         public static void Serialize(string path, CraftingRecipeSerializationObject recipesObject)
         {
             string json = JsonUtility.ToJson(recipesObject, true);
-            System.IO.File.WriteAllText(path, json);
+            File.WriteAllText(path, json);
         }
 
         /// <summary>
-        /// Deserializes a CraftingRecipeSerializationObject from a file at the given path. First tries to load the file
-        /// as a TextAsset in the editor. If that fails, it will try to read the file from disk. If that fails, it will
-        /// return null.
+        ///     Deserializes a CraftingRecipeSerializationObject from a file at the given path. First tries to load the file
+        ///     as a TextAsset in the editor. If that fails, it will try to read the file from disk. If that fails, it will
+        ///     return null.
         /// </summary>
         /// <returns>Deserialized object or null if failed</returns>
         [CanBeNull]
@@ -28,12 +29,12 @@ namespace Cosmobot.ItemSystem
                 CraftingRecipeSerializationObject obj = JsonUtility.FromJson<CraftingRecipeSerializationObject>(json);
                 if (obj is null)
                 {
-                    Debug.LogError("Failed to deserialize CraftingRecipeSerializationObject from file at path {path}");    
+                    Debug.LogError("Failed to deserialize CraftingRecipeSerializationObject from file at path {path}");
                 }
 
                 return obj;
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Debug.LogError($"Failed to read file at path {path}: {e.Message}");
                 return null;
@@ -42,12 +43,12 @@ namespace Cosmobot.ItemSystem
 
         private static string ReadFile(string path)
         {
-# if UNITY_EDITOR
+#if UNITY_EDITOR
             TextAsset asset = (TextAsset)AssetDatabase.LoadAssetAtPath(path, typeof(TextAsset));
             if (asset) return asset.text;
-# endif
-            
-            return System.IO.File.ReadAllText(path);
+#endif
+
+            return File.ReadAllText(path);
         }
     }
 }

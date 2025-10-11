@@ -153,11 +153,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PotentialTarget: {fileID: 0}
   health: {fileID: -2071396687391651747}
-  Enemy: {fileID: 2840893973740745227, guid: a0e907ef54ad0d540ba5b9d9aa0caae3, type: 3}
-  SpawnInterval: 5
-  EnemyLimit: 5
-  MinSpawnRange: 5
-  MaxSpawnRange: 15
+  enemy: {fileID: 2840893973740745227, guid: a0e907ef54ad0d540ba5b9d9aa0caae3, type: 3}
+  spawnInterval: 5
+  enemyLimit: 5
+  minSpawnRange: 5
+  maxSpawnRange: 15
 --- !u!114 &-2071396687391651747
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8339b0bc1ee850ff4adc6685a95e39e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 100
+  maxHealth: 100
   currentHealth: 100
 --- !u!1001 &7649291430896978290
 PrefabInstance:

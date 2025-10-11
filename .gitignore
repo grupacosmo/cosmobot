@@ -74,13 +74,18 @@ crashlytics-build.properties
 
 # Editors
 .vs/
-.vscode/
+.vscode/*
+.vscode/**/
+!.vscode/tasks.json
 .idea/
 
 # Auto-generated script
 Assets/Scripts/DefaultInputActions.cs
 
 
-#dlls
+# dlls
 Assets/Plugins/*.dll
 Assets/Plugins/*.dll.meta
+
+# Allow Formatting.csproj for formatting check check
+!Formatting.csproj

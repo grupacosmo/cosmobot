@@ -3,8 +3,8 @@ using UnityEditor;
 
 namespace Cosmobot.Editor
 {
-    public static class IMGUIDebugger {
-
+    public static class IMGUIDebugger
+    {
         [MenuItem("Window/IMGUI Debugger")]
         public static void Open()
         {

@@ -1,14 +1,32 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Cosmobot
 {
     public class PlayerInteractionHandler : MonoBehaviour, DefaultInputActions.IInteractionActions
     {
-        private IInteractable interaction = null;
-        private DefaultInputActions actions;
         [SerializeField]
         private TMP_Text interactionPrompt;
+
+        private DefaultInputActions actions;
+        private IInteractable interaction  ;
+
+        private void OnEnable()
+        {
+            if (actions == null)
+            {
+                actions = new DefaultInputActions();
+                actions.Interaction.SetCallbacks(this);
+            }
+
+            actions.Interaction.Enable();
+        }
+
+        private void OnDisable()
+        {
+            actions.Interaction.Disable();
+        }
 
         private void OnTriggerEnter(Collider other)
         {
@@ -31,6 +49,14 @@ namespace Cosmobot
             }
         }
 
+        public void OnInteract(InputAction.CallbackContext context)
+        {
+            if (context.performed)
+            {
+                Interact();
+            }
+        }
+
         private void ShowInteractionPrompt()
         {
             interactionPrompt.text = interaction?.Prompt;
@@ -41,30 +67,6 @@ namespace Cosmobot
         {
             interaction?.Use();
             ShowInteractionPrompt();
-        }
-
-        public void OnInteract(UnityEngine.InputSystem.InputAction.CallbackContext context)
-        {
-            if (context.performed)
-            {
-                Interact();
-            }
-        }
-
-        private void OnEnable()
-        {
-            if (actions == null)
-            {
-                actions = new DefaultInputActions();
-                actions.Interaction.SetCallbacks(this);
-            }
-            
-            actions.Interaction.Enable();
-        }
-        
-        private void OnDisable()
-        {
-            actions.Interaction.Disable();
         }
     }
 }

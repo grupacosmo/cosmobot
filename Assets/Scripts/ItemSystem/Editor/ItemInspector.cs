@@ -1,6 +1,6 @@
-using UnityEditor;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 namespace Cosmobot.ItemSystem.Editor
@@ -8,9 +8,8 @@ namespace Cosmobot.ItemSystem.Editor
     [CustomEditor(typeof(ItemComponent))]
     public class ItemInspector : UnityEditor.Editor
     {
-        private ItemComponent itemComponent;
-
         private static string[] declaredConstants;
+        private ItemComponent itemComponent;
 
         private void OnEnable()
         {

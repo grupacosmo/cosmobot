@@ -3,45 +3,14 @@ using UnityEngine;
 
 namespace Cosmobot
 {
-
     [RequireComponent(typeof(Rigidbody))]
     public class RouteMovement : MonoBehaviour
     {
-        #region start variables
-        public bool canMove;
-        public float robotSpeed;
-        public float gravity = 50;
-        public float distanceToGround = 0.1f;
-
-        public Vector3 direction = Vector3.zero;
-
-        #endregion start variables
-
-        #region route
-        [Header("Route")]
-        public bool loopMode;
-        public float arrivalThreshold;
-        public int routeIndex = 0;
-        public List<Route> route = new List<Route>();
-        private bool routeForward = true;
-        // arrivalThreshold had been tested for 0.5f, but might not work correctly for higher velocities
-        // (but i don't think we ever plan to set the velocity THAT high, we're talking about setting it to 999 speed)
-        #endregion route
-
-        #region ground check
-        private bool isGrounded;
-        private float groundCheckRadius;
-        private float groundCheckDistance;
-        public float maxFloorAngleDegrees;
-        private Vector3 groundNormal = Vector3.up;
-        public Transform groundCheckOrigin;
-        private CapsuleCollider capsuleCollider;
-        #endregion ground check
-
-        private Rigidbody rb;
         private Grabber grabber;
 
-        void Start()
+        private Rigidbody rb;
+
+        private void Start()
         {
             capsuleCollider = GetComponent<CapsuleCollider>();
             var radius = capsuleCollider.radius;
@@ -52,7 +21,7 @@ namespace Cosmobot
             grabber = GetComponentInChildren<Grabber>();
         }
 
-        void FixedUpdate()
+        private void FixedUpdate()
         {
             GroundCheck();
             ProcessMovement();
@@ -82,7 +51,10 @@ namespace Cosmobot
                 var floorAngleDegrees = Mathf.Acos(Vector3.Dot(Vector3.up, groundNormal)) * Mathf.Rad2Deg;
                 isGrounded = floorAngleDegrees <= maxFloorAngleDegrees;
             }
-            else isGrounded = false;
+            else
+            {
+                isGrounded = false;
+            }
 
             if (!isGrounded) groundNormal = Vector3.up;
         }
@@ -117,7 +89,7 @@ namespace Cosmobot
             transform.rotation = rotation;
         }
 
-        Vector3 GetDirectionToPoint(Vector3 pointFrom, Vector3 pointTo)
+        private Vector3 GetDirectionToPoint(Vector3 pointFrom, Vector3 pointTo)
         {
             Vector3 directionToPoint = pointTo - pointFrom;
             directionToPoint = new Vector3(directionToPoint.x, 0, directionToPoint.z).normalized;
@@ -134,7 +106,10 @@ namespace Cosmobot
                     else routeForward = false;
                 }
             }
-            else if (routeIndex == 0) routeForward = true;
+            else if (routeIndex == 0)
+            {
+                routeForward = true;
+            }
 
             int add_amount = routeForward ? 1 : -1;
             routeIndex += add_amount;
@@ -147,6 +122,7 @@ namespace Cosmobot
                 grabber.ReleaseItem();
             }
         }
+
         private void TryGrab()
         {
             if (grabber.automaticGrabMode) return;
@@ -155,6 +131,7 @@ namespace Cosmobot
                 grabber.GrabItem();
             }
         }
+
         private bool CheckIfArrived(Vector3 point)
         {
             var currentPosition = new Vector3(transform.position.x, 0f, transform.position.z);
@@ -167,7 +144,46 @@ namespace Cosmobot
                 Debug.Log($"Robot has arrived at the point number '{routeIndex}'.");
                 return true;
             }
-            else return false;
+
+            return false;
         }
+
+        #region start variables
+
+        public bool canMove;
+        public float robotSpeed;
+        public float gravity = 50;
+        public float distanceToGround = 0.1f;
+
+        public Vector3 direction = Vector3.zero;
+
+        #endregion start variables
+
+        #region route
+
+        [Header("Route")]
+        public bool loopMode;
+
+        public float arrivalThreshold;
+        public int routeIndex  ;
+        public List<Route> route = new List<Route>();
+
+        private bool routeForward = true;
+        // arrivalThreshold had been tested for 0.5f, but might not work correctly for higher velocities
+        // (but i don't think we ever plan to set the velocity THAT high, we're talking about setting it to 999 speed)
+
+        #endregion route
+
+        #region ground check
+
+        private bool isGrounded;
+        private float groundCheckRadius;
+        private float groundCheckDistance;
+        public float maxFloorAngleDegrees;
+        private Vector3 groundNormal = Vector3.up;
+        public Transform groundCheckOrigin;
+        private CapsuleCollider capsuleCollider;
+
+        #endregion ground check
     }
 }

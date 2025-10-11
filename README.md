@@ -44,3 +44,12 @@
 - The PR should be merged by the person who created it.
 - Add appropriate "_type:_" labels to the PR to indicate the type of change made, e.g. `type: bug`, 
   `type: feature`, etc.
+
+## Formatting
+
+Use standard dotnet-format. There are avaliable script:
+- Run in project root directory:
+  - Format check: [`./format-check.sh.bat`](./format-check.sh.bat)
+  - Auto formatting (whitespace only): [`./format-code.sh.bat`](./format-code.sh.bat) (if possible)
+
+Works both on Linux and Windows (but have .bat extension coz windows does not understand otherwise)

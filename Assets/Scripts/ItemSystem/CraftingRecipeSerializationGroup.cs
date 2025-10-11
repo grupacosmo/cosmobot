@@ -1,14 +1,17 @@
+using System;
 using System.Collections.Generic;
 
 namespace Cosmobot.ItemSystem
 {
-    [System.Serializable]
+    [Serializable]
     public class CraftingRecipeSerializationGroup
     {
         /// <summary> Internal ID </summary>
-        public string Id;
+        public string id;
+
         /// <summary> Display name </summary>
-        public string Name;
-        public List<string> Recipes;
+        public string name;
+
+        public List<string> recipes;
     }
 }
