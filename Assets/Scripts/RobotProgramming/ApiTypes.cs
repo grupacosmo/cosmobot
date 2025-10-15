@@ -3,91 +3,94 @@ using UnityEngine;
 
 namespace Cosmobot.Api.Types
 {
-    public struct Vec3
+    public struct vec3
     {
         public float x, y, z;
 
-        public Vec3(float x, float y, float z)
+        public vec3(float x, float y, float z)
         {
             this.x = x;
             this.y = y;
             this.z = z;
         }
 
-        public static implicit operator Vec3(Vector3 v)
+        public static implicit operator vec3(Vector3 v)
         {
-            return new Vec3(v.x, v.y, v.z);
+            return new vec3(v.x, v.y, v.z);
         }
 
-        public static implicit operator Vector3(Vec3 v)
+        public static implicit operator Vector3(vec3 v)
         {
             return new Vector3(v.x, v.y, v.z);
         }
 
-        public static implicit operator Vec3(Vec2 v)
+        public static implicit operator vec3(vec2 v)
         {
-            return new Vec3(v.x, 0, v.y);
+            return new vec3(v.x, 0, v.y);
         }
     }
 
-    public struct Vec2
+    public struct vec2
     {
         public float x, y;
 
-        public Vec2(float x, float y)
+        public vec2(float x, float y)
         {
             this.x = x;
             this.y = y;
         }
 
-        public static implicit operator Vec2(Vector2 v)
+        public static implicit operator vec2(Vector2 v)
         {
-            return new Vec2(v.x, v.y);
+            return new vec2(v.x, v.y);
         }
 
-        public static implicit operator Vec2(Vector3 v)
+        public static implicit operator vec2(Vector3 v)
         {
-            return new Vec2(v.x, v.z);
+            return new vec2(v.x, v.z);
         }
 
-        public static implicit operator Vector2(Vec2 v)
+        public static implicit operator Vector2(vec2 v)
         {
             return new Vector2(v.x, v.y);
         }
 
-        public static implicit operator Vector3(Vec2 v)
+        public static implicit operator Vector3(vec2 v)
         {
             return new Vector3(v.x, 0, v.y);
         }
     }
-
+}
+namespace Cosmobot.Api.TypesInternal
+{
+    using Cosmobot.Api.Types;
     public abstract class Entity
     {
-        public Vec2 Position { get; protected set; }
-        internal abstract bool IsValid { get; }
+        public vec2 position { get; set; }
+        internal virtual bool IsValid { get; } // This is needed to know if Entity is still there
     }
 
     public class Item : Entity
     {
-        internal ItemComponent itemComponent;
+        internal ItemComponent itemComponent; // Jint shouldn't have access to Unity types
         internal override bool IsValid => itemComponent != null;
 
-        public Item(ItemComponent itemComponent, Vec2 position)
+        public Item(ItemComponent itemComponent, vec2 position)
         {
             this.itemComponent = itemComponent;
-            this.Position = position;
+            this.position = position;
         }
     }
 
     public class Hostile : Entity
     {
-        internal Enemy enemyComponent;
+        internal Enemy enemyComponent;  // Jint shouldn't have access to Unity types
         internal override bool IsValid => enemyComponent != null;
 
-        public Hostile(Enemy enemyComponent, Vec2 position)
+        public Hostile(Enemy enemyComponent, vec2 position)
         {
             this.enemyComponent = enemyComponent;
-            this.Position = position;
+            this.position = position;
         }
     }
 }

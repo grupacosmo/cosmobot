@@ -247,6 +247,28 @@ namespace Cosmobot
         }
 
         [Test]
+        public void RemoveLatestFromInventory()
+        {
+            Inventory inventory = new Inventory(10);
+            ItemInstance z1, z2;
+
+            // no items
+            Assert.Null(inventory.RemoveLatest());
+
+            // remove 2 times with 1 item
+            inventory.AddItem(z1 = new ItemInstance(CreateItemInfo("z1")));
+            Assert.AreEqual(z1, inventory.RemoveLatest());
+            Assert.Null(inventory.RemoveLatest());
+            Assert.AreEqual(0, inventory.ItemCount);
+
+            // remove with 2 items
+            inventory.AddItem(z1);
+            inventory.AddItem(z2 = new ItemInstance(CreateItemInfo("z2")));
+            Assert.AreEqual(z2, inventory.RemoveLatest());
+            Assert.AreEqual(1, inventory.ItemCount);
+        }
+
+        [Test]
         public void RemoveWithLockedRemovingAndGetFalse()
         {
             Inventory inventory = new Inventory(10);

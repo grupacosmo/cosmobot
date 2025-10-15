@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using Cosmobot.Api.Types;
+using Newtonsoft.Json.Bson;
 using UnityEngine;
 
 namespace Cosmobot.Api
@@ -27,11 +28,11 @@ namespace Cosmobot.Api
             //Expose robot's ingame functions here
             return new Dictionary<string, Delegate>()
             {
-                { "Wait", wrapper.Wrap<float>(Wait)},
-                { "Log", wrapper.Wrap<string>(Log)},
-                { "LogWarning", wrapper.Wrap<string>(LogWarning)},
-                { "LogError", wrapper.Wrap<string>(LogError)},
-                { "Dance", wrapper.Wrap(Dance)},
+                { "wait", wrapper.Wrap<float>(Wait)},
+                { "log", wrapper.Wrap<string>(Log)},
+                { "logWarning", wrapper.Wrap<string>(LogWarning)},
+                { "logError", wrapper.Wrap<string>(LogError)},
+                { "dance", wrapper.Wrap(Dance)},
             };
         }
 
@@ -41,41 +42,56 @@ namespace Cosmobot.Api
         // functions also must have a unique name
         // (!)remember to expose functions ingame in Dictionary above
         // (!)remember to call "taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
-        public void Wait(float seconds)
+        private void Wait(float seconds)
         {
             StartCoroutine(WaitCoroutine(seconds));
         }
 
-        public IEnumerator WaitCoroutine(float seconds)
+        private IEnumerator WaitCoroutine(float seconds)
         {
             yield return new WaitForSeconds(seconds);
             taskCompletedEvent.Set();
         }
 
-        public void Log(string message)
+        private void Log(string message)
         {
             Debug.Log(message);
             taskCompletedEvent.Set();
         }
 
-        public void LogWarning(string message)
+        public void LogInternal(string message)
+        {
+            Debug.Log(message);
+        }
+
+        private void LogWarning(string message)
         {
             Debug.LogWarning(message);
             taskCompletedEvent.Set();
         }
 
-        public void LogError(string message)
+        public void LogWarningInternal (string message)
+        {
+            Debug.LogWarning(message);
+        }
+
+        private void LogError(string message)
         {
             Debug.LogError(message);
             taskCompletedEvent.Set();
         }
 
-        public void Dance()
+        public void LogErrorInternal(string message)
+        {
+            Debug.LogError(message);
+        }
+
+        private void Dance()
         {
             StartCoroutine(DanceCoroutine());
         }
 
-        public IEnumerator DanceCoroutine()
+        private IEnumerator DanceCoroutine()
         {
             // This probably will be an animation in the future
             for (int i = 0; i < 3; ++i)

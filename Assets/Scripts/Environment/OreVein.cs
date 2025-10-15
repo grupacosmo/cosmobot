@@ -1,13 +1,14 @@
+using Cosmobot.ItemSystem;
 using UnityEngine;
 
 namespace Cosmobot
 {
-    public class MaterialDeposit : MonoBehaviour
+    public class OreVein : MonoBehaviour
     {
-        [SerializeField] private GameObject material;
+        [SerializeField] private ItemInfo material;
         [SerializeField] private int oreLeft;
 
-        public GameObject Mine()
+        public ItemInfo Mine()
         {
             DepleteDeposit();
 

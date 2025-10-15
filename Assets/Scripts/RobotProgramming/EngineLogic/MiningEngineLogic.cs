@@ -36,7 +36,7 @@ namespace Cosmobot.Api
             //Expose robot's ingame functions here
             return new Dictionary<string, Delegate>()
             {
-                { "Dig", wrapper.Wrap(Dig)},
+                { "dig", wrapper.Wrap(Dig)},
             };
         }
 
@@ -46,29 +46,29 @@ namespace Cosmobot.Api
         // functions also must have a unique name
         // (!)remember to expose functions ingame in Dictionary above
         // (!)remember to call "taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
-        void Dig()
+        private void Dig()
         {
             RaycastHit hit;
             Physics.Raycast(transform.position, Vector3.down, out hit, 1);
 
-            MaterialDeposit deposit = hit.collider.gameObject.GetComponent<MaterialDeposit>();
+            OreVein deposit = hit.collider.gameObject.GetComponent<OreVein>();
 
             if (deposit == null)
             {
-                baseLogic.Log("There's no material deposit here");
+                baseLogic.LogInternal("There's no material deposit here");
                 taskCompletedEvent.Set();
                 return;
             }
 
-            GameObject material = deposit.Mine();
+            ItemInfo material = deposit.Mine();
             if (material == null)
             {
-                baseLogic.LogError("Gathered material was null");
+                baseLogic.LogErrorInternal("Gathered material was null");
                 taskCompletedEvent.Set();
                 return;
             }
 
-            Instantiate(material, transform.position + transform.forward, Quaternion.identity);
+            material.InstantiateItem(transform.position + transform.forward, Quaternion.identity);
             taskCompletedEvent.Set();
         }
     }

@@ -11,10 +11,7 @@ namespace Cosmobot.ItemSystem
         public ItemInstance Item
         {
             get => item;
-            private set
-            {
-                item = value;
-            }
+            private set => item = value;
         }
 
         public ItemInfo ItemInfo => item.ItemInfo;

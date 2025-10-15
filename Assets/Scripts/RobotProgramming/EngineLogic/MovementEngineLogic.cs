@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
-using Codice.CM.Common;
 using Cosmobot.Api.Types;
 using UnityEngine;
 
@@ -39,12 +38,12 @@ namespace Cosmobot.Api
             //Expose robot's ingame functions here
             return new Dictionary<string, Delegate>()
             {
-                { "MoveToObject", wrapper.Wrap<Types.Entity>(MoveToObject)},
-                { "MoveToPosition", wrapper.Wrap<float, float>(MoveToPosition)},
-                { "MoveForward", wrapper.Wrap<float>(MoveForward)},
-                { "TurnRight", wrapper.Wrap<float>(TurnRight)},
-                { "TurnLeft", wrapper.Wrap<float>(TurnLeft)},
-                { "TurnFacing", wrapper.Wrap<float>(TurnFacing)},
+                { "moveToObject", wrapper.Wrap<TypesInternal.Entity>(MoveToObject)},
+                { "moveToPosition", wrapper.Wrap<float, float>(MoveToPosition)},
+                { "moveForward", wrapper.Wrap<float>(MoveForward)},
+                { "turnRight", wrapper.Wrap<float>(TurnRight)},
+                { "turnLeft", wrapper.Wrap<float>(TurnLeft)},
+                { "turnFacing", wrapper.Wrap<float>(TurnFacing)},
             };
         }
 
@@ -54,66 +53,59 @@ namespace Cosmobot.Api
         // functions also must have a unique name
         // (!)remember to expose functions ingame in Dictionary above
         // (!)remember to call "taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
-        void MoveToObject(Types.Entity obj)
+        private void MoveToObject(TypesInternal.Entity obj)
         {
-            if (!obj.IsValid)
-            {
-                baseLogic.LogError("Item doesn't exist anymore");
-                taskCompletedEvent.Set();
-                return;
-            }
-
-            Vector3 facingOffset = transform.position - obj.Position;
-            StartCoroutine(MoveToPointCoroutine(obj.Position + facingOffset.normalized));
+            Vector3 facingOffset = transform.position - obj.position;
+            StartCoroutine(MoveToPointCoroutine(obj.position + facingOffset.normalized));
         }
 
-        void MoveToPosition(float x, float y)
+        private void MoveToPosition(float x, float y)
         {
-            Vec2 to = new Vec2(x, y);
+            vec2 to = new vec2(x, y);
             StartCoroutine(MoveToPointCoroutine(to));
         }
 
-        void MoveForward(float distance)
+        private void MoveForward(float distance)
         {
             StartCoroutine(MoveToPointCoroutine(transform.position + transform.forward * distance));
         }
 
-        IEnumerator MoveToPointCoroutine(Vec3 to)
+        private IEnumerator MoveToPointCoroutine(vec3 to)
         {
-            yield return TurnCoroutine(Vector3.Angle(to - transform.position, transform.forward), false);
+            yield return TurnCoroutine(Vector3.SignedAngle(transform.forward, to - transform.position, Vector3.up), false);
 
-            while (transform.position != to)
+            Vector3 dir = to - transform.position;
+            while (dir.magnitude > 0.1f)
             {
-                Vector3 dir = to - transform.position;
-                if (dir.magnitude <= 0.1) transform.position = to;
-                else transform.position += speed * Time.deltaTime * dir.normalized;
+                transform.position += speed * Time.deltaTime * dir.normalized;
+                dir = to - transform.position;
                 yield return null;
             }
 
             taskCompletedEvent.Set();
         }
 
-        void TurnRight(float degrees)
+        private void TurnRight(float degrees)
         {
             StartCoroutine(TurnCoroutine(degrees, true));
         }
 
-        void TurnLeft(float degrees)
+        private void TurnLeft(float degrees)
         {
             StartCoroutine(TurnCoroutine(-degrees, true));
         }
 
-        void TurnFacing(float degrees)
+        private void TurnFacing(float degrees)
         {
             Quaternion targetRotation = Quaternion.Euler(0, degrees, 0);
-            StartCoroutine(TurnCoroutine(Vector3.Angle(transform.forward, targetRotation * Vector3.forward), true));
+            StartCoroutine(TurnCoroutine(Vector3.SignedAngle(transform.forward, targetRotation * Vector3.forward, Vector3.up), true));
         }
 
-        IEnumerator TurnCoroutine(float degrees, bool completeEvent)
+        private IEnumerator TurnCoroutine(float degrees, bool completeEvent)
         {
             Quaternion targetRotation = transform.rotation * Quaternion.Euler(Vector3.up *  degrees);
 
-            while (transform.rotation != targetRotation)
+            while (Quaternion.Angle(transform.rotation, targetRotation) > 0.1f)
             {
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, turningSpeed * Time.deltaTime);
                 yield return null;

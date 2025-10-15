@@ -8,9 +8,14 @@ using UnityEngine;
 
 namespace Cosmobot.Api
 {
+    //
+    // This class in under WIP
+    // Waiting for construction fix
+    // `abstract` from `public abstract class` and this comment should be removed when it starts working properly
+    //
     [DisallowMultipleComponent]
     [RequireComponent(typeof(BaseEngineLogic))]
-    public class ConstructionEngineLogic : MonoBehaviour, IEngineLogic
+    public abstract class ConstructionEngineLogic : MonoBehaviour, IEngineLogic
     {
         private ManualResetEvent taskCompletedEvent;
         private CancellationToken cancellationToken;
@@ -47,15 +52,15 @@ namespace Cosmobot.Api
         // functions also must have a unique name
         // (!)remember to expose functions ingame in Dictionary above
         // (!)remember to call "taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
-        void SetupConstructionSite()
+        private void SetupConstructionSite()
         {
             // This will throw an error as construction system might need reworking, 
             // also team not sure if robot should be able to initialize builds
             Vector3 inFront = transform.position + transform.forward;
 
-            inFront.x -= inFront.x % GlobalConstants.GRID_CELL_SIZE + 0.5f;
+            inFront.x = Mathf.Floor(inFront.x / GlobalConstants.GRID_CELL_SIZE) * GlobalConstants.GRID_CELL_SIZE + 0.5f;
             inFront.y = 0;
-            inFront.z -= inFront.z % GlobalConstants.GRID_CELL_SIZE + 0.5f;
+            inFront.z = Mathf.Floor(inFront.z / GlobalConstants.GRID_CELL_SIZE) * GlobalConstants.GRID_CELL_SIZE + 0.5f;
 
             Instantiate(constructionSite, inFront, Quaternion.identity);
             taskCompletedEvent.Set();

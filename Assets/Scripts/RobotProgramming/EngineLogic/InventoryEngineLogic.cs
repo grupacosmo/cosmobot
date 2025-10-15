@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 using Cosmobot.Api.Types;
+using Cosmobot.Api.TypesInternal;
 using Cosmobot.ItemSystem;
 using UnityEngine;
 
@@ -43,11 +44,11 @@ namespace Cosmobot.Api
             {
                 //{ "ExampleFunctionARG", wrapper.Wrap(ExampleFunctionARG)},
                 //{ ... },
-                { "FindItem", wrapper.Wrap<string, Item>(FindItem)},
-                { "FindClosestItem", wrapper.Wrap<string, Item>(FindClosestItem)},
-                { "FindAllItems", wrapper.Wrap<string, List<Item>>(FindAllItems)},
-                { "PickupItem", wrapper.Wrap<Item>(PickupItem)},
-                { "DropItem", wrapper.Wrap<string>(DropItem)},
+                { "findItem", wrapper.Wrap<string, Item>(FindItem)},
+                { "findClosestItem", wrapper.Wrap<string, Item>(FindClosestItem)},
+                { "findAllItems", wrapper.Wrap<string, List<Item>>(FindAllItems)},
+                { "pickupItem", wrapper.Wrap<Item>(PickupItem)},
+                { "dropItem", wrapper.Wrap<string>(DropItem)},
             };
         }
 
@@ -57,9 +58,9 @@ namespace Cosmobot.Api
         // functions also must have a unique name
         // (!)remember to expose functions ingame in Dictionary above
         // (!)remember to call "taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
-        Item FindItem(string type = "")
+        private Item FindItem(string type = "")
         {
-            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << GlobalConstants.ITEM_LAYER);
+            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << Layers.ITEM);
 
             if (objects.Length == 0)
             {
@@ -87,9 +88,9 @@ namespace Cosmobot.Api
             return null;
         }
 
-        Item FindClosestItem(string type = "")
+        private Item FindClosestItem(string type = "")
         {
-            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << GlobalConstants.ITEM_LAYER);
+            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << Layers.ITEM);
 
             if (objects.Length == 0)
             {
@@ -123,9 +124,9 @@ namespace Cosmobot.Api
             return closest;
         }
 
-        List<Item> FindAllItems(string type = "")
+        private List<Item> FindAllItems(string type = "")
         {
-            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << GlobalConstants.ITEM_LAYER);
+            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << Layers.ITEM);
             List<Item> items = new List<Item>();
 
             foreach (Collider collider in objects)
@@ -146,19 +147,19 @@ namespace Cosmobot.Api
             return items;
         }
 
-        void PickupItem(Item item)
+        private void PickupItem(Item item)
         {
             if (item == null || item.itemComponent == null || !item.IsValid)
             {
-                baseLogic.LogError("Item doesn't exist anymore");
+                baseLogic.LogErrorInternal("Item doesn't exist anymore");
                 taskCompletedEvent.Set();
                 return;
             }
 
             Vector2 pos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.z);
-            if (Vector2.Distance(pos, item.Position) > reachRange)
+            if (Vector2.Distance(pos, item.position) > reachRange)
             {
-                baseLogic.LogError("Item is too far");
+                baseLogic.LogErrorInternal("Item is too far");
                 taskCompletedEvent.Set();
                 return;
             }
@@ -170,23 +171,23 @@ namespace Cosmobot.Api
                 return;
             }
 
-            baseLogic.LogError("Couldn't add item to inventory");
+            baseLogic.LogErrorInternal("Couldn't add item to inventory");
             taskCompletedEvent.Set();
         }
 
-        void DropItem(string itemId = "")
+        private void DropItem(string itemId = "")
         {
             if (string.IsNullOrEmpty(itemId))
             {
                 ItemInstance temp = inventoryComponent.inventory.RemoveLatest();
                 if (temp == null)
                 {
-                    baseLogic.Log("No items to be dropped");
+                    baseLogic.LogInternal("No items to be dropped");
                     taskCompletedEvent.Set();
                     return;
                 }
 
-                Instantiate(temp.ItemInfo.Prefab, transform.position + transform.forward, Quaternion.identity);
+                temp.ItemInfo.InstantiateItem(transform.position + transform.forward, Quaternion.identity);
                 taskCompletedEvent.Set();
                 return;
             }
@@ -194,12 +195,12 @@ namespace Cosmobot.Api
             ItemInstance item = inventoryComponent.inventory.RemoveFirstById(itemId);
             if (item == null)
             {
-                baseLogic.Log("No such item in inventory");
+                baseLogic.LogInternal("No such item in inventory");
                 taskCompletedEvent.Set();
                 return;
             }
 
-            Instantiate(item.ItemInfo.Prefab, transform.position + transform.forward, Quaternion.identity);
+            item.ItemInfo.InstantiateItem(transform.position + transform.forward, Quaternion.identity);
             taskCompletedEvent.Set();
             return;
         }

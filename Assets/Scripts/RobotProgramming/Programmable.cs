@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Jint;
 using UnityEngine;
+using Cosmobot.Api.Types;
+using Jint.Runtime.Interop;
 
 namespace Cosmobot
 {
@@ -25,9 +29,9 @@ namespace Cosmobot
 
         Thread task;
 
-        static int staticDebugI;
-        int debugI = 0;
-        string objectName;
+        private static int staticDebugI;
+        private int debugI = 0;
+        private string objectName;
 
         void Start()
         {
@@ -86,6 +90,17 @@ namespace Cosmobot
                 }
             }
 
+
+            Type apiVec2Type = typeof(Cosmobot.Api.Types.vec2);
+            string apiNamespace = apiVec2Type.Namespace;
+            IEnumerable<Type> apiTypes = apiVec2Type.Assembly.GetTypes().Where(t => t.Namespace == apiNamespace);
+            //jsEngine.SetValue("Types", new NamespaceReference(jsEngine, apiNamespace));
+            foreach (Type type in apiTypes)
+            {
+                jsEngine.SetValue(type.Name, TypeReference.CreateTypeReference(jsEngine, type));
+                Debug.Log("Exposed type: " + type.Name);
+            }
+
             try
             {
                 token.ThrowIfCancellationRequested();
@@ -95,9 +110,13 @@ namespace Cosmobot
             {
                 Debug.Log("Operation was cancelled");
             }
+            catch (Jint.Runtime.JavaScriptException ex)
+            {
+                Debug.LogError($"JS Error ({objectName}): {ex.Error} | {ex.Location}\n{ex.StackTrace}");
+            }
             catch (System.Exception ex)
             {
-                Debug.LogError("Error: " + ex.Message + " " + objectName);
+                Debug.LogError($"Error: ({objectName}): {ex.Message}");
             }
             finally
             {
@@ -107,6 +126,7 @@ namespace Cosmobot
 
 #if DEBUG
         const string RobotApiTypesNamespace = "Cosmobot.Api.Types";
+        const string RobotApiTypesInternalNamespace = "Cosmobot.Api.TypesInternal";
 
         private void ValidateFunction(string key, Delegate value, string name)
         {
@@ -123,7 +143,7 @@ namespace Cosmobot
                 Type[] argsTypes = type.GetGenericArguments();
                 foreach (var arg in argsTypes)
                 {
-                    if (arg == typeof(void) || arg.IsPrimitive || arg.Namespace == RobotApiTypesNamespace)
+                    if (arg == typeof(void) || arg.IsPrimitive || arg.Namespace == RobotApiTypesNamespace || arg.Namespace == RobotApiTypesInternalNamespace)
                     {
                         continue;
                     }
@@ -133,7 +153,7 @@ namespace Cosmobot
                 return;
             }
 
-            if (type == typeof(void) || type.IsPrimitive || type.Namespace == RobotApiTypesNamespace)
+            if (type == typeof(void) || type.IsPrimitive || type.Namespace == RobotApiTypesNamespace || type.Namespace == RobotApiTypesInternalNamespace)
             {
                 return;
             }

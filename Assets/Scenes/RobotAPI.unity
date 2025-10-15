@@ -177,15 +177,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  code: 'Dig();
+  code: 'dig();
 
-    Wait(1);
+    wait(1);
 
-    Dig();
+    dig();
 
-    Wait(1);
+    wait(1);
 
-    Dig();'
+    dig();'
 --- !u!65 &5262942
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -352,25 +352,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  code: 'let a = FindItem("");
+  code: 'let a = findItem("");
 
-    Log(a.itemComponent);
+    log(a.itemComponent);
 
-    PickupItem(a);
+    pickupItem(a);
 
-    PickupItem(a);
+    pickupItem(a);
 
-    Wait(1);
+    wait(1);
 
-    DropItem();
+    dropItem();
 
-    Wait(1);
+    wait(1);
 
-    DropItem();
+    dropItem();
 
-    Wait(1);
+    wait(1);
 
-    DropItem("copper-ore");'
+    dropItem("copper-ore");'
 --- !u!65 &24800182
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -552,41 +552,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  code: 'let a = FindItem();
+  code: 'let a = findItem();
 
-    MoveToPosition(0,0);
+    moveToPosition(0,0);
 
-    Wait(1);
+    wait(1);
 
-    MoveForward(5);
+    moveForward(5);
 
-    Wait(1);
+    wait(1);
 
-    TurnRight(45);
+    turnRight(45);
 
-    Wait(1);
+    wait(1);
 
-    TurnLeft(45);
+    turnLeft(45);
 
-    Wait(1);
+    wait(1);
 
-    TurnFacing(0);
+    turnFacing(0);
 
-    Wait(1);
+    wait(1);
 
-    TurnFacing(90);
+    turnFacing(90);
 
-    Wait(1);
+    wait(1);
 
-    TurnFacing(180);
+    turnFacing(180);
 
-    Wait(1);
+    wait(1);
 
-    TurnFacing(270);
+    turnFacing(270);
 
-    Wait(1);
+    wait(1);
 
-    MoveToObject(a);'
+    moveToObject(a);'
 --- !u!65 &226238873
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -677,155 +677,6 @@ Transform:
   - {fileID: 986398516}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &351375542
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 351375549}
-  - component: {fileID: 351375548}
-  - component: {fileID: 351375547}
-  - component: {fileID: 351375546}
-  - component: {fileID: 351375545}
-  - component: {fileID: 351375544}
-  - component: {fileID: 351375543}
-  m_Layer: 0
-  m_Name: ConstructionRobot
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &351375543
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 351375542}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f034187a87b15342917a2b0615ce43c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  constructionSite: {fileID: 6571599839263284129, guid: 11c3bb8c65eb71bca9cff435f75bdc0b, type: 3}
---- !u!114 &351375544
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 351375542}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f40b3f98d88f3940b3d7b1a439eb915, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &351375545
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 351375542}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  code: SetupConstructionSite();
---- !u!65 &351375546
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 351375542}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &351375547
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 351375542}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &351375548
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 351375542}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &351375549
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 351375542}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.02, y: 0.5, z: -6.36}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &562375068
 GameObject:
   m_ObjectHideFlags: 0
@@ -858,7 +709,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4937479bbe862e6408295f526148a9cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  material: {fileID: 1862692014303423458, guid: c04cc4750f51256c2a65b82b07c0e960, type: 3}
+  material: {fileID: 11400000, guid: e5b25632b5123549e807f58b93a6fe85, type: 2}
   oreLeft: 2
 --- !u!65 &562375070
 BoxCollider:
@@ -1083,28 +934,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  code: 'Log("BaseRobot Log");
+  code: 'log("BaseRobot Log");
 
-    Wait(1);
+    wait(1);
 
-    LogWarning("BaseRobot Warning");
+    logWarning("BaseRobot Warning");
 
-    Wait(1);
+    wait(1);
 
-    LogError("BaseRobot
+    logError("BaseRobot
     Error");
 
-    Wait(1);
+    wait(1);
 
     let x = 2;
 
-    Log(x);
+    log(x);
 
     let y = "string";
 
-    Log(y)
+    log(y)
 
-    Dance();'
+    dance();'
 --- !u!1 &772136588
 GameObject:
   m_ObjectHideFlags: 0
@@ -1356,7 +1207,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3516543481110741587, guid: c04cc4750f51256c2a65b82b07c0e960, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.3654776
+      value: -4.8
       objectReference: {fileID: 0}
     - target: {fileID: 3516543481110741587, guid: c04cc4750f51256c2a65b82b07c0e960, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1686,6 +1537,5 @@ SceneRoots:
   - {fileID: 24800185}
   - {fileID: 226238876}
   - {fileID: 5262945}
-  - {fileID: 351375549}
   - {fileID: 1112178287}
   - {fileID: 562375073}
