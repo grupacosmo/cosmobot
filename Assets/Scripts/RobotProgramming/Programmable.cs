@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Jint;
-using UnityEngine;
-using Cosmobot.Api.Types;
 using Jint.Runtime.Interop;
+using UnityEngine;
 
 namespace Cosmobot
 {

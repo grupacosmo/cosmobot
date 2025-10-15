@@ -304,6 +304,9 @@ dotnet_naming_style.pascal_case_style.capitalization = pascal_case
 
 
 ### Additional suppressions ###
+# Disable C# name convention for JS types
+[Assets/Scripts/RobotProgramming/ApiTypes.cs]
+dotnet_diagnostic.IDE1006.severity = none
 [*.cs]
 # Enforce removal of unnecessary suppression (works only on "#pragma warning disable" and not on the list below)
 dotnet_diagnostic.IDE0079.severity = error

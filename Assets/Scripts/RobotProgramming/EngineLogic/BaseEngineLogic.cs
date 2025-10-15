@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
-using Cosmobot.Api.Types;
-using Newtonsoft.Json.Bson;
 using UnityEngine;
 
 namespace Cosmobot.Api
@@ -70,7 +68,7 @@ namespace Cosmobot.Api
             taskCompletedEvent.Set();
         }
 
-        public void LogWarningInternal (string message)
+        public void LogWarningInternal(string message)
         {
             Debug.LogWarning(message);
         }
