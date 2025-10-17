@@ -19,93 +19,78 @@ There is available template: RMB -> Create -> Cosmobot -> EngineLogic Script
 
 ```csharp
 [DisallowMultipleComponent]
-//[RequireComponent(typeof(BaseRobotEngineLogic))]
+[RequireComponent(typeof(BaseEngineLogic))]
 public class MyRobot : MonoBehaviour, IEngineLogic
 {
-    private ManualResetEvent taskCompletedEvent;
-    private CancellationToken cancellationToken;
-    private Wrapper wrapper;
+    private ProgrammableFunctionWrapper wrapper;
 
-    public void SetupThread(
-        ManualResetEvent taskEvent, CancellationToken token, ConcurrentQueue<Action> commandQueue)
+    public void SetupThread(ManualResetEvent taskEvent, CancellationToken token, ConcurrentQueue<Action> commandQueue)
     {
-        // copy taskEvent and token to the local variables for later use
-        taskCompletedEvent = taskEvent;
-        cancellationToken = token;
-        // create a new Wrapper instance to wrap your functions 
-        wrapper = new Wrapper(taskCompletedEvent, cancellationToken, commandQueue);
+        // create a new ProgrammableFunctionWrapper instance to wrap your functions 
+        wrapper = new ProgrammableFunctionWrapper(taskEvent, token, commandQueue);
     }
 
-    public Dictionary<string, Delegate> GetFunctions()
+    public IReadOnlyDictionary<string, Delegate> GetFunctions()
     {
-        //Expose robot's ingame functions here
+        // Expose robot's ingame functions here, use:
+        // WrapOneFrame() for immediate functions and
+        // WrapDeffered() for time-stretched functions (like coroutines)
         return new Dictionary<string, Delegate>()
         {
-            { "exampleFunctionARG", wrapper.Wrap<int, int, int>(ExampleFunctionARG)},
-            { "exampleFunctionR", wrapper.Wrap(ExampleFunctionR)},
-            { "exampleFunctionR_ARG", wrapper.Wrap<int, int, int, int>(ExampleFunctionR_ARG)},
-            { "coroutineExample", wrapper.Wrap(CoroutineExample)},
+            { "exampleFunctionARG", wrapper.WrapOneFrame<int, int, int>(ExampleFunctionARG)},
+            { "exampleFunctionR", wrapper.WrapOneFrame(ExampleFunctionR)},
+            { "exampleFunctionR_ARG", wrapper.WrapOneFrame<int, int, int, int>(ExampleFunctionR_ARG)},
+            { "coroutineExample", wrapper.WrapDeffered(CoroutineExample)},
         };
     }
 
-    void ExampleFunctionARG(int x, int y, int z)
+    private void ExampleFunctionARG(int x, int y, int z)
     {
         transform.position = new Vector3(x, y, z);
-        
-        taskCompletedEvent.Set();
     }
 
-    int ExampleFunctionR()
+    private int ExampleFunctionR()
     {
         int xRoundPos = (int) transform.position.x;
         
-        taskCompletedEvent.Set();
         return xRoundPos;
     }
 
-    int ExampleFunctionR_ARG(int x, int y, int z)
+    private int ExampleFunctionR_ARG(int x, int y, int z)
     {
         int result = x + y + z;
         
-        taskCompletedEvent.Set();
         return result;
     }
 
     //This will not work because Vector3 is a Unity type. Use Cosmobot.Api.Types.Vec3 instead.
-    Vector3 ApiTypesExampleBad()
+    private Vector3 ApiTypesExampleBad()
     {
-        taskCompletedEvent.Set();
         return Vector3.zero;
     }
 
     //This is okay
-    Vec3 ApiTypesExampleCorrect()
+    private Vec3 ApiTypesExampleCorrect()
     {
-        taskCompletedEvent.Set();
         return Vector3.zero;
     }
 
     // Coroutine implementation example
     // useful for creating delayed actions or creating actions that take multiple frames to complete
     // for example, moving a robot to a position over time
-    void CoroutineExample()
+    private void CoroutineExample(ManualResetEvent taskCompletedEvent)
     {
-        StartCoroutine(CoroutineExampleCoroutine());
+        StartCoroutine(CoroutineExampleCoroutine(taskCompletedEvent));
     }
 
     // example of a coroutine that moves the robot to a target position over time
-    public IEnumerator CoroutineExampleCoroutine()
+    private IEnumerator CoroutineExampleCoroutine(ManualResetEvent taskCompletedEvent)
     {
         Vector3 targetPosition = new Vector3(10, 0, 0);
         Vector3 startPosition = transform.position;
         float x = 0;
         while (x < 1f)
         {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                yield break; // Exit coroutine if cancellation is requested
-            }
-
             x += Time.deltaTime; // Simulate some work
             transform.position = Vector3.Lerp(startPosition, targetPosition, x);
             yield return null; // Wait for the next frame
@@ -120,9 +105,10 @@ public class MyRobot : MonoBehaviour, IEngineLogic
 When implementing functions, remember:
 - functions must only return void, primitives or types in Cosmobot.Api.Types
 - functions must only accept primitives or types in Cosmobot.Api.Types as arguments
-- functions must have a unique name in whole game
-- remember to expose functions ingame in Dictionary above
-- **remember to call** `taskCompletedEvent.Set();` when yours code is finished or robot will wait infinitely
-- it is recommended to use `Wrapper` class to wrap your functions for correct unity thread handling and cancellation token support
+- functions must have a globally unique name
+- expose functions ingame in Dictionary above
+- **pass and call** `taskCompletedEvent.Set();` when using WrapDeffered() or robot will wait infinitely
+- wrap your functions for correct unity thread handling and cancellation token support
+- keep your functions private as much as possible
 
 The `Programmable` component will automatically scan for `IEngineLogic` components and will call `SetupThread` method on the `IEngineLogic` implementation when the game starts.

@@ -26,7 +26,7 @@ namespace Cosmobot
         private CancellationTokenSource cancellationTokenSource; //for thread killing
         private ConcurrentQueue<Action> commandQueue = new ConcurrentQueue<Action>();
 
-        Thread task;
+        private Thread task;
 
         private static int staticDebugI;
         private int debugI = 0;
@@ -90,7 +90,7 @@ namespace Cosmobot
             }
 
 
-            Type apiVec2Type = typeof(Cosmobot.Api.Types.vec2);
+            Type apiVec2Type = typeof(Cosmobot.Api.Types.Vec2);
             string apiNamespace = apiVec2Type.Namespace;
             IEnumerable<Type> apiTypes = apiVec2Type.Assembly.GetTypes().Where(t => t.Namespace == apiNamespace);
             //jsEngine.SetValue("Types", new NamespaceReference(jsEngine, apiNamespace));
@@ -115,7 +115,7 @@ namespace Cosmobot
             }
             catch (System.Exception ex)
             {
-                Debug.LogError($"Error: ({objectName}): {ex.Message}");
+                Debug.LogError($"Error: ({objectName}): {ex.Message}\n {ex.StackTrace}");
             }
             finally
             {

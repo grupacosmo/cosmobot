@@ -15,8 +15,6 @@ namespace Cosmobot.Api
     [RequireComponent(typeof(BaseEngineLogic))]
     public abstract class ConstructionEngineLogic : MonoBehaviour, IEngineLogic
     {
-        private ManualResetEvent taskCompletedEvent;
-        private CancellationToken cancellationToken;
         private ProgrammableFunctionWrapper wrapper;
 
         private BaseEngineLogic baseLogic;
@@ -30,17 +28,17 @@ namespace Cosmobot.Api
 
         public void SetupThread(ManualResetEvent taskEvent, CancellationToken token, ConcurrentQueue<Action> commandQueue)
         {
-            taskCompletedEvent = taskEvent;
-            cancellationToken = token;
-            wrapper = new ProgrammableFunctionWrapper(taskCompletedEvent, cancellationToken, commandQueue);
+            wrapper = new ProgrammableFunctionWrapper(taskEvent, token, commandQueue);
         }
 
         public IReadOnlyDictionary<string, Delegate> GetFunctions()
         {
-            //Expose robot's ingame functions here
+            // Here you can expose the robot's functions in the game, use:
+            // WrapOneFrame() for immediate functions and
+            // WrapDeffered() for time-stretched functions (like coroutines)
             return new Dictionary<string, Delegate>()
             {
-                { "SetupConstructionSite", wrapper.Wrap(SetupConstructionSite)},
+                { "setupConstructionSite", wrapper.WrapOneFrame(SetupConstructionSite)},
             };
         }
 
@@ -49,7 +47,7 @@ namespace Cosmobot.Api
         // functions must only return void, primitives or types in Cosmobot.Api.Types
         // functions also must have a unique name
         // (!)remember to expose functions ingame in Dictionary above
-        // (!)remember to call "taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
+        // (!)remember to include "ManualResetEvent taskCompletedEvent" in arguments if using WrapDeffered and .Set() it at the end of action
         private void SetupConstructionSite()
         {
             // This will throw an error as construction system might need reworking, 
@@ -61,7 +59,6 @@ namespace Cosmobot.Api
             inFront.z = Mathf.Floor(inFront.z / GlobalConstants.GRID_CELL_SIZE) * GlobalConstants.GRID_CELL_SIZE + 0.5f;
 
             Instantiate(constructionSite, inFront, Quaternion.identity);
-            taskCompletedEvent.Set();
         }
     }
 }

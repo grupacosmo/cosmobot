@@ -11,8 +11,6 @@ namespace Cosmobot.Api
     [RequireComponent(typeof(BaseEngineLogic))]
     public class MiningEngineLogic : MonoBehaviour, IEngineLogic
     {
-        private ManualResetEvent taskCompletedEvent;
-        private CancellationToken cancellationToken;
         private ProgrammableFunctionWrapper wrapper;
 
         private BaseEngineLogic baseLogic;
@@ -24,17 +22,17 @@ namespace Cosmobot.Api
 
         public void SetupThread(ManualResetEvent taskEvent, CancellationToken token, ConcurrentQueue<Action> commandQueue)
         {
-            taskCompletedEvent = taskEvent;
-            cancellationToken = token;
-            wrapper = new ProgrammableFunctionWrapper(taskCompletedEvent, cancellationToken, commandQueue);
+            wrapper = new ProgrammableFunctionWrapper(taskEvent, token, commandQueue);
         }
 
         public IReadOnlyDictionary<string, Delegate> GetFunctions()
         {
-            //Expose robot's ingame functions here
+            // Here you can expose the robot's functions in the game, use:
+            // WrapOneFrame() for immediate functions and
+            // WrapDeffered() for time-stretched functions (like coroutines)
             return new Dictionary<string, Delegate>()
             {
-                { "dig", wrapper.Wrap(Dig)},
+                { "dig", wrapper.WrapOneFrame(Dig)},
             };
         }
 
@@ -43,18 +41,22 @@ namespace Cosmobot.Api
         // functions must only return void, primitives or types in Cosmobot.Api.Types
         // functions also must have a unique name
         // (!)remember to expose functions ingame in Dictionary above
-        // (!)remember to call "taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
+        // (!)remember to include "ManualResetEvent taskCompletedEvent" in arguments if using WrapDeffered and .Set() it at the end of action
         private void Dig()
         {
             RaycastHit hit;
-            Physics.Raycast(transform.position, Vector3.down, out hit, 1);
+
+            if (!Physics.Raycast(transform.position, Vector3.down, out hit, 1))
+            {
+                baseLogic.LogInternal("Nothing detected under me");
+                return;
+            }
 
             OreVein deposit = hit.collider.gameObject.GetComponent<OreVein>();
 
             if (deposit == null)
             {
                 baseLogic.LogInternal("There's no material deposit here");
-                taskCompletedEvent.Set();
                 return;
             }
 
@@ -62,12 +64,10 @@ namespace Cosmobot.Api
             if (material == null)
             {
                 baseLogic.LogErrorInternal("Gathered material was null");
-                taskCompletedEvent.Set();
                 return;
             }
 
             material.InstantiateItem(transform.position + transform.forward, Quaternion.identity);
-            taskCompletedEvent.Set();
         }
     }
 }

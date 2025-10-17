@@ -12,8 +12,6 @@ namespace Cosmobot.Api
     [RequireComponent(typeof(BaseEngineLogic))]
     public class MovementEngineLogic : MonoBehaviour, IEngineLogic
     {
-        private ManualResetEvent taskCompletedEvent;
-        private CancellationToken cancellationToken;
         private ProgrammableFunctionWrapper wrapper;
 
         private BaseEngineLogic baseLogic;
@@ -28,22 +26,22 @@ namespace Cosmobot.Api
 
         public void SetupThread(ManualResetEvent taskEvent, CancellationToken token, ConcurrentQueue<Action> commandQueue)
         {
-            taskCompletedEvent = taskEvent;
-            cancellationToken = token;
-            wrapper = new ProgrammableFunctionWrapper(taskCompletedEvent, cancellationToken, commandQueue);
+            wrapper = new ProgrammableFunctionWrapper(taskEvent, token, commandQueue);
         }
 
         public IReadOnlyDictionary<string, Delegate> GetFunctions()
         {
-            //Expose robot's ingame functions here
+            // Here you can expose the robot's functions in the game, use:
+            // WrapOneFrame() for immediate functions and
+            // WrapDeffered() for time-stretched functions (like coroutines)
             return new Dictionary<string, Delegate>()
             {
-                { "moveToObject", wrapper.Wrap<TypesInternal.Entity>(MoveToObject)},
-                { "moveToPosition", wrapper.Wrap<float, float>(MoveToPosition)},
-                { "moveForward", wrapper.Wrap<float>(MoveForward)},
-                { "turnRight", wrapper.Wrap<float>(TurnRight)},
-                { "turnLeft", wrapper.Wrap<float>(TurnLeft)},
-                { "turnFacing", wrapper.Wrap<float>(TurnFacing)},
+                { "moveToObject", wrapper.WrapDeffered<TypesInternal.Entity>(MoveToObject)},
+                { "moveToPosition", wrapper.WrapDeffered<float, float>(MoveToPosition)},
+                { "moveForward", wrapper.WrapDeffered<float>(MoveForward)},
+                { "turnRight", wrapper.WrapDeffered<float>(TurnRight)},
+                { "turnLeft", wrapper.WrapDeffered<float>(TurnLeft)},
+                { "turnFacing", wrapper.WrapDeffered<float>(TurnFacing)},
             };
         }
 
@@ -52,27 +50,27 @@ namespace Cosmobot.Api
         // functions must only return void, primitives or types in Cosmobot.Api.Types
         // functions also must have a unique name
         // (!)remember to expose functions ingame in Dictionary above
-        // (!)remember to call "taskCompletedEvent.Set();" when yours code is finished or robot will wait infinitely
-        private void MoveToObject(TypesInternal.Entity obj)
+        // (!)remember to include "ManualResetEvent taskCompletedEvent" in arguments if using WrapDeffered and .Set() it at the end of action
+        private void MoveToObject(ManualResetEvent taskCompletedEvent, TypesInternal.Entity obj)
         {
-            Vector3 facingOffset = transform.position - obj.position;
-            StartCoroutine(MoveToPointCoroutine(obj.position + facingOffset.normalized));
+            Vector3 facingOffset = transform.position - obj.getPosition();
+            StartCoroutine(MoveToPointCoroutine(taskCompletedEvent, obj.getPosition() + facingOffset.normalized));
         }
 
-        private void MoveToPosition(float x, float y)
+        private void MoveToPosition(ManualResetEvent taskCompletedEvent, float x, float y)
         {
-            vec2 to = new vec2(x, y);
-            StartCoroutine(MoveToPointCoroutine(to));
+            Vec2 to = new Vec2(x, y);
+            StartCoroutine(MoveToPointCoroutine(taskCompletedEvent, to));
         }
 
-        private void MoveForward(float distance)
+        private void MoveForward(ManualResetEvent taskCompletedEvent, float distance)
         {
-            StartCoroutine(MoveToPointCoroutine(transform.position + transform.forward * distance));
+            StartCoroutine(MoveToPointCoroutine(taskCompletedEvent, transform.position + transform.forward * distance));
         }
 
-        private IEnumerator MoveToPointCoroutine(vec3 to)
+        private IEnumerator MoveToPointCoroutine(ManualResetEvent taskCompletedEvent, Vec3 to)
         {
-            yield return TurnCoroutine(Vector3.SignedAngle(transform.forward, to - transform.position, Vector3.up), false);
+            yield return TurnCoroutine(taskCompletedEvent, Vector3.SignedAngle(transform.forward, to - transform.position, Vector3.up), false);
 
             Vector3 dir = to - transform.position;
             while (dir.magnitude > 0.1f)
@@ -85,23 +83,23 @@ namespace Cosmobot.Api
             taskCompletedEvent.Set();
         }
 
-        private void TurnRight(float degrees)
+        private void TurnRight(ManualResetEvent taskCompletedEvent, float degrees)
         {
-            StartCoroutine(TurnCoroutine(degrees, true));
+            StartCoroutine(TurnCoroutine(taskCompletedEvent, degrees, true));
         }
 
-        private void TurnLeft(float degrees)
+        private void TurnLeft(ManualResetEvent taskCompletedEvent, float degrees)
         {
-            StartCoroutine(TurnCoroutine(-degrees, true));
+            StartCoroutine(TurnCoroutine(taskCompletedEvent, -degrees, true));
         }
 
-        private void TurnFacing(float degrees)
+        private void TurnFacing(ManualResetEvent taskCompletedEvent, float degrees)
         {
             Quaternion targetRotation = Quaternion.Euler(0, degrees, 0);
-            StartCoroutine(TurnCoroutine(Vector3.SignedAngle(transform.forward, targetRotation * Vector3.forward, Vector3.up), true));
+            StartCoroutine(TurnCoroutine(taskCompletedEvent, Vector3.SignedAngle(transform.forward, targetRotation * Vector3.forward, Vector3.up), true));
         }
 
-        private IEnumerator TurnCoroutine(float degrees, bool completeEvent)
+        private IEnumerator TurnCoroutine(ManualResetEvent taskCompletedEvent, float degrees, bool completeEvent)
         {
             Quaternion targetRotation = transform.rotation * Quaternion.Euler(Vector3.up *  degrees);
 
