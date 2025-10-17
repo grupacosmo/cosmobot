@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Cosmobot.BuildingSystem;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +10,7 @@ namespace Cosmobot
     public class BuildingSelectionUI : MonoBehaviour
     {
         [SerializeField]
-        private string[] buildingInfoDirectory = { };
+        private List<BuildingInfo> buildings;
 
         [SerializeField]
         private SerializableDictionary<string, BuildingInfo> buildingInfoFiles;
@@ -66,10 +65,6 @@ namespace Cosmobot
 
         private void LoadBuildings()
         {
-            IEnumerable<BuildingInfo> buildings =
-                AssetDatabase.FindAssets("t:BuildingInfo", buildingInfoDirectory)
-                    .Select(guid => AssetDatabase.GUIDToAssetPath(guid))
-                    .Select(path => AssetDatabase.LoadAssetAtPath<BuildingInfo>(path));
 
             foreach (BuildingInfo building in buildings)
             {
