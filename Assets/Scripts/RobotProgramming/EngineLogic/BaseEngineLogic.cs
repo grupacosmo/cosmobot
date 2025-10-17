@@ -26,7 +26,8 @@ namespace Cosmobot.Api
         {
             Debug.LogWarning(message);
         }
-        public void LogError (string message)
+
+        public void LogError(string message)
         {
             Debug.LogError(message);
         }
