@@ -17,16 +17,16 @@ namespace Cosmobot.Api
             wrapper = new ProgrammableFunctionWrapper(taskEvent, token, commandQueue);
         }
 
-        public void LogInternal(string message)
+        public void Log(string message)
         {
             Debug.Log(message);
         }
 
-        public void LogWarningInternal(string message)
+        public void LogWarning(string message)
         {
             Debug.LogWarning(message);
         }
-        public void LogErrorInternal(string message)
+        public void LogError (string message)
         {
             Debug.LogError(message);
         }
@@ -39,9 +39,9 @@ namespace Cosmobot.Api
             return new Dictionary<string, Delegate>()
             {
                 { "wait", wrapper.WrapDeffered<float>(Wait)},
-                { "log", wrapper.WrapOneFrame<string>(Log)},
-                { "logWarning", wrapper.WrapOneFrame<string>(LogWarning)},
-                { "logError", wrapper.WrapOneFrame<string>(LogError)},
+                { "log", wrapper.WrapOneFrame<string>(LogInternal)},
+                { "logWarning", wrapper.WrapOneFrame<string>(LogWarningInternal)},
+                { "logError", wrapper.WrapOneFrame<string>(LogErrorInternal)},
                 { "dance", wrapper.WrapDeffered(Dance)},
             };
         }
@@ -63,19 +63,19 @@ namespace Cosmobot.Api
             taskCompletedEvent.Set();
         }
 
-        private void Log(string message)
+        private void LogInternal(string message)
         {
-            LogInternal(message);
+            Log(message);
         }
 
-        private void LogWarning(string message)
+        private void LogWarningInternal(string message)
         {
-            LogWarningInternal(message);
+            LogWarning(message);
         }
 
-        private void LogError(string message)
+        private void LogErrorInternal(string message)
         {
-            LogErrorInternal(message);
+            LogError(message);
         }
 
         private void Dance(ManualResetEvent taskCompletedEvent)

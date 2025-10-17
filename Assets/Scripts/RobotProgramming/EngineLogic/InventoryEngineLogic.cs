@@ -140,14 +140,14 @@ namespace Cosmobot.Api
         {
             if (item == null || !item.itemComponent)
             {
-                baseLogic.LogErrorInternal("Item doesn't exist anymore");
+                baseLogic.LogError("Item doesn't exist anymore");
                 return;
             }
 
             Vector2 pos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.z);
             if (Vector2.Distance(pos, item.itemComponent.transform.position) > reachRange)
             {
-                baseLogic.LogErrorInternal("Item is too far");
+                baseLogic.LogError("Item is too far");
                 return;
             }
 
@@ -157,7 +157,7 @@ namespace Cosmobot.Api
                 return;
             }
 
-            baseLogic.LogErrorInternal("Couldn't add item to inventory");
+            baseLogic.LogError("Couldn't add item to inventory");
         }
 
         private void DropItem(string itemId = "")
@@ -167,7 +167,7 @@ namespace Cosmobot.Api
                 ItemInstance temp = inventoryComponent.inventory.RemoveLatest();
                 if (temp == null)
                 {
-                    baseLogic.LogInternal("No items to be dropped");
+                    baseLogic.Log("No items to be dropped");
                     return;
                 }
 
@@ -178,7 +178,7 @@ namespace Cosmobot.Api
             ItemInstance item = inventoryComponent.inventory.RemoveFirstById(itemId);
             if (item == null)
             {
-                baseLogic.LogInternal("No such item in inventory");
+                baseLogic.Log("No such item in inventory");
                 return;
             }
 

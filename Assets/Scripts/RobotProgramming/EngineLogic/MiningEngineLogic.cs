@@ -48,7 +48,7 @@ namespace Cosmobot.Api
 
             if (!Physics.Raycast(transform.position, Vector3.down, out hit, 1))
             {
-                baseLogic.LogInternal("Nothing detected under me");
+                baseLogic.Log("Nothing detected under me");
                 return;
             }
 
@@ -56,14 +56,14 @@ namespace Cosmobot.Api
 
             if (deposit == null)
             {
-                baseLogic.LogInternal("There's no material deposit here");
+                baseLogic.Log("There's no material deposit here");
                 return;
             }
 
             ItemInfo material = deposit.Mine();
             if (material == null)
             {
-                baseLogic.LogErrorInternal("Gathered material was null");
+                baseLogic.LogError("Gathered material was null");
                 return;
             }
 
