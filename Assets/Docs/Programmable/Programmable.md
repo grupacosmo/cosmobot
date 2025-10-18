@@ -102,13 +102,39 @@ public class MyRobot : MonoBehaviour, IEngineLogic
 }
 ```
 
-When implementing functions, remember:
-- functions must only return void, primitives or types in Cosmobot.Api.Types
-- functions must only accept primitives or types in Cosmobot.Api.Types as arguments
-- functions must have a globally unique name
-- expose functions ingame in Dictionary above
-- **pass and call** `taskCompletedEvent.Set();` when using WrapDeffered() or robot will wait infinitely
-- wrap your functions for correct unity thread handling and cancellation token support
-- keep your functions private as much as possible
+# Wrapping
+You must always wrap JavaScript (JS) functions to ensure thread-safe execution.
 
-The `Programmable` component will automatically scan for `IEngineLogic` components and will call `SetupThread` method on the `IEngineLogic` implementation when the game starts.
+When JS calls a C# function, the engine searches for the best matching function overload and will attempt to call it — even if it’s not actually compatible.
+For example:
+- C# definition: `int add(int x, int y)`
+- JS code: `add(1)`
+This will throw an exception because JS cannot find `add(int)` or `add(float)`. The closest match is `add(int, int)`, so the engine will attempt to call `add(1, null)`. However, since C# does not allow int to be null, an exception is thrown.
+
+Keep this in mind when creating overloads for your functions. Also note that JS will attempt to convert values between types in order to match **any** available function overload.
+
+There are two wrapper functions to use depending on your goal.
+
+## `WrapOneFrame`
+Use `WrapOneFrame` for functions that perform calculations or retrieve values from the game.
+These functions must complete all their work within a single call. They cannot delegate work to be done later - for example, they cannot start coroutines or set flags to do something in `Update()`.
+
+## `WrapDeffered`
+Use `WrapDeferred` for functions that take time to execute, eg., those that run over multiple frames or use coroutines.
+
+Functions wrapped with `WrapDeferred` must take a `ManualResetEvent taskCompletedEvent` as their first argument (will be ignored by JS). All other parameters will be translated to the JS definition.
+
+
+# Remember when implementing
+- functions must only return `void`, *primitives* or types in `Cosmobot.Api.Types`
+- functions must only accept *primitives* or types in `Cosmobot.Api.Types` as arguments
+- expose functions ingame via Dictionary returned by `GetFunctions()`
+- functions must have a **globally unique** names (key in `GetFunctions()` dictionary)
+- When using `WrapDeferred()`, always call `taskCompletedEvent.Set()` at the end of task execution - otherwise, the robot will wait indefinitely
+- Always wrap your functions for proper Unity thread handling, exception handling and cancellation token support
+- Keep your wrapped functions **private**
+  - If you need to expose robot functions publicly, create a public version and call it from the private wrapped function.
+    - Public functions **should not** call `taskCompletedEvent.Set()`
+    - Public functions **must** be safe to call even when the JS engine is not running
+
+The `Programmable` component will automatically scan for `IEngineLogic` components and calls the `SetupThread` method on each `IEngineLogic` implementation when the game starts.
