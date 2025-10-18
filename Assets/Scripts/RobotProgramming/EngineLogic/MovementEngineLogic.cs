@@ -53,8 +53,15 @@ namespace Cosmobot.Api
         // (!)remember to include "ManualResetEvent taskCompletedEvent" in arguments if using WrapDeffered and .Set() it at the end of action
         private void MoveToObject(ManualResetEvent taskCompletedEvent, TypesInternal.Entity obj)
         {
-            Vector3 facingOffset = transform.position - obj.getPosition();
-            StartCoroutine(MoveToPointCoroutine(taskCompletedEvent, obj.getPosition() + facingOffset.normalized));
+            if (obj.transform == null)
+            {
+                baseLogic.LogError("Item doesn't exist");
+                taskCompletedEvent.Set();
+                return;
+            }
+
+            Vector3 facingOffset = transform.position - obj.transform.position;
+            StartCoroutine(MoveToPointCoroutine(taskCompletedEvent, obj.transform.position + facingOffset.normalized));
         }
 
         private void MoveToPosition(ManualResetEvent taskCompletedEvent, float x, float y)

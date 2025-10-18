@@ -80,10 +80,12 @@ namespace Cosmobot.Api.TypesInternal
     using Cosmobot.Api.Types;
     public abstract class Entity
     {
+        internal Transform transform;
         internal Func<bool> IsValidHandler;
         internal Func<Vector2> positionHandler;
         internal Entity(Component component, ProgrammableFunctionWrapper wrapper)
         {
+            transform = component.transform;
             positionHandler = wrapper.WrapOneFrame<Vector2>(() => component.transform.position);
             IsValidHandler = wrapper.WrapOneFrame<bool>(() => component);
         }
