@@ -126,10 +126,10 @@ Functions wrapped with `WrapDeferred` must take a `ManualResetEvent taskComplete
 
 
 # Remember when implementing
-- functions must only return `void`, *primitives* or types in `Cosmobot.Api.Types`
-- functions must only accept *primitives* or types in `Cosmobot.Api.Types` as arguments
+- functions must only return `void`, *primitives*, types in `Cosmobot.Api.Types` or `Cosmobot.Api.TypesInternal`
+- functions must only accept *primitives* or types in `Cosmobot.Api.Types` or `Cosmobot.Api.TypesInternal` as arguments
 - expose functions ingame via Dictionary returned by `GetFunctions()`
-- functions must have a **globally unique** names (key in `GetFunctions()` dictionary)
+- functions must have **globally unique** names (key in `GetFunctions()` dictionary)
 - When using `WrapDeferred()`, always call `taskCompletedEvent.Set()` at the end of task execution - otherwise, the robot will wait indefinitely
 - Always wrap your functions for proper Unity thread handling, exception handling and cancellation token support
 - Keep your wrapped functions **private**
