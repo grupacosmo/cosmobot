@@ -8,6 +8,11 @@ namespace Cosmobot.ItemSystem
     {
         [SerializeField]
         private ItemInstance item;
+        public ItemInstance Item
+        {
+            get => item;
+            private set => item = value;
+        }
 
         public ItemInfo ItemInfo => item.ItemInfo;
 
@@ -42,9 +47,20 @@ namespace Cosmobot.ItemSystem
 
         public SerializableDictionary<string, string> StringValue => item.StringValue;
 
+#if UNITY_ENGINE
         private void Awake()
         {
             ComponentUtils.RequireNotNull(item, "'item' is not set.", this);
+        }
+#endif
+
+        void Init(ItemInstance initValue)
+        {
+            if (item is not null)
+            {
+                throw new InvalidOperationException("Can't re initialise ItemComponent that is already initialised");
+            }
+            item = initValue;
         }
 
         /// <summary>
@@ -88,6 +104,11 @@ namespace Cosmobot.ItemSystem
         public void SetBoolValue(string key, bool? value)
         {
             SetValue(key, value.ToString());
+        }
+
+        public void Dispose()
+        {
+            Destroy(gameObject);
         }
     }
 }

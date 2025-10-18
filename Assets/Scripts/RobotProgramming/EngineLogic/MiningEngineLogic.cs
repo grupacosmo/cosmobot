@@ -2,13 +2,14 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
+using Cosmobot.ItemSystem;
 using UnityEngine;
 
 namespace Cosmobot.Api
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(BaseEngineLogic))]
-    public class #SCRIPTNAME# : MonoBehaviour, IEngineLogic
+    public class MiningEngineLogic : MonoBehaviour, IEngineLogic
     {
         private ProgrammableFunctionWrapper wrapper;
 
@@ -31,8 +32,7 @@ namespace Cosmobot.Api
             // WrapDeffered() for time-stretched functions (like coroutines)
             return new Dictionary<string, Delegate>()
             {
-                //{ "ExampleFunction", wrapper.WrapOneFrame(ExampleFunction)},
-                //{ ... },
+                { "dig", wrapper.WrapOneFrame(Dig)},
             };
         }
 
@@ -42,11 +42,32 @@ namespace Cosmobot.Api
         // functions also must have a unique name
         // (!)remember to expose functions ingame in Dictionary above
         // (!)remember to include "ManualResetEvent taskCompletedEvent" in arguments if using WrapDeffered and .Set() it at the end of action
-        void ExampleFunctionARG()
+        private void Dig()
         {
-            //do stuff...
+            RaycastHit hit;
+
+            if (!Physics.Raycast(transform.position, Vector3.down, out hit, 1))
+            {
+                baseLogic.Log("Nothing detected under me");
+                return;
+            }
+
+            OreVein deposit = hit.collider.gameObject.GetComponent<OreVein>();
+
+            if (deposit == null)
+            {
+                baseLogic.Log("There's no material deposit here");
+                return;
+            }
+
+            ItemInfo material = deposit.Mine();
+            if (material == null)
+            {
+                baseLogic.LogError("Gathered material was null");
+                return;
+            }
+
+            material.InstantiateItem(transform.position + transform.forward, Quaternion.identity);
         }
-
-
     }
 }

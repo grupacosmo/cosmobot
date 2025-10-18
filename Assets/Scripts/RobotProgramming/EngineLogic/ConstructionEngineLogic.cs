@@ -6,13 +6,20 @@ using UnityEngine;
 
 namespace Cosmobot.Api
 {
+    //
+    // This class in under WIP
+    // Waiting for construction fix
+    // `abstract` from `public abstract class` and this comment should be removed when it starts working properly
+    //
     [DisallowMultipleComponent]
     [RequireComponent(typeof(BaseEngineLogic))]
-    public class #SCRIPTNAME# : MonoBehaviour, IEngineLogic
+    public abstract class ConstructionEngineLogic : MonoBehaviour, IEngineLogic
     {
         private ProgrammableFunctionWrapper wrapper;
 
         private BaseEngineLogic baseLogic;
+
+        [SerializeField] private GameObject constructionSite;
 
         private void Start()
         {
@@ -31,8 +38,7 @@ namespace Cosmobot.Api
             // WrapDeffered() for time-stretched functions (like coroutines)
             return new Dictionary<string, Delegate>()
             {
-                //{ "ExampleFunction", wrapper.WrapOneFrame(ExampleFunction)},
-                //{ ... },
+                { "setupConstructionSite", wrapper.WrapOneFrame(SetupConstructionSite)},
             };
         }
 
@@ -42,11 +48,17 @@ namespace Cosmobot.Api
         // functions also must have a unique name
         // (!)remember to expose functions ingame in Dictionary above
         // (!)remember to include "ManualResetEvent taskCompletedEvent" in arguments if using WrapDeffered and .Set() it at the end of action
-        void ExampleFunctionARG()
+        private void SetupConstructionSite()
         {
-            //do stuff...
+            // This will throw an error as construction system might need reworking, 
+            // also team not sure if robot should be able to initialize builds
+            Vector3 inFront = transform.position + transform.forward;
+
+            inFront.x = Mathf.Floor(inFront.x / GlobalConstants.GRID_CELL_SIZE) * GlobalConstants.GRID_CELL_SIZE + 0.5f;
+            inFront.y = 0;
+            inFront.z = Mathf.Floor(inFront.z / GlobalConstants.GRID_CELL_SIZE) * GlobalConstants.GRID_CELL_SIZE + 0.5f;
+
+            Instantiate(constructionSite, inFront, Quaternion.identity);
         }
-
-
     }
 }

@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Jint;
+using Jint.Runtime.Interop;
 using UnityEngine;
 
 namespace Cosmobot
@@ -23,10 +26,11 @@ namespace Cosmobot
         private CancellationTokenSource cancellationTokenSource; //for thread killing
         private ConcurrentQueue<Action> commandQueue = new ConcurrentQueue<Action>();
 
-        Thread task;
+        private Thread task;
 
-        static int staticDebugI;
-        int debugI = 0;
+        private static int staticDebugI;
+        private int debugI = 0;
+        private string objectName;
 
         void Start()
         {
@@ -39,7 +43,7 @@ namespace Cosmobot
 
             debugI = staticDebugI++;
             engineLogicInterfaces = GetComponents<IEngineLogic>();
-
+            objectName = gameObject.name;
         }
 
         private void Update()
@@ -85,6 +89,17 @@ namespace Cosmobot
                 }
             }
 
+
+            Type apiVec2Type = typeof(Cosmobot.Api.Types.Vec2);
+            string apiNamespace = apiVec2Type.Namespace;
+            IEnumerable<Type> apiTypes = apiVec2Type.Assembly.GetTypes().Where(t => t.Namespace == apiNamespace);
+            //jsEngine.SetValue("Types", new NamespaceReference(jsEngine, apiNamespace));
+            foreach (Type type in apiTypes)
+            {
+                jsEngine.SetValue(type.Name, TypeReference.CreateTypeReference(jsEngine, type));
+                Debug.Log("Exposed type: " + type.Name);
+            }
+
             try
             {
                 token.ThrowIfCancellationRequested();
@@ -94,9 +109,13 @@ namespace Cosmobot
             {
                 Debug.Log("Operation was cancelled");
             }
+            catch (Jint.Runtime.JavaScriptException ex)
+            {
+                Debug.LogError($"JS Error ({objectName}): {ex.Error} | {ex.Location}\n{ex.StackTrace}");
+            }
             catch (System.Exception ex)
             {
-                Debug.LogError("Error: " + ex.Message);
+                Debug.LogError($"Error: ({objectName}): {ex.Message}\n {ex.StackTrace}");
             }
             finally
             {
@@ -106,11 +125,34 @@ namespace Cosmobot
 
 #if DEBUG
         const string RobotApiTypesNamespace = "Cosmobot.Api.Types";
+        const string RobotApiTypesInternalNamespace = "Cosmobot.Api.TypesInternal";
 
         private void ValidateFunction(string key, Delegate value, string name)
         {
             Type type = value.Method.ReturnType;
-            if (type == typeof(void) || type.IsPrimitive || type.Namespace == RobotApiTypesNamespace)
+
+            Type underNullableType = Nullable.GetUnderlyingType(type);
+            if (underNullableType != null)
+            {
+                type = underNullableType;
+            }
+
+            if (type.IsGenericType)
+            {
+                Type[] argsTypes = type.GetGenericArguments();
+                foreach (var arg in argsTypes)
+                {
+                    if (arg == typeof(void) || arg.IsPrimitive || arg.Namespace == RobotApiTypesNamespace || arg.Namespace == RobotApiTypesInternalNamespace)
+                    {
+                        continue;
+                    }
+                    Debug.LogError($"Method returns disallowed type argument in generic type! Method: {arg} in {type.GetGenericTypeDefinition()} {key} in {name}");
+                    throw new Exception($"Method returns disallowed type argument in generic type! Method: {arg} in {type.GetGenericTypeDefinition()} {key} in {name}");
+                }
+                return;
+            }
+
+            if (type == typeof(void) || type.IsPrimitive || type.Namespace == RobotApiTypesNamespace || type.Namespace == RobotApiTypesInternalNamespace)
             {
                 return;
             }
