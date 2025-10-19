@@ -26,6 +26,7 @@ namespace Cosmobot.BuildingSystem
         [SerializeField]
         private SerializableDictionary<ItemInfo, int> resourceRequirements = new();
 
+        [SerializeField]
         private Vector2Int gridSize = new(1, 1);
 
         public string Id => id;
