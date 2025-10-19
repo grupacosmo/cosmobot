@@ -80,6 +80,7 @@ namespace Cosmobot.Editor
                 progress++;
             }
 
+            AssetDatabase.Refresh();
             EditorUtility.ClearProgressBar();
         }
 

@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
@@ -51,3 +52,4 @@ namespace Cosmobot.ItemSystem.Editor
         }
     }
 }
+#endif
