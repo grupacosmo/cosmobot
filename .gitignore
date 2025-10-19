@@ -89,3 +89,6 @@ Assets/Plugins/*.dll.meta
 
 # Allow Formatting.csproj for formatting check check
 !Formatting.csproj
+
+# temporary scenes
+Assets/Scenes/temp*
