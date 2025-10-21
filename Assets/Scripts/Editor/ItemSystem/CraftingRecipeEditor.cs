@@ -1,14 +1,14 @@
-#if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Cosmobot.ItemSystem;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 
-namespace Cosmobot.ItemSystem.Editor
+namespace Cosmobot.Editor.ItemSystem
 {
     public class CraftingRecipeEditor : EditorWindow
     {
@@ -394,4 +394,3 @@ namespace Cosmobot.ItemSystem.Editor
         groups
     }
 }
-#endif

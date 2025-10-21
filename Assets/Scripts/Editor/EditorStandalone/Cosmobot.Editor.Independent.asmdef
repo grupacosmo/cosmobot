@@ -1,9 +1,8 @@
 {
-    "name": "Cosmobot.Editor",
-    "rootNamespace": "Cosmobot.Editor",
+    "name": "Cosmobot.Editor.Standalone",
+    "rootNamespace": "Cosmobot.Editor.Standalone",
     "references": [
-        "GUID:d550786fe3d078e4b8037e8b66c4d019",
-        "GUID:c2ed27b174ffc1f6787b4ba1ecf4ea89"
+        "GUID:d550786fe3d078e4b8037e8b66c4d019"
     ],
     "includePlatforms": [
         "Editor"

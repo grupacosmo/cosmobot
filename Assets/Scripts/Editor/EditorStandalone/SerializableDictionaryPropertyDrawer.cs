@@ -2,7 +2,7 @@ using Cosmobot.Utils;
 using UnityEditor;
 using UnityEngine;
 
-namespace Cosmobot.Editor
+namespace Cosmobot.Editor.Standalone
 {
     [CustomPropertyDrawer(typeof(SerializableDictionary<,>))]
     public class SerializableDictionaryPropertyDrawer : PropertyDrawer

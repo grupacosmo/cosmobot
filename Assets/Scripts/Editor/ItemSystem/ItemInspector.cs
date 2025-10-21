@@ -1,10 +1,10 @@
-#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.Linq;
+using Cosmobot.ItemSystem;
 using UnityEditor;
 using UnityEngine;
 
-namespace Cosmobot.ItemSystem.Editor
+namespace Cosmobot.Editor.ItemSystem
 {
     [CustomEditor(typeof(ItemComponent))]
     public class ItemInspector : UnityEditor.Editor
@@ -87,4 +87,3 @@ namespace Cosmobot.ItemSystem.Editor
         }
     }
 }
-#endif

@@ -8,7 +8,7 @@ using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
-namespace Cosmobot.Editor
+namespace Cosmobot.Editor.Standalone
 {
     public class LibImporter
     {
