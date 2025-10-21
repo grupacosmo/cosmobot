@@ -3,7 +3,7 @@ using System.Reflection;
 using Cosmobot.ItemSystem;
 using UnityEditor;
 
-namespace Cosmobot.Editor.ItemSystem
+namespace Cosmobot.Editor
 {
     [CustomEditor(typeof(ItemInfo))]
     public class ItemInfoInspector : UnityEditor.Editor

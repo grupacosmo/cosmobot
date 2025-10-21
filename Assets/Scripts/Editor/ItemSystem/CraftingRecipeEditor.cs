@@ -8,7 +8,7 @@ using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 
-namespace Cosmobot.Editor.ItemSystem
+namespace Cosmobot.Editor
 {
     public class CraftingRecipeEditor : EditorWindow
     {

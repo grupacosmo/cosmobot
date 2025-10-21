@@ -4,7 +4,7 @@ using Cosmobot.ItemSystem;
 using UnityEditor;
 using UnityEngine;
 
-namespace Cosmobot.Editor.ItemSystem
+namespace Cosmobot.Editor
 {
     [CustomEditor(typeof(ItemComponent))]
     public class ItemInspector : UnityEditor.Editor
