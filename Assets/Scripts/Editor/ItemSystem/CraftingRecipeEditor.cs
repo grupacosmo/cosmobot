@@ -102,7 +102,7 @@ namespace Cosmobot.Editor.ItemSystem
             }
         }
 
-#region GuiHelpers
+        #region GuiHelpers
 
         // ========================================
         // GUI Helpers
@@ -129,9 +129,9 @@ namespace Cosmobot.Editor.ItemSystem
             EditorGUILayout.EndHorizontal();
         }
 
-#endregion
+        #endregion
 
-#region RecipeGUI
+        #region RecipeGUI
 
         // ========================================
         // Recipe GUI
@@ -215,9 +215,9 @@ namespace Cosmobot.Editor.ItemSystem
             }
         }
 
-#endregion
+        #endregion
 
-#region GroupsGUI
+        #region GroupsGUI
 
         // ========================================
         // Groups GUI
@@ -323,9 +323,9 @@ namespace Cosmobot.Editor.ItemSystem
             EditorGUILayout.EndScrollView();
         }
 
-#endregion
+        #endregion
 
-#region AssetManagment
+        #region AssetManagment
 
         // ========================================
         // Asset Management
@@ -385,7 +385,7 @@ namespace Cosmobot.Editor.ItemSystem
             groupSelected = true;
         }
 
-#endregion
+        #endregion
     }
 
     internal enum RecipeEditorTab
