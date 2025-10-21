@@ -3,7 +3,7 @@
 ## Requirements
 
 - [Git LFS](https://git-lfs.com/)
-- Unity 6000.0.50f1 LTS
+- Unity 6000.0.60f1 LTS
 
 # Project File structure
 
