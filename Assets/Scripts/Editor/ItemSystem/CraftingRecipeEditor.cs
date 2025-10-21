@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Cosmobot.ItemSystem;
 using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
 
-namespace Cosmobot.ItemSystem.Editor
+namespace Cosmobot.Editor
 {
     public class CraftingRecipeEditor : EditorWindow
     {

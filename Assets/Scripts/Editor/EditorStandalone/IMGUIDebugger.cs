@@ -1,7 +1,7 @@
 using System;
 using UnityEditor;
 
-namespace Cosmobot.Editor
+namespace Cosmobot.Editor.Standalone
 {
     public static class IMGUIDebugger
     {

@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace Cosmobot
+namespace Cosmobot.Editor.Standalone
 {
     public class EngineLogicTemplateGenerator
     {

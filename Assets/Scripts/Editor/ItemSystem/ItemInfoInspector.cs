@@ -1,8 +1,9 @@
 using System.Linq;
 using System.Reflection;
+using Cosmobot.ItemSystem;
 using UnityEditor;
 
-namespace Cosmobot.ItemSystem.Editor
+namespace Cosmobot.Editor
 {
     [CustomEditor(typeof(ItemInfo))]
     public class ItemInfoInspector : UnityEditor.Editor

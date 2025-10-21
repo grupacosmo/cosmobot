@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Cosmobot
+namespace Cosmobot.Utils
 {
     public abstract class SingletonSystem<T> : MonoBehaviour where T : SingletonSystem<T>
     {

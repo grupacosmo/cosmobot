@@ -1,6 +1,6 @@
 using System;
 
-namespace Cosmobot
+namespace Cosmobot.Utils
 {
     /// <summary>
     ///     Allows to access values in a <c>SerializableDictionary&ltstring, string&gt</c> with a specified type by using
