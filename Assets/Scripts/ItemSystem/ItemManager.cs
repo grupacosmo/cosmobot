@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Cosmobot.Utils;
 using JetBrains.Annotations;
@@ -12,15 +13,13 @@ namespace Cosmobot.ItemSystem
     public class ItemManager : SingletonSystem<ItemManager>
     {
         [SerializeField]
-        private string[] itemsDataDirectory = { };
-
-        [SerializeField]
-        private string craftingRecipesDataDirectory = "Assets/Scripts/ItemSystem/CraftingRecipes";
+        private string craftingRecipesDataDirectory = "/Data/Crafting";
 
         private List<CraftingRecipe> craftingRecipes;
         private List<CraftingRecipeGroup> craftingRecipesGroups;
 
-        private List<ItemInfo> items = new();
+        [SerializeField]
+        private List<ItemInfo> items;
 
         public IReadOnlyList<ItemInfo> Items => items.AsReadOnly();
         public IReadOnlyList<CraftingRecipe> CraftingRecipes => craftingRecipes.AsReadOnly();
@@ -48,39 +47,29 @@ namespace Cosmobot.ItemSystem
 
         protected override void SystemAwake()
         {
-            ValidateDirectories();
+            craftingRecipesDataDirectory = Path.Combine(Application.dataPath, craftingRecipesDataDirectory);
+
+            ValidateRecipeDirectory();
             LoadItems();
             LoadCraftingRecipes();
         }
 
-        private void ValidateDirectories()
+        private void ValidateRecipeDirectory()
         {
-            string invalidDirs =
-                string.Join(
-                    ",  ",
-                    itemsDataDirectory.Where(dir => !AssetDatabase.IsValidFolder(dir)));
-
-            if (invalidDirs.Length > 0)
-                Debug.LogError($"Invalid directories: {invalidDirs}");
+            if (!File.Exists(craftingRecipesDataDirectory))
+            {
+                Debug.LogError($"Invalid directory for recipes: {craftingRecipesDataDirectory}");
+            }
         }
 
         private void LoadItems()
         {
-            // why Unity? I cant load asset by GUID directly and the only method that search in
-            // directory returns GUIDs.
-            List<ItemInfo> assets =
-                AssetDatabase.FindAssets("t:ItemInfo", itemsDataDirectory)
-                    .Select(guid => AssetDatabase.GUIDToAssetPath(guid))
-                    .Select(path => AssetDatabase.LoadAssetAtPath<ItemInfo>(path))
-                    .ToList();
-
-
             List<ItemInfo> distinct =
-                assets.Distinct(new FieldComparer<ItemInfo, string>(i => i.Id)).ToList();
+                items.Distinct(new FieldComparer<ItemInfo, string>(i => i.Id)).ToList();
 
             // idk if this is necessary
 #if UNITY_EDITOR
-            ValidateItems(assets, distinct);
+            ValidateItems(items, distinct);
 #endif
             items = distinct;
         }

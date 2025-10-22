@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -38,13 +38,12 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
-  m_GIWorkflowMode: 1
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -67,9 +66,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -238,6 +234,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -335,9 +334,8 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 203844586}
   m_Enabled: 1
-  serializedVersion: 10
+  serializedVersion: 11
   m_Type: 1
-  m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
   m_Range: 10
@@ -387,8 +385,12 @@ Light:
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
+  m_ForceVisible: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+  m_LightUnit: 1
+  m_LuxAtDistance: 1
+  m_EnableSpotReflector: 1
 --- !u!4 &203844589
 Transform:
   m_ObjectHideFlags: 0
@@ -603,15 +605,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 0
   m_isCullingEnabled: 0
@@ -626,12 +630,12 @@ MonoBehaviour:
   m_margin: {x: 9.064221, y: 1.322886, z: 6.012301, w: 2.5722795}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_renderer: {fileID: 647445961}
-  m_maskType: 0
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
+  m_hasFontAssetChanged: 0
+  m_renderer: {fileID: 647445961}
+  m_maskType: 0
 --- !u!23 &647445961
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -649,6 +653,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -722,9 +729,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34d286acf8a6df7adb06a658106883df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemsDataDirectory:
-  - Assets/Data/Items
-  craftingRecipesDataDirectory: Assets/Data/Crafting/recipes.json
+  craftingRecipesDataDirectory: Data/Crafting/recipes.json
+  items:
+  - {fileID: 11400000, guid: f7ae07d8c58b04ed5b6ff1781b8ebab4, type: 2}
+  - {fileID: 11400000, guid: 5279402d783a7cd6ab3e69233e367baa, type: 2}
+  - {fileID: 11400000, guid: 85a6b340d26e8e7b39516c393bdafd61, type: 2}
+  - {fileID: 11400000, guid: aa057ad6846ac52c5b08c8d0c3186b99, type: 2}
+  - {fileID: 11400000, guid: e5b25632b5123549e807f58b93a6fe85, type: 2}
+  - {fileID: 11400000, guid: 059b2551a72838889886b1a766ec008f, type: 2}
+  - {fileID: 11400000, guid: c2aa7223e4d8745d58386e39664853c4, type: 2}
+  - {fileID: 11400000, guid: 461db7fdba3e7563a9154a0c18a66e6f, type: 2}
+  - {fileID: 11400000, guid: f842c6917a63ac6a58da58e01cce72ec, type: 2}
+  - {fileID: 11400000, guid: 530aa0dc5b75d85a5ab48e4ee6343e61, type: 2}
+  - {fileID: 11400000, guid: 1166367e3c8d355cea370e3c4a1a2aa9, type: 2}
+  - {fileID: 11400000, guid: 84e30f3e4c85705078f994040466eb77, type: 2}
+  - {fileID: 11400000, guid: eab75f985dcf7e5f6a3c549ebb23df16, type: 2}
+  - {fileID: 11400000, guid: aeab811dc21d796e4a694214f7e59c81, type: 2}
+  - {fileID: 11400000, guid: 2ae32f33e1a7732c2a298977f02c8535, type: 2}
+  - {fileID: 11400000, guid: e0a14426b54101ce085acdf3d12ef6b4, type: 2}
+  - {fileID: 11400000, guid: cd0e7e731b465eaf58cd25789f9666ce, type: 2}
+  - {fileID: 11400000, guid: 0b777388761b7a2b0b53d0a5eee140c6, type: 2}
+  - {fileID: 11400000, guid: 42153066f2f17c88183321f166eef7b5, type: 2}
+  - {fileID: 11400000, guid: 9b6eec19752d2cfbcbf3ceea5e73d3e1, type: 2}
+  - {fileID: 11400000, guid: 3204fc56638abcd719a61e12cad8866a, type: 2}
 --- !u!4 &672043017
 Transform:
   m_ObjectHideFlags: 0
@@ -935,15 +962,17 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_TextWrappingMode: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 0
   m_isCullingEnabled: 0
@@ -958,12 +987,12 @@ MonoBehaviour:
   m_margin: {x: 9.064221, y: 1.322886, z: 6.012301, w: 2.5722795}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_renderer: {fileID: 940018895}
-  m_maskType: 0
   _SortingLayer: 0
   _SortingLayerID: 0
   _SortingOrder: 0
+  m_hasFontAssetChanged: 0
+  m_renderer: {fileID: 940018895}
+  m_maskType: 0
 --- !u!23 &940018895
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -981,6 +1010,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1082,12 +1114,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    quality: 3
-    frameInfluence: 0.1
-    jitterScale: 1
-    mipBias: 0
-    varianceClampScale: 0.9
-    contrastAdaptiveSharpening: 0
+    m_Quality: 3
+    m_FrameInfluence: 0.1
+    m_JitterScale: 1
+    m_MipBias: 0
+    m_VarianceClampScale: 0.9
+    m_ContrastAdaptiveSharpening: 0
 --- !u!81 &961739751
 AudioListener:
   m_ObjectHideFlags: 0

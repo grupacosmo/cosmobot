@@ -43,11 +43,6 @@ namespace Cosmobot.ItemSystem
 
         private static string ReadFile(string path)
         {
-#if UNITY_EDITOR
-            TextAsset asset = (TextAsset)AssetDatabase.LoadAssetAtPath(path, typeof(TextAsset));
-            if (asset) return asset.text;
-#endif
-
             return File.ReadAllText(path);
         }
     }
