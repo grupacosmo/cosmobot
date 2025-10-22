@@ -26,7 +26,7 @@ namespace Cosmobot.Editor.Standalone
 
             foreach (BuildBundle bundle in buildBundles)
             {
-                foreach(Object file in bundle.Files)
+                foreach (Object file in bundle.Files)
                 {
                     string filePath = AssetDatabase.GetAssetPath(file);
 
@@ -42,7 +42,7 @@ namespace Cosmobot.Editor.Standalone
                             Directory.CreateDirectory(outputDirPath);
                         }
 
-                        File.Copy(Path.Combine(Application.dataPath, filePath) , outputPath, true);
+                        File.Copy(Path.Combine(Application.dataPath, filePath), outputPath, true);
                         Debug.Log($"Copied file to: {outputPath}");
                     }
                 }
