@@ -729,7 +729,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34d286acf8a6df7adb06a658106883df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  craftingRecipesDataDirectory: Data/Crafting/recipes.json
+  recipesJson: {fileID: 4900000, guid: 4b1be96be374622699cb50eb5a23875e, type: 3}
   items:
   - {fileID: 11400000, guid: f7ae07d8c58b04ed5b6ff1781b8ebab4, type: 2}
   - {fileID: 11400000, guid: 5279402d783a7cd6ab3e69233e367baa, type: 2}

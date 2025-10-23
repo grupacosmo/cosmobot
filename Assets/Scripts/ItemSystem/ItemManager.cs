@@ -12,8 +12,10 @@ namespace Cosmobot.ItemSystem
     [DefaultExecutionOrder(ExecutionOrder.ItemManager)]
     public class ItemManager : SingletonSystem<ItemManager>
     {
+        //[SerializeField]
+        //private string craftingRecipesDataDirectory = "/Data/Crafting";
         [SerializeField]
-        private string craftingRecipesDataDirectory = "/Data/Crafting";
+        private TextAsset recipesJson;
 
         private List<CraftingRecipe> craftingRecipes;
         private List<CraftingRecipeGroup> craftingRecipesGroups;
@@ -47,7 +49,7 @@ namespace Cosmobot.ItemSystem
 
         protected override void SystemAwake()
         {
-            craftingRecipesDataDirectory = Path.Combine(Application.dataPath, craftingRecipesDataDirectory);
+            //craftingRecipesDataDirectory = Path.Combine(Application.dataPath, craftingRecipesDataDirectory);
 
             ValidateRecipeDirectory();
             LoadItems();
@@ -56,10 +58,10 @@ namespace Cosmobot.ItemSystem
 
         private void ValidateRecipeDirectory()
         {
-            if (!File.Exists(craftingRecipesDataDirectory))
-            {
-                Debug.LogError($"Invalid directory for recipes: {craftingRecipesDataDirectory}");
-            }
+            //if (!File.Exists(craftingRecipesDataDirectory))
+            //{
+            //    Debug.LogError($"Invalid directory for recipes: {craftingRecipesDataDirectory}");
+            //}
         }
 
         private void LoadItems()
@@ -98,8 +100,16 @@ namespace Cosmobot.ItemSystem
 
         private void LoadCraftingRecipes()
         {
-            CraftingRecipeSerializationObject deserializedObject =
-                CraftingRecipeSerializer.Deserialize(craftingRecipesDataDirectory);
+            //CraftingRecipeSerializationObject deserializedObject =
+            //     JsonUtility.FromJson<CraftingRecipeSerializationObject>(craftingRecipesDataDirectory);
+
+            CraftingRecipeSerializationObject deserializedObject = null;
+
+            if (recipesJson != null)
+            {
+                deserializedObject = JsonUtility.FromJson<CraftingRecipeSerializationObject>(recipesJson.text);
+            }
+
             if (deserializedObject is null)
             {
                 Debug.LogError("Failed to load crafting recipes.");

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02e26c4dc5cd56340bb04ae954c7e02e, type: 3}
   m_Name: BuildBundleFull
   m_EditorClassIdentifier: 
-  includeInBuild: 1
+  includeInBuild: 0
   files:
   - {fileID: 4900000, guid: 4b1be96be374622699cb50eb5a23875e, type: 3}
