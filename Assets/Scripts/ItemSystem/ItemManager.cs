@@ -100,8 +100,8 @@ namespace Cosmobot.ItemSystem
 
         private void LoadCraftingRecipes()
         {
-            //CraftingRecipeSerializationObject deserializedObject =
-            //     JsonUtility.FromJson<CraftingRecipeSerializationObject>(craftingRecipesDataDirectory);
+            //CraftingRecipeSerializationObject deserializedObject = 
+            //CraftingRecipeSerializer.Deserialize(craftingRecipesDataDirectory);
 
             CraftingRecipeSerializationObject deserializedObject = null;
 
