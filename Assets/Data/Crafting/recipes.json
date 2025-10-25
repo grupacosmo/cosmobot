@@ -1,114 +1,114 @@
 {
-  "Recipes": [
+  "recipes": [
     {
-      "Id": "smelt-iron-ore",
-      "Name": "Smelt Iron Ore",
-      "Ingredients": [
+      "id": "smelt-iron-ore",
+      "name": "Smelt Iron Ore",
+      "ingredients": [
         "iron-ore"
       ],
-      "Result": [
+      "result": [
         "iron-bar"
       ],
-      "EnergyCost": 10
+      "energyCost": 10
     },
     {
-      "Id": "oil-cracking",
-      "Name": "Oil Cracking",
-      "Ingredients": [
+      "id": "oil-cracking",
+      "name": "Oil Cracking",
+      "ingredients": [
         "oil-barrel"
       ],
-      "Result": [
+      "result": [
         "fuel-barrel",
         "lubricant-barrel",
         "acid-barrel"
       ],
-      "EnergyCost": 10
+      "energyCost": 10
     },
     {
-      "Id": "smelt-copper-ore",
-      "Name": "Smelt Copper Ore",
-      "Ingredients": [
+      "id": "smelt-copper-ore",
+      "name": "Smelt Copper Ore",
+      "ingredients": [
         "copper-ore"
       ],
-      "Result": [
+      "result": [
         "copper-bar"
       ],
-      "EnergyCost": 10
+      "energyCost": 10
     },
     {
-      "Id": "smelt-uranium-ore",
-      "Name": "Smelt Uranium Ore",
-      "Ingredients": [
+      "id": "smelt-uranium-ore",
+      "name": "Smelt Uranium Ore",
+      "ingredients": [
         "uranium-ore"
       ],
-      "Result": [
+      "result": [
         "uranium-bar"
       ],
-      "EnergyCost": 20
+      "energyCost": 20
     },
     {
-      "Id": "smelt-titanium-ore",
-      "Name": "Smelt Titanium Ore",
-      "Ingredients": [
+      "id": "smelt-titanium-ore",
+      "name": "Smelt Titanium Ore",
+      "ingredients": [
         "titanium-ore"
       ],
-      "Result": [
+      "result": [
         "titanium-bar"
       ],
-      "EnergyCost": 20
+      "energyCost": 20
     },
     {
-      "Id": "composite-materials",
-      "Name": "Composite materials",
-      "Ingredients": [
+      "id": "composite-materials",
+      "name": "Composite materials",
+      "ingredients": [
         "iron-bar",
         "titanium-bar"
       ],
-      "Result": [
+      "result": [
         "material-composite",
         "material-composite"
       ],
-      "EnergyCost": 0
+      "energyCost": 0
     },
     {
-      "Id": "make-a-mess",
-      "Name": "Make a mess",
-      "Ingredients": [
+      "id": "make-a-mess",
+      "name": "Make a mess",
+      "ingredients": [
         "iron-bar",
         "titanium-bar",
         "material-composite"
       ],
-      "Result": [
+      "result": [
         "material-mess"
       ],
-      "EnergyCost": 0
+      "energyCost": 0
     },
     {
-      "Id": "produce-oil-barrel",
-      "Name": "Produce Oil Barrel",
-      "Ingredients": [],
-      "Result": [
+      "id": "produce-oil-barrel",
+      "name": "Produce Oil Barrel",
+      "ingredients": [],
+      "result": [
         "oil-barrel"
       ],
-      "EnergyCost": 10
+      "energyCost": 10
     },
     {
-      "Id": "smelt-tin-ore",
-      "Name": "Smelt Tin Ore",
-      "Ingredients": [
+      "id": "smelt-tin-ore",
+      "name": "Smelt Tin Ore",
+      "ingredients": [
         "tin-ore"
       ],
-      "Result": [
+      "result": [
         "tin-bar"
       ],
-      "EnergyCost": 10
+      "energyCost": 10
     }
   ],
-  "Groups": [
+  "groups": [
     {
-      "Id": "furnace",
-      "Name": "Furnace",
-      "Recipes": [
+      "id": "furnace",
+      "name": "Furnace",
+      "recipes": [
         "smelt-iron-ore",
         "smelt-titanium-ore",
         "smelt-copper-ore",
@@ -118,30 +118,30 @@
       ]
     },
     {
-      "Id": "chemical-crafter",
-      "Name": "Chemical Crafter",
-      "Recipes": [
+      "id": "chemical-crafter",
+      "name": "Chemical Crafter",
+      "recipes": [
         "oil-cracking"
       ]
     },
     {
-      "Id": "mess-maker",
-      "Name": "Mess maker",
-      "Recipes": [
+      "id": "mess-maker",
+      "name": "Mess maker",
+      "recipes": [
         "make-a-mess"
       ]
     },
     {
-      "Id": "pump-jack",
-      "Name": "Pump Jack",
-      "Recipes": [
+      "id": "pump-jack",
+      "name": "Pump Jack",
+      "recipes": [
         "produce-oil-barrel"
       ]
     },
     {
-      "Id": "",
-      "Name": "",
-      "Recipes": []
+      "id": "",
+      "name": "",
+      "recipes": []
     }
   ]
 }
