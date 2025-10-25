@@ -12,8 +12,6 @@ namespace Cosmobot.ItemSystem
     [DefaultExecutionOrder(ExecutionOrder.ItemManager)]
     public class ItemManager : SingletonSystem<ItemManager>
     {
-        //[SerializeField]
-        //private string craftingRecipesDataDirectory = "/Data/Crafting";
         [SerializeField]
         private TextAsset recipesJson;
 
@@ -49,19 +47,8 @@ namespace Cosmobot.ItemSystem
 
         protected override void SystemAwake()
         {
-            //craftingRecipesDataDirectory = Path.Combine(Application.dataPath, craftingRecipesDataDirectory);
-
-            ValidateRecipeDirectory();
             LoadItems();
             LoadCraftingRecipes();
-        }
-
-        private void ValidateRecipeDirectory()
-        {
-            //if (!File.Exists(craftingRecipesDataDirectory))
-            //{
-            //    Debug.LogError($"Invalid directory for recipes: {craftingRecipesDataDirectory}");
-            //}
         }
 
         private void LoadItems()
@@ -100,9 +87,6 @@ namespace Cosmobot.ItemSystem
 
         private void LoadCraftingRecipes()
         {
-            //CraftingRecipeSerializationObject deserializedObject = 
-            //CraftingRecipeSerializer.Deserialize(craftingRecipesDataDirectory);
-
             CraftingRecipeSerializationObject deserializedObject = null;
 
             if (recipesJson != null)
