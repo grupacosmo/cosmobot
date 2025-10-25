@@ -16,10 +16,16 @@ namespace Cosmobot
         private float blinkInterval = 0.55f;
         [SerializeField]
         private float blinkDelayAfterEdit = 0.8f;
+
+        [SerializeField]
+        private Scrollbar inputFieldScrollBar;
+        [SerializeField]
+        private Scrollbar codeDisplayScrollBar;
+        
         
         private int lastCaretPosition = 0;
         
-        private string bufferedText;
+        private string bufferedText = "";
         private bool dirty = false;
         private bool cursorBlink = false;
         private float lastBlink = 0;
@@ -48,6 +54,22 @@ namespace Cosmobot
 
         private void Update()
         {
+            UpdateScroll();
+            UpdateBlinkCursor();
+            
+            if (dirty)
+            {
+                UpdateOutputField();
+            }
+        }
+
+        private void UpdateScroll()
+        {
+            codeDisplayScrollBar.value = 1 - inputFieldScrollBar.value; // ???
+        }
+
+        private void UpdateBlinkCursor()
+        {
             if (inputField.caretPosition != lastCaretPosition)
             {
                 lastCaretPosition = inputField.caretPosition;
@@ -60,23 +82,23 @@ namespace Cosmobot
                 dirty = true;
                 wasBlinkUpdate = true;
             }
-            
-            if (dirty)
+        }
+
+        private void UpdateOutputField()
+        {
+            if (!wasBlinkUpdate)
             {
-                if (!wasBlinkUpdate)
-                {
-                    cursorBlink = true;
-                    lastBlink = blinkDelayAfterEdit;
-                }
-                else
-                {
-                    lastBlink = blinkInterval;
-                    wasBlinkUpdate = false;
-                }
-                
-                UpdateText();
-                dirty = false;
+                cursorBlink = true;
+                lastBlink = blinkDelayAfterEdit;
             }
+            else
+            {
+                lastBlink = blinkInterval;
+                wasBlinkUpdate = false;
+            }
+                
+            UpdateText();
+            dirty = false;
         }
 
         private void UpdateText()
@@ -104,7 +126,7 @@ namespace Cosmobot
 
         private string Format(string input, int caretPosition, int selStart, int selEnd)
         {
-            Debug.Log("Format: cp" + caretPosition + " sel: "+ selStart + " to " + selEnd + "; " + input);
+            // Debug.Log("Format: cp" + caretPosition + " sel: "+ selStart + " to " + selEnd + "; " + input);
             int startOffset = 0;
             int endOffset = 0;
             for (int i = 0; i < input.Length; i++)
@@ -128,27 +150,27 @@ namespace Cosmobot
                 + SelectStartMarkTag.Length
                 + (selStart == selEnd ? SelectEndMarkTag.Length : 0);
 
-
+            // offsetCaretPos = caretPosition + startOffset;
+            
             const char ZWJ = '\u200D';
-            const string monospaceStartTag = "<mspace=0.7em>";
+            const string monospaceStartTag = ""; //""<mspace=0.7em>";
             // const string cursorTag = "</mspace><rotate=15>\u0338</rotate>" + monospaceStartTag;
 
             string cursorBlinked = cursorBlink ? "|" : "";
             string cursorTag = $"<mspace=-0.01>{cursorBlinked}</mspace>" + monospaceStartTag;
-            
+
             return monospaceStartTag + input
                     .Replace("<", "<" + ZWS)
                     .Replace(">", ZWS + ">")
-                    .Insert(offsetSelStart, SelectStartMarkTag)
-                    .Insert(offsetSelEnd, SelectEndMarkTag)
-                    .Insert(offsetCaretPos, cursorTag) 
-                // .Replace("<", "<" + zws)
-                // .Replace(">", zws + ">" )
+                    // .Insert(offsetSelStart, SelectStartMarkTag)
+                    // .Insert(offsetSelEnd, SelectEndMarkTag)
+                    // .Insert(offsetCaretPos, cursorTag)
                     .Replace("public", "<color=#ff0000>public</color>")
                     .Replace("void",  "<color=#00ff00>void</color>")
                     .Replace("int",  "<color=#00ff00>int</color>")
                     .Replace("6",  "<color=#0000ff>6</color>")
-                                     + "</mspace>";
+                    // + "</mspace>";
+                ;
         }
     }
 }
