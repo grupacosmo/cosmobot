@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using JetBrains.Annotations;
 
-namespace Cosmobot
+namespace Cosmobot.Utils
 {
     public static class SerializationUtils
     {

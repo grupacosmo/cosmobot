@@ -1,4 +1,4 @@
-namespace Cosmobot
+namespace Cosmobot.Utils
 {
     /// <summary>
     ///     Constants for the execution order of scripts.

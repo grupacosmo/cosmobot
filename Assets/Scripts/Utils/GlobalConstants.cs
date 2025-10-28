@@ -1,4 +1,4 @@
-namespace Cosmobot
+namespace Cosmobot.Utils
 {
     public static class GlobalConstants
     {

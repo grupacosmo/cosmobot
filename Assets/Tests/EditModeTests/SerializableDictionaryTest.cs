@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Cosmobot.Utils;
 using NUnit.Framework;
 
 namespace Cosmobot

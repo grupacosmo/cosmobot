@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Cosmobot
+namespace Cosmobot.Utils
 {
     public static class ComponentUtils
     {

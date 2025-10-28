@@ -1,9 +1,10 @@
 using System;
+using Cosmobot.Utils;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Cosmobot.Editor
+namespace Cosmobot.Editor.Standalone
 {
     [CustomPropertyDrawer(typeof(AnyUnityObjectUIAttribute))]
     public class AnyUnityObjectUIPropertyDrawer : PropertyDrawer

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Cosmobot
+namespace Cosmobot.Utils
 {
     [Serializable]
     public class SerializableDictionary<TKey, TValue> :
