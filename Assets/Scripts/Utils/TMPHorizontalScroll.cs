@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -10,10 +9,6 @@ namespace Cosmobot.Utils
     [RequireComponent(typeof(RectTransform))]
     public class TMPHorizontalScroll : UIBehaviour, ILayoutSelfController
     {
-        // TODO allow TMPHorizontalScroll on any RectTransform 
-        //  - will set size of its own RectTransform
-        //    based on Text and its parent
-        
         [SerializeField]
         private TMP_InputField target;
         
@@ -22,13 +17,18 @@ namespace Cosmobot.Utils
         public float additionalExpand = 0;
 
         [SerializeField]
+        [Tooltip("ScrollRect containing this TMPHorizontalScroll")]
         private ScrollRect targetScrollRect;
         
+        private float previousCharCaretPositionX = 0;
+
         private RectTransform parentRt;
         private RectTransform currentRectTransform;
         private RectTransform inputFieldTextRt;
-        
+
         private DrivenRectTransformTracker tracker;
+
+        private Vector3 CharacterCaretPos => target.textComponent.textInfo.characterInfo[target.caretPosition].topLeft;
 
         protected RectTransform ParentRt
         {
@@ -39,7 +39,7 @@ namespace Cosmobot.Utils
                 return parentRt;
             }
         }
-        
+
         protected RectTransform CurrentRectTransform
         {
             get
@@ -59,13 +59,18 @@ namespace Cosmobot.Utils
                 return inputFieldTextRt;
             }
         }
-    
+
+        // == impl ILayoutSelfController
+
         public void SetLayoutHorizontal()
         {
             UpdateLayout();   
         }
 
         public void SetLayoutVertical() {}
+
+
+        // == Unity Events
 
         protected override void OnEnable()
         {
@@ -81,24 +86,7 @@ namespace Cosmobot.Utils
             LayoutRebuilder.MarkLayoutForRebuild(CurrentRectTransform);
             base.OnDisable();
         }
-        
-        protected override void OnTransformParentChanged()
-        {
-            SetDirty();
-        }
 
-        protected override void OnRectTransformDimensionsChange()
-        {
-            SetDirty();
-        }
-        
-        private void OnTargetTextChanged(string newText)
-        {
-            SetDirty();
-        }
-
-        private float previousCharCaretPositionX = 0;
-        
         private void Update()
         {
 #if UNITY_EDITOR
@@ -113,29 +101,43 @@ namespace Cosmobot.Utils
             }
         }
 
-        private Vector3 CharacterCaretPos => target.textComponent.textInfo.characterInfo[target.caretPosition].topLeft;
+        // == extends UIBehaviour
+        protected override void OnTransformParentChanged()
+        {
+            SetDirty();
+        }
+
+        protected override void OnRectTransformDimensionsChange()
+        {
+            SetDirty();
+        }
+
+        // ==
         
+        protected void SetDirty()
+        {
+            if (!IsActive())
+                return;
+            
+            LayoutRebuilder.MarkLayoutForRebuild(CurrentRectTransform);
+            // if (target) LayoutRebuilder.MarkLayoutForRebuild(InputFieldTextRt);
+        }
+
+        private void OnTargetTextChanged(string newText)
+        {
+            SetDirty();
+        }
+
         private void ScrollToCaret()
         {
-            
-            // float scrollPosition = 
-            //     (m_TextComponent.textInfo.lineInfo[0].ascender 
-            //         + m_TextComponent.margin.y 
-            //         + m_TextComponent.margin.w 
-            //         - viewportRect.yMax 
-            //         + m_TextComponent.rectTransform.anchoredPosition.y)
-            //     / ( m_TextComponent.preferredHeight - viewportRect.height);
-
-
-            RectTransform targetScrollRectRt = (RectTransform)targetScrollRect.transform;
             Vector3 caretPositionInTextComponent = CharacterCaretPos;
 
             Vector3 caretPositionGlobal = target.textComponent.transform.position + caretPositionInTextComponent;
             Vector3 caretPositionInContent = targetScrollRect.content.InverseTransformPoint(caretPositionGlobal);
             Vector3 caretPositionInViewport = targetScrollRect.viewport.InverseTransformPoint(caretPositionGlobal);
-            Debug.Log(caretPositionInViewport.x);
             float contentWidth = targetScrollRect.content.rect.width;
             Rect viewportRect = targetScrollRect.viewport.rect;
+            
             float offsetCursorAlignment = 0;
             if (caretPositionInViewport.x > (viewportRect.width - additionalExpand))
             {
@@ -151,36 +153,16 @@ namespace Cosmobot.Utils
             }
             
             float viewportWidth = viewportRect.width;
-            
             float scrollPosition = (caretPositionInContent.x + offsetCursorAlignment) / (contentWidth - viewportWidth);
 
             float size = viewportWidth / contentWidth;
             targetScrollRect.horizontalScrollbar.size = size;
             targetScrollRect.horizontalScrollbar.value = scrollPosition;
-            
-
-
-            //
-            // Vector3 caretPositionGlobal = target.textComponent.transform.position + caretPositionInTextComponent;
-            // Vector3 caretPositionInScroll = targetScrollRectRt.InverseTransformPoint(caretPositionGlobal);
-            // Vector3 contentPositionInScroll = targetScrollRectRt.InverseTransformPoint(targetScrollRect.content.position);
-            // Vector3 difference = contentPositionInScroll - caretPositionInScroll;
-            //
-            // float differenceX = difference.x;
-            // float scrollRectWidth = targetScrollRectRt.rect.width;
-            // // coz content is wider than actual scroll rect, normalizedDifferenceX can be <0 or >1
-            // float normalizedDifferenceX =  differenceX / scrollRectWidth;  
-            // if (normalizedDifferenceX < 0 || normalizedDifferenceX > 1) // is outside displayed bounds
-            // {
-            //     float contentNormalizedDifferenceX = differenceX / targetScrollRect.content.rect.width;
-            //     // TODO: check to align left/right
-            //     targetScrollRect.horizontalScrollbar.value = 1 - contentNormalizedDifferenceX;
-            // }
         }
 
         private void UpdateLayout()
         {
-            if (!target) return;
+            if (target == null) return;
             
             tracker.Add(this, CurrentRectTransform, DrivenTransformProperties.SizeDeltaX);
             
@@ -192,19 +174,12 @@ namespace Cosmobot.Utils
             CurrentRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, preferredWidth);
         }
 
-        protected void SetDirty()
-        {
-            if (!IsActive())
-                return;
-            
-            LayoutRebuilder.MarkLayoutForRebuild(CurrentRectTransform);
-            // if (target) LayoutRebuilder.MarkLayoutForRebuild(InputFieldTextRt);
-        }
-
 #if UNITY_EDITOR
+        // == Editor stuff
+        
         protected override void OnValidate()
         {
-            if (!target)
+            if (target == null)
             {
                 Debug.Log("Target field is required | " + nameof(TMPHorizontalScroll), this);
                 return;
