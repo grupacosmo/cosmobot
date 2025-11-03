@@ -1,4 +1,4 @@
-using System;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,31 +13,21 @@ namespace Cosmobot
         private TMP_Text codeDisplay;
         
         [SerializeField]
-        private float blinkInterval = 0.55f;
-        [SerializeField]
-        private float blinkDelayAfterEdit = 0.8f;
-
-        [SerializeField]
-        private Scrollbar inputFieldScrollBar;
-        [SerializeField]
-        private Scrollbar codeDisplayScrollBar;
-        
-        
-        private int lastCaretPosition = 0;
+        private TMP_Text lineNumbersText;
         
         private string bufferedText = "";
         private bool dirty = false;
-        private bool cursorBlink = false;
-        private float lastBlink = 0;
-        private bool wasBlinkUpdate = false;
-        
+        private int bufferedLineCount = 1;
+        private int visibleLineCount;
+        private float previousLineNumberContainerHeight;
+
+        private RectTransform lineNumberTextParent;
         
         private void OnEnable()
         {
             if (inputField != null && codeDisplay != null)
             {
                 inputField.onValueChanged.AddListener(OnInputFieldValueChanged);
-                inputField.onTextSelection.AddListener(OnTextSelection);
                 codeDisplay.text = inputField.text;
             }
         }
@@ -46,69 +36,108 @@ namespace Cosmobot
         {
             if (inputField != null)
             {
-                inputField.onTextSelection.RemoveListener(OnTextSelection);
                 inputField.onValueChanged.RemoveListener(OnInputFieldValueChanged);
             }
         }
         
+        private void Start()
+        {
+            lineNumberTextParent = (RectTransform)lineNumbersText.transform.parent;
+            bufferedLineCount = 1; 
+            RecalculateVisibleLineCount();
+            UpdateLineNumbers();
+            
+        }
 
         private void Update()
         {
-            UpdateScroll();
-            UpdateBlinkCursor();
+            float currentLineNumberContainerHeight = lineNumberTextParent.rect.size.y;
+            if (!Mathf.Approximately(currentLineNumberContainerHeight, previousLineNumberContainerHeight))
+            {
+                RecalculateVisibleLineCount();
+                UpdateLineNumbers();
+                previousLineNumberContainerHeight = currentLineNumberContainerHeight;
+            }
             
             if (dirty)
             {
                 UpdateOutputField();
+                dirty = false;
             }
         }
 
-        private void UpdateScroll()
+        private void RecalculateVisibleLineCount()
         {
-            codeDisplayScrollBar.value = 1 - inputFieldScrollBar.value; // ???
-        }
-
-        private void UpdateBlinkCursor()
-        {
-            if (inputField.caretPosition != lastCaretPosition)
+            TMP_LineInfo[] lineInfo = lineNumbersText.textInfo.lineInfo;
+            if (lineInfo.Length == 0)
             {
-                lastCaretPosition = inputField.caretPosition;
-                dirty = true;
+                Debug.LogError("no line in line numbers text. Is it even possible?");
             }
-            lastBlink -= Time.deltaTime;
-            if (lastBlink <= 0)
-            {
-                cursorBlink = !cursorBlink;
-                dirty = true;
-                wasBlinkUpdate = true;
-            }
-        }
 
+            float fullLineHeight = lineInfo[0].lineHeight + lineNumbersText.lineSpacing;
+            float containerHeight = lineNumberTextParent.rect.size.y;
+            if (fullLineHeight < Mathf.Epsilon)
+            {
+                Debug.LogWarning("fullLineHeight is too small");
+                fullLineHeight = containerHeight / 10;
+            }
+            
+            int lineCount = (int)Mathf.Ceil(containerHeight / fullLineHeight);
+            visibleLineCount = lineCount + 1; // just to be sure
+        }
+        
         private void UpdateOutputField()
         {
-            if (!wasBlinkUpdate)
+            int lineCount = CountLines();
+            if (lineCount != bufferedLineCount)
             {
-                cursorBlink = true;
-                lastBlink = blinkDelayAfterEdit;
+                bufferedLineCount = lineCount;
+                UpdateLineNumbers();
             }
-            else
-            {
-                lastBlink = blinkInterval;
-                wasBlinkUpdate = false;
-            }
-                
+
             UpdateText();
             dirty = false;
         }
 
+        private int CountLines()
+        {
+            int lineCount = 1;
+            foreach (char c in bufferedText)
+            {
+                if (c == '\n') lineCount++;
+            }
+            return lineCount;
+        }
+        
+        private void UpdateLineNumbers()
+        {
+            // well with more than 9999 lines unity will probably die processing TMPro 
+            // simple and stupid approximation
+            int stringSize = Mathf.Min(bufferedLineCount, visibleLineCount) + 1; // '\n'
+            if (bufferedLineCount < 1000)
+                stringSize += bufferedLineCount * 3; // 001-999 
+            else 
+                stringSize += 3000 + (bufferedLineCount - 1000) * 4; // (001-999) + (1000-9999)
+            
+            StringBuilder lineNumbers = new StringBuilder(stringSize);
+            int i = 0;
+            for (; i < bufferedLineCount; i++)
+            {
+                lineNumbers.Append(i+1).Append('\n');
+            }
+
+            // for (; i < visibleLineCount; i++) // fill to bottom
+            // {
+            //     lineNumbers.Append('\n');
+            // }
+            // lineNumbers.Append('\n');
+            
+            lineNumbersText.text = lineNumbers.ToString();
+        }
+
         private void UpdateText()
         {
-            int selectStart = inputField.selectionStringAnchorPosition;
-            int selectEnd = inputField.selectionStringFocusPosition;
-            int carretPosition = inputField.caretPosition;
-            int selStart = Math.Min(selectStart, selectEnd);
-            int selEnd = Math.Max(selectStart, selectEnd);
-            codeDisplay.text = Format(bufferedText, carretPosition, selStart, selEnd);
+            codeDisplay.text = Format(bufferedText);
         }
 
         private void OnInputFieldValueChanged(string newValue)
@@ -116,60 +145,19 @@ namespace Cosmobot
             bufferedText = newValue;
             dirty = true;
         }
-        
-        private void OnTextSelection(string text, int selectionStart, int selectionEnd)
-        {
-            bufferedText = text;
-            dirty = true;
-        }
-        
 
-        private string Format(string input, int caretPosition, int selStart, int selEnd)
+        private string Format(string input)
         {
             // Debug.Log("Format: cp" + caretPosition + " sel: "+ selStart + " to " + selEnd + "; " + input);
-            int startOffset = 0;
-            int endOffset = 0;
-            for (int i = 0; i < input.Length; i++)
-            {
-                if (input[i] != '<' && input[i] != '>') continue;
-                if (i < selStart + startOffset) startOffset++;
-                if (i < selEnd + endOffset) endOffset++;
-            }
-            
             const char ZWS = '\u200B'; // zero-width space
-            const string SelectStartMarkTag = "<mark=#4444ff55>";
-            const string SelectEndMarkTag = "</mark>";
 
-
-            int offsetSelStart = selStart + startOffset;
-            int offsetSelEnd = selEnd + endOffset + SelectStartMarkTag.Length;
-
-            int offsetCaretPos =
-                caretPosition
-                + (caretPosition == selStart ? startOffset : endOffset)
-                + SelectStartMarkTag.Length
-                + (selStart == selEnd ? SelectEndMarkTag.Length : 0);
-
-            // offsetCaretPos = caretPosition + startOffset;
-            
-            const char ZWJ = '\u200D';
-            const string monospaceStartTag = ""; //""<mspace=0.7em>";
-            // const string cursorTag = "</mspace><rotate=15>\u0338</rotate>" + monospaceStartTag;
-
-            string cursorBlinked = cursorBlink ? "|" : "";
-            string cursorTag = $"<mspace=-0.01>{cursorBlinked}</mspace>" + monospaceStartTag;
-
-            return monospaceStartTag + input
+            return input
                     .Replace("<", "<" + ZWS)
                     .Replace(">", ZWS + ">")
-                    // .Insert(offsetSelStart, SelectStartMarkTag)
-                    // .Insert(offsetSelEnd, SelectEndMarkTag)
-                    // .Insert(offsetCaretPos, cursorTag)
                     .Replace("public", "<color=#ff0000>public</color>")
                     .Replace("void",  "<color=#00ff00>void</color>")
                     .Replace("int",  "<color=#00ff00>int</color>")
                     .Replace("6",  "<color=#0000ff>6</color>")
-                    // + "</mspace>";
                 ;
         }
     }
