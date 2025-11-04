@@ -104,6 +104,12 @@ namespace Cosmobot.Utils.UI
         
         private void Update()
         {
+            // not necessary in update, coz this value does not chane in runtime
+            // but just to be safe...
+            // textWrappingMode does check if value changes and if not, returns so minimal performance impact
+            // also it changes in editor OnValidate for TMP_InputField (every inspector interaction)
+            target.textComponent.textWrappingMode = TextWrappingModes.PreserveWhitespace;
+            
 #if UNITY_EDITOR
             // coz [ExecuteAlways]
             if (!Application.isPlaying) return;

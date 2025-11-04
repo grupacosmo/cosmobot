@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Cosmobot
 {
-    public class ProgramminUi : MonoBehaviour
+    public class ProgrammingUi : MonoBehaviour
     {
         [SerializeField]
         private TMP_InputField inputField;
@@ -158,6 +158,7 @@ namespace Cosmobot
                     .Replace("void",  "<color=#00ff00>void</color>")
                     .Replace("int",  "<color=#00ff00>int</color>")
                     .Replace("6",  "<color=#0000ff>6</color>")
+                // + "<color=#00000000></mspace=0.01>.</mspace></color>"
                 ;
         }
     }
