@@ -12,7 +12,7 @@ namespace Cosmobot.Utils.UI
     {
         [SerializeField]
         private TMP_InputField target;
-        
+
         public bool expandWidthInputFieldToParent = true;
         public bool expandHeightInputFieldToParent = true;
         [Tooltip("This value will be added to RectTransform width to accomodate for future updates")]
@@ -23,7 +23,7 @@ namespace Cosmobot.Utils.UI
                  "This should be independent (in object tree) from InputField and " + nameof(TMPScrollable) +
                  " element")]
         private RectTransform minimalSizeRect;
-        
+
         [SerializeField]
         [Tooltip("ScrollRect containing this " + nameof(TMPScrollable))]
         private ScrollRect targetScrollRect;
@@ -34,7 +34,7 @@ namespace Cosmobot.Utils.UI
         [SerializeField]
         [InspectorName("Horizontal scroll bars to sync position")]
         private List<Scrollbar> horScrollBarsToSync;
-        
+
         private Vector2 previousCharCaretPosition = Vector2.zero;
 
         private RectTransform currentRectTransform;
@@ -70,14 +70,14 @@ namespace Cosmobot.Utils.UI
 
         public void SetLayoutHorizontal()
         {
-            UpdateLayout();   
+            UpdateLayout();
         }
 
         public void SetLayoutVertical()
         {
             UpdateLayout();
         }
-        
+
         // == Unity Events
 
         protected override void OnEnable()
@@ -101,7 +101,7 @@ namespace Cosmobot.Utils.UI
             LayoutRebuilder.MarkLayoutForRebuild(CurrentRectTransform);
             base.OnDisable();
         }
-        
+
         private void Update()
         {
             // not necessary in update, coz this value does not chane in runtime
@@ -109,13 +109,13 @@ namespace Cosmobot.Utils.UI
             // textWrappingMode does check if value changes and if not, returns so minimal performance impact
             // also it changes in editor OnValidate for TMP_InputField (every inspector interaction)
             target.textComponent.textWrappingMode = TextWrappingModes.PreserveWhitespace;
-            
+
 #if UNITY_EDITOR
             // coz [ExecuteAlways]
             if (!Application.isPlaying) return;
 #endif
             Vector2 currentCaretPosition = CharacterCaretPos;
-            
+
             if (Vector2.SqrMagnitude(previousCharCaretPosition - currentCaretPosition) > Mathf.Epsilon)
             {
                 ScrollToCaret();
@@ -136,28 +136,28 @@ namespace Cosmobot.Utils.UI
 
         // ==
 
-        private void OnTargetTextChanged(string newText)
+        private void OnTargetTextChanged(string _)
         {
             SetDirty();
         }
-        
+
         protected void SetDirty()
         {
             if (!IsActive())
                 return;
-            
+
             LayoutRebuilder.MarkLayoutForRebuild(CurrentRectTransform);
         }
-        
+
         private void OnHorizontalScroll(float _)
         {
             foreach (Scrollbar sb in horScrollBarsToSync)
             {
                 sb.size = targetScrollRect.horizontalScrollbar.size;
                 sb.value = targetScrollRect.horizontalScrollbar.value;
-            }    
+            }
         }
-        
+
         private void OnVerticalScroll(float _)
         {
             foreach (Scrollbar sb in vertScrollBarsToSync)
@@ -166,7 +166,7 @@ namespace Cosmobot.Utils.UI
                 sb.value = targetScrollRect.verticalScrollbar.value;
             }
         }
-        
+
         private void ScrollToCaret()
         {
             Vector3 caretPositionInTextComponent = CharacterCaretPos;
@@ -187,7 +187,7 @@ namespace Cosmobot.Utils.UI
                 offsetCursorAlignment.x = 0;
             else
                 scrollX = false;
-            
+
             if (caretPositionInViewport.y > (viewportRect.height - additionalExpand.y))
                 offsetCursorAlignment.y = -viewportRect.yMax + additionalExpand.y + caretHeight;
             else if (caretPositionInViewport.y < 0)
@@ -201,7 +201,7 @@ namespace Cosmobot.Utils.UI
             Vector2 scrollSize = viewportRect.size / contentSize;
             if (!float.IsFinite(scrollPosition.x)) scrollPosition.x = 0;
             if (!float.IsFinite(scrollPosition.y)) scrollPosition.y = 0;
-            
+
             if (scrollX)
             {
                 targetScrollRect.horizontalScrollbar.size = scrollSize.x;
@@ -220,18 +220,25 @@ namespace Cosmobot.Utils.UI
         private void UpdateLayout()
         {
             if (target == null) return;
-            
+
             tracker.Add(this, CurrentRectTransform, DrivenTransformProperties.SizeDelta);
 
             float lineHeight = CharacterInfoAtCursor.ascender - CharacterInfoAtCursor.descender;
-            
+            float characterWidth = target.pointSize;
+
+            const char CommonWideCharacter = 'W';
+            if (target.fontAsset.characterLookupTable.TryGetValue(CommonWideCharacter, out TMP_Character character))
+            {
+                characterWidth = character.glyph.metrics.width;
+            }
+
             float textPreferredWidth = LayoutUtility.GetPreferredWidth(InputFieldTextRt) + additionalExpand.x;
             float textPreferredHeight = LayoutUtility.GetPreferredHeight(InputFieldTextRt) + additionalExpand.y;
             float minWidth = expandWidthInputFieldToParent ? minimalSizeRect.rect.width : 0;
             float minHeight = expandHeightInputFieldToParent ? minimalSizeRect.rect.height : 0;
-            float preferredWidth = Mathf.Max(textPreferredWidth, minWidth);
+            float preferredWidth = Mathf.Max(textPreferredWidth + characterWidth, minWidth);
             float preferredHeight = Mathf.Max(textPreferredHeight + lineHeight, minHeight);
-            
+
             CurrentRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, preferredWidth);
             CurrentRectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, preferredHeight);
             OnHorizontalScroll(targetScrollRect.horizontalScrollbar.value);

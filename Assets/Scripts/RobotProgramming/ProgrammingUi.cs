@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Cosmobot.Utils;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Cosmobot
 {
     public class ProgrammingUi : MonoBehaviour
     {
+
+        [SerializeField]
+        private float fontSize = 36;
+
         [SerializeField]
         private TMP_InputField inputField;
 
@@ -20,6 +24,24 @@ namespace Cosmobot
         [SerializeField]
         private TMP_Text lineNumbersText;
 
+        // syntax highlight
+        private static readonly Regex parsingRegex = PrepareApiTypes();
+        private static readonly Regex richTextFixerRegex = new Regex(@"(<|>)");
+        private static readonly Dictionary<string, Color> syntaxColorStyle = new Dictionary<string, Color>
+        {
+            ["comment"]     = ColorHex(0x6A9955), // greenish
+            ["string"]      = ColorHex(0xCE9178), // light red/orange
+            ["number"]      = ColorHex(0xB5CEA8), // pale green
+            ["keyword"]     = ColorHex(0x569CD6), // blue
+            ["literal"]     = ColorHex(0xDCDCAA), // yellowish
+            ["builtin"]     = ColorHex(0x4EC9B0), // teal
+            ["function"]    = ColorHex(0xDCDCAA), // yellow
+            ["operator"]    = ColorHex(0xD4D4D4), // light gray
+            ["punctuation"] = ColorHex(0xD4D4D4), // same as operator
+            ["apiTypes"]    = ColorHex(0x8DDDCD), // light teal
+        };
+
+        // render
         private string bufferedText = "";
         private bool dirty = false;
         private int bufferedLineCount = 1;
@@ -28,13 +50,25 @@ namespace Cosmobot
 
         private RectTransform lineNumberTextParent;
 
+        // == Unity's event functions
+
         private void OnEnable()
         {
-            if (inputField != null && codeDisplay != null)
+            bool hasComponents = true;
+            hasComponents &= ComponentUtils.RequireNotNull(inputField, "inputField", this);
+            hasComponents &= ComponentUtils.RequireNotNull(lineNumbersText, "lineNumbersText", this);
+            hasComponents &= ComponentUtils.RequireNotNull(codeDisplay, "codeDisplay", this);
+            if (!hasComponents)
             {
-                inputField.onValueChanged.AddListener(OnInputFieldValueChanged);
-                codeDisplay.text = inputField.text;
+                Debug.LogWarning($"{nameof(ProgrammingUi)} have unset references. Check logs for more info", this);
+                enabled = false;
+                return;
             }
+
+            UpdateFontSize();
+
+            inputField.onValueChanged.AddListener(OnInputFieldValueChanged);
+            codeDisplay.text = inputField.text;
         }
 
         private void OnDisable()
@@ -69,6 +103,15 @@ namespace Cosmobot
                 UpdateOutputField();
                 dirty = false;
             }
+        }
+
+        // ==
+
+        private void UpdateFontSize()
+        {
+            inputField.pointSize = fontSize;
+            codeDisplay.fontSize = fontSize;
+            lineNumbersText.fontSize = fontSize;
         }
 
         private void RecalculateVisibleLineCount()
@@ -132,11 +175,11 @@ namespace Cosmobot
                 lineNumbers.Append(i + 1).Append('\n');
             }
 
-            // for (; i < visibleLineCount; i++) // fill to bottom
-            // {
-            //     lineNumbers.Append('\n');
-            // }
-            // lineNumbers.Append('\n');
+            for (; i < visibleLineCount; i++) // fill to bottom
+            {
+                lineNumbers.Append('\n');
+            }
+            lineNumbers.Append('\n');
 
             lineNumbersText.text = lineNumbers.ToString();
         }
@@ -152,22 +195,6 @@ namespace Cosmobot
             dirty = true;
         }
 
-        private static readonly Regex parsingRegex = PrepareApiTypes();
-        private static readonly Regex richTextFixerRegex = new Regex(@"(<|>)");
-        private static readonly Dictionary<string, Color> syntaxColorStyle = new Dictionary<string, Color>
-        {
-            ["comment"]     = ColorHex(0x6A9955), // greenish
-            ["string"]      = ColorHex(0xCE9178), // light red/orange
-            ["number"]      = ColorHex(0xB5CEA8), // pale green
-            ["keyword"]     = ColorHex(0x569CD6), // blue
-            ["literal"]     = ColorHex(0xDCDCAA), // yellowish
-            ["builtin"]     = ColorHex(0x4EC9B0), // teal
-            ["function"]    = ColorHex(0xDCDCAA), // yellow
-            ["operator"]    = ColorHex(0xD4D4D4), // light gray
-            ["punctuation"] = ColorHex(0xD4D4D4), // same as operator
-            ["apiTypes"]    = ColorHex(0x8DDDCD), // light teal
-        };
-
         private static Color ColorHex(uint color)
         {
             float r = (color       & 0xFF) / 255f;
@@ -175,7 +202,7 @@ namespace Cosmobot
             float b = (color >> 16 & 0xFF) / 255f;
             return new Color(r, g, b);
         }
-        
+
         private static string ColorToHex(Color color)
         {
             int r = (int)(color.r * 255);
@@ -183,17 +210,17 @@ namespace Cosmobot
             int b = (int)(color.b * 255);
             return $"#{r:X2}{g:X2}{b:X2}";
         }
-        
+
         private static Regex PrepareApiTypes()
         {
             Type apiVec2Type = typeof(Cosmobot.Api.Types.Vec2);
             string apiNamespace = apiVec2Type.Namespace;
-            string apiTypesNames = 
+            string apiTypesNames =
                 apiVec2Type.Assembly.GetTypes()
                     .Where(t => t.Namespace == apiNamespace)
                     .Select(t => t.Name)
                     .Aggregate((total, next) =>  total + "|" + next);
-            
+
             string pattern = string.Join("|", new[]
             {
                 @"(?<comment>\/\/[^\n]*|\/\*[\s\S]*?\*\/)",
@@ -207,13 +234,12 @@ namespace Cosmobot
                 @"(?<punctuation>[{}()[\];,.])",
                 @"(?<apiTypes>" + apiTypesNames + @")"
             });
-            
+
             return new Regex(pattern, RegexOptions.Compiled);
         }
 
         private string Format(string input)
         {
-            // Debug.Log("Format: cp" + caretPosition + " sel: "+ selStart + " to " + selEnd + "; " + input);
             const char ZWS = '\u200B'; // zero-width space
             input = richTextFixerRegex.Replace(input, match =>
             {
@@ -221,7 +247,7 @@ namespace Cosmobot
                     return "<" + ZWS;
                 return ZWS + ">";
             });
-            
+
             StringBuilder output = new StringBuilder(input.Length);
             int lastIndex = 0;
             foreach (Match match in parsingRegex.Matches(input))
@@ -243,11 +269,24 @@ namespace Cosmobot
                 }
                 lastIndex = match.Index + match.Length;
             }
-            
+
             if (lastIndex < input.Length)
                 output.Append(input.Substring(lastIndex));
-            
+
             return output.ToString();
         }
+
+#if UNITY_EDITOR
+        // == editor only 
+        private float previousFontSize = 36;
+        private void OnValidate()
+        {
+            if (previousFontSize != fontSize) // safe float comparison
+            {
+                UpdateFontSize();
+                previousFontSize = fontSize;
+            }
+        }
+#endif
     }
 }
