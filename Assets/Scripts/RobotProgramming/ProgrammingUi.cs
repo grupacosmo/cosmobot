@@ -11,7 +11,6 @@ namespace Cosmobot
 {
     public class ProgrammingUi : MonoBehaviour
     {
-
         [SerializeField]
         private float fontSize = 36;
 
@@ -23,6 +22,9 @@ namespace Cosmobot
 
         [SerializeField]
         private TMP_Text lineNumbersText;
+
+        [SerializeField]
+        private TMP_Text fileStatusText;
 
         // syntax highlight
         private static readonly Regex parsingRegex = PrepareApiTypes();
@@ -47,6 +49,9 @@ namespace Cosmobot
         private int bufferedLineCount = 1;
         private int visibleLineCount;
         private float previousLineNumberContainerHeight;
+        private int prevCaretPos = 0;
+        private int prevSelectAnchorPos = 0;
+        private int prevSelectFocusPos = 0;
 
         private RectTransform lineNumberTextParent;
 
@@ -90,6 +95,16 @@ namespace Cosmobot
 
         private void Update()
         {
+            if (prevCaretPos != inputField.caretPosition
+                || prevSelectAnchorPos != inputField.selectionAnchorPosition
+                || prevSelectFocusPos != inputField.selectionFocusPosition)
+            {
+                UpdateFileStatus();
+                prevCaretPos = inputField.caretPosition;
+                prevSelectAnchorPos = inputField.selectionAnchorPosition;
+                prevSelectFocusPos = inputField.selectionFocusPosition;
+            }
+
             float currentLineNumberContainerHeight = lineNumberTextParent.rect.size.y;
             if (!Mathf.Approximately(currentLineNumberContainerHeight, previousLineNumberContainerHeight))
             {
@@ -101,11 +116,41 @@ namespace Cosmobot
             if (dirty)
             {
                 UpdateOutputField();
+                UpdateFileStatus();
                 dirty = false;
             }
         }
 
         // ==
+
+        private void UpdateFileStatus()
+        {
+            int caretPos = inputField.caretPosition;
+            TMP_TextInfo textInfo = inputField.textComponent.textInfo;
+            TMP_CharacterInfo charAtCaret = textInfo.characterInfo[caretPos];
+            int caretLine = charAtCaret.lineNumber + 1;
+            int caretChar = charAtCaret.index - textInfo.lineInfo[charAtCaret.lineNumber].firstCharacterIndex + 1;
+            int selectionAnchorPos = inputField.selectionAnchorPosition;
+            int selectionFocusPos = inputField.selectionFocusPosition;
+            int selectedChars = Mathf.Abs(selectionFocusPos - selectionAnchorPos);
+
+            string status = $"{caretLine}:{caretChar}";
+            if (selectedChars != 0)
+            {
+                int selectionAnchorLine = textInfo.characterInfo[selectionAnchorPos].lineNumber;
+                int selectionFocusLine = textInfo.characterInfo[selectionFocusPos].lineNumber;
+                int selectedLines =  Mathf.Abs(selectionFocusLine - selectionAnchorLine);
+
+                status += $" ({selectedChars} chars";
+                if (selectedLines > 0)
+                    status += $", {selectedLines} line break" + (selectedLines == 1 ? "" : "s");
+                status += ")";
+            }
+
+            status += $" | file: {textInfo.lineCount} ({textInfo.characterCount})";
+
+            fileStatusText.text = status;
+        }
 
         private void UpdateFontSize()
         {
