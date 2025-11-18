@@ -1,3 +1,4 @@
+using System.Text;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,16 +12,16 @@ namespace Cosmobot
         [SerializeField]
         private ProgrammingUiLogManager logManager;
 
-        private string[] files = new [] { "main.js", "robot.js", "mySuperSystem.js", "api.js", "<internal>" };
-        private string[] functionNames = new[] { "foo", "main", "findIron", "findItem", "travelToMine", "goAround" };
-        private string[] dummyErrors = new[] {
+        private readonly string[] files = new [] { "main.js", "robot.js", "mySuperSystem.js", "api.js", "<internal>" };
+        private readonly string[] functionNames = new[] { "foo", "main", "findIron", "findItem", "travelToMine", "goAround" };
+        private readonly string[] dummyErrors = new[] {
             "Uncaught ReferenceError: myVar is not defined",
             "TypeError: Cannot read properties of undefined (reading 'length')",
             "RangeError: Maximum call stack size exceeded",
             "URIError: Malformed URI sequence"
         };
 
-        private string[] dummyWarnings = new[] {
+        private readonly string[] dummyWarnings = new[] {
             "Warning: Deprecated API usage: 'escape()' is deprecated",
             "Warning: 'var' declarations are function-scoped, consider using 'let' or 'const'",
             "Warning: Possible loss of precision in number conversion",
@@ -28,7 +29,7 @@ namespace Cosmobot
             "Warning: Assignment to constant variable"
         };
 
-        private string[] dummyTraces = new[] {
+        private readonly string[] dummyTraces = new[] {
             "entering function initApp()",
             "found 'Battery' item at (10, 1, 15)",
             "Construction completed",
@@ -71,14 +72,14 @@ namespace Cosmobot
         private string GenerateStackTrace()
         {
             int stackSize = Random.Range(2, 6);
-            string stackTraceStr = "";
+            StringBuilder stackTraceSb = new StringBuilder();
             for (int i = 0; i < stackSize; i++)
             {
-                stackTraceStr += RandomElem(functionNames) + " @ " + RandomElem(files) + ":" + Random.Range(1, 1000);
-                stackTraceStr += "\n";
+                stackTraceSb.Append(RandomElem(functionNames) + " @ " + RandomElem(files) + ":" + Random.Range(1, 1000));
+                stackTraceSb.Append('\n');
             }
 
-            return stackTraceStr;
+            return stackTraceSb.ToString();
         }
 
         private string GetBaseMessageFor(LogLevel level)

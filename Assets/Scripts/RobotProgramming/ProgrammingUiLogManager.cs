@@ -19,7 +19,7 @@ namespace Cosmobot
         [SerializeField]
         private GameObject uiLogEntryPrefab;
 
-        private Queue<ProgrammingUiLogEntry> logs = new();
+        private readonly Queue<ProgrammingUiLogEntry> logs = new();
 
         public void CreateLog(LogLevel level, string message)
         {

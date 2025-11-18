@@ -11,6 +11,8 @@ namespace Cosmobot
 {
     public class ProgrammingUi : MonoBehaviour
     {
+        public string Code => bufferedText;
+        
         [SerializeField]
         private float fontSize = 36;
 
@@ -165,6 +167,8 @@ namespace Cosmobot
             if (lineInfo.Length == 0)
             {
                 Debug.LogError("no line in line numbers text. Is it even possible?");
+                visibleLineCount = 1;
+                return;
             }
 
             float fullLineHeight = lineInfo[0].lineHeight + lineNumbersText.lineSpacing;
@@ -242,9 +246,9 @@ namespace Cosmobot
 
         private static Color ColorHex(uint color)
         {
-            float r = (color       & 0xFF) / 255f;
+            float r = (color >> 16 & 0xFF) / 255f;
             float g = (color >> 8  & 0xFF) / 255f;
-            float b = (color >> 16 & 0xFF) / 255f;
+            float b = (color       & 0xFF) / 255f;
             return new Color(r, g, b);
         }
 
@@ -260,24 +264,25 @@ namespace Cosmobot
         {
             Type apiVec2Type = typeof(Cosmobot.Api.Types.Vec2);
             string apiNamespace = apiVec2Type.Namespace;
-            string apiTypesNames =
+
+            IEnumerable<string> apiTypeNamesEnumerable = 
                 apiVec2Type.Assembly.GetTypes()
                     .Where(t => t.Namespace == apiNamespace)
-                    .Select(t => t.Name)
-                    .Aggregate((total, next) =>  total + "|" + next);
+                    .Select(t => t.Name);
+            string apiTypesNamesRegex =  string.Join("|", apiTypeNamesEnumerable);
 
             string pattern = string.Join("|", new[]
             {
                 @"(?<comment>\/\/[^\n]*|\/\*[\s\S]*?\*\/)",
                 @"(?<string>(['""`])(?:\\.|(?!\1).)*\1)",
-                @"(?<number>\b(?:0[xX][\dA-Fa-f]+|\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|0[bB][\d0-1]+\b)",
+                @"(?<number>\b(?:0[xX][\dA-Fa-f]+|\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)|0[bB][0-1]+\b)",
                 @"(?<keyword>\b(?:if|else|for|while|do|break|continue|return|switch|case|default|function|class|extends|super|import|export|new|try|catch|finally|throw|const|let|var|of|in|instanceof|typeof|delete|await|async|yield|with|this)\b)",
                 @"(?<literal>\b(?:true|false|null|undefined|NaN|Infinity)\b)",
                 @"(?<builtin>\b(?:Array|Object|String|Number|Boolean|Date|Math|JSON|Promise|Symbol|BigInt|Map|Set|WeakMap|WeakSet|Error|RegExp|console|window|document)\b)",
                 @"(?<function>\b[a-zA-Z_]\w*(?=\s*\())",
                 @"(?<operator>[+\-*/%=&|^!?<>]=?|={1,3}|:{1,2}|\?|\.\.\.|~|\*\*)",
                 @"(?<punctuation>[{}()[\];,.])",
-                @"(?<apiTypes>" + apiTypesNames + @")"
+                @"(?<apiTypes>" + apiTypesNamesRegex + @")"
             });
 
             return new Regex(pattern, RegexOptions.Compiled);
@@ -298,25 +303,24 @@ namespace Cosmobot
             foreach (Match match in parsingRegex.Matches(input))
             {
                 if (match.Index > lastIndex)
-                    output.Append(input.Substring(lastIndex, match.Index - lastIndex));
+                    output.Append(input, lastIndex, match.Index - lastIndex);
 
                 foreach (Group group in match.Groups)
                 {
                     // string regex -> two groups
-                    if (group.Success && group.Name != "0" && group.Name != "1")
+                    bool validGroup = group.Name != "0" && group.Name != "1";
+                    bool syntaxColorExists = syntaxColorStyle.TryGetValue(group.Name, out Color value); 
+                    if (group.Success && validGroup && syntaxColorExists)
                     {
-                        if (syntaxColorStyle.TryGetValue(group.Name, out Color value))
-                        {
-                            string color = ColorToHex(value);
-                            output.Append($"<color={color}>{group.Value}</color>");
-                        }
+                        string color = ColorToHex(value);
+                        output.Append($"<color={color}>{group.Value}</color>");
                     }
                 }
                 lastIndex = match.Index + match.Length;
             }
 
             if (lastIndex < input.Length)
-                output.Append(input.Substring(lastIndex));
+                output.Append(input, lastIndex, input.Length - lastIndex);
 
             return output.ToString();
         }

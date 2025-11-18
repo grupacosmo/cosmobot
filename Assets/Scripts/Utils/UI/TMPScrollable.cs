@@ -15,7 +15,7 @@ namespace Cosmobot.Utils.UI
 
         public bool expandWidthInputFieldToParent = true;
         public bool expandHeightInputFieldToParent = true;
-        [Tooltip("This value will be added to RectTransform width to accomodate for future updates")]
+        [Tooltip("This value will be added to RectTransform width to accommodate for future updates")]
         public Vector2 additionalExpand = Vector2.zero;
 
         [SerializeField]
@@ -104,7 +104,7 @@ namespace Cosmobot.Utils.UI
 
         private void Update()
         {
-            // not necessary in update, coz this value does not chane in runtime
+            // not necessary in update, coz this value does not change in runtime
             // but just to be safe...
             // textWrappingMode does check if value changes and if not, returns so minimal performance impact
             // also it changes in editor OnValidate for TMP_InputField (every inspector interaction)

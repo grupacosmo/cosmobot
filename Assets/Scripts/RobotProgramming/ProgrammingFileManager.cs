@@ -16,7 +16,7 @@ namespace Cosmobot
         [SerializeField]
         private GameObject uiFileEntryPrefab;
 
-        private List<ProgrammingUiFileEntry> files = new();
+        private readonly List<ProgrammingUiFileEntry> files = new();
 
         public ProgrammingUiFileEntry CreateNewFile(string filename)
         {
