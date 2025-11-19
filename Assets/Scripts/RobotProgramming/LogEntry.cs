@@ -18,7 +18,7 @@ namespace Cosmobot
 
         public string GetIsoTime()
         {
-            return DateTimeOffset.FromUnixTimeSeconds(timestamp).ToString("HH:mm:ss");
+            return DateTimeOffset.FromUnixTimeSeconds(timestamp).ToLocalTime().ToString("HH:mm:ss");
         }
     }
 }

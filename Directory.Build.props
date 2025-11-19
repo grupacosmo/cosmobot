@@ -1,6 +1,0 @@
-<Project>
-    <PropertyGroup>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <DocumentationFile>bin\$(Configuration)\$(AssemblyName).xml</DocumentationFile>
-    </PropertyGroup>
-</Project>

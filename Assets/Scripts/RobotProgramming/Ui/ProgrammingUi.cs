@@ -12,7 +12,7 @@ namespace Cosmobot
     public class ProgrammingUi : MonoBehaviour
     {
         public string Code => bufferedText;
-        
+
         [SerializeField]
         private float fontSize = 36;
 
@@ -265,7 +265,7 @@ namespace Cosmobot
             Type apiVec2Type = typeof(Cosmobot.Api.Types.Vec2);
             string apiNamespace = apiVec2Type.Namespace;
 
-            IEnumerable<string> apiTypeNamesEnumerable = 
+            IEnumerable<string> apiTypeNamesEnumerable =
                 apiVec2Type.Assembly.GetTypes()
                     .Where(t => t.Namespace == apiNamespace)
                     .Select(t => t.Name);
@@ -309,7 +309,7 @@ namespace Cosmobot
                 {
                     // string regex -> two groups
                     bool validGroup = group.Name != "0" && group.Name != "1";
-                    bool syntaxColorExists = syntaxColorStyle.TryGetValue(group.Name, out Color value); 
+                    bool syntaxColorExists = syntaxColorStyle.TryGetValue(group.Name, out Color value);
                     if (group.Success && validGroup && syntaxColorExists)
                     {
                         string color = ColorToHex(value);
