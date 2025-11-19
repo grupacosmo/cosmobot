@@ -270,7 +270,7 @@ namespace Cosmobot.Utils.UI
                 if (minimalTarget || minimalThis)
                 {
                     Debug.LogWarning(
-                        $"The {minimalSizeRect.name} belong to the transform {transform.name} or {target.name}. " +
+                        $"The {minimalSizeRect.name} belongs to the transform {transform.name} or {target.name}. " +
                         $"This can cause unexpected behaviour", this);
                 }
             }

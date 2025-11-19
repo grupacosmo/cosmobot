@@ -67,7 +67,7 @@ namespace Cosmobot
             hasComponents &= ComponentUtils.RequireNotNull(codeDisplay, "codeDisplay", this);
             if (!hasComponents)
             {
-                Debug.LogWarning($"{nameof(ProgrammingUi)} have unset references. Check logs for more info", this);
+                Debug.LogWarning($"{nameof(ProgrammingUi)} has unset references. Check logs for more info", this);
                 enabled = false;
                 return;
             }

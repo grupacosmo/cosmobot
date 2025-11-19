@@ -42,7 +42,7 @@ namespace Cosmobot
                 }
             }
 
-            if (removed && files.Count > 0)
+            if (removed && files.Count > 0 && files[0])
             {
                 files[0].IsOpen = true;
             }
