@@ -26,7 +26,7 @@ namespace Cosmobot.Utils
         ///     Requires all objects in obj list to be not null. If any of the objects is null, it will
         ///     log an error message and return false.
         /// </summary>
-        /// <param name="obj">list of objects, possible nulls. List itself cannot be null.</param>
+        /// <param name="objs">list of objects, possible nulls. List itself cannot be null.</param>
         /// <param name="fieldNames">
         ///     list of objects names (null values not allowed). Should be the
         ///     same length as objs. List itself cannot be null.

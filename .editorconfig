@@ -317,3 +317,9 @@ dotnet_diagnostic.IDE0079.severity = error
 [Assets/Scripts/Buildings/ConstructionSite/ResourceTextHandler.cs,
  Assets/Scripts/Camera/PlayerCamera.cs]
 dotnet_diagnostic.CS0109.severity = none
+
+
+# Disable "IDE1006: Naming rule violation" for classes inheriting from UnityEngine.UI.ILayoutElement
+# Coz formatter does not know about UnityEngine.UI types to mark them as inherited
+[Assets/Scripts/Utils/UI/SizeMatcher.cs]
+dotnet_diagnostic.IDE1006.severity = none
