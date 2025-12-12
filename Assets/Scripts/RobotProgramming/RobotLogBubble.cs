@@ -23,7 +23,6 @@ namespace Cosmobot
             if (mainCamera != null)
             {
                 Vector3 directionToCamera = transform.position - mainCamera.transform.position;
-
                 directionToCamera.y = 0;
 
                 if (directionToCamera != Vector3.zero)
@@ -42,7 +41,6 @@ namespace Cosmobot
             {
                 textComponent.text = message;
             }
-
             Image bgImage = newLog.GetComponent<Image>();
             if (bgImage != null)
             {
