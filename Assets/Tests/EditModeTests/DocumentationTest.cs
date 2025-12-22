@@ -66,24 +66,51 @@ namespace Cosmobot
         }
 
         [Test]
-        public void test()
+        public void ValidateFunctions()
         {
-            List<MethodData> implementations = GetImplementedFunctions();
-            string[] functionNames = functions
-                .Select(f => f.name)
-                .ToArray();
+            List<FunctionData> implementations = GetImplementedFunctions();
+            var matchedPairs = from impl in implementations
+                                join doc in functions
+                                on impl.name equals doc.name
+                                select new { Implementation = impl, Documented = doc };
 
-            foreach (var function in implementations)
+            var undocumented = implementations
+                .Where(impl => !functions.Any(doc => doc.name == impl.name))
+                .ToList();
+
+            foreach (var impl in undocumented)
             {
-                Assert.Contains(function.name, functionNames, $"Function {function.name} is not documented.");
+                Assert.True(false, $"Function {impl.name} is not documented.");
+            }
+
+            foreach (var pair in matchedPairs)
+            {
+                string implReturn = NormalizeReturnType(pair.Implementation.returns);
+                Assert.IsTrue(ReturnMatches(implReturn, pair.Documented.returns), 
+                $"Argument types of {pair.Documented.name} do not match. Implementation: {implReturn}, Documentation: {pair.Documented.returns}");
+
+                List<ArgData> implArgs = pair.Implementation.args;
+                List<ArgData> docArgs = pair.Documented.args;
+
+                Assert.That(implArgs.Count, Is.EqualTo(docArgs.Count), 
+                $"Argument count mismatch for {pair.Documented.name}. Implementation: {implArgs.Count}, Documentation: {docArgs.Count}");
+
+
+                for (int i = 0; i < implArgs.Count; i++)
+                {
+                    string argType = NormalizeReturnType(implArgs[i].type);
+
+                    Assert.IsTrue(ReturnMatches(argType, docArgs[i].type), 
+                    $"Argument types of {pair.Documented.name} do not match. Implementation: {argType}, Documentation: {docArgs[i].type}");
+                }
             }
         }
 
-        private List<MethodData> GetImplementedFunctions()
+        private List<FunctionData> GetImplementedFunctions()
         {
             var interfaceType = typeof(IEngineLogic);
             var runtimeAssembly = interfaceType.Assembly;
-            List<MethodData> allImplementedFunctions = new();
+            List<FunctionData> allImplementedFunctions = new();
 
             var allValidImplementations = runtimeAssembly
             .GetTypes()
@@ -106,8 +133,19 @@ namespace Cosmobot
 
                 foreach (var function in functions)
                 {
-                    MethodData data = new();
+                    FunctionData data = new();
+                    var methodInfo = function.Value.Method;
+                    
                     data.name = function.Key;
+                    data.returns = methodInfo.ReturnType == typeof(void) ? "null" : GetReturnTypeName(methodInfo.ReturnType);
+                    
+                    foreach (var parameter in methodInfo.GetParameters())
+                    {
+                        data.args.Add(new ArgData
+                        {
+                            type = GetTypeName(parameter.ParameterType)
+                        });
+                    }
 
                     allImplementedFunctions.Add(data);
                 }
@@ -131,7 +169,6 @@ namespace Cosmobot
                                 .Elements("arg")
                                 .Select(arg => new ArgData
                                 {
-                                    name = arg.Element("name")?.Value,
                                     type = arg.Element("type")?.Value,
                                 })
                                 .ToList(),
@@ -179,6 +216,71 @@ namespace Cosmobot
             }
 
             return allTypes;
+        }
+
+        private static string GetTypeName(Type type)
+        {
+            if (type.IsByRef)
+                type = type.GetElementType();
+
+            if (type.IsGenericType)
+                return $"{type.Name[..type.Name.IndexOf('`')]}<{string.Join(", ", type.GetGenericArguments().Select(GetTypeName))}>";
+
+            return Type.GetTypeCode(type) switch
+            {
+                TypeCode.Boolean => "bool",
+                TypeCode.Byte    => "byte",
+                TypeCode.SByte   => "sbyte",
+                TypeCode.Int16   => "short",
+                TypeCode.UInt16  => "ushort",
+                TypeCode.Int32   => "int",
+                TypeCode.UInt32  => "uint",
+                TypeCode.Int64   => "long",
+                TypeCode.UInt64  => "ulong",
+                TypeCode.Single  => "float",
+                TypeCode.Double  => "double",
+                TypeCode.Decimal => "decimal",
+                TypeCode.String  => "string",
+                _ => type.Name
+            };
+        }
+
+        private static string GetReturnTypeName(Type type)
+        {
+            if (type.IsArray)
+                return $"Array({GetReturnTypeName(type.GetElementType())})";
+
+            if (type.IsGenericType)
+            {
+                var typeName = type.Name;
+                var backtickIndex = typeName.IndexOf('`');
+                if (backtickIndex > 0)
+                    typeName = typeName.Substring(0, backtickIndex);
+
+                var genericArgs = type.GetGenericArguments()
+                                    .Select(GetReturnTypeName);
+
+                return $"{typeName}({string.Join(", ", genericArgs)})";
+            }
+
+            return type.Name;
+        }
+
+        private static string NormalizeReturnType(string implReturn)
+        {
+            if (implReturn.StartsWith("List(") && implReturn.EndsWith(")"))
+            {
+                string innerType = implReturn.Substring(5, implReturn.Length - 6);
+                return $"Array({innerType})";
+            }
+
+            return implReturn;
+        }
+
+        private static bool ReturnMatches(string implReturn, string docReturn)
+        {
+            // match returns that contain |null, since there is no information of possible null return in function signatures
+            return docReturn == implReturn || (docReturn.EndsWith("|null") && docReturn.Substring(0, docReturn.Length - 5).Trim() == implReturn);
         }
     }
 }
