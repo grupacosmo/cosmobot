@@ -16,7 +16,7 @@ namespace Cosmobot
     /// Automatically searches for components implementing the EngineLogicInterface,
     /// which provide methods that can be called from the JavaScript code.
     /// </summary>
-    public class Programmable : MonoBehaviour
+    public class Programmable : MonoBehaviour // TODO wyjebac MB
     {
         private IEngineLogic[] engineLogicInterfaces;
         [TextArea(10, 20)]
@@ -88,8 +88,7 @@ namespace Cosmobot
                     }
                 }
             }
-
-
+            
             Type apiVec2Type = typeof(Cosmobot.Api.Types.Vec2);
             string apiNamespace = apiVec2Type.Namespace;
             IEnumerable<Type> apiTypes = apiVec2Type.Assembly.GetTypes().Where(t => t.Namespace == apiNamespace);
@@ -103,6 +102,7 @@ namespace Cosmobot
             try
             {
                 token.ThrowIfCancellationRequested();
+                RobotLogger.InitCurrent(this);
                 jsEngine.Execute(code);
             }
             catch (OperationCanceledException)
@@ -119,6 +119,7 @@ namespace Cosmobot
             }
             finally
             {
+                RobotLogger.ClearCurrent();
                 Debug.Log("Done");
             }
         }

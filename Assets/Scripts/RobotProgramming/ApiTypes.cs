@@ -99,7 +99,7 @@ namespace Cosmobot.Api.TypesInternal
         {
             if (!isValid())
             {
-                Debug.LogError("Couldn't get position");
+                RobotLogger.LogError("Couldn't get position");
                 return null;
             }
             return positionHandler();
