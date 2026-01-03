@@ -36,19 +36,19 @@ namespace Cosmobot
                 return currentFrames;
             }
 
-            StackFrame mergeFrame = new StackFrame("[Programmable Context Switch]",0);
+            StackFrame mergeFrame = new StackFrame("[Programmable Context Switch]",-1);
             
             StackTrace capturedSt = capturedStackTrace.Value;
             StackFrame[] capturedFrames = capturedSt.GetFrames() ?? Array.Empty<StackFrame>();
             return 
-                capturedFrames
+                currentFrames
                     .Concat(Enumerable.Repeat(mergeFrame, 1))
-                    .Concat(currentFrames);
+                    .Concat(capturedFrames);
         }
 
-        public static string GetCurrentRobotContextStackTraceAsString()
+        public static string GetCurrentRobotContextStackTraceAsString(ProgrammableData data)
         {
-            return StackFramesToText(GetCurrentRobotContextStackTrace());
+            return StackFramesToText(GetCurrentRobotContextStackTrace(), data);
         }
         
         [CanBeNull]
@@ -62,13 +62,20 @@ namespace Cosmobot
         /// </summary>
         /// <param name="stackFrames">frames to stringify</param>
         /// <returns>formatted stack trace</returns>
-        public static string StackFramesToText(IEnumerable<StackFrame> stackFrames)
+        public static string StackFramesToText(IEnumerable<StackFrame> stackFrames, ProgrammableData data = null)
         {
             StringBuilder outText = new();
             bool ignoredJintStackFrame = false;
             
             foreach (StackFrame stackFrame in stackFrames)
             {
+                if (stackFrame.GetFileLineNumber() == -1) // special case
+                {
+                    outText.Append(stackFrame.GetFileName());
+                    outText.Append('\n');
+                    continue;
+                }
+
                 MethodBase methodBase = stackFrame.GetMethod();
                 
                 if (methodBase?.DeclaringType?.Namespace?.StartsWith("Jint") ?? false)
@@ -78,8 +85,17 @@ namespace Cosmobot
                 }
                 else if (ignoredJintStackFrame)
                 {
-                    // TODO: append Jint stack trace (try: jsEngine.Advanced.StackTrace)
                     outText.Append("[Internal Jint Calls]\n");
+                    // TODO: append Jint stack trace (try: jsEngine.Advanced.StackTrace)
+                    if (data != null)
+                    {
+                        string jintStackTrace = data.Unity.ProgrammableComponent.engineInstance.Advanced.StackTrace;
+                        outText.Append("[Begin of JS StackTrace]\n");
+                        outText.Append("[JS]    ");
+                        outText.Append(jintStackTrace.Replace("\n", "\n[JS]    "));
+                        outText.Append("\n[End of JS Stack Trace]\n");
+                    }
+
                     ignoredJintStackFrame = false;
                 }
                 
@@ -138,8 +154,14 @@ namespace Cosmobot
             return outText.ToString();
         }
 
-        
-        private static readonly string[] IgnoredNamespacesInStackTrace = new string[] {
+
+
+        private static readonly Type[] ignoredTypesInStackTrace = new Type[] {
+                typeof(Delegate),
+                typeof(MulticastDelegate),
+                typeof(RobotDebugHelper)
+        };
+        private static readonly string[] ignoredNamespacesInStackTrace = new string[] {
             "System.Reflection"
         };
         
@@ -164,8 +186,11 @@ namespace Cosmobot
             if (declaringType.IsDefined(typeof(CompilerGeneratedAttribute), false))
                 return false;
 
+            if (ignoredTypesInStackTrace.Contains(declaringType)) 
+                return false;
+            
             // Check Namespace
-            if (IgnoredNamespacesInStackTrace.Contains(declaringType.Namespace))
+            if (ignoredNamespacesInStackTrace.Contains(declaringType.Namespace))
                 return false;
             
             return true;

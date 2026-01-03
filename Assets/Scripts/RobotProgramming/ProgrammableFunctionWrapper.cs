@@ -233,13 +233,13 @@ namespace Cosmobot
             {
                 commandQueue.Enqueue(() => ExecutionContext.Run(ctx, _ => command(), null));
             }
-
-            RobotDebugHelper.AfterExecutionContextCapture();
         }
+        
 
         private void WaitForSync()
         {
             WaitHandle.WaitAny(new[] { taskCompletedEvent, token.WaitHandle });
+            RobotDebugHelper.AfterExecutionContextCapture();
             taskCompletedEvent.Reset();
             token.ThrowIfCancellationRequested();
         }

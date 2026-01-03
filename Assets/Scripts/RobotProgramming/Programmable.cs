@@ -19,6 +19,9 @@ namespace Cosmobot
     public class Programmable : MonoBehaviour
     {
         private ProgrammableData instance;
+
+        public Engine engineInstance;// TODO: DEBUG ONLY - REMOVE THIS
+        
         
         private IEngineLogic[] engineLogicInterfaces;
         [TextArea(10, 20)]
@@ -70,6 +73,7 @@ namespace Cosmobot
             Thread.CurrentThread.Name = $"jsEngine-{debugI}";
 
             using Engine jsEngine = new Engine();
+            engineInstance = jsEngine;
 
             foreach (IEngineLogic logicInterface in engineLogicInterfaces)
             {
@@ -105,7 +109,7 @@ namespace Cosmobot
             {
                 token.ThrowIfCancellationRequested();
                 RobotLogger.InitCurrent(instance);
-                jsEngine.Execute(code);
+                jsEngine.Execute(code, "main.js");
             }
             catch (OperationCanceledException)
             {

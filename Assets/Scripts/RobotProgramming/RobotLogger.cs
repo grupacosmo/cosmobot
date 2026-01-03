@@ -164,13 +164,13 @@ namespace Cosmobot
                 type,
                 LogOption.None,
                 currentRobotLogs.robot.Unity.ProgrammableComponent, /* should be safe coz its inside Unit's function? */
-                "Robot: '{0}' ([id: {1:X8}]) at {2} [{3}]: {4}\n\nRobot Context Debug StackTrace (not real):\n{5}",
+                "Robot: '{0}' ([id: {1:X8}]) at {2} [{3}]: {4}\n\nRobot Context Debug StackTrace:\n{5}",
                 currentRobotLogs.robot.Name,
                 currentRobotId,
                 logEntry.GetIsoTime(),
                 logEntry.level.GetConstSizeName(),
                 logEntry.message,
-                RobotDebugHelper.GetCurrentRobotContextStackTraceAsString());
+                RobotDebugHelper.GetCurrentRobotContextStackTraceAsString(currentRobotLogs.robot));
 #endif
         }
 

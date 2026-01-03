@@ -297,7 +297,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &24800178
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2470,7 +2470,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &586230987
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2584,28 +2584,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  code: 'log("BaseRobot Log");
-
-    wait(1);
-
-    logWarning("BaseRobot Warning");
-
-    wait(1);
-
-    logError("BaseRobot
-    Error");
-
-    wait(1);
-
-    let x = 2;
-
-    log(x);
-
-    let y = "string";
-
-    log(y)
-
-    dance();'
+  code: "function foo() {\n   bar();\n}\n\nfunction bar() {\n  log(\"Log from Robot
+    Script\");\n}\n\nfoo();\n\nlog(\"BaseRobot Log\");\nwait(1);\nlogWarning(\"BaseRobot
+    Warning\");\nwait(1);\nlogError(\"BaseRobot Error\");\nwait(1);\nlet x = 2;\nlog(x);\nlet
+    y = \"string\";\nlog(y)\ndance();"
 --- !u!1 &629202461
 GameObject:
   m_ObjectHideFlags: 0
