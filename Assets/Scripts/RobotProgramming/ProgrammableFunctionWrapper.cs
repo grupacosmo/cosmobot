@@ -222,6 +222,8 @@ namespace Cosmobot
 
         private void EnsureContextAndEnqueue(Action command)
         {
+            RobotDebugHelper.BeforeExecutionContextCapture();
+            
             ExecutionContext ctx = ExecutionContext.Capture();
             if (ctx == null)
             {
@@ -231,6 +233,8 @@ namespace Cosmobot
             {
                 commandQueue.Enqueue(() => ExecutionContext.Run(ctx, _ => command(), null));
             }
+
+            RobotDebugHelper.AfterExecutionContextCapture();
         }
 
         private void WaitForSync()

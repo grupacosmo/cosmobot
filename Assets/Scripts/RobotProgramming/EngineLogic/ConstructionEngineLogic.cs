@@ -18,14 +18,7 @@ namespace Cosmobot.Api
     {
         private ProgrammableFunctionWrapper wrapper;
 
-        private BaseEngineLogic baseLogic;
-
         [SerializeField] private GameObject constructionSite;
-
-        private void Start()
-        {
-            baseLogic = gameObject.GetComponent<BaseEngineLogic>();
-        }
 
         public void SetupThread(ManualResetEvent taskEvent, CancellationToken token, ConcurrentQueue<Action> commandQueue)
         {

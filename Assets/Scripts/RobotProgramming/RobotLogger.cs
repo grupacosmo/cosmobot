@@ -5,35 +5,25 @@ using System.Linq;
 using System.Threading;
 using JetBrains.Annotations;
 using UnityEngine;
+using Object = System.Object;
 
 namespace Cosmobot
 {
+    /// <summary>
+    /// Allows all Robots and functions called by robot to use logger and automatically assigns programmable instance to
+    /// every log.
+    ///
+    /// </summary>
     public static class RobotLogger
     {
-        private struct RobotLogs
-        {
-            public Programmable robot; // TODO: nie MB Programmable, tylko niezaleze
-                                       //   posiadac moze wszystkie rzeczy robota jak nazwa itp
-            public List<LogEntry> logs;
-
-            public RobotLogs(Programmable robot)
-            {
-                this.robot = robot;
-                this.logs = new List<LogEntry>();
-            }
-
-            public void Add(LogEntry log)
-            {
-                logs.Add(log);
-            }
-        }
+        private static System.Object lck = new Object(); // for multioperation on logs;
         
         private const int GlobalLogsKey = 0; // Object Instance ID is never 0
         
         private static readonly AsyncLocal<int?> current = new();
         private static readonly ConcurrentDictionary<int, RobotLogs> logs;
         
-        private static readonly ConcurrentDictionary<int, Action<int, LogEntry>> logEventHandlers = new();
+        private static readonly ConcurrentDictionary<int, Action<ProgrammableData, LogEntry>> logEventHandlers = new();
         
         static RobotLogger()
         {
@@ -41,47 +31,61 @@ namespace Cosmobot
             logs[GlobalLogsKey] = new RobotLogs(null);
         }
 
-        public static void AddLogEventHandler(Programmable robot, Action<int, LogEntry> handler)
+        public static void AddLogEventHandler(Programmable robot, Action<ProgrammableData, LogEntry> handler)
         {
             int robotId = robot.GetInstanceID();
-            if (logEventHandlers.TryGetValue(robotId, out Action<int, LogEntry> existing))
+            lock (lck)
             {
-                logEventHandlers[robotId] = existing + handler;
-            }
-            else
-            {
-                logEventHandlers[robotId] = handler;
-            }
-        }
-
-        public static void RemoveLogEventHandler(Programmable robot, Action<int, LogEntry> handler)
-        {
-            int robotId = robot.GetInstanceID();
-            if (logEventHandlers.TryGetValue(robotId, out Action<int, LogEntry> existing))
-            {
-                existing -= handler;
-                if (existing == null)
+                if (logEventHandlers.TryGetValue(robotId, out Action<ProgrammableData, LogEntry> existing))
                 {
-                    logEventHandlers.Remove(robotId, out _);
+                    logEventHandlers[robotId] = existing + handler;
                 }
                 else
                 {
-                    logEventHandlers[robotId] = existing;
+                    logEventHandlers[robotId] = handler;
+                }
+            }
+        }
+
+        public static void RemoveLogEventHandler(Programmable robot, Action<ProgrammableData, LogEntry> handler)
+        {
+            int robotId = robot.GetInstanceID();
+            lock (lck)
+            {
+                if (logEventHandlers.TryGetValue(robotId, out Action<ProgrammableData, LogEntry> existing))
+                {
+                    existing -= handler;
+                    if (existing == null)
+                    {
+                        logEventHandlers.Remove(robotId, out _);
+                    }
+                    else
+                    {
+                        logEventHandlers[robotId] = existing;
+                    }
                 }
             }
         }
         
-        public static void InitCurrent(Programmable robot)
+        public static void InitCurrent(ProgrammableData robot)
         {
             if (robot == null)
             {
                 throw new ArgumentException("robot cant be null and must exist", nameof(robot));
             }
+            int robotId = robot.InstanceID;
+            
+            if (current.Value is not null)
+            {
+                int currentRobotId = current.Value.Value;
+                throw new InvalidOperationException(
+                    $"Cannot initialize Logger for '{robot.Name}' ([id: {robotId}]) because the same" +
+                    $"async control flow is already initialized for [id: {currentRobotId}]");
+            }
 
-            int robotId = robot.GetInstanceID();
             if (logs.ContainsKey(robotId))
             {
-                throw new InvalidOperationException($"Logger for {robot.name}  is already initialized");
+                throw new InvalidOperationException($"Logger for {robot.Name}  is already initialized");
             }
             
             current.Value = robotId;
@@ -97,6 +101,10 @@ namespace Cosmobot
                 return;
             }
             logs.TryRemove(currentRobotId.Value, out _);
+            lock (lck) // sync to (un)subscribe
+            {
+                logEventHandlers.TryRemove(currentRobotId.Value, out _);
+            }
             current.Value = null;
         }
 
@@ -124,15 +132,46 @@ namespace Cosmobot
         {
             int? currentRobotId = current.Value;
             LogEntry logEntry = new LogEntry(level, message);
-            if (currentRobotId == null)
+            if (currentRobotId == null || !logs.ContainsKey(currentRobotId.Value))
             {
                 Debug.LogWarning("Missing Robot thread context. Logging to global");
                 logs[GlobalLogsKey].Add(logEntry);
                 return;
             }
+
+            RobotLogs currentRobotLogs = logs[currentRobotId.Value];
+            currentRobotLogs.Add(logEntry);
             
-            logs[currentRobotId.Value].Add(logEntry);
-            logEventHandlers[currentRobotId.Value]?.Invoke(currentRobotId.Value, logEntry);
+            Action<ProgrammableData, LogEntry> localEvent;
+            lock (lck) // sync to (un)subscribe
+            {
+                logEventHandlers.TryGetValue(currentRobotId.Value, out localEvent);
+            }
+            
+            localEvent?.Invoke(currentRobotLogs.robot, logEntry);
+            
+#if UNITY_EDITOR
+            LogType type;
+            switch (logEntry.level)
+            {
+                case LogLevel.Info: type = LogType.Log; break;
+                case LogLevel.Warn: type = LogType.Warning; break;
+                case LogLevel.Error: type = LogType.Error; break;
+                default: type = LogType.Log; break;
+            }
+            
+            Debug.LogFormat(
+                type,
+                LogOption.None,
+                currentRobotLogs.robot.Unity.ProgrammableComponent, /* should be safe coz its inside Unit's function? */
+                "Robot: '{0}' ([id: {1:X8}]) at {2} [{3}]: {4}\n\nRobot Context Debug StackTrace (not real):\n{5}",
+                currentRobotLogs.robot.Name,
+                currentRobotId,
+                logEntry.GetIsoTime(),
+                logEntry.level.GetConstSizeName(),
+                logEntry.message,
+                RobotDebugHelper.GetCurrentRobotContextStackTraceAsString());
+#endif
         }
 
         /// <summary>
@@ -195,11 +234,28 @@ namespace Cosmobot
         ///
         /// Clone returned dictionary to ensure stability.
         /// </summary>
-        public static IReadOnlyDictionary<Programmable, IReadOnlyCollection<LogEntry>> GetAllLogs()
+        public static IReadOnlyDictionary<ProgrammableData, IReadOnlyCollection<LogEntry>> GetAllLogs()
         {
             return logs.ToDictionary(
                 kv => kv.Value.robot,
                 kv => (IReadOnlyCollection<LogEntry>) kv.Value.logs);
+        }
+        
+        private struct RobotLogs
+        {
+            public ProgrammableData robot;
+            public List<LogEntry> logs;
+
+            public RobotLogs(ProgrammableData robot)
+            {
+                this.robot = robot;
+                this.logs = new List<LogEntry>();
+            }
+
+            public void Add(LogEntry log)
+            {
+                logs.Add(log);
+            }
         }
     }
 }

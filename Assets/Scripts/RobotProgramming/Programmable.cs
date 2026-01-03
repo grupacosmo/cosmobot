@@ -16,8 +16,10 @@ namespace Cosmobot
     /// Automatically searches for components implementing the EngineLogicInterface,
     /// which provide methods that can be called from the JavaScript code.
     /// </summary>
-    public class Programmable : MonoBehaviour // TODO wyjebac MB
+    public class Programmable : MonoBehaviour
     {
+        private ProgrammableData instance;
+        
         private IEngineLogic[] engineLogicInterfaces;
         [TextArea(10, 20)]
         [SerializeField] private string code;
@@ -34,6 +36,7 @@ namespace Cosmobot
 
         void Start()
         {
+            instance = new ProgrammableData(this);
             taskCompletedEvent = new ManualResetEvent(false);
             cancellationTokenSource = new CancellationTokenSource();
 
@@ -96,31 +99,30 @@ namespace Cosmobot
             foreach (Type type in apiTypes)
             {
                 jsEngine.SetValue(type.Name, TypeReference.CreateTypeReference(jsEngine, type));
-                Debug.Log("Exposed type: " + type.Name);
             }
 
             try
             {
                 token.ThrowIfCancellationRequested();
-                RobotLogger.InitCurrent(this);
+                RobotLogger.InitCurrent(instance);
                 jsEngine.Execute(code);
             }
             catch (OperationCanceledException)
             {
-                Debug.Log("Operation was cancelled");
+                Debug.Log("[Programmable JsThread] Operation was cancelled");
             }
             catch (Jint.Runtime.JavaScriptException ex)
             {
-                Debug.LogError($"JS Error ({objectName}): {ex.Error} | {ex.Location}\n{ex.StackTrace}");
+                Debug.LogError($"[Programmable JsThread] JS Error ({objectName}): {ex.Error} | {ex.Location}\n{ex.StackTrace}");
             }
             catch (System.Exception ex)
             {
-                Debug.LogError($"Error: ({objectName}): {ex.Message}\n {ex.StackTrace}");
+                Debug.LogError($"[Programmable JsThread] Error: ({objectName}): {ex.Message}\n {ex.StackTrace}");
             }
             finally
             {
                 RobotLogger.ClearCurrent();
-                Debug.Log("Done");
+                Debug.Log("[Programmable JsThread] Done");
             }
         }
 
