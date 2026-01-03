@@ -9,6 +9,7 @@ using UnityEngine;
 using Debug = UnityEngine.Debug;
 using System.Xml.Linq;
 using System.Linq;
+using System.Reflection;
 
 namespace Cosmobot
 {
@@ -50,6 +51,7 @@ namespace Cosmobot
         private List<TypeData> types;
         private GameObject testObject;
         private XDocument document = XDocument.Parse(File.ReadAllText(Application.dataPath + "/Data/documentation.xml"));
+        private static readonly string[] ApiNamespaces = {"Cosmobot.Api.Types", "Cosmobot.Api.TypesInternal"};
 
         [SetUp]
         public void SetUp()
@@ -78,9 +80,18 @@ namespace Cosmobot
                 .Where(impl => !functions.Any(doc => doc.name == impl.name))
                 .ToList();
 
+            var unimplemented = functions
+                .Where(impl => !implementations.Any(doc => doc.name == impl.name))
+                .ToList();
+            
+            foreach (var unimpl in unimplemented)
+            {
+                Assert.True(false, $"Function {unimpl.name} is documented but not implemented.");
+            }
+
             foreach (var impl in undocumented)
             {
-                Assert.True(false, $"Function {impl.name} is not documented.");
+                Assert.True(false, $"Function {impl.name} is implemented but not documented.");
             }
 
             foreach (var pair in matchedPairs)
@@ -104,6 +115,109 @@ namespace Cosmobot
                     $"Argument types of {pair.Documented.name} do not match. Implementation: {argType}, Documentation: {docArgs[i].type}");
                 }
             }
+        }
+
+        [Test]
+        public void ValidateTypes()
+        {
+            List<TypeData> implementations = GetImplementedTypes();
+            var matchedPairs = from impl in implementations
+                            join doc in types
+                            on impl.name equals doc.name
+                            select new { Implementation = impl, Documented = doc };
+
+            var undocumented = implementations
+                .Where(impl => !types.Any(doc => doc.name == impl.name))
+                .ToList();
+
+            var unimplemented = types
+                .Where(doc => !implementations.Any(impl => impl.name == doc.name))
+                .ToList();
+
+            foreach (var unimpl in unimplemented)
+            {
+                Assert.True(false, $"Type {unimpl.name} is documented but not implemented.");
+            }
+
+            foreach (var impl in undocumented)
+            {
+                Assert.True(false, $"Type {impl.name} is implemented but not documented.");
+            }
+
+            foreach (var pair in matchedPairs)
+            {
+                var implFields = pair.Implementation.fields;
+                var docFields = pair.Documented.fields;
+
+                for (int i = 0; i < implFields.Count; i++)
+                {
+                    string implType = NormalizeReturnType(implFields[i].type);
+                    string docType = pair.Documented.fields[i].type;
+
+                    Assert.IsTrue(ReturnMatches(implType, docType),
+                    $"Field type mismatch in type {pair.Documented.name} for field {implFields[i].name}. Implementation: {implType}, Documentation: {docType}");
+                }
+            }
+        }
+
+        private List<TypeData> GetImplementedTypes()
+        {
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            List<TypeData> result = new();
+
+            var targetTypes = assemblies
+                .SelectMany(a =>
+                {
+                    try { return a.GetTypes(); }
+                    catch (ReflectionTypeLoadException e) { return e.Types.Where(t => t != null); }
+                })
+                .Where(t =>
+                    t.IsClass &&
+                    !t.IsAbstract &&
+                    t.Namespace != null &&
+                    ApiNamespaces.Contains(t.Namespace))
+                .Where(t => !t.Name.StartsWith("<"))
+                .OrderBy(t => t.FullName)
+                .ToList();
+
+            foreach (var type in targetTypes)
+            {
+                TypeData typeData = new()
+                {
+                    name = type.Name,
+                    fields = type.GetFields(
+                        BindingFlags.Instance |
+                        BindingFlags.Public |
+                        BindingFlags.NonPublic |
+                        BindingFlags.DeclaredOnly)
+                    .Where(f => f.DeclaringType == type)
+                    .Where(f => !f.IsAssembly)
+                    .Select(f => new FieldData
+                    {
+                        name = f.Name,
+                        type = GetTypeName(f.FieldType) 
+                    })
+                    .ToList(),
+                    methods = type.GetMethods(
+                        BindingFlags.Instance |
+                        BindingFlags.Public |
+                        BindingFlags.NonPublic |
+                        BindingFlags.DeclaredOnly)
+                    .Where(m => m.DeclaringType == type)
+                    .Where(m => !m.IsSpecialName)
+                    .Where(m => !m.Name.StartsWith("<"))
+                    .Select(m => new MethodData
+                    {
+                        name = m.Name,
+                        returns = GetTypeName(m.ReturnType)
+                    })
+                    .ToList()
+                };
+
+                result.Add(typeData);
+            }
+
+            return result;
         }
 
         private List<FunctionData> GetImplementedFunctions()

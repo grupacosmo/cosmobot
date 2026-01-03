@@ -418,23 +418,23 @@
         </function>
     </functions>
     <types>
-        <type name="vec3">
+        <type name="Vec3">
             <description>A 3D vector representation. Has x, y and z fields.</description>
             <fields>
                 <field>
                     <type>float</type>
                     <name>x</name>
-                    <description>x coordinate of the vector.</description>
+                    <description>X coordinate of the vector.</description>
                 </field>
                 <field>
                     <type>float</type>
                     <name>y</name>
-                    <description>y coordinate of the vector.</description>
+                    <description>Y coordinate of the vector.</description>
                 </field>
                 <field>
                     <type>float</type>
                     <name>z</name>
-                    <description>z coordinate of the vector.</description>
+                    <description>Z coordinate of the vector.</description>
                 </field>
             </fields>
             <methods>
@@ -448,18 +448,18 @@
                 const vector3 = vec3(1.0, 1.0, 1.0);
             </example>
         </type>
-        <type name="vec2">
+        <type name="Vec2">
             <description>A 2D vector representation. Has x and y fields.</description>
             <fields>
                 <field>
                     <type>float</type>
                     <name>x</name>
-                    <description>x coordinate of the vector.</description>
+                    <description>X coordinate of the vector.</description>
                 </field>
                 <field>
                     <type>float</type>
                     <name>y</name>
-                    <description>y coordinate of the vector.</description>
+                    <description>Y coordinate of the vector.</description>
                 </field>
             </fields>
             <methods>
@@ -472,29 +472,6 @@
             <example>
                 const vector2 = vec2(1.0, 1.0);
             </example>
-        </type>
-        <type name="Entity">
-            <description>Base for all objects, enemies, etc.</description>
-            <fields>
-                <field>
-                    <type></type>
-                    <name></name>
-                    <description></description>
-                </field>
-            </fields>
-            <methods>
-                <method>
-                    <name>isValid</name>
-                    <returns>bool</returns>
-                    <description>Checks if the entity is valid.</description>
-                </method>
-                <method>
-                    <name>getPosition</name>
-                    <returns>vec2</returns>
-                    <description>Return the current position of the entity.</description>
-                </method>
-            </methods>
-            <example></example>
         </type>
         <type name="Item">
             <description>Subclass of Entity. Represents pickupable items.</description>
