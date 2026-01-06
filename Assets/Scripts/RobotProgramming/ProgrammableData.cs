@@ -1,3 +1,5 @@
+using System;
+
 namespace Cosmobot
 {
     /// <summary>
@@ -13,7 +15,7 @@ namespace Cosmobot
     /// Instance of this class should be only created by <see cref="Programmable"/>.
     ///  
     /// </summary>
-    public class ProgrammableData
+    public class ProgrammableData : IEquatable<ProgrammableData>
     {
         private readonly Programmable parent;
         public readonly int InstanceID;
@@ -23,14 +25,14 @@ namespace Cosmobot
         //  - safe "isValid" - is parent != null 
         //  both probably need implementation in ProgrammableComponent
         //  eg. using Interlocked.Exchange/Read or sth on variable that will be set OnDisable/Enable and Engine finally 
-        
+
         /// <summary>All content of this field is bind to Unit's main thread. Use only from Unity's main thread</summary> 
         public readonly UnityReference Unity;
-        
-        internal ProgrammableData(Programmable parent)
+
+        public ProgrammableData(Programmable parent)
         {
             this.parent = parent;
-            
+
             // not sure about this, GameObject name can change over time, but it would be nice to keep this API simple
             // without need to thread sync every read operation
             Name = parent.name;
@@ -43,11 +45,31 @@ namespace Cosmobot
         {
             private readonly ProgrammableData data; // java does this better
             public Programmable ProgrammableComponent => data.parent;
-            
+
             public UnityReference(ProgrammableData parent)
             {
                 data = parent;
             }
+        }
+
+        public bool Equals(ProgrammableData other)
+        {
+            if (other is null) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return InstanceID == other.InstanceID;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((ProgrammableData)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return InstanceID;
         }
     }
 }

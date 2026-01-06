@@ -14,6 +14,7 @@ namespace Cosmobot.Utils
 
         public const int SingletonSystems = First;
         public const int GameManager = SingletonSystems + 1;
-        public const int ItemManager = SingletonSystems + 2;
+        public const int RobotLogger = SingletonSystems + 2;
+        public const int ItemManager = SingletonSystems + 3;
     }
 }

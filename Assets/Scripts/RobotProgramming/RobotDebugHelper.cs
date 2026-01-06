@@ -13,7 +13,19 @@ namespace Cosmobot
 {
     public static class RobotDebugHelper
     {
-        private static readonly AsyncLocal<StackTrace?> capturedStackTrace = new(); 
+#nullable enable
+        private static readonly AsyncLocal<StackTrace?> capturedStackTrace = new();
+#nullable disable
+
+        private static readonly Type[] ignoredTypesInStackTrace = new Type[] {
+            typeof(Delegate),
+            typeof(MulticastDelegate),
+            typeof(RobotDebugHelper)
+        };
+
+        private static readonly string[] ignoredNamespacesInStackTrace = new string[] {
+            "System.Reflection"
+        };
 
         public static void BeforeExecutionContextCapture()
         {
@@ -26,7 +38,6 @@ namespace Cosmobot
             capturedStackTrace.Value = null;
         }
 
-        
         public static IEnumerable<StackFrame> GetCurrentRobotContextStackTrace()
         {
             StackTrace currentSt = new StackTrace(1, true);
@@ -37,10 +48,10 @@ namespace Cosmobot
             }
 
             StackFrame mergeFrame = new StackFrame("[Programmable Context Switch]",-1);
-            
+
             StackTrace capturedSt = capturedStackTrace.Value;
             StackFrame[] capturedFrames = capturedSt.GetFrames() ?? Array.Empty<StackFrame>();
-            return 
+            return
                 currentFrames
                     .Concat(Enumerable.Repeat(mergeFrame, 1))
                     .Concat(capturedFrames);
@@ -50,7 +61,7 @@ namespace Cosmobot
         {
             return StackFramesToText(GetCurrentRobotContextStackTrace(), data);
         }
-        
+
         [CanBeNull]
         public static StackTrace GetCapturedStackTrace()
         {
@@ -66,7 +77,7 @@ namespace Cosmobot
         {
             StringBuilder outText = new();
             bool ignoredJintStackFrame = false;
-            
+
             foreach (StackFrame stackFrame in stackFrames)
             {
                 if (stackFrame.GetFileLineNumber() == -1) // special case
@@ -77,7 +88,7 @@ namespace Cosmobot
                 }
 
                 MethodBase methodBase = stackFrame.GetMethod();
-                
+
                 if (methodBase?.DeclaringType?.Namespace?.StartsWith("Jint") ?? false)
                 {
                     ignoredJintStackFrame = true;
@@ -89,7 +100,7 @@ namespace Cosmobot
                     // TODO: append Jint stack trace (try: jsEngine.Advanced.StackTrace)
                     if (data != null)
                     {
-                        string jintStackTrace = data.Unity.ProgrammableComponent.engineInstance.Advanced.StackTrace;
+                        string jintStackTrace = data.Unity.ProgrammableComponent.EngineStackTrace;
                         outText.Append("[Begin of JS StackTrace]\n");
                         outText.Append("[JS]    ");
                         outText.Append(jintStackTrace.Replace("\n", "\n[JS]    "));
@@ -98,11 +109,10 @@ namespace Cosmobot
 
                     ignoredJintStackFrame = false;
                 }
-                
-                
+
                 if (methodBase != null)
                 {
-                    if (!ShouldShowInStackTrace(methodBase)) 
+                    if (!ShouldShowInStackTrace(methodBase))
                         continue;
 
                     Type declaringType = methodBase.DeclaringType;
@@ -113,16 +123,16 @@ namespace Cosmobot
                         outText.Append(declaringType.Name);
                         outText.Append(".");
                     }
-                    
+
                     outText.Append(methodBase.Name);
-            
+
                     if (methodBase.IsGenericMethod)
                     {
                         outText.Append('<');
                         outText.Append(string.Join(", ", methodBase.GetGenericArguments().Select(a => a.Name)));
                         outText.Append('>');
                     }
-                    
+
 
                     ParameterInfo[] parameterInfos = methodBase.GetParameters();
                     outText.Append('(');
@@ -150,49 +160,38 @@ namespace Cosmobot
                 }
                 outText.Append('\n');
             }
-            
+
             return outText.ToString();
         }
 
-
-
-        private static readonly Type[] ignoredTypesInStackTrace = new Type[] {
-                typeof(Delegate),
-                typeof(MulticastDelegate),
-                typeof(RobotDebugHelper)
-        };
-        private static readonly string[] ignoredNamespacesInStackTrace = new string[] {
-            "System.Reflection"
-        };
-        
         private static bool ShouldShowInStackTrace(MethodBase methodBase)
         {
             // Check Method Base
-            MethodImplAttributes hiddingFlags = 
+            MethodImplAttributes hiddingFlags =
                 MethodImplAttributes.AggressiveInlining
                 | MethodImplAttributes.IL
                 | MethodImplAttributes.InternalCall;
-            
+
             if ((methodBase.MethodImplementationFlags & hiddingFlags) != 0)
                 return false;
-            
+
             if (methodBase.IsDefined(typeof(CompilerGeneratedAttribute), false))
                 return false;
-            
+
             // Check declaring type
             Type declaringType = methodBase.DeclaringType;
             if (declaringType == null) return true; // true coz there is no declaring type to check
-            
+
             if (declaringType.IsDefined(typeof(CompilerGeneratedAttribute), false))
                 return false;
 
-            if (ignoredTypesInStackTrace.Contains(declaringType)) 
+            if (ignoredTypesInStackTrace.Contains(declaringType))
                 return false;
-            
+
             // Check Namespace
             if (ignoredNamespacesInStackTrace.Contains(declaringType.Namespace))
                 return false;
-            
+
             return true;
         }
     }

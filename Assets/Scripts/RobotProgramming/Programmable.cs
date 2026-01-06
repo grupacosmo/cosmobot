@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Cosmobot.Utils;
 using Jint;
 using Jint.Runtime.Interop;
 using UnityEngine;
@@ -18,11 +19,11 @@ namespace Cosmobot
     /// </summary>
     public class Programmable : MonoBehaviour
     {
-        private ProgrammableData instance;
+        public string EngineStackTrace => engineInstance.Advanced.StackTrace;
 
-        public Engine engineInstance;// TODO: DEBUG ONLY - REMOVE THIS
-        
-        
+        private ProgrammableData instance;
+        private Engine engineInstance;
+
         private IEngineLogic[] engineLogicInterfaces;
         [TextArea(10, 20)]
         [SerializeField] private string code;
@@ -95,7 +96,7 @@ namespace Cosmobot
                     }
                 }
             }
-            
+
             Type apiVec2Type = typeof(Cosmobot.Api.Types.Vec2);
             string apiNamespace = apiVec2Type.Namespace;
             IEnumerable<Type> apiTypes = apiVec2Type.Assembly.GetTypes().Where(t => t.Namespace == apiNamespace);
@@ -114,14 +115,31 @@ namespace Cosmobot
             catch (OperationCanceledException)
             {
                 Debug.Log("[Programmable JsThread] Operation was cancelled");
+                RobotLogger.LogError("Program was stopped/cancelled", RobotLogger.LogOptions.SkipUnityDebugLog);
             }
             catch (Jint.Runtime.JavaScriptException ex)
             {
-                Debug.LogError($"[Programmable JsThread] JS Error ({objectName}): {ex.Error} | {ex.Location}\n{ex.StackTrace}");
+                string jsStackTrace =
+                    ex.JavaScriptStackTrace != null
+                        ? ("[JS]  " + ex.JavaScriptStackTrace.Replace("\n", "\n[JS]  "))
+                        : "[No JS stack trace available]";
+                Debug.LogError($"[Programmable JsThread] JS Error ({objectName}): {ex.Error} | {ex.Location}\n{jsStackTrace}\n{ex.StackTrace}");
+                RobotLogger.LogError(
+                    $"[JavaScript Exception]: {ex.Error}\n\n{ex.JavaScriptStackTrace ?? "Stack trace not avaliable"}",
+                    RobotLogger.LogOptions.SkipUnityDebugLog);
             }
             catch (System.Exception ex)
             {
                 Debug.LogError($"[Programmable JsThread] Error: ({objectName}): {ex.Message}\n {ex.StackTrace}");
+                RobotLogger.LogError("Internal unknown error occurred! This error is outside of your code, and you " +
+                                     "have probably discovered a \"real\"-world glitch! Unfortunately, this is a game" +
+                                     $"bug - you can report it at {GameInfo.BugReportUrl}.\n\n" +
+                                     "If you are interested in more detailed information about this error, here is " +
+                                     "the raw message (you probably won’t understand it because it’s an internal " +
+                                     "error and games normally don’t show these to players - but this is a game " +
+                                     "about programming, so why not?):\n\n" +
+                                     $"{ex.GetType().Name}: {ex.Message}",
+                    RobotLogger.LogOptions.SkipUnityDebugLog);
             }
             finally
             {

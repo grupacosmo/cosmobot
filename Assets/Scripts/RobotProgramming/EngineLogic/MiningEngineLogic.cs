@@ -12,7 +12,7 @@ namespace Cosmobot.Api
     public class MiningEngineLogic : MonoBehaviour, IEngineLogic
     {
         private ProgrammableFunctionWrapper wrapper;
-        
+
         public void SetupThread(ManualResetEvent taskEvent, CancellationToken token, ConcurrentQueue<Action> commandQueue)
         {
             wrapper = new ProgrammableFunctionWrapper(taskEvent, token, commandQueue);
