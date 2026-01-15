@@ -53,9 +53,19 @@ namespace Cosmobot
             fileManager.CreateNewFile(files[Random.Range(0, files.Length - 1)]);
         }
 
+        public void ConfirmRemoveOpenFile()
+        {
+            fileManager.ConfirmRemoveOpenFile();
+        }
+
         public void RemoveOpenFile()
         {
             fileManager.RemoveOpenFile();
+        }
+
+        public void SaveFile()
+        {
+            fileManager.SaveFile();
         }
 
         public void GenerateDummyLog()

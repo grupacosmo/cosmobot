@@ -35,6 +35,11 @@ namespace Cosmobot
             activeFileToggle.group = activeFileGroup;
         }
 
+        public void UpdateStats(string stats)
+        {
+            fileStatsText.text = stats;
+        }
+
         private void OnEnable()
         {
             openFileToggle.onValueChanged.AddListener(OnOpenToggle);
