@@ -11,7 +11,7 @@ namespace Cosmobot
 {
     public class ProgrammingUi : MonoBehaviour
     {
-        public string Code => bufferedText;
+        public string Code { get => bufferedText; set => HandleFileLoad(value); }
 
         [SerializeField]
         private float fontSize = 36;
@@ -124,6 +124,12 @@ namespace Cosmobot
         }
 
         // ==
+
+        private void HandleFileLoad(string fileContents)
+        {
+            bufferedText = fileContents;
+            inputField.text = fileContents;
+        }
 
         private void UpdateFileStatus()
         {

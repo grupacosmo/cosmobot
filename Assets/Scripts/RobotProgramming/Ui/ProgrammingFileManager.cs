@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using System.IO;
-using Acornima.Ast;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Cosmobot
 {
@@ -24,13 +24,31 @@ namespace Cosmobot
 
         private readonly List<ProgrammingUiFileEntry> files = new();
 
+        private readonly string jsFilesSaveFolder = @"/home/milosz/cosmobot/JsFiles/"; // TEMP
+
         public ProgrammingUiFileEntry CreateNewFile(string filename)
+        {
+            CreateFile(filename);
+            return CreateNewFileEntry(filename);
+        }
+
+        private ProgrammingUiFileEntry CreateNewFileEntry(string filename)
         {
             GameObject uiInstance = Instantiate(uiFileEntryPrefab, transform);
             ProgrammingUiFileEntry entry = uiInstance.GetComponent<ProgrammingUiFileEntry>();
             entry.SetFile(openFileGroup, activeFileGroup, filename, "no stats...");
+            entry.OnOpenFile += HandleOpenFile;
             files.Add(entry);
             return entry;
+        }
+
+        public void OnEnable()
+        {
+            string[] jsFiles = Directory.GetFiles(jsFilesSaveFolder, "*.js");
+            foreach(string filePath in jsFiles)
+            {
+                LoadFileFromDisk(Path.GetFileName(filePath));
+            }
         }
 
         public void ConfirmRemoveOpenFile()
@@ -66,7 +84,7 @@ namespace Cosmobot
         {
             ProgrammingUiFileEntry openFile = files[GetOpenFileIndex()];
             openFile.UpdateStats(programmingUI.Code.Length + " characters");
-            Debug.Log(programmingUI.Code.Length);
+            SaveTextToFile(openFile.filename);
         }
 
         private int GetOpenFileIndex()
@@ -81,6 +99,31 @@ namespace Cosmobot
             }
 
             return 0;
+        }
+
+        private void CreateFile(string filename)
+        {
+            File.Create(jsFilesSaveFolder + filename).Dispose();
+        }
+
+        public void HandleOpenFile(ProgrammingUiFileEntry entry)
+        {
+            LoadFileOnOpen(entry);
+        }
+
+        private void LoadFileOnOpen(ProgrammingUiFileEntry entry)
+        {
+            programmingUI.Code = File.ReadAllText(jsFilesSaveFolder + entry.filename, Encoding.UTF8);
+        }
+
+        private void LoadFileFromDisk(string filename)
+        {
+            CreateNewFileEntry(filename);
+        }
+
+        private void SaveTextToFile(string filename)
+        {
+            File.WriteAllText(jsFilesSaveFolder + filename, programmingUI.Code, Encoding.UTF8);
         }
     }
 }

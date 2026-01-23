@@ -815,7 +815,7 @@ MonoBehaviour:
   openFileGroup: {fileID: 1481105428}
   activeFileGroup: {fileID: 2060586376}
   confirmRemoveBt: {fileID: 429231273}
-  programmingUI: {fileID: 0}
+  programmingUI: {fileID: 984255081}
   uiFileEntryPrefab: {fileID: 5280276289285643954, guid: 5e29d0815a2398d44ae2337cc612ddd0, type: 3}
 --- !u!1 &213625103
 GameObject:
@@ -9012,7 +9012,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2013063801}
   m_HandleRect: {fileID: 2013063800}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 0.001
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
