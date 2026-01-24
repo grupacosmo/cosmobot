@@ -7101,13 +7101,13 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6298237145738746592, guid: 68deae0805aff708196c645faa861dc7, type: 3}
-      propertyPath: mainCamera
-      value: 
-      objectReference: {fileID: 756108759}
-    - target: {fileID: 6298237145738746592, guid: 68deae0805aff708196c645faa861dc7, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 756108756}
+    - target: {fileID: 6298237145738746592, guid: 68deae0805aff708196c645faa861dc7, type: 3}
+      propertyPath: mainCamera
+      value: 
+      objectReference: {fileID: 756108759}
     - target: {fileID: 6521496035671230963, guid: 68deae0805aff708196c645faa861dc7, type: 3}
       propertyPath: m_Name
       value: UI
@@ -7241,9 +7241,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34d286acf8a6df7adb06a658106883df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemsDataDirectory:
-  - Assets/Data/Items
-  craftingRecipesDataDirectory: Assets/Data/Crafting/recipes.json
+  recipesJson: {fileID: 4900000, guid: 4b1be96be374622699cb50eb5a23875e, type: 3}
+  items: []
 --- !u!4 &1751012810
 Transform:
   m_ObjectHideFlags: 0

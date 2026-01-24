@@ -1,3 +1,4 @@
+using Cosmobot.Api;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,9 +9,29 @@ namespace Cosmobot
     {
         [SerializeField]
         private TMP_Text interactionPrompt;
+        [SerializeField]
+        private ProgrammingUiManager programmingUiManager;
+        [SerializeField]
+        private PlayerCamera playerCamera;
 
         private DefaultInputActions actions;
-        private IInteractable interaction  ;
+        private IInteractable interaction;
+
+        public void Update()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                Ray ray = playerCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
+                Debug.DrawRay(ray.origin, ray.direction * 500f, Color.green);
+                if (Physics.Raycast(ray, out RaycastHit hit, 500f))
+                {
+                    if (hit.collider.TryGetComponent<BaseEngineLogic>(out var _))
+                    {
+                        programmingUiManager.Open();
+                    }
+                }
+            }
+        }
 
         private void OnEnable()
         {

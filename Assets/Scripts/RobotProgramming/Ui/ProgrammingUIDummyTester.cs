@@ -11,6 +11,8 @@ namespace Cosmobot
         private ProgrammingFileManager fileManager;
         [SerializeField]
         private ProgrammingUiLogManager logManager;
+        [SerializeField]
+        private ProgrammingUiManager uiManager;
 
         private readonly string[] files = new [] { "main.js", "robot.js", "mySuperSystem.js", "api.js", "<internal>" };
         private readonly string[] functionNames = new[] { "foo", "main", "findIron", "findItem", "travelToMine", "goAround" };
@@ -66,6 +68,16 @@ namespace Cosmobot
         public void SaveFile()
         {
             fileManager.SaveFile();
+        }
+
+        public void CloseUI()
+        {
+            uiManager.Close();
+        }
+
+        public void OpenUI()
+        {
+            uiManager.Open();
         }
 
         public void GenerateDummyLog()
