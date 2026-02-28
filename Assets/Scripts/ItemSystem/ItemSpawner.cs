@@ -1,4 +1,3 @@
-#if UNITY_EDITOR
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Cosmobot.Utils;
@@ -11,6 +10,7 @@ namespace Cosmobot.ItemSystem
     [ExecuteAlways]
     public class ItemSpawner : MonoBehaviour
     {
+#if UNITY_EDITOR
         [InitializeOnLoad]
         private static class ItemSpawnerDrawer
         {
@@ -56,6 +56,7 @@ namespace Cosmobot.ItemSystem
                 }
             }
         }
+#endif
 
         [SerializeField] private ItemInfo itemInfo;
 
@@ -65,13 +66,14 @@ namespace Cosmobot.ItemSystem
         public ItemInfo ItemInfo => itemInfo;
         public SerializableDictionary<string, string> ItemData => itemData;
 
+#if UNITY_EDITOR
         public Mesh Mesh { get; private set; }
         public Material Material { get; private set; }
         private ItemInfo oldItem;
+#endif
 
         private void Awake()
         {
-            gameObject.name = nameof(ItemSpawner);
             if (Application.isPlaying)
             {
                 ItemComponent itemComponent = gameObject.AddComponent<ItemComponent>();
@@ -81,8 +83,10 @@ namespace Cosmobot.ItemSystem
                 Destroy(GetComponent<MeshFilter>());
                 transform.localScale = Vector3.one;
             }
+#if UNITY_EDITOR
             else if (gameObject.GetComponent<MeshRenderer>() == null)
             {
+                gameObject.name = nameof(ItemSpawner);
                 Mesh m = Resources.GetBuiltinResource<Mesh>("Sphere.fbx");
 
                 Material material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
@@ -95,8 +99,10 @@ namespace Cosmobot.ItemSystem
                 gameObject.AddComponent<MeshRenderer>().material = material;
                 transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
             }
+#endif
         }
 
+#if UNITY_EDITOR
         void OnEnable()
         {
             ItemSpawnerDrawer.Instances.Add(this);
@@ -140,6 +146,6 @@ namespace Cosmobot.ItemSystem
 
             Material.hideFlags = HideFlags.DontSave;
         }
+#endif
     }
 }
-#endif
