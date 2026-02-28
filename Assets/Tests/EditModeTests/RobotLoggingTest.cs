@@ -79,7 +79,7 @@ namespace Cosmobot
             
             
             Thread[] robotsThreads = new Thread[RobotCount];
-            CountdownEvent loggedCounter = new CountdownEvent(RobotCount);
+            using CountdownEvent loggedCounter = new CountdownEvent(RobotCount);
             ManualResetEventSlim[] robotResetGate = new ManualResetEventSlim[RobotCount];
             for (int i = 0 ; i < RobotCount; i++)
             {
@@ -117,10 +117,14 @@ namespace Cosmobot
             
             logs.Sort();
             
-            Assert.AreEqual(expectedLogs.Length, logs.Count, "log count does not mach expected count");
+            Assert.AreEqual(expectedLogs.Length, logs.Count, "log count does not match expected count");
             for (int i = 0; i < logs.Count; i++)
             {
                 Assert.AreEqual(expectedLogs[i], logs[i]);
+            }
+            foreach (ManualResetEventSlim gate in robotResetGate)
+            {
+                gate.Dispose();
             }
         }
 
@@ -148,7 +152,7 @@ namespace Cosmobot
             RobotLogger.LogInfo("new");
             RobotLogger.Pump();
             
-            Assert.AreEqual(2, logCount, "log count does not mach expected count");
+            Assert.AreEqual(2, logCount, "log count does not match expected count");
             
             RobotLogger.ClearCurrent();
         }
@@ -181,6 +185,10 @@ namespace Cosmobot
             
             RobotLogger.RemoveGlobalLogEventHandler(handler);
             Assert.AreEqual(2, logCount);
+            Assert.AreEqual(2, RobotLogger.GetGlobalLogs().Count, "Global logs should have all logged entries");
+            
+            RobotLogger.ClearGlobalLogs();
+            Assert.AreEqual(0, RobotLogger.GetGlobalLogs().Count, "Global logs should be empty after clear");
         }
 
         [Test]
@@ -223,7 +231,7 @@ namespace Cosmobot
             ProgrammableData[] robots = new ProgrammableData[RobotCount];
             Thread[] robotsThreads = new Thread[RobotCount];
             ManualResetEventSlim[] robotResetGate = new ManualResetEventSlim[RobotCount];
-            CountdownEvent loggedCounter = new CountdownEvent(RobotCount);
+            using CountdownEvent loggedCounter = new CountdownEvent(RobotCount);
             
             for(int i = 0 ; i < RobotCount ; i++)
             {
@@ -281,12 +289,7 @@ namespace Cosmobot
 
             foreach (ManualResetEventSlim gate in robotResetGate) gate.Set();
             foreach (Thread robotsThread in robotsThreads) robotsThread.Join();
-        }
-
-        [Test]
-        public void TestEverything()
-        {
-            Assert.True(true);
+            foreach (ManualResetEventSlim gate in robotResetGate) gate.Dispose();
         }
 
         private ProgrammableData GetMockedProgrammableData()

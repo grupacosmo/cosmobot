@@ -47,7 +47,7 @@ namespace Cosmobot
                 return currentFrames;
             }
 
-            StackFrame mergeFrame = new StackFrame("[Programmable Context Switch]",-1);
+            StackFrame mergeFrame = new StackFrame("[Programmable Context Switch]", -1);
 
             StackTrace capturedSt = capturedStackTrace.Value;
             StackFrame[] capturedFrames = capturedSt.GetFrames() ?? Array.Empty<StackFrame>();
@@ -167,12 +167,12 @@ namespace Cosmobot
         private static bool ShouldShowInStackTrace(MethodBase methodBase)
         {
             // Check Method Base
-            MethodImplAttributes hiddingFlags =
+            MethodImplAttributes hidingFlags =
                 MethodImplAttributes.AggressiveInlining
                 | MethodImplAttributes.IL
                 | MethodImplAttributes.InternalCall;
 
-            if ((methodBase.MethodImplementationFlags & hiddingFlags) != 0)
+            if ((methodBase.MethodImplementationFlags & hidingFlags) != 0)
                 return false;
 
             if (methodBase.IsDefined(typeof(CompilerGeneratedAttribute), false))

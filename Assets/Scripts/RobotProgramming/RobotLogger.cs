@@ -2,8 +2,8 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
+using Cosmobot.Utils;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -51,7 +51,7 @@ namespace Cosmobot
             // emitted on his thread and events can be emitted even after calling unsubscribe
 
 
-            // collect values to remove before emiting events, so no handler will be left without last message 
+            // collect values to remove before emitting events, so no handler will be left without last message 
             // when context cleaning occurs between emitting and clearing
             List<int> toRemove = logs.Where(vk => vk.Value.markedToDispose).Select(vk => vk.Key).ToList();
 
@@ -176,7 +176,7 @@ namespace Cosmobot
         {
             if (robot == null)
             {
-                throw new ArgumentException("robot cant be null and must exist", nameof(robot));
+                throw new ArgumentException("robot can't be null and must exist", nameof(robot));
             }
             int robotId = robot.InstanceID;
 
@@ -184,7 +184,7 @@ namespace Cosmobot
             {
                 int currentRobotId = current.Value.Value;
                 throw new InvalidOperationException(
-                    $"Cannot initialize Logger for '{robot.Name}' ([id: {robotId}]) because the same" +
+                    $"Cannot initialize Logger for '{robot.Name}' ([id: {robotId}]) because the same " +
                     $"async control flow is already initialized for [id: {currentRobotId}]");
             }
 
@@ -315,7 +315,10 @@ namespace Cosmobot
             }
 
             bool result = logs.TryGetValue(currentRobotId.Value, out RobotLogs foundRobotLogs);
-            outLogs = foundRobotLogs.Logs; // cast
+            outLogs = result 
+                ? foundRobotLogs.Logs
+                : Array.Empty<LogEntry>(); 
+            
             return result;
         }
 
@@ -374,14 +377,14 @@ namespace Cosmobot
         private struct RobotLogs : IEquatable<RobotLogs>
         {
             public readonly ProgrammableData Robot;
-            public readonly List<LogEntry> Logs;
+            public readonly ConcurrentLogList<LogEntry> Logs;
             public readonly ConcurrentQueue<LogEntry> MessageQueue;
             public bool markedToDispose;
 
             public RobotLogs(ProgrammableData robot)
             {
                 this.Robot = robot;
-                Logs = new List<LogEntry>();
+                Logs = new ConcurrentLogList<LogEntry>();
                 MessageQueue = new ConcurrentQueue<LogEntry>();
                 markedToDispose = false;
             }

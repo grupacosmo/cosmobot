@@ -58,6 +58,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -141,6 +144,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -224,6 +230,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -307,6 +316,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -405,27 +417,27 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
-      propertyPath: ItemData.keys.Array.data[0]
+      propertyPath: 'ItemData.keys.Array.data[0]'
       value: MaxCharge
       objectReference: {fileID: 0}
     - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
-      propertyPath: ItemData.keys.Array.data[1]
+      propertyPath: 'ItemData.keys.Array.data[1]'
       value: Charge
       objectReference: {fileID: 0}
     - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
-      propertyPath: ItemData.keys.Array.data[2]
+      propertyPath: 'ItemData.keys.Array.data[2]'
       value: TransferRate
       objectReference: {fileID: 0}
     - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
-      propertyPath: ItemData.values.Array.data[0]
+      propertyPath: 'ItemData.values.Array.data[0]'
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
-      propertyPath: ItemData.values.Array.data[1]
+      propertyPath: 'ItemData.values.Array.data[1]'
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
-      propertyPath: ItemData.values.Array.data[2]
+      propertyPath: 'ItemData.values.Array.data[2]'
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
@@ -437,27 +449,35 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
-      propertyPath: item.itemData.keys.Array.data[0]
+      propertyPath: 'item.itemData.keys.Array.data[0]'
       value: MaxCharge
       objectReference: {fileID: 0}
     - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
-      propertyPath: item.itemData.keys.Array.data[1]
+      propertyPath: 'item.itemData.keys.Array.data[1]'
       value: Charge
       objectReference: {fileID: 0}
     - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
-      propertyPath: item.itemData.keys.Array.data[2]
+      propertyPath: 'item.itemData.keys.Array.data[2]'
       value: TransferRate
       objectReference: {fileID: 0}
     - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
-      propertyPath: item.itemData.values.Array.data[0]
+      propertyPath: 'item.itemData.keys.Array.data[3]'
+      value: dasdas
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: 'item.itemData.values.Array.data[0]'
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
-      propertyPath: item.itemData.values.Array.data[1]
+      propertyPath: 'item.itemData.values.Array.data[1]'
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
-      propertyPath: item.itemData.values.Array.data[2]
+      propertyPath: 'item.itemData.values.Array.data[2]'
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7891933895555751745, guid: 673f124dc710e134d99cf2a49f29a6e9, type: 3}
+      propertyPath: 'item.itemData.values.Array.data[3]'
       value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []

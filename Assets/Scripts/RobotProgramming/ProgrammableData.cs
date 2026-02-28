@@ -26,7 +26,7 @@ namespace Cosmobot
         //  both probably need implementation in ProgrammableComponent
         //  eg. using Interlocked.Exchange/Read or sth on variable that will be set OnDisable/Enable and Engine finally 
 
-        /// <summary>All content of this field is bind to Unit's main thread. Use only from Unity's main thread</summary> 
+        /// <summary>All content of this field is bound to Unity's main thread. Use only from Unity's main thread</summary> 
         public readonly UnityReference Unity;
 
         public ProgrammableData(Programmable parent)

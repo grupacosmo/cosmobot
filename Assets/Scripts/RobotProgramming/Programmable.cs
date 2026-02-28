@@ -125,7 +125,7 @@ namespace Cosmobot
                         : "[No JS stack trace available]";
                 Debug.LogError($"[Programmable JsThread] JS Error ({objectName}): {ex.Error} | {ex.Location}\n{jsStackTrace}\n{ex.StackTrace}");
                 RobotLogger.LogError(
-                    $"[JavaScript Exception]: {ex.Error}\n\n{ex.JavaScriptStackTrace ?? "Stack trace not avaliable"}",
+                    $"[JavaScript Exception]: {ex.Error}\n\n{ex.JavaScriptStackTrace ?? "Stack trace not available"}",
                     RobotLogger.LogOptions.SkipUnityDebugLog);
             }
             catch (System.Exception ex)
