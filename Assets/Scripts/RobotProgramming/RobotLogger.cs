@@ -10,7 +10,7 @@ using UnityEngine;
 namespace Cosmobot
 {
     // TODO: catch context for StartCoroutine() or create custom alternative
-    
+
     /// <summary>
     /// Allows all Robots and functions called by robot to use logger and automatically assigns programmable instance to
     /// every log.
@@ -317,10 +317,10 @@ namespace Cosmobot
             }
 
             bool result = logs.TryGetValue(currentRobotId.Value, out RobotLogs foundRobotLogs);
-            outLogs = result 
+            outLogs = result
                 ? foundRobotLogs.Logs
-                : Array.Empty<LogEntry>(); 
-            
+                : Array.Empty<LogEntry>();
+
             return result;
         }
 

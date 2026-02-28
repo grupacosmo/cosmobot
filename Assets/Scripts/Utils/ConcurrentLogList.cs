@@ -9,19 +9,19 @@ namespace Cosmobot.Utils
     {
         private const int GrowFactor = 2;
         public const int DefaultCapacity = 20;
-        
+
         public int Capacity { get; private set; }
         public int Count { get; private set; }
         public bool IsSynchronized => true;
         public object SyncRoot => lck;
-        
+
         public bool IsFixedSize => false;
         public bool IsReadOnly => false;
 
         private object lck = new object();
 
         private T[] array;
-        
+
         public ConcurrentLogList() : this(DefaultCapacity) { }
 
         public ConcurrentLogList(int capacity)
@@ -30,12 +30,13 @@ namespace Cosmobot.Utils
             Count = 0;
             array = new T[capacity];
         }
-        
+
         public T this[int index]
         {
             get => At(index);
-            set {
-                throw new InvalidOperationException("Cannot change existing value. This collection allows only Adding to the end");    
+            set
+            {
+                throw new InvalidOperationException("Cannot change existing value. This collection allows only Adding to the end");
             }
         }
 
@@ -59,10 +60,10 @@ namespace Cosmobot.Utils
             {
                 return int.MaxValue;
             }
-            
+
             return Capacity == 0 ? DefaultCapacity : Capacity * 2;
         }
-        
+
         private void EnsureCapacity(int newCapacity)
         {
             lock (lck)
@@ -78,7 +79,7 @@ namespace Cosmobot.Utils
                 }
             }
         }
-        
+
         public void Clear()
         {
             lock (lck)
@@ -88,9 +89,9 @@ namespace Cosmobot.Utils
                     Array.Clear(array, 0, Count);
                     Count = 0;
                 }
-                else    
+                else
                 {
-                    Count = 0;    
+                    Count = 0;
                 }
             }
         }
@@ -116,7 +117,7 @@ namespace Cosmobot.Utils
                 array[i] = currentArray[i];
             }
         }
-        
+
         public void CopyTo(Array array, int arrayIndex)
         {
             int currentSize = Count;
@@ -126,7 +127,7 @@ namespace Cosmobot.Utils
                 array.SetValue(currentArray, i);
             }
         }
-        
+
         /// <summary>
         /// Same as <see cref="List{T}.IndexOf(T)"/> but will check only part of array that exist at the moment of call.
         /// Any elements added during function call will be ignored. It is better to first copy array and then work on
@@ -152,7 +153,7 @@ namespace Cosmobot.Utils
 
         public void Insert(int index, T value)
         {
-            throw new InvalidOperationException("This collection allows only Adding to the end. Use Add(T)");    
+            throw new InvalidOperationException("This collection allows only Adding to the end. Use Add(T)");
         }
 
         public bool Remove(T value)
