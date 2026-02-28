@@ -137,11 +137,21 @@ namespace Cosmobot
         {
             if (newItemTransform is not null)
             {
-                carriedItemTransform = newItemTransform;
-                carriedItemBody = newItemTransform.GetComponent<Rigidbody>();
-                carryingItem = true;
+                Rigidbody itemBody = newItemTransform.GetComponent<Rigidbody>();
 
-                carriedItemBody.excludeLayers |= playerLayer.value;
+                if (itemBody != null)
+                {
+                    carriedItemTransform = newItemTransform;
+                    carriedItemBody = itemBody;
+                    carryingItem = true;
+
+                    carriedItemBody.excludeLayers |= playerLayer.value;
+                }
+                else
+                {
+                    Debug.LogError($"[PlayerGun] '{newItemTransform.name}' do not have Rigidbody!");
+                    return;
+                }
             }
             else
             {
@@ -151,6 +161,8 @@ namespace Cosmobot
                 carriedItemBody = null;
                 carryingItem = false;
             }
+
         }
+
     }
 }
