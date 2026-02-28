@@ -9,6 +9,8 @@ using UnityEngine;
 
 namespace Cosmobot
 {
+    // TODO: catch context for StartCoroutine() or create custom alternative
+    
     /// <summary>
     /// Allows all Robots and functions called by robot to use logger and automatically assigns programmable instance to
     /// every log.
