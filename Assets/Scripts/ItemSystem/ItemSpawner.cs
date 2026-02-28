@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using System.Collections.Generic;
 using Cosmobot.Utils;
 
@@ -54,6 +55,7 @@ namespace Cosmobot.ItemSystem
                 }
             }
         }
+        
         [SerializeField] private ItemInfo itemInfo;
 
         [SerializeField]
@@ -61,6 +63,10 @@ namespace Cosmobot.ItemSystem
 
         public ItemInfo ItemInfo => itemInfo;
         public SerializableDictionary<string, string> ItemData => itemData;
+        
+        public Mesh Mesh { get; private set; }
+        public Material Material { get; private set; }
+        private ItemInfo oldItem;
 
         private void Awake()
         {
@@ -81,20 +87,15 @@ namespace Cosmobot.ItemSystem
                 Material material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
                 material.color = new Color(1, 1, 1, 0.0f);
                 material.SetFloat("_Surface", 1.0f);
-                EditorUtility.SetDirty(gameObject.GetComponent<MeshRenderer>());
-                AssetDatabase.SaveAssets(); AssetDatabase.Refresh();
+                EditorUtility.SetDirty(material);
+                AssetDatabase.SaveAssets();
 
                 gameObject.AddComponent<MeshFilter>().mesh = m;
                 gameObject.AddComponent<MeshRenderer>().material = material;
                 transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
             }
         }
-
-        public Mesh Mesh { get; private set; }
-        public Material Material { get; private set; }
-
-        ItemInfo oldItem;
-
+        
         void OnEnable()
         {
             ItemSpawnerDrawer.Instances.Add(this);
@@ -135,3 +136,4 @@ namespace Cosmobot.ItemSystem
         }
     }
 }
+#endif
