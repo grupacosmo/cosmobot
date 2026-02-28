@@ -14,10 +14,10 @@ namespace Cosmobot.ItemSystem
         [SerializeField]
         private SerializableDictionary<string, string> itemData;
 
-        public ItemInstance(ItemInfo itemInfo): this(itemInfo, new SerializableDictionary<string, string>()) 
+        public ItemInstance(ItemInfo itemInfo) : this(itemInfo, new SerializableDictionary<string, string>())
         {
         }
-        
+
         public ItemInstance(ItemInfo itemInfo, SerializableDictionary<string, string> itemData)
         {
             this.itemInfo = itemInfo;

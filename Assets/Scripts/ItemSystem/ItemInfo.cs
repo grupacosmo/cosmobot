@@ -41,13 +41,13 @@ namespace Cosmobot.ItemSystem
                 name = $"{displayName} (instance)",
                 transform =
                 {
-                    position = position, 
+                    position = position,
                     rotation = rotation
                 }
             };
             ItemComponent itemComponent = instantiatedObject.AddComponent<ItemComponent>();
             itemComponent.Init(new ItemInstance(this));
-            
+
             if (!itemComponent)
             {
                 throw new InvalidOperationException(

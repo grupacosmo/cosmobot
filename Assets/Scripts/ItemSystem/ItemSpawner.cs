@@ -77,13 +77,13 @@ namespace Cosmobot.ItemSystem
             else if (gameObject.GetComponent<MeshRenderer>() == null)
             {
                 Mesh m = Resources.GetBuiltinResource<Mesh>("Sphere.fbx");
-                
+
                 Material material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
                 material.color = new Color(1, 1, 1, 0.0f);
-                material.SetFloat("_Surface", 1.0f);       
+                material.SetFloat("_Surface", 1.0f);
                 EditorUtility.SetDirty(gameObject.GetComponent<MeshRenderer>());
-                AssetDatabase.SaveAssets();AssetDatabase.Refresh();
-                
+                AssetDatabase.SaveAssets(); AssetDatabase.Refresh();
+
                 gameObject.AddComponent<MeshFilter>().mesh = m;
                 gameObject.AddComponent<MeshRenderer>().material = material;
                 transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);

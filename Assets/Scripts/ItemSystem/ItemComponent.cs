@@ -60,7 +60,7 @@ namespace Cosmobot.ItemSystem
                 throw new InvalidOperationException("Can't re initialise ItemComponent that is already initialised");
             }
             item = initValue;
-            
+
             gameObject.AddComponent<BoxCollider>();
             gameObject.AddComponent<Rigidbody>();
             Instantiate(initValue.ItemInfo.ModelPrefab, transform);
