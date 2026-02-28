@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using Cosmobot.Utils;
 
 namespace Cosmobot.ItemSystem
@@ -55,7 +56,7 @@ namespace Cosmobot.ItemSystem
                 }
             }
         }
-        
+
         [SerializeField] private ItemInfo itemInfo;
 
         [SerializeField]
@@ -63,14 +64,14 @@ namespace Cosmobot.ItemSystem
 
         public ItemInfo ItemInfo => itemInfo;
         public SerializableDictionary<string, string> ItemData => itemData;
-        
+
         public Mesh Mesh { get; private set; }
         public Material Material { get; private set; }
         private ItemInfo oldItem;
 
         private void Awake()
         {
-            Debug.Log("ItemSpawner awake");
+            gameObject.name = nameof(ItemSpawner);
             if (Application.isPlaying)
             {
                 ItemComponent itemComponent = gameObject.AddComponent<ItemComponent>();
@@ -95,7 +96,7 @@ namespace Cosmobot.ItemSystem
                 transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
             }
         }
-        
+
         void OnEnable()
         {
             ItemSpawnerDrawer.Instances.Add(this);
@@ -111,8 +112,8 @@ namespace Cosmobot.ItemSystem
         {
             if (oldItem != itemInfo)
             {
-                oldItem = itemInfo;
                 ReInitImage();
+                oldItem = itemInfo;
             }
         }
 
@@ -122,6 +123,11 @@ namespace Cosmobot.ItemSystem
             {
                 Material = null;
                 return;
+            }
+
+            if (Regex.IsMatch(gameObject.name, $"^({Regex.Escape(oldItem?.Id ?? nameof(ItemSpawner))})( \\([0-9]+\\))?$"))
+            {
+                gameObject.name = itemInfo.Id;
             }
 
             Mesh = Resources.GetBuiltinResource<Mesh>("Quad.fbx");
