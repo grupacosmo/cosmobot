@@ -15,7 +15,7 @@ MonoBehaviour:
   id: material-composite
   displayName: Material Composite
   icon: {fileID: 0}
-  prefab: {fileID: 5481697963393283948, guid: eb1dffa687b06e9879b2e9ec005e687f, type: 3}
+  modelPrefab: {fileID: 5481697963393283948, guid: eb1dffa687b06e9879b2e9ec005e687f, type: 3}
   additionalData:
     keys: []
     values: []

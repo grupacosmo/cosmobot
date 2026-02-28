@@ -48,14 +48,12 @@ namespace Cosmobot.ItemSystem
 
         public SerializableDictionary<string, string> StringValue => item.StringValue;
 
-#if UNITY_ENGINE
-        private void Awake()
+        private void Start()
         {
             ComponentUtils.RequireNotNull(item, "'item' is not set.", this);
         }
-#endif
 
-        void Init(ItemInstance initValue)
+        public void Init(ItemInstance initValue)
         {
             if (item is not null)
             {

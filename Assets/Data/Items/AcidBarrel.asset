@@ -15,7 +15,7 @@ MonoBehaviour:
   id: acid-barrel
   displayName: Acid Barrel
   icon: {fileID: 0}
-  prefab: {fileID: 1862692014303423458, guid: b0c08f38339b94aa6a5867f0a27d0623, type: 3}
+  modelPrefab: {fileID: 1862692014303423458, guid: b0c08f38339b94aa6a5867f0a27d0623, type: 3}
   additionalData:
     keys: []
     values: []
