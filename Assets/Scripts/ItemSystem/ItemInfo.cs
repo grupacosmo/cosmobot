@@ -36,8 +36,18 @@ namespace Cosmobot.ItemSystem
 
         public GameObject InstantiateItem(Vector3 position, Quaternion rotation)
         {
-            GameObject instantiatedObject = Instantiate(ModelPrefab, position, rotation);
-            ItemComponent itemComponent = instantiatedObject.GetComponent<ItemComponent>();
+            GameObject instantiatedObject = new GameObject
+            {
+                name = $"{displayName} (instance)",
+                transform =
+                {
+                    position = position, 
+                    rotation = rotation
+                }
+            };
+            ItemComponent itemComponent = instantiatedObject.AddComponent<ItemComponent>();
+            itemComponent.Init(new ItemInstance(this));
+            
             if (!itemComponent)
             {
                 throw new InvalidOperationException(

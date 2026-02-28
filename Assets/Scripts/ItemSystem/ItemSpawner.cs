@@ -18,9 +18,6 @@ namespace Cosmobot.ItemSystem
             {
                 ItemComponent itemComponent = gameObject.AddComponent<ItemComponent>();
                 itemComponent.Init(new ItemInstance(itemInfo, itemData));
-                gameObject.AddComponent<BoxCollider>();
-                gameObject.AddComponent<Rigidbody>();
-                Instantiate(itemInfo.ModelPrefab, transform);
                 Destroy(this);
             }
         }
