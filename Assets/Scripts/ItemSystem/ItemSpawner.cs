@@ -10,54 +10,6 @@ namespace Cosmobot.ItemSystem
     [ExecuteAlways]
     public class ItemSpawner : MonoBehaviour
     {
-#if UNITY_EDITOR
-        [InitializeOnLoad]
-        private static class ItemSpawnerDrawer
-        {
-            public static readonly HashSet<ItemSpawner> Instances = new HashSet<ItemSpawner>();
-
-            static ItemSpawnerDrawer()
-            {
-                SceneView.duringSceneGui += Draw;
-            }
-
-            [InitializeOnLoadMethod]
-            static void Clear()
-            {
-                Instances.Clear();
-            }
-
-            static void Draw(SceneView sceneView)
-            {
-                if (Event.current.type != EventType.Repaint)
-                    return;
-
-                Camera cam = sceneView.camera;
-                if (!cam) return;
-
-                foreach (ItemSpawner ex in Instances)
-                {
-                    if (!ex || ex.Mesh == null || ex.Material == null)
-                        continue;
-
-                    Matrix4x4 matrix = Matrix4x4.TRS(
-                        ex.transform.position,
-                        Quaternion.LookRotation(cam.transform.forward),
-                        Vector3.one * 0.5f
-                    );
-
-                    Graphics.DrawMesh(
-                        ex.Mesh,
-                        matrix,
-                        ex.Material,
-                        0,
-                        cam
-                    );
-                }
-            }
-        }
-#endif
-
         [SerializeField] private ItemInfo itemInfo;
 
         [SerializeField]
@@ -67,9 +19,8 @@ namespace Cosmobot.ItemSystem
         public SerializableDictionary<string, string> ItemData => itemData;
 
 #if UNITY_EDITOR
-        public Mesh Mesh { get; private set; }
-        public Material Material { get; private set; }
         private ItemInfo oldItem;
+        private Material material;
 #endif
 
         private void Awake()
@@ -84,20 +35,17 @@ namespace Cosmobot.ItemSystem
                 transform.localScale = Vector3.one;
             }
 #if UNITY_EDITOR
-            else if (gameObject.GetComponent<MeshRenderer>() == null)
+            else
             {
-                gameObject.name = nameof(ItemSpawner);
-                Mesh m = Resources.GetBuiltinResource<Mesh>("Sphere.fbx");
-
-                Material material = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-                material.color = new Color(1, 1, 1, 0.0f);
-                material.SetFloat("_Surface", 1.0f);
-                EditorUtility.SetDirty(material);
-                AssetDatabase.SaveAssets();
-
-                gameObject.AddComponent<MeshFilter>().mesh = m;
-                gameObject.AddComponent<MeshRenderer>().material = material;
-                transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+                if (gameObject.GetComponent<MeshRenderer>() == null)
+                {
+                    Mesh m = Resources.Load<Mesh>("billboard_cross");
+                    gameObject.AddComponent<MeshFilter>().mesh = m;
+                    gameObject.AddComponent<MeshRenderer>();
+                    transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+                }
+                material = new Material(Shader.Find("Hidden/InternalErrorShader"));
+                gameObject.GetComponent<MeshRenderer>().material = material;
             }
 #endif
         }
@@ -105,13 +53,7 @@ namespace Cosmobot.ItemSystem
 #if UNITY_EDITOR
         void OnEnable()
         {
-            ItemSpawnerDrawer.Instances.Add(this);
             ReInitImage();
-        }
-
-        void OnDisable()
-        {
-            ItemSpawnerDrawer.Instances.Remove(this);
         }
 
         void OnValidate()
@@ -125,26 +67,33 @@ namespace Cosmobot.ItemSystem
 
         void ReInitImage()
         {
+            SetItemIcon();
+            
             if (itemInfo == null)
             {
-                Material = null;
                 return;
             }
 
-            if (Regex.IsMatch(gameObject.name, $"^({Regex.Escape(oldItem?.Id ?? nameof(ItemSpawner))})( \\([0-9]+\\))?$"))
+            if (Regex.IsMatch(gameObject.name,
+                    $"^({Regex.Escape(oldItem?.Id ?? nameof(ItemSpawner))})( \\([0-9]+\\))?$"))
             {
                 gameObject.name = itemInfo.Id;
             }
 
-            Mesh = Resources.GetBuiltinResource<Mesh>("Quad.fbx");
+        }
 
-            Shader shader = itemInfo.Icon == null
+        private void SetItemIcon()
+        {
+            Shader shader = itemInfo?.Icon == null
                 ? Shader.Find("Hidden/InternalErrorShader")
                 : Shader.Find("Universal Render Pipeline/Unlit");
 
-            Material = new Material(shader) { mainTexture = itemInfo.Icon };
-
-            Material.hideFlags = HideFlags.DontSave;
+            material.shader = shader;
+            material.color = Color.white;
+            if (itemInfo?.Icon != null)
+            {
+                material.mainTexture = itemInfo.Icon;
+            }
         }
 #endif
     }
