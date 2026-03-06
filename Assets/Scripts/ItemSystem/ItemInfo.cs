@@ -46,7 +46,6 @@ namespace Cosmobot.ItemSystem
                 }
             };
             ItemComponent itemComponent = instantiatedObject.AddComponent<ItemComponent>();
-            itemComponent.Init(new ItemInstance(this));
 
             if (!itemComponent)
             {
@@ -64,6 +63,8 @@ namespace Cosmobot.ItemSystem
             {
                 itemComponent.ItemData[keyValuePair.Key] = keyValuePair.Value;
             }
+
+            itemComponent.Init(new ItemInstance(this));
 
             return instantiatedObject;
         }
