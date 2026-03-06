@@ -15,7 +15,7 @@ MonoBehaviour:
   id: tin-bar
   displayName: Tin Bar
   icon: {fileID: 0}
-  prefab: {fileID: 1862692014303423458, guid: a30f73e82edb90ce2a9c9a612ee02882, type: 3}
+  modelPrefab: {fileID: 1862692014303423458, guid: a30f73e82edb90ce2a9c9a612ee02882, type: 3}
   additionalData:
     keys: []
     values: []

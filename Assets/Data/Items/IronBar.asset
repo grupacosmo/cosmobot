@@ -15,7 +15,7 @@ MonoBehaviour:
   id: iron-bar
   displayName: Iron bar
   icon: {fileID: 0}
-  prefab: {fileID: 8181001148266838328, guid: a315ed9d15c6045c0bd4e3a13988372f, type: 3}
+  modelPrefab: {fileID: 8181001148266838328, guid: a315ed9d15c6045c0bd4e3a13988372f, type: 3}
   additionalData:
     keys: []
     values: []
