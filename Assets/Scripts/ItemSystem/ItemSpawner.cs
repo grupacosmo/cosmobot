@@ -54,6 +54,17 @@ namespace Cosmobot.ItemSystem
         void OnEnable()
         {
             ReInitImage();
+            // <TEMP>
+            if (Application.isPlaying)
+            {
+                ItemComponent itemComponent = gameObject.AddComponent<ItemComponent>();
+                itemComponent.Init(new ItemInstance(itemInfo, itemData));
+                Destroy(this);
+                Destroy(GetComponent<MeshRenderer>());
+                Destroy(GetComponent<MeshFilter>());
+                transform.localScale = Vector3.one;
+            }
+            // </TEMP>
         }
 
         void OnValidate()
@@ -84,15 +95,17 @@ namespace Cosmobot.ItemSystem
 
         private void SetItemIcon()
         {
-            Shader shader = itemInfo?.Icon == null
-                ? Shader.Find("Hidden/InternalErrorShader")
-                : Shader.Find("Universal Render Pipeline/Unlit");
+            if (material) {
+                Shader shader = itemInfo?.Icon == null
+                    ? Shader.Find("Hidden/InternalErrorShader")
+                    : Shader.Find("Universal Render Pipeline/Unlit");
 
-            material.shader = shader;
-            material.color = Color.white;
-            if (itemInfo?.Icon != null)
-            {
-                material.mainTexture = itemInfo.Icon;
+                material.shader = shader;
+                material.color = Color.white;
+                if (itemInfo?.Icon != null)
+                {
+                    material.mainTexture = itemInfo.Icon;
+                }
             }
         }
 #endif
