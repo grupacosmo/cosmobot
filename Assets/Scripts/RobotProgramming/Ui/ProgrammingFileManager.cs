@@ -24,33 +24,47 @@ namespace Cosmobot
 
         private readonly List<ProgrammingUiFileEntry> files = new();
 
-        private readonly string jsFilesSaveFolder = @"/home/milosz/cosmobot/JsFiles/"; // TEMP
-
-        public ProgrammingUiFileEntry CreateNewFile(string filename)
+        private const string JsFilesSaveFolder = @"/home/milosz/cosmobot/JsFiles/"; // TEMP
+        
+        private void Start()
+        {
+            string[] jsFiles = Directory.GetFiles(JsFilesSaveFolder, "*.js");
+            foreach (string filePath in jsFiles)
+            {
+                
+                CreateNewFileEntry(Path.GetFileName(filePath));
+            }
+        }
+        
+        public void CreateNewFile(string filename)
         {
             CreateFile(filename);
-            return CreateNewFileEntry(filename);
+            CreateNewFileEntry(filename);
         }
 
-        private ProgrammingUiFileEntry CreateNewFileEntry(string filename)
+        private void CreateNewFileEntry(string filename)
         {
             GameObject uiInstance = Instantiate(uiFileEntryPrefab, transform);
             ProgrammingUiFileEntry entry = uiInstance.GetComponent<ProgrammingUiFileEntry>();
             entry.SetFile(openFileGroup, activeFileGroup, filename, "no stats...");
             entry.OnOpenFile += HandleOpenFile;
             files.Add(entry);
-            return entry;
         }
 
-        public void OnEnable()
+        public void RemoveOpenFile()
         {
-            string[] jsFiles = Directory.GetFiles(jsFilesSaveFolder, "*.js");
-            foreach (string filePath in jsFiles)
+            ProgrammingUiFileEntry entry = files[GetOpenFileIndex()];
+
+            if (string.IsNullOrWhiteSpace(ReadFile(entry)))
             {
-                CreateNewFileEntry(Path.GetFileName(filePath));
+                ConfirmRemoveOpenFile();
+            } 
+            else
+            {
+                confirmRemoveBt.SetActive(!confirmRemoveBt.activeSelf);
             }
         }
-
+        
         public void ConfirmRemoveOpenFile()
         {
             if (files.Count == 0) { return; }
@@ -74,20 +88,6 @@ namespace Cosmobot
             confirmRemoveBt.SetActive(false);
         }
 
-        public void RemoveOpenFile()
-        {
-            ProgrammingUiFileEntry entry = files[GetOpenFileIndex()];
-            Debug.Log(new FileInfo(jsFilesSaveFolder + entry.filename).Length);
-            if (string.IsNullOrWhiteSpace(ReadFile(entry)))
-            {
-                ConfirmRemoveOpenFile();
-            } 
-            else
-            {
-                confirmRemoveBt.SetActive(!confirmRemoveBt.activeSelf);
-            }
-        }
-
         public void SaveFile()
         {
             ProgrammingUiFileEntry openFile = files[GetOpenFileIndex()];
@@ -109,29 +109,29 @@ namespace Cosmobot
             return 0;
         }
 
-        private void CreateFile(string filename)
+        private static void CreateFile(string filename)
         {
-            File.Create(jsFilesSaveFolder + filename).Dispose();
+            File.Create(JsFilesSaveFolder + filename).Dispose();
         }
 
-        private void RemoveFile(string filename)
+        private static void RemoveFile(string filename)
         {
-            File.Delete(jsFilesSaveFolder + filename);
+            File.Delete(JsFilesSaveFolder + filename);
         }
 
-        private string ReadFile(ProgrammingUiFileEntry entry)
+        private static string ReadFile(ProgrammingUiFileEntry entry)
         {
-            return File.ReadAllText(jsFilesSaveFolder + entry.filename, Encoding.UTF8);
+            return File.ReadAllText(JsFilesSaveFolder + entry.filename, Encoding.UTF8);
         }
 
-        public void HandleOpenFile(ProgrammingUiFileEntry entry)
+        private void HandleOpenFile(ProgrammingUiFileEntry entry)
         {
             programmingUI.Code = ReadFile(entry);
         }
 
         private void SaveTextToFile(string filename)
         {
-            File.WriteAllText(jsFilesSaveFolder + filename, programmingUI.Code, Encoding.UTF8);
+            File.WriteAllText(JsFilesSaveFolder + filename, programmingUI.Code, Encoding.UTF8);
         }
     }
 }
