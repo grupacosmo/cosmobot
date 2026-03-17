@@ -75,9 +75,9 @@ namespace Cosmobot
             uiManager.Close();
         }
 
-        public void OpenUI()
+        public void RunOpenFile()
         {
-            uiManager.Open();
+            fileManager.RunOpenFile();
         }
 
         public void GenerateDummyLog()

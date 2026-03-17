@@ -19,17 +19,14 @@ namespace Cosmobot
 
         public void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (!Input.GetMouseButtonDown(0)) { return; }
+            if (!Physics.Raycast(
+                    playerCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition),
+                    out RaycastHit hit, 500f)) { return; }
+
+            if (hit.collider.TryGetComponent<Programmable>(out Programmable programmable))
             {
-                Ray ray = playerCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition);
-                Debug.DrawRay(ray.origin, ray.direction * 500f, Color.green);
-                if (Physics.Raycast(ray, out RaycastHit hit, 500f))
-                {
-                    if (hit.collider.TryGetComponent<BaseEngineLogic>(out var _))
-                    {
-                        programmingUiManager.Open();
-                    }
-                }
+                programmingUiManager.Open(programmable);
             }
         }
 

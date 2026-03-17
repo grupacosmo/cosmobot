@@ -20,7 +20,7 @@ namespace Cosmobot
     {
         private IEngineLogic[] engineLogicInterfaces;
         [TextArea(10, 20)]
-        [SerializeField] private string code;
+        [SerializeField] public string code;
 
         private ManualResetEvent taskCompletedEvent; //for waiting for Unity thread
         private CancellationTokenSource cancellationTokenSource; //for thread killing
@@ -36,16 +36,19 @@ namespace Cosmobot
         {
             taskCompletedEvent = new ManualResetEvent(false);
             cancellationTokenSource = new CancellationTokenSource();
-
-            task = new Thread(() => JsThread(cancellationTokenSource.Token));
-            task.IsBackground = true;
-            task.Start();
-
+            
             debugI = staticDebugI++;
             engineLogicInterfaces = GetComponents<IEngineLogic>();
             objectName = gameObject.name;
         }
 
+        public void RunTask()
+        {
+            task = new Thread(() => JsThread(cancellationTokenSource.Token));
+            task.IsBackground = true;
+            task.Start();
+        }
+        
         private void Update()
         {
             if (commandQueue.TryDequeue(out Action currentCommand))
@@ -113,7 +116,7 @@ namespace Cosmobot
             {
                 Debug.LogError($"JS Error ({objectName}): {ex.Error} | {ex.Location}\n{ex.StackTrace}");
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Debug.LogError($"Error: ({objectName}): {ex.Message}\n {ex.StackTrace}");
             }

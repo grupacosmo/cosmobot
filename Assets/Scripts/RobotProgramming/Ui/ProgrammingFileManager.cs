@@ -1,8 +1,8 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Cosmobot
 {
@@ -25,23 +25,31 @@ namespace Cosmobot
         private readonly List<ProgrammingUiFileEntry> files = new();
 
         private const string JsFilesSaveFolder = @"/home/milosz/cosmobot/JsFiles/"; // TEMP
-        
+
         private void Start()
         {
             string[] jsFiles = Directory.GetFiles(JsFilesSaveFolder, "*.js");
             foreach (string filePath in jsFiles)
             {
-                
+
                 CreateNewFileEntry(Path.GetFileName(filePath));
             }
         }
-        
+
         public void CreateNewFile(string filename)
         {
             CreateFile(filename);
             CreateNewFileEntry(filename);
         }
 
+        public void RunOpenFile()
+        {
+            ProgrammingUiFileEntry entry = files[GetOpenFileIndex()];
+            SaveFile();
+            programmingUI.activeRobot.code = ReadFile(entry);
+            programmingUI.activeRobot.RunTask();
+        }
+        
         private void CreateNewFileEntry(string filename)
         {
             GameObject uiInstance = Instantiate(uiFileEntryPrefab, transform);
@@ -58,13 +66,13 @@ namespace Cosmobot
             if (string.IsNullOrWhiteSpace(ReadFile(entry)))
             {
                 ConfirmRemoveOpenFile();
-            } 
+            }
             else
             {
                 confirmRemoveBt.SetActive(!confirmRemoveBt.activeSelf);
             }
         }
-        
+
         public void ConfirmRemoveOpenFile()
         {
             if (files.Count == 0) { return; }
@@ -84,7 +92,7 @@ namespace Cosmobot
             {
                 programmingUI.Code = "";
             }
-            
+
             confirmRemoveBt.SetActive(false);
         }
 

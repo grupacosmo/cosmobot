@@ -16,13 +16,15 @@ namespace Cosmobot
             ChangeUiState(false);
         }
 
-        public void Open()
+        public void Open(Programmable robot)
         {
+            programmingUi.activeRobot = robot;
             ChangeUiState(true);
         }
 
         public void Close()
         {
+            programmingUi.activeRobot = null;
             ChangeUiState(false);
         }
 

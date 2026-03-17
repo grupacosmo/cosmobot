@@ -17,7 +17,7 @@ namespace Cosmobot
         private TMP_Text fileNameText;
         [SerializeField]
         private TMP_Text fileStatsText;
-        
+
         public string filename;
 
         public event FileEntryEvent OnOpenFile;

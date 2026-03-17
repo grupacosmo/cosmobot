@@ -28,6 +28,8 @@ namespace Cosmobot
         [SerializeField]
         private TMP_Text fileStatusText;
 
+        public Programmable activeRobot;
+        
         // syntax highlight
         private static readonly Regex parsingRegex = PrepareApiTypes();
         private static readonly Regex richTextFixerRegex = new Regex(@"(<|>)");
