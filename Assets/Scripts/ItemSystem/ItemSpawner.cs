@@ -27,12 +27,12 @@ namespace Cosmobot.ItemSystem
         {
             if (Application.isPlaying)
             {
-                ItemComponent itemComponent = gameObject.AddComponent<ItemComponent>();
+                /*ItemComponent itemComponent = gameObject.AddComponent<ItemComponent>();
                 itemComponent.Init(new ItemInstance(itemInfo, itemData));
                 Destroy(this);
                 Destroy(GetComponent<MeshRenderer>());
                 Destroy(GetComponent<MeshFilter>());
-                transform.localScale = Vector3.one;
+                transform.localScale = Vector3.one;*/
             }
 #if UNITY_EDITOR
             else
