@@ -14,15 +14,8 @@ namespace Cosmobot.Api
     {
         private ProgrammableFunctionWrapper wrapper;
 
-        private BaseEngineLogic baseLogic;
-
         [SerializeField] private float speed;
         [SerializeField] private float turningSpeed;
-
-        private void Start()
-        {
-            baseLogic = gameObject.GetComponent<BaseEngineLogic>();
-        }
 
         public void SetupThread(ManualResetEvent taskEvent, CancellationToken token, ConcurrentQueue<Action> commandQueue)
         {
@@ -55,7 +48,7 @@ namespace Cosmobot.Api
         {
             if (obj.transform == null)
             {
-                baseLogic.LogError("Item doesn't exist");
+                RobotLogger.LogError("Item doesn't exist");
                 taskCompletedEvent.Set();
                 return;
             }

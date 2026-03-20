@@ -21,7 +21,7 @@ namespace Cosmobot
         {
             return () =>
             {
-                commandQueue.Enqueue(() => action(this.taskCompletedEvent));
+                EnsureContextAndEnqueue(() => action(this.taskCompletedEvent));
                 WaitForSync();
             };
         }
@@ -30,7 +30,7 @@ namespace Cosmobot
         {
             return (t) =>
             {
-                commandQueue.Enqueue(() => action(this.taskCompletedEvent, t));
+                EnsureContextAndEnqueue(() => action(this.taskCompletedEvent, t));
                 WaitForSync();
             };
         }
@@ -39,7 +39,7 @@ namespace Cosmobot
         {
             return (t1, t2) =>
             {
-                commandQueue.Enqueue(() => action(this.taskCompletedEvent, t1, t2));
+                EnsureContextAndEnqueue(() => action(this.taskCompletedEvent, t1, t2));
                 WaitForSync();
             };
         }
@@ -48,7 +48,7 @@ namespace Cosmobot
         {
             return (t1, t2, t3) =>
             {
-                commandQueue.Enqueue(() => action(this.taskCompletedEvent, t1, t2, t3));
+                EnsureContextAndEnqueue(() => action(this.taskCompletedEvent, t1, t2, t3));
                 WaitForSync();
             };
         }
@@ -57,7 +57,7 @@ namespace Cosmobot
         {
             return (t1, t2, t3, t4) =>
             {
-                commandQueue.Enqueue(() => action(this.taskCompletedEvent, t1, t2, t3, t4));
+                EnsureContextAndEnqueue(() => action(this.taskCompletedEvent, t1, t2, t3, t4));
                 WaitForSync();
             };
         }
@@ -66,7 +66,7 @@ namespace Cosmobot
         {
             return (t1, t2, t3, t4, t5) =>
             {
-                commandQueue.Enqueue(() => action(this.taskCompletedEvent, t1, t2, t3, t4, t5));
+                EnsureContextAndEnqueue(() => action(this.taskCompletedEvent, t1, t2, t3, t4, t5));
                 WaitForSync();
             };
         }
@@ -75,7 +75,7 @@ namespace Cosmobot
         {
             return (t1, t2, t3, t4, t5, t6) =>
             {
-                commandQueue.Enqueue(() => action(this.taskCompletedEvent, t1, t2, t3, t4, t5, t6));
+                EnsureContextAndEnqueue(() => action(this.taskCompletedEvent, t1, t2, t3, t4, t5, t6));
                 WaitForSync();
             };
         }
@@ -84,7 +84,7 @@ namespace Cosmobot
         {
             return () =>
             {
-                commandQueue.Enqueue(() => { action(); taskCompletedEvent.Set(); });
+                EnsureContextAndEnqueue(() => { action(); taskCompletedEvent.Set(); });
                 WaitForSync();
             };
         }
@@ -93,7 +93,7 @@ namespace Cosmobot
         {
             return (t1) =>
             {
-                commandQueue.Enqueue(() => { action(t1); taskCompletedEvent.Set(); });
+                EnsureContextAndEnqueue(() => { action(t1); taskCompletedEvent.Set(); });
                 WaitForSync();
             };
         }
@@ -102,7 +102,7 @@ namespace Cosmobot
         {
             return (t1, t2) =>
             {
-                commandQueue.Enqueue(() => { action(t1, t2); taskCompletedEvent.Set(); });
+                EnsureContextAndEnqueue(() => { action(t1, t2); taskCompletedEvent.Set(); });
                 WaitForSync();
             };
         }
@@ -111,7 +111,7 @@ namespace Cosmobot
         {
             return (t1, t2, t3) =>
             {
-                commandQueue.Enqueue(() => { action(t1, t2, t3); taskCompletedEvent.Set(); });
+                EnsureContextAndEnqueue(() => { action(t1, t2, t3); taskCompletedEvent.Set(); });
                 WaitForSync();
             };
         }
@@ -120,7 +120,7 @@ namespace Cosmobot
         {
             return (t1, t2, t3, t4) =>
             {
-                commandQueue.Enqueue(() => { action(t1, t2, t3, t4); taskCompletedEvent.Set(); });
+                EnsureContextAndEnqueue(() => { action(t1, t2, t3, t4); taskCompletedEvent.Set(); });
                 WaitForSync();
             };
         }
@@ -129,7 +129,7 @@ namespace Cosmobot
         {
             return (t1, t2, t3, t4, t5) =>
             {
-                commandQueue.Enqueue(() => { action(t1, t2, t3, t4, t5); taskCompletedEvent.Set(); });
+                EnsureContextAndEnqueue(() => { action(t1, t2, t3, t4, t5); taskCompletedEvent.Set(); });
                 WaitForSync();
             };
         }
@@ -138,7 +138,7 @@ namespace Cosmobot
         {
             return (t1, t2, t3, t4, t5, t6) =>
             {
-                commandQueue.Enqueue(() => { action(t1, t2, t3, t4, t5, t6); taskCompletedEvent.Set(); });
+                EnsureContextAndEnqueue(() => { action(t1, t2, t3, t4, t5, t6); taskCompletedEvent.Set(); });
                 WaitForSync();
             };
         }
@@ -148,7 +148,7 @@ namespace Cosmobot
             return () =>
             {
                 TR tr = default;
-                commandQueue.Enqueue(() => { tr = action(); taskCompletedEvent.Set(); });
+                EnsureContextAndEnqueue(() => { tr = action(); taskCompletedEvent.Set(); });
                 WaitForSync();
                 return tr;
             };
@@ -159,7 +159,7 @@ namespace Cosmobot
             return (t1) =>
             {
                 TR tr = default;
-                commandQueue.Enqueue(() => { tr = action(t1); taskCompletedEvent.Set(); });
+                EnsureContextAndEnqueue(() => { tr = action(t1); taskCompletedEvent.Set(); });
                 WaitForSync();
                 return tr;
             };
@@ -170,7 +170,7 @@ namespace Cosmobot
             return (t1, t2) =>
             {
                 TR tr = default;
-                commandQueue.Enqueue(() => { tr = action(t1, t2); taskCompletedEvent.Set(); });
+                EnsureContextAndEnqueue(() => { tr = action(t1, t2); taskCompletedEvent.Set(); });
                 WaitForSync();
                 return tr;
             };
@@ -181,7 +181,7 @@ namespace Cosmobot
             return (t1, t2, t3) =>
             {
                 TR tr = default;
-                commandQueue.Enqueue(() => { tr = action(t1, t2, t3); taskCompletedEvent.Set(); });
+                EnsureContextAndEnqueue(() => { tr = action(t1, t2, t3); taskCompletedEvent.Set(); });
                 WaitForSync();
                 return tr;
             };
@@ -192,7 +192,7 @@ namespace Cosmobot
             return (t1, t2, t3, t4) =>
             {
                 TR tr = default;
-                commandQueue.Enqueue(() => { tr = action(t1, t2, t3, t4); taskCompletedEvent.Set(); });
+                EnsureContextAndEnqueue(() => { tr = action(t1, t2, t3, t4); taskCompletedEvent.Set(); });
                 WaitForSync();
                 return tr;
             };
@@ -203,7 +203,7 @@ namespace Cosmobot
             return (t1, t2, t3, t4, t5) =>
             {
                 TR tr = default;
-                commandQueue.Enqueue(() => { tr = action(t1, t2, t3, t4, t5); taskCompletedEvent.Set(); });
+                EnsureContextAndEnqueue(() => { tr = action(t1, t2, t3, t4, t5); taskCompletedEvent.Set(); });
                 WaitForSync();
                 return tr;
             };
@@ -214,15 +214,31 @@ namespace Cosmobot
             return (t1, t2, t3, t4, t5, t6) =>
             {
                 TR tr = default;
-                commandQueue.Enqueue(() => { tr = action(t1, t2, t3, t4, t5, t6); taskCompletedEvent.Set(); });
+                EnsureContextAndEnqueue(() => { tr = action(t1, t2, t3, t4, t5, t6); taskCompletedEvent.Set(); });
                 WaitForSync();
                 return tr;
             };
         }
 
+        private void EnsureContextAndEnqueue(Action command)
+        {
+            RobotDebugHelper.BeforeExecutionContextCapture();
+
+            ExecutionContext ctx = ExecutionContext.Capture();
+            if (ctx == null)
+            {
+                commandQueue.Enqueue(command);
+            }
+            else
+            {
+                commandQueue.Enqueue(() => ExecutionContext.Run(ctx, _ => command(), null));
+            }
+        }
+
         private void WaitForSync()
         {
             WaitHandle.WaitAny(new[] { taskCompletedEvent, token.WaitHandle });
+            RobotDebugHelper.AfterExecutionContextCapture();
             taskCompletedEvent.Reset();
             token.ThrowIfCancellationRequested();
         }

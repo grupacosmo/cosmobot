@@ -17,21 +17,6 @@ namespace Cosmobot.Api
             wrapper = new ProgrammableFunctionWrapper(taskEvent, token, commandQueue);
         }
 
-        public void Log(string message)
-        {
-            Debug.Log(message);
-        }
-
-        public void LogWarning(string message)
-        {
-            Debug.LogWarning(message);
-        }
-
-        public void LogError(string message)
-        {
-            Debug.LogError(message);
-        }
-
         public IReadOnlyDictionary<string, Delegate> GetFunctions()
         {
             // Here you can expose the robot's functions in the game, use:
@@ -66,17 +51,17 @@ namespace Cosmobot.Api
 
         private void LogInternal(string message)
         {
-            Log(message);
+            RobotLogger.LogInfo(message);
         }
 
         private void LogWarningInternal(string message)
         {
-            LogWarning(message);
+            RobotLogger.LogWarning(message);
         }
 
         private void LogErrorInternal(string message)
         {
-            LogError(message);
+            RobotLogger.LogError(message);
         }
 
         private void Dance(ManualResetEvent taskCompletedEvent)

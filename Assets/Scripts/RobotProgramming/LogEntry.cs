@@ -1,6 +1,4 @@
 using System;
-using UnityEngine;
-
 namespace Cosmobot
 {
     public struct LogEntry
@@ -15,6 +13,14 @@ namespace Cosmobot
             this.level = level;
             this.message = message;
         }
+
+        public LogEntry(LogLevel level, string message)
+        {
+            this.timestamp = DateTimeOffset.Now.ToUnixTimeSeconds();
+            this.level = level;
+            this.message = message;
+        }
+
 
         public string GetIsoTime()
         {

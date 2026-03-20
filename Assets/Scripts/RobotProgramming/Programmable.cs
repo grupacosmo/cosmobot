@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Cosmobot.Utils;
 using Jint;
 using Jint.Runtime.Interop;
 using UnityEngine;
@@ -18,6 +19,11 @@ namespace Cosmobot
     /// </summary>
     public class Programmable : MonoBehaviour
     {
+        public string EngineStackTrace => engineInstance.Advanced.StackTrace;
+
+        private ProgrammableData instance;
+        private Engine engineInstance;
+
         private IEngineLogic[] engineLogicInterfaces;
         [TextArea(10, 20)]
         [SerializeField] private string code;
@@ -34,6 +40,7 @@ namespace Cosmobot
 
         void Start()
         {
+            instance = new ProgrammableData(this);
             taskCompletedEvent = new ManualResetEvent(false);
             cancellationTokenSource = new CancellationTokenSource();
 
@@ -67,6 +74,7 @@ namespace Cosmobot
             Thread.CurrentThread.Name = $"jsEngine-{debugI}";
 
             using Engine jsEngine = new Engine();
+            engineInstance = jsEngine;
 
             foreach (IEngineLogic logicInterface in engineLogicInterfaces)
             {
@@ -89,7 +97,6 @@ namespace Cosmobot
                 }
             }
 
-
             Type apiVec2Type = typeof(Cosmobot.Api.Types.Vec2);
             string apiNamespace = apiVec2Type.Namespace;
             IEnumerable<Type> apiTypes = apiVec2Type.Assembly.GetTypes().Where(t => t.Namespace == apiNamespace);
@@ -97,29 +104,47 @@ namespace Cosmobot
             foreach (Type type in apiTypes)
             {
                 jsEngine.SetValue(type.Name, TypeReference.CreateTypeReference(jsEngine, type));
-                Debug.Log("Exposed type: " + type.Name);
             }
 
             try
             {
                 token.ThrowIfCancellationRequested();
-                jsEngine.Execute(code);
+                RobotLogger.InitCurrent(instance);
+                jsEngine.Execute(code, "main.js");
             }
             catch (OperationCanceledException)
             {
-                Debug.Log("Operation was cancelled");
+                Debug.Log("[Programmable JsThread] Operation was cancelled");
+                RobotLogger.LogError("Program was stopped/cancelled", RobotLogger.LogOptions.SkipUnityDebugLog);
             }
             catch (Jint.Runtime.JavaScriptException ex)
             {
-                Debug.LogError($"JS Error ({objectName}): {ex.Error} | {ex.Location}\n{ex.StackTrace}");
+                string jsStackTrace =
+                    ex.JavaScriptStackTrace != null
+                        ? ("[JS]  " + ex.JavaScriptStackTrace.Replace("\n", "\n[JS]  "))
+                        : "[No JS stack trace available]";
+                Debug.LogError($"[Programmable JsThread] JS Error ({objectName}): {ex.Error} | {ex.Location}\n{jsStackTrace}\n{ex.StackTrace}");
+                RobotLogger.LogError(
+                    $"[JavaScript Exception]: {ex.Error}\n\n{ex.JavaScriptStackTrace ?? "Stack trace not available"}",
+                    RobotLogger.LogOptions.SkipUnityDebugLog);
             }
             catch (System.Exception ex)
             {
-                Debug.LogError($"Error: ({objectName}): {ex.Message}\n {ex.StackTrace}");
+                Debug.LogError($"[Programmable JsThread] Error: ({objectName}): {ex.Message}\n {ex.StackTrace}");
+                RobotLogger.LogError("Internal unknown error occurred! This error is outside of your code, and you " +
+                                     "have probably discovered a \"real\"-world glitch! Unfortunately, this is a game" +
+                                     $"bug - you can report it at {GameInfo.BugReportUrl}.\n\n" +
+                                     "If you are interested in more detailed information about this error, here is " +
+                                     "the raw message (you probably won’t understand it because it’s an internal " +
+                                     "error and games normally don’t show these to players - but this is a game " +
+                                     "about programming, so why not?):\n\n" +
+                                     $"{ex.GetType().Name}: {ex.Message}",
+                    RobotLogger.LogOptions.SkipUnityDebugLog);
             }
             finally
             {
-                Debug.Log("Done");
+                RobotLogger.ClearCurrent();
+                Debug.Log("[Programmable JsThread] Done");
             }
         }
 
