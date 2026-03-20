@@ -26,6 +26,8 @@ namespace Cosmobot
 
         private const string JsFilesSaveFolder = @"/home/milosz/cosmobot/JsFiles/"; // TEMP
 
+        public Programmable currentRobot;
+        
         private void Start()
         {
             string[] jsFiles = Directory.GetFiles(JsFilesSaveFolder, "*.js");
@@ -42,12 +44,29 @@ namespace Cosmobot
             CreateNewFileEntry(filename);
         }
 
-        public void RunOpenFile()
+        public void RunActiveFile()
         {
-            ProgrammingUiFileEntry entry = files[GetOpenFileIndex()];
             SaveFile();
-            programmingUI.activeRobot.code = ReadFile(entry);
-            programmingUI.activeRobot.RunTask();
+            currentRobot.code = ReadFile(files[GetOpenFileIndex(true)]);//currentRobot.activeFile);
+            currentRobot.RunTask();
+        }
+
+        public void SetActiveFile(ProgrammingUiFileEntry entry)
+        {
+            currentRobot.activeFile = files[GetOpenFileIndex(true)];
+            programmingUI.robotFiles[currentRobot.activeFile] = currentRobot;
+            Debug.Log("Set Active File: " + currentRobot.activeFile + "to Robot: " + currentRobot.name);
+        }
+
+        public void LoadActiveFile()
+        {
+            foreach (ProgrammingUiFileEntry entry in files)
+            {
+                if (entry == currentRobot.activeFile)
+                {
+                    entry.IsActive = true;
+                }
+            }
         }
         
         private void CreateNewFileEntry(string filename)
@@ -103,11 +122,15 @@ namespace Cosmobot
             SaveTextToFile(openFile.filename);
         }
 
-        private int GetOpenFileIndex()
+        private int GetOpenFileIndex(bool getActiveIndex = false)
         {
             for (int i = 0; i < files.Count; i++)
             {
                 ProgrammingUiFileEntry entry = files[i];
+                if (getActiveIndex && entry.IsActive)
+                {
+                    return i;
+                }
                 if (entry.IsOpen)
                 {
                     return i;

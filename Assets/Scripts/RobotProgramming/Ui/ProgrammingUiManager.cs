@@ -9,6 +9,8 @@ namespace Cosmobot
         [SerializeField]
         private ProgrammingUi programmingUi;
         [SerializeField]
+        private ProgrammingFileManager fileManager;
+        [SerializeField]
         private PlayerController playerController;
 
         public void Start()
@@ -18,13 +20,12 @@ namespace Cosmobot
 
         public void Open(Programmable robot)
         {
-            programmingUi.activeRobot = robot;
+            fileManager.currentRobot = robot;
             ChangeUiState(true);
         }
 
         public void Close()
         {
-            programmingUi.activeRobot = null;
             ChangeUiState(false);
         }
 

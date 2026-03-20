@@ -19,8 +19,10 @@ namespace Cosmobot
     public class Programmable : MonoBehaviour
     {
         private IEngineLogic[] engineLogicInterfaces;
-        [TextArea(10, 20)]
-        [SerializeField] public string code;
+        [TextArea(10, 20)] 
+        
+        public string code;
+        public ProgrammingUiFileEntry activeFile;
 
         private ManualResetEvent taskCompletedEvent; //for waiting for Unity thread
         private CancellationTokenSource cancellationTokenSource; //for thread killing
@@ -48,6 +50,7 @@ namespace Cosmobot
             task.IsBackground = true;
             task.Start();
         }
+
         
         private void Update()
         {

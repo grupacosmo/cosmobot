@@ -28,7 +28,7 @@ namespace Cosmobot
         [SerializeField]
         private TMP_Text fileStatusText;
 
-        public Programmable activeRobot;
+        public SerializableDictionary<ProgrammingUiFileEntry, Programmable> robotFiles = new();
         
         // syntax highlight
         private static readonly Regex parsingRegex = PrepareApiTypes();
@@ -132,7 +132,7 @@ namespace Cosmobot
             bufferedText = fileContents;
             inputField.text = fileContents;
         }
-
+        
         private void UpdateFileStatus()
         {
             int caretPos = inputField.caretPosition;
