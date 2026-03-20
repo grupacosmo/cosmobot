@@ -15,7 +15,7 @@ MonoBehaviour:
   id: test-item
   displayName: Test Item
   icon: {fileID: 0}
-  prefab: {fileID: 6465536157305844652, guid: a6d096074b3444efe8648661c753ec22, type: 3}
+  modelPrefab: {fileID: 6465536157305844652, guid: a6d096074b3444efe8648661c753ec22, type: 3}
   additionalData:
     keys:
     - TestProperty

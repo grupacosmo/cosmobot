@@ -15,7 +15,7 @@ MonoBehaviour:
   id: tin-ore
   displayName: Tin Ore
   icon: {fileID: 0}
-  prefab: {fileID: 1862692014303423458, guid: 559467ef527c685ee850c37f0edb578c, type: 3}
+  modelPrefab: {fileID: 1862692014303423458, guid: 559467ef527c685ee850c37f0edb578c, type: 3}
   additionalData:
     keys: []
     values: []

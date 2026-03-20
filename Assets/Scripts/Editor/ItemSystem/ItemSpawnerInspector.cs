@@ -6,28 +6,28 @@ using UnityEngine;
 
 namespace Cosmobot.Editor
 {
-    [CustomEditor(typeof(ItemComponent))]
-    public class ItemInspector : UnityEditor.Editor
+    [CustomEditor(typeof(ItemSpawner))]
+    public class ItemSpawnerInspector : UnityEditor.Editor
     {
         private static string[] declaredConstants;
-        private ItemComponent itemComponent;
+        private ItemSpawner itemSpawner;
 
         private void OnEnable()
         {
-            itemComponent = (ItemComponent)target;
+            itemSpawner = (ItemSpawner)target;
         }
 
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
 
-            if (itemComponent.ItemInfo is null)
+            if (itemSpawner.ItemInfo is null)
             {
                 EditorGUILayout.HelpBox("ItemInfo is not set.", MessageType.Warning);
                 return;
             }
 
-            if (itemComponent.ItemData is null || itemComponent.ItemData.Count == 0)
+            if (itemSpawner.ItemData is null || itemSpawner.ItemData.Count == 0)
             {
                 if (GUILayout.Button("Add ItemInfo keys"))
                 {
@@ -37,8 +37,8 @@ namespace Cosmobot.Editor
                 return;
             }
 
-            List<string> infoKeys = itemComponent.ItemInfo.AdditionalData.Keys.ToList();
-            List<string> itemKeys = itemComponent.ItemData.Keys.ToList();
+            List<string> infoKeys = itemSpawner.ItemInfo.AdditionalData.Keys.ToList();
+            List<string> itemKeys = itemSpawner.ItemData.Keys.ToList();
 
             IEnumerable<string> missingKeys = infoKeys.Except(itemKeys);
             IEnumerable<string> extraKeys = itemKeys.Except(infoKeys);
@@ -69,12 +69,12 @@ namespace Cosmobot.Editor
 
         private void AddMissingKeys()
         {
-            SerializedProperty keys = serializedObject.FindProperty("item.itemData.keys");
-            SerializedProperty values = serializedObject.FindProperty("item.itemData.values");
+            SerializedProperty keys = serializedObject.FindProperty("itemData.keys");
+            SerializedProperty values = serializedObject.FindProperty("itemData.values");
 
-            foreach (var additionalField in itemComponent.ItemInfo.AdditionalData)
+            foreach (var additionalField in itemSpawner.ItemInfo.AdditionalData)
             {
-                if (!itemComponent.ItemData.ContainsKey(additionalField.Key))
+                if (!itemSpawner.ItemData.ContainsKey(additionalField.Key))
                 {
                     keys.InsertArrayElementAtIndex(keys.arraySize);
                     values.InsertArrayElementAtIndex(values.arraySize);

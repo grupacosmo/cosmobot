@@ -18,7 +18,7 @@ namespace Cosmobot.ItemSystem
         private Texture2D icon;
 
         [SerializeField]
-        private GameObject prefab;
+        private GameObject modelPrefab;
 
         [SerializeField]
         private SerializableDictionary<string, string> additionalData = new();
@@ -26,7 +26,7 @@ namespace Cosmobot.ItemSystem
         public string Id => id;
         public string DisplayName => displayName;
         public Texture2D Icon => icon;
-        public GameObject Prefab => prefab;
+        public GameObject ModelPrefab => modelPrefab;
         public IReadOnlyDictionary<string, string> AdditionalData => additionalData;
 
         public bool Equals(ItemInfo other)
@@ -36,8 +36,17 @@ namespace Cosmobot.ItemSystem
 
         public GameObject InstantiateItem(Vector3 position, Quaternion rotation)
         {
-            GameObject instantiatedObject = Instantiate(Prefab, position, rotation);
-            ItemComponent itemComponent = instantiatedObject.GetComponent<ItemComponent>();
+            GameObject instantiatedObject = new GameObject
+            {
+                name = $"{displayName} (instance)",
+                transform =
+                {
+                    position = position,
+                    rotation = rotation
+                }
+            };
+            ItemComponent itemComponent = instantiatedObject.AddComponent<ItemComponent>();
+
             if (!itemComponent)
             {
                 throw new InvalidOperationException(
@@ -54,6 +63,8 @@ namespace Cosmobot.ItemSystem
             {
                 itemComponent.ItemData[keyValuePair.Key] = keyValuePair.Value;
             }
+
+            itemComponent.Init(new ItemInstance(this));
 
             return instantiatedObject;
         }
