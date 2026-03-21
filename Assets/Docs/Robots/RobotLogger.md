@@ -14,13 +14,13 @@ For code example, see:
 3. Register log event handlers in the `OnEnable` Unity event and unregister then in the `OnDisable` 
    - `RobotLogger.AddLogEventHandler` and `RobotLogger.RemoveLogEventHandler` for logs of specific robot (`Programmable`)
    - `RobotLogger.AddAllLogEventHandler` and `RobotLogger.RemoveAllLogEventHandler` for logs of all robots
-   - `Robot.Logger.AddGlobalLogEventHandler` and `RobotLogger.RemoveGlobalLogEventHandler` for global logs (not pared with any robot)
+   - `RobotLogger.AddGlobalLogEventHandler` and `RobotLogger.RemoveGlobalLogEventHandler` for global logs (not paired with any robot)
 
 - Access logs any time when needed
    - `IReadOnlyCollection<LogEntry> GetRobotLogs(Programmable robot)` - Logs of a specific robot
    - `bool TryGetRobotLogs(Programmable robot, out IReadOnlyCollection<LogEntry> outLogs)` - safe access to a specific robot logs
-   - `IReadOnlyCollection<LogEntry> GetGlobalLogs()` - global logs (not pared with any robot)
-   - `List<ReadOnlyRobotLogs> GetAllLogs()` - logs for all robots (pared with robots)
+   - `IReadOnlyCollection<LogEntry> GetGlobalLogs()` - global logs (not paired with any robot)
+   - `List<ReadOnlyRobotLogs> GetAllLogs()` - logs for all robots (paired with robots)
    - `IReadOnlyCollection<LogEntry> GetCurrentLogs()` - logs of current robot (only works in robot code)
    - `bool TryGetCurrentLogs(out IReadOnlyCollection<LogEntry> outLogs)` - safe access to current robot logs (only works in robot code)
 
@@ -33,11 +33,11 @@ In this manual: an "Environment" refers to any execution context outside a Unity
 - Every scene/environment requires a SingletonSystem: [RobotLoggerSingletonSystem](../../Scripts/RobotProgramming/RobotLoggerSingletonSystem.cs)
   - _(Scene only)_ When enabled this component automatically calls `RobotLogger.Pump()` once per frame (Unity `Update`). (Pump is described below)
   - _(Environment only)_ It is required to manually assign `Instance` property to created instance of this class. 
-- Before starting scene/environment, it is recommended to call `RobotLogger.FullClenup()`:
+- Before starting scene/environment, it is recommended to call `RobotLogger.FullCleanup()`:
   - Clears all unregistered event listeners 
   - Removes old logs
   - _(Scene only)_ This is automatically done by `RobotLoggerSingletonSystem` in `SystemAwake`
-  - **Important**: If any robot is executing code during scene/environment change, calling `FullClenup()` may break that robot logging. Ensure all robots have finished execution beforehand.
+  - **Important**: If any robot is executing code during scene/environment change, calling `FullCleanup()` may break that robot logging. Ensure all robots have finished execution beforehand.
 
 ## Pump
 All log event handlers are synchronized to the thread in which `RobotLogger.Pump()` is called.
@@ -55,7 +55,7 @@ Robot code can use:
 - `RobotLogger.LogError` 
 - `RobotLogger.Log` - allows specifying the log level manually
 
-`RobotLogger` automatically manages context, sothere is no need to pass the `Programmable` instance explicitly (see [Coroutine limitation](#coroutine-limitation) below).
+`RobotLogger` automatically manages context, so there is no need to pass the `Programmable` instance explicitly (see [Coroutine limitation](#coroutine-limitation) below).
 
 ### Log Options
 - Use `LogOptions.SkipUnityDebugLog` as the last argument in `Log` and `LogXXX` function to skip writing to Unity Console
