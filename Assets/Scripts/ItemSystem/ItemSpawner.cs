@@ -53,9 +53,9 @@ namespace Cosmobot.ItemSystem
 
         void OnEnable()
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             ReInitImage();
-            #endif
+#endif
             // <TEMP>
             if (Application.isPlaying)
             {
@@ -98,7 +98,10 @@ namespace Cosmobot.ItemSystem
 
         private void SetItemIcon()
         {
-            if (!material) return;
+            if (material == null) 
+            {
+                return;
+            }
 
             Shader shader = itemInfo?.Icon == null
                 ? Shader.Find("Hidden/InternalErrorShader")
