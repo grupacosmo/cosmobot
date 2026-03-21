@@ -11,7 +11,7 @@ For code example, see:
    - _(optional)_ Adjust `RobotLoggerSingletonSystem` properties in the Inspector
 2. Add Robots with [Programmable](../../Scripts/RobotProgramming/Programmable.cs) component to scene
    - Use `RobotLogger.LogInfo`, `LogWarning` and `LogError` in your robot code (see [Coroutine limitation](#coroutine-limitation) below)
-3. Register log event handlers in the `OnEnable` Unity event and unregister then in the `OnDisable` 
+3. Register log event handlers in the `OnEnable` Unity event and unregister them in the `OnDisable` 
    - `RobotLogger.AddLogEventHandler` and `RobotLogger.RemoveLogEventHandler` for logs of specific robot (`Programmable`)
    - `RobotLogger.AddAllLogEventHandler` and `RobotLogger.RemoveAllLogEventHandler` for logs of all robots
    - `RobotLogger.AddGlobalLogEventHandler` and `RobotLogger.RemoveGlobalLogEventHandler` for global logs (not paired with any robot)
@@ -72,6 +72,6 @@ If implementing robots without the `Programmable` Component:
   - **Use with caution** 
 
 # Coroutine limitation
-Currently, code stared with `StartCoroutine` does **not** properly preserve the robot logging context. This results in all logs from unity coroutine ending up in global logs without association to specific robot.
+Currently, code started with `StartCoroutine` does **not** properly preserve the robot logging context. This results in all logs from unity coroutine ending up in global logs without association to specific robot.
 
 Suggestion for future fix: Implement custom coroutine, that will preserve `ExecutionContext` between calls (there is possibility to wrap Unity's `StartCoroutine`, however it can impact performance overhead in some situations)
