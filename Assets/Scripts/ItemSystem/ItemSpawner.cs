@@ -50,10 +50,12 @@ namespace Cosmobot.ItemSystem
 #endif
         }
 
-#if UNITY_EDITOR
+
         void OnEnable()
         {
+            #if UNITY_EDITOR
             ReInitImage();
+            #endif
             // <TEMP>
             if (Application.isPlaying)
             {
@@ -67,6 +69,7 @@ namespace Cosmobot.ItemSystem
             // </TEMP>
         }
 
+#if UNITY_EDITOR
         void OnValidate()
         {
             if (oldItem != itemInfo)
@@ -95,18 +98,19 @@ namespace Cosmobot.ItemSystem
 
         private void SetItemIcon()
         {
-            if (material) {
-                Shader shader = itemInfo?.Icon == null
-                    ? Shader.Find("Hidden/InternalErrorShader")
-                    : Shader.Find("Universal Render Pipeline/Unlit");
+            if (!material) return;
 
-                material.shader = shader;
-                material.color = Color.white;
-                if (itemInfo?.Icon != null)
-                {
-                    material.mainTexture = itemInfo.Icon;
-                }
+            Shader shader = itemInfo?.Icon == null
+                ? Shader.Find("Hidden/InternalErrorShader")
+                : Shader.Find("Universal Render Pipeline/Unlit");
+
+            material.shader = shader;
+            material.color = Color.white;
+            if (itemInfo?.Icon != null)
+            {
+                material.mainTexture = itemInfo.Icon;
             }
+            
         }
 #endif
     }
