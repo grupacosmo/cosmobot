@@ -14,7 +14,7 @@ namespace Cosmobot.Utils
             {
                 return;
             }
-            
+
             SceneManager.LoadScene(GameManagerSceneName, LoadSceneMode.Additive);
         }
     }
