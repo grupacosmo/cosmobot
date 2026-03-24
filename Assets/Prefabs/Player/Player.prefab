@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8588927043253974589}
   - component: {fileID: 22047482429002795}
   - component: {fileID: 8541405582010329814}
+  - component: {fileID: 2830036494978813911}
   - component: {fileID: 8923823829295642403}
   - component: {fileID: 2478930478815991005}
   - component: {fileID: 3600333300070363453}
@@ -76,6 +77,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactionPrompt: {fileID: 0}
+--- !u!114 &2830036494978813911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1137498538287740836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cf0962dc2ba4505b9030a0230ff839c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraTransform: {fileID: 7577094790283547248}
+  constructionPreview: {fileID: 0}
+  buildTargetingCollisionMask:
+    serializedVersion: 2
+    m_Bits: 1
+  maxBuildDistance: 20
+  maxTerrainHeight: 100
+  constructionSitePrefab: {fileID: 6571599839263284129, guid: 11c3bb8c65eb71bca9cff435f75bdc0b, type: 3}
+  buildingSelectionUI: {fileID: 0}
 --- !u!23 &8923823829295642403
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -93,6 +115,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -430,7 +455,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
 --- !u!95 &3148441669088234227
 Animator:
-  serializedVersion: 5
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -444,6 +469,7 @@ Animator:
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
