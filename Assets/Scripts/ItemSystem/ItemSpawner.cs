@@ -27,12 +27,12 @@ namespace Cosmobot.ItemSystem
         {
             if (Application.isPlaying)
             {
-                ItemComponent itemComponent = gameObject.AddComponent<ItemComponent>();
+                /*ItemComponent itemComponent = gameObject.AddComponent<ItemComponent>();
                 itemComponent.Init(new ItemInstance(itemInfo, itemData));
                 Destroy(this);
                 Destroy(GetComponent<MeshRenderer>());
                 Destroy(GetComponent<MeshFilter>());
-                transform.localScale = Vector3.one;
+                transform.localScale = Vector3.one;*/
             }
 #if UNITY_EDITOR
             else
@@ -50,12 +50,26 @@ namespace Cosmobot.ItemSystem
 #endif
         }
 
-#if UNITY_EDITOR
+
         void OnEnable()
         {
+#if UNITY_EDITOR
             ReInitImage();
+#endif
+            // <TEMP>
+            if (Application.isPlaying)
+            {
+                ItemComponent itemComponent = gameObject.AddComponent<ItemComponent>();
+                itemComponent.Init(new ItemInstance(itemInfo, itemData));
+                Destroy(this);
+                Destroy(GetComponent<MeshRenderer>());
+                Destroy(GetComponent<MeshFilter>());
+                transform.localScale = Vector3.one;
+            }
+            // </TEMP>
         }
 
+#if UNITY_EDITOR
         void OnValidate()
         {
             if (oldItem != itemInfo)
@@ -84,6 +98,11 @@ namespace Cosmobot.ItemSystem
 
         private void SetItemIcon()
         {
+            if (material == null) 
+            {
+                return;
+            }
+
             Shader shader = itemInfo?.Icon == null
                 ? Shader.Find("Hidden/InternalErrorShader")
                 : Shader.Find("Universal Render Pipeline/Unlit");
@@ -94,6 +113,7 @@ namespace Cosmobot.ItemSystem
             {
                 material.mainTexture = itemInfo.Icon;
             }
+            
         }
 #endif
     }
