@@ -177,6 +177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  logManager: {fileID: 0}
   code: 
   activeFile: {fileID: 0}
 --- !u!65 &5262942
@@ -345,6 +346,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  logManager: {fileID: 0}
   code: 
   activeFile: {fileID: 0}
 --- !u!65 &24800182
@@ -1013,6 +1015,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  logManager: {fileID: 0}
   code: 
   activeFile: {fileID: 0}
 --- !u!65 &226238873
@@ -2011,6 +2014,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  logManager: {fileID: 1257615562}
   code: 
   activeFile: {fileID: 0}
 --- !u!65 &461082888
@@ -2890,6 +2894,7 @@ GameObject:
   - component: {fileID: 586230987}
   - component: {fileID: 586230993}
   - component: {fileID: 586230991}
+  - component: {fileID: 586230994}
   m_Layer: 0
   m_Name: BaseRobot
   m_TagString: Untagged
@@ -3010,8 +3015,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  logManager: {fileID: 1257615562}
   code: 
   activeFile: {fileID: 0}
+--- !u!114 &586230994
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 586230986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a4e1ad7f2a331749b380d249ffb75f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  turningSpeed: 1
 --- !u!1 &629202461
 GameObject:
   m_ObjectHideFlags: 0
@@ -4496,7 +4516,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fileManager: {fileID: 203391317}
-  logManager: {fileID: 1257615562}
+  logManager: {fileID: 0}
   uiManager: {fileID: 127583548}
 --- !u!1 &986398515
 GameObject:
@@ -5602,7 +5622,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 984255082}
         m_TargetAssemblyTypeName: Cosmobot.ProgrammingUIDummyTester, Cosmobot
-        m_MethodName: CreateDummyFile
+        m_MethodName: CreateNewFile
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7697,8 +7717,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 984255082}
-        m_TargetAssemblyTypeName: Cosmobot.ProgrammingUIDummyTester, Cosmobot
+      - m_Target: {fileID: 127583548}
+        m_TargetAssemblyTypeName: Cosmobot.ProgrammingUiManager, Cosmobot
         m_MethodName: CloseUI
         m_Mode: 1
         m_Arguments:
@@ -8565,6 +8585,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  logManager: {fileID: 0}
   code: 
   activeFile: {fileID: 0}
 --- !u!65 &1784620195
@@ -10379,7 +10400,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2131572629}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 984255082}
+        m_TargetAssemblyTypeName: Cosmobot.ProgrammingUIDummyTester, Cosmobot
+        m_MethodName: StopActiveFile
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2131572629
 MonoBehaviour:
   m_ObjectHideFlags: 0

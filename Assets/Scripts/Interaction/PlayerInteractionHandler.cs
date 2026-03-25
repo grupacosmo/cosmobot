@@ -26,7 +26,7 @@ namespace Cosmobot
 
             if (hit.collider.TryGetComponent<Programmable>(out Programmable programmable))
             {
-                programmingUiManager.Open(programmable);
+                programmingUiManager.OpenUI(programmable);
             }
         }
 

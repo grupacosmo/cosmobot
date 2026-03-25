@@ -18,13 +18,13 @@ namespace Cosmobot
             ChangeUiState(false);
         }
 
-        public void Open(Programmable robot)
+        public void OpenUI(Programmable robot)
         {
             fileManager.currentRobot = robot;
             ChangeUiState(true);
         }
 
-        public void Close()
+        public void CloseUI()
         {
             ChangeUiState(false);
         }

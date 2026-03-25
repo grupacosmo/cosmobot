@@ -25,7 +25,8 @@ namespace Cosmobot
         private readonly List<ProgrammingUiFileEntry> files = new();
 
         private const string JsFilesSaveFolder = @"/home/milosz/cosmobot/JsFiles/"; // TEMP
-
+        private readonly string[] fileNames = new[] { "main.js", "robot.js", "mySuperSystem.js", "api.js" };
+        
         public Programmable currentRobot;
         
         private void Start()
@@ -47,8 +48,14 @@ namespace Cosmobot
         public void RunActiveFile()
         {
             SaveFile();
-            currentRobot.code = ReadFile(files[GetOpenFileIndex(true)]);//currentRobot.activeFile);
+            currentRobot.code = ReadFile(files[GetOpenFileIndex(true)]);
             currentRobot.RunTask();
+        }
+
+        public void StopActiveFile()
+        {
+            currentRobot.code = "";
+            currentRobot.StopTask();
         }
 
         public void SetActiveFile(ProgrammingUiFileEntry entry)
@@ -140,6 +147,11 @@ namespace Cosmobot
             return 0;
         }
 
+        public int GetFileCount()
+        {
+            return files.Count;
+        }
+        
         private static void CreateFile(string filename)
         {
             File.Create(JsFilesSaveFolder + filename).Dispose();

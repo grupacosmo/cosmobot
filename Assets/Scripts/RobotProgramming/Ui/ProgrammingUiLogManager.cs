@@ -14,7 +14,7 @@ namespace Cosmobot
 
         [SerializeField]
         private ScrollRect consoleScrollView;
-
+        
         [Header("Canvas UI Prefabs")]
         [SerializeField]
         private GameObject uiLogEntryPrefab;

@@ -18,6 +18,9 @@ namespace Cosmobot
     /// </summary>
     public class Programmable : MonoBehaviour
     {
+        [SerializeField]
+        private ProgrammingUiLogManager logManager;
+        
         private IEngineLogic[] engineLogicInterfaces;
         [TextArea(10, 20)] 
         
@@ -37,7 +40,6 @@ namespace Cosmobot
         void Start()
         {
             taskCompletedEvent = new ManualResetEvent(false);
-            cancellationTokenSource = new CancellationTokenSource();
             
             debugI = staticDebugI++;
             engineLogicInterfaces = GetComponents<IEngineLogic>();
@@ -46,11 +48,28 @@ namespace Cosmobot
 
         public void RunTask()
         {
+            if (task != null && task.IsAlive)
+            {
+                logManager.CreateLog(LogLevel.Warn, "Task already running");
+                return;
+            }
+
+            cancellationTokenSource = new CancellationTokenSource();
+
             task = new Thread(() => JsThread(cancellationTokenSource.Token));
             task.IsBackground = true;
             task.Start();
         }
 
+        public void StopTask()
+        {
+            StopAllCoroutines();
+            commandQueue.Clear();
+            
+            cancellationTokenSource?.Cancel();
+            cancellationTokenSource?.Dispose();
+            cancellationTokenSource = null;
+        }
         
         private void Update()
         {
@@ -113,19 +132,27 @@ namespace Cosmobot
             }
             catch (OperationCanceledException)
             {
-                Debug.Log("Operation was cancelled");
+                commandQueue.Enqueue(() => logManager.CreateLog(
+                    LogLevel.Info, 
+                    "Operation was cancelled"));
             }
             catch (Jint.Runtime.JavaScriptException ex)
             {
-                Debug.LogError($"JS Error ({objectName}): {ex.Error} | {ex.Location}\n{ex.StackTrace}");
+                commandQueue.Enqueue(() => logManager.CreateLog(
+                    LogLevel.Error, 
+                    $"JS Error ({objectName}): {ex.Error} | {ex.Location}\n{ex.StackTrace}"));
             }
             catch (Exception ex)
             {
-                Debug.LogError($"Error: ({objectName}): {ex.Message}\n {ex.StackTrace}");
+                commandQueue.Enqueue(() => logManager.CreateLog(
+                    LogLevel.Error, 
+                    $"Error: ({objectName}): {ex.Message}\n {ex.StackTrace}"));
             }
             finally
             {
-                Debug.Log("Done");
+                commandQueue.Enqueue(() => logManager.CreateLog(
+                    LogLevel.Info, 
+                    "Done"));
             }
         }
 
