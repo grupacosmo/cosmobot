@@ -14,6 +14,9 @@ namespace Cosmobot
 
         [SerializeField]
         private ScrollRect consoleScrollView;
+
+        [SerializeField]
+        private GameObject logInstantiationTarget;
         
         [Header("Canvas UI Prefabs")]
         [SerializeField]
@@ -32,7 +35,7 @@ namespace Cosmobot
             bool scrollToBottom = consoleScrollView.verticalNormalizedPosition <= 0.01f;
 
             LogEntry entry = new LogEntry(time, level, message);
-            GameObject uiLogEntry = Instantiate(uiLogEntryPrefab, transform);
+            GameObject uiLogEntry = Instantiate(uiLogEntryPrefab, logInstantiationTarget.transform);
             ProgrammingUiLogEntry uiLog = uiLogEntry.GetComponent<ProgrammingUiLogEntry>();
             uiLog.SetLog(entry);
 

@@ -28,7 +28,8 @@ namespace Cosmobot
         [SerializeField]
         private TMP_Text fileStatusText;
 
-        public SerializableDictionary<ProgrammingUiFileEntry, Programmable> robotFiles = new();
+        public SerializableDictionary<Programmable, ProgrammingUiFileEntry> robotActiveFiles = new();
+        public SerializableDictionary<Programmable, ProgrammingUiFileEntry> robotOpenFiles = new();
         
         // syntax highlight
         private static readonly Regex parsingRegex = PrepareApiTypes();

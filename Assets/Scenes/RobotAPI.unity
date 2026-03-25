@@ -690,6 +690,7 @@ GameObject:
   - component: {fileID: 127583547}
   - component: {fileID: 127583546}
   - component: {fileID: 127583548}
+  - component: {fileID: 127583549}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -742,6 +743,22 @@ MonoBehaviour:
   programmingUi: {fileID: 984255081}
   fileManager: {fileID: 203391317}
   playerController: {fileID: 530060404}
+--- !u!114 &127583549
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 127583545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d53612442e9d4eb484cde6905f74f5d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxLogEntries: 100
+  consoleScrollView: {fileID: 904585085}
+  logInstantiationTarget: {fileID: 1257615556}
+  uiLogEntryPrefab: {fileID: 5786305717814102051, guid: 35775eb09a89dd52ea3a89ebb4f3a5a8, type: 3}
 --- !u!1 &203391311
 GameObject:
   m_ObjectHideFlags: 0
@@ -2014,7 +2031,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logManager: {fileID: 1257615562}
+  logManager: {fileID: 127583549}
   code: 
   activeFile: {fileID: 0}
 --- !u!65 &461082888
@@ -3015,7 +3032,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logManager: {fileID: 1257615562}
+  logManager: {fileID: 127583549}
   code: 
   activeFile: {fileID: 0}
 --- !u!114 &586230994
@@ -3031,7 +3048,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
-  turningSpeed: 1
+  turningSpeed: 5
 --- !u!1 &629202461
 GameObject:
   m_ObjectHideFlags: 0
@@ -4500,7 +4517,10 @@ MonoBehaviour:
   codeDisplay: {fileID: 1941104651}
   lineNumbersText: {fileID: 1262629569}
   fileStatusText: {fileID: 1835161054}
-  robotFiles:
+  robotActiveFiles:
+    keys: []
+    values: []
+  robotOpenFiles:
     keys: []
     values: []
 --- !u!114 &984255082
@@ -4516,7 +4536,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fileManager: {fileID: 203391317}
-  logManager: {fileID: 0}
+  logManager: {fileID: 127583549}
   uiManager: {fileID: 127583548}
 --- !u!1 &986398515
 GameObject:
@@ -4763,8 +4783,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1521439339}
   m_HandleRect: {fileID: 1521439337}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.9999999
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5680,7 +5700,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1257615557}
   - component: {fileID: 1257615561}
-  - component: {fileID: 1257615562}
   - component: {fileID: 1257615559}
   - component: {fileID: 1257615558}
   m_Layer: 5
@@ -5761,21 +5780,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1257615556}
   m_CullTransparentMesh: 1
---- !u!114 &1257615562
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1257615556}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d53612442e9d4eb484cde6905f74f5d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxLogEntries: 100
-  consoleScrollView: {fileID: 904585085}
-  uiLogEntryPrefab: {fileID: 5786305717814102051, guid: 35775eb09a89dd52ea3a89ebb4f3a5a8, type: 3}
 --- !u!1 &1262629567
 GameObject:
   m_ObjectHideFlags: 0
@@ -9521,7 +9525,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2013063801}
   m_HandleRect: {fileID: 2013063800}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 0.001
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -10640,6 +10644,10 @@ PrefabInstance:
       propertyPath: closeFileToggle
       value: 
       objectReference: {fileID: 1998372355}
+    - target: {fileID: 1943412305861122044, guid: 5e29d0815a2398d44ae2337cc612ddd0, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3590240414527533216, guid: 5e29d0815a2398d44ae2337cc612ddd0, type: 3}
       propertyPath: m_Group
       value: 
@@ -10670,7 +10678,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4775724732504491685, guid: 5e29d0815a2398d44ae2337cc612ddd0, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 225.40002
+      value: 195.34003
       objectReference: {fileID: 0}
     - target: {fileID: 4775724732504491685, guid: 5e29d0815a2398d44ae2337cc612ddd0, type: 3}
       propertyPath: m_SizeDelta.y
@@ -10706,7 +10714,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4775724732504491685, guid: 5e29d0815a2398d44ae2337cc612ddd0, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 112.70001
+      value: 97.67001
       objectReference: {fileID: 0}
     - target: {fileID: 4775724732504491685, guid: 5e29d0815a2398d44ae2337cc612ddd0, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -10731,6 +10739,14 @@ PrefabInstance:
     - target: {fileID: 5280276289285643954, guid: 5e29d0815a2398d44ae2337cc612ddd0, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6075156166995072048, guid: 5e29d0815a2398d44ae2337cc612ddd0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7280947076915760249, guid: 5e29d0815a2398d44ae2337cc612ddd0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

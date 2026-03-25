@@ -25,7 +25,6 @@ namespace Cosmobot
         private readonly List<ProgrammingUiFileEntry> files = new();
 
         private const string JsFilesSaveFolder = @"/home/milosz/cosmobot/JsFiles/"; // TEMP
-        private readonly string[] fileNames = new[] { "main.js", "robot.js", "mySuperSystem.js", "api.js" };
         
         public Programmable currentRobot;
         
@@ -34,11 +33,21 @@ namespace Cosmobot
             string[] jsFiles = Directory.GetFiles(JsFilesSaveFolder, "*.js");
             foreach (string filePath in jsFiles)
             {
-
                 CreateNewFileEntry(Path.GetFileName(filePath));
             }
         }
 
+        private void OnEnable()
+        {
+            ProgrammingUiFileEntry activeEntry = programmingUI.robotActiveFiles.GetValueOrDefault(currentRobot);
+            ProgrammingUiFileEntry openEntry = programmingUI.robotOpenFiles.GetValueOrDefault(currentRobot);
+            if (activeEntry is null) { return; }
+            if (openEntry is null) { return; }
+            
+            openEntry.IsOpen = true;
+            activeEntry.IsActive = true;
+        }
+        
         public void CreateNewFile(string filename)
         {
             CreateFile(filename);
@@ -47,33 +56,15 @@ namespace Cosmobot
 
         public void RunActiveFile()
         {
-            SaveFile();
-            currentRobot.code = ReadFile(files[GetOpenFileIndex(true)]);
+            ProgrammingUiFileEntry entry = programmingUI.robotActiveFiles[currentRobot];
+            currentRobot.code = ReadFile(entry);
+            currentRobot.activeFile = entry;
             currentRobot.RunTask();
         }
-
+        
         public void StopActiveFile()
         {
-            currentRobot.code = "";
             currentRobot.StopTask();
-        }
-
-        public void SetActiveFile(ProgrammingUiFileEntry entry)
-        {
-            currentRobot.activeFile = files[GetOpenFileIndex(true)];
-            programmingUI.robotFiles[currentRobot.activeFile] = currentRobot;
-            Debug.Log("Set Active File: " + currentRobot.activeFile + "to Robot: " + currentRobot.name);
-        }
-
-        public void LoadActiveFile()
-        {
-            foreach (ProgrammingUiFileEntry entry in files)
-            {
-                if (entry == currentRobot.activeFile)
-                {
-                    entry.IsActive = true;
-                }
-            }
         }
         
         private void CreateNewFileEntry(string filename)
@@ -82,9 +73,10 @@ namespace Cosmobot
             ProgrammingUiFileEntry entry = uiInstance.GetComponent<ProgrammingUiFileEntry>();
             entry.SetFile(openFileGroup, activeFileGroup, filename, "no stats...");
             entry.OnOpenFile += HandleOpenFile;
+            entry.OnActivateFile += HandleActiveFile;
             files.Add(entry);
         }
-
+        
         public void RemoveOpenFile()
         {
             ProgrammingUiFileEntry entry = files[GetOpenFileIndex()];
@@ -169,9 +161,15 @@ namespace Cosmobot
 
         private void HandleOpenFile(ProgrammingUiFileEntry entry)
         {
+            programmingUI.robotOpenFiles[currentRobot] = entry;
             programmingUI.Code = ReadFile(entry);
         }
-
+        
+        private void HandleActiveFile(ProgrammingUiFileEntry entry)
+        {
+            programmingUI.robotActiveFiles[currentRobot] = entry;
+        }
+        
         private void SaveTextToFile(string filename)
         {
             File.WriteAllText(JsFilesSaveFolder + filename, programmingUI.Code, Encoding.UTF8);

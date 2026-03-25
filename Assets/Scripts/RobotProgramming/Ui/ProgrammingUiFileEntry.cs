@@ -53,6 +53,8 @@ namespace Cosmobot
         {
             activeFileToggle.onValueChanged.RemoveListener(OnActiveToggle);
             openFileToggle.onValueChanged.RemoveListener(OnOpenToggle);
+            IsActive = false;
+            IsOpen = false;
         }
 
         private void OnOpenToggle(bool value)
