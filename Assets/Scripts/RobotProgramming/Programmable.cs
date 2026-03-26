@@ -20,10 +20,10 @@ namespace Cosmobot
     {
         [SerializeField]
         private ProgrammingUiLogManager logManager;
-        
+
         private IEngineLogic[] engineLogicInterfaces;
-        [TextArea(10, 20)] 
-        
+        [TextArea(10, 20)]
+
         public string code;
         public ProgrammingUiFileEntry activeFile;
 
@@ -40,7 +40,7 @@ namespace Cosmobot
         void Start()
         {
             taskCompletedEvent = new ManualResetEvent(false);
-            
+
             debugI = staticDebugI++;
             engineLogicInterfaces = GetComponents<IEngineLogic>();
             objectName = gameObject.name;
@@ -65,12 +65,12 @@ namespace Cosmobot
         {
             StopAllCoroutines();
             commandQueue.Clear();
-            
+
             cancellationTokenSource?.Cancel();
             cancellationTokenSource?.Dispose();
             cancellationTokenSource = null;
         }
-        
+
         private void Update()
         {
             if (commandQueue.TryDequeue(out Action currentCommand))
@@ -133,25 +133,25 @@ namespace Cosmobot
             catch (OperationCanceledException)
             {
                 commandQueue.Enqueue(() => logManager.CreateLog(
-                    LogLevel.Info, 
+                    LogLevel.Info,
                     "Operation was cancelled"));
             }
             catch (Jint.Runtime.JavaScriptException ex)
             {
                 commandQueue.Enqueue(() => logManager.CreateLog(
-                    LogLevel.Error, 
+                    LogLevel.Error,
                     $"JS Error ({objectName}): {ex.Error} | {ex.Location}\n{ex.StackTrace}"));
             }
             catch (Exception ex)
             {
                 commandQueue.Enqueue(() => logManager.CreateLog(
-                    LogLevel.Error, 
+                    LogLevel.Error,
                     $"Error: ({objectName}): {ex.Message}\n {ex.StackTrace}"));
             }
             finally
             {
                 commandQueue.Enqueue(() => logManager.CreateLog(
-                    LogLevel.Info, 
+                    LogLevel.Info,
                     "Done"));
             }
         }

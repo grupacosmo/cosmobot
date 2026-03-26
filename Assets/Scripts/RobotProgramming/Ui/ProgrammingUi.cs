@@ -13,7 +13,7 @@ namespace Cosmobot
     {
         public string Code { get => bufferedText; set => HandleFileLoad(value); }
         public event Action OnCodeChanged;
-        
+
         [SerializeField]
         private float fontSize = 36;
 
@@ -30,7 +30,7 @@ namespace Cosmobot
         private TMP_Text fileStatusText;
 
         public SerializableDictionary<Programmable, ProgrammingUiFileEntry> robotActiveFiles = new();
-        
+
         // syntax highlight
         private static readonly Regex parsingRegex = PrepareApiTypes();
         private static readonly Regex richTextFixerRegex = new Regex(@"(<|>)");
@@ -134,14 +134,14 @@ namespace Cosmobot
 
             bufferedText = fileContents;
             inputField.SetTextWithoutNotify(fileContents);
-            
+
             bufferedLineCount = CountLines();
             RecalculateVisibleLineCount();
-            UpdateLineNumbers(); 
-            
+            UpdateLineNumbers();
+
             dirty = true;
         }
-        
+
         private void UpdateFileStatus()
         {
             int caretPos = inputField.caretPosition;
@@ -259,7 +259,7 @@ namespace Cosmobot
         {
             bufferedText = newValue;
             dirty = true;
-            
+
             OnCodeChanged?.Invoke();
         }
 

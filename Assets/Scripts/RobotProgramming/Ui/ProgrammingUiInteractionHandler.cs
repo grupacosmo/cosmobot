@@ -49,7 +49,7 @@ namespace Cosmobot
         private bool IsUiInteractionInvalid(string logMessage)
         {
             if (fileManager.GetFileCount() != 0) { return false; }
-            
+
             logManager.CreateLog(LogLevel.Warn, logMessage);
             return true;
         }

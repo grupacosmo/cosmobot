@@ -17,7 +17,7 @@ namespace Cosmobot
 
         [SerializeField]
         private GameObject logInstantiationTarget;
-        
+
         [Header("Canvas UI Prefabs")]
         [SerializeField]
         private GameObject uiLogEntryPrefab;
