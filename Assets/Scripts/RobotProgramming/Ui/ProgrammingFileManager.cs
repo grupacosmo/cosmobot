@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,14 +19,16 @@ namespace Cosmobot
         private GameObject confirmRemoveBt;
         [SerializeField]
         private ProgrammingUi programmingUI;
+        [SerializeField]
+        private GameObject dirtyIndicator;
 
         [Header("Canvas UI Prefabs")]
         [SerializeField]
         private GameObject uiFileEntryPrefab;
 
         private readonly List<ProgrammingUiFileEntry> files = new();
-
         private const string JsFilesSaveFolder = @"/home/milosz/cosmobot/JsFiles/"; // TEMP
+        private ProgrammingUiFileEntry currentEntry;
         
         public Programmable currentRobot;
         
@@ -35,19 +39,32 @@ namespace Cosmobot
             {
                 CreateNewFileEntry(Path.GetFileName(filePath));
             }
+
+            if (files.Count == 0) { return; }
+            
+            HandleOpenFile(files[0]);
+            files[0].IsOpen = true;
+            
         }
 
         private void OnEnable()
         {
-            ProgrammingUiFileEntry activeEntry = programmingUI.robotActiveFiles.GetValueOrDefault(currentRobot);
-            ProgrammingUiFileEntry openEntry = programmingUI.robotOpenFiles.GetValueOrDefault(currentRobot);
-            if (activeEntry is null) { return; }
-            if (openEntry is null) { return; }
+            programmingUI.OnCodeChanged += HandleCodeChanged;
             
-            openEntry.IsOpen = true;
+            ProgrammingUiFileEntry activeEntry = programmingUI.robotActiveFiles.GetValueOrDefault(currentRobot);
+            if (activeEntry is null) { return; }
+            
+            activeEntry.IsOpen = true;
             activeEntry.IsActive = true;
+            
+            HandleOpenFile(activeEntry);
         }
-        
+
+        private void OnDisable()
+        {
+            programmingUI.OnCodeChanged -= HandleCodeChanged;
+        }
+
         public void CreateNewFile(string filename)
         {
             CreateFile(filename);
@@ -56,7 +73,10 @@ namespace Cosmobot
 
         public void RunActiveFile()
         {
+            SaveAllFiles();
+            
             ProgrammingUiFileEntry entry = programmingUI.robotActiveFiles[currentRobot];
+            entry.IsOpen = true;
             currentRobot.code = ReadFile(entry);
             currentRobot.activeFile = entry;
             currentRobot.RunTask();
@@ -72,6 +92,7 @@ namespace Cosmobot
             GameObject uiInstance = Instantiate(uiFileEntryPrefab, transform);
             ProgrammingUiFileEntry entry = uiInstance.GetComponent<ProgrammingUiFileEntry>();
             entry.SetFile(openFileGroup, activeFileGroup, filename, "no stats...");
+            entry.unsavedCode = null;
             entry.OnOpenFile += HandleOpenFile;
             entry.OnActivateFile += HandleActiveFile;
             files.Add(entry);
@@ -114,13 +135,24 @@ namespace Cosmobot
             confirmRemoveBt.SetActive(false);
         }
 
-        public void SaveFile()
+        public void SaveAllFiles()
         {
-            ProgrammingUiFileEntry openFile = files[GetOpenFileIndex()];
-            openFile.UpdateStats(programmingUI.Code.Length + " characters");
-            SaveTextToFile(openFile.filename);
+            foreach (ProgrammingUiFileEntry entry in files)
+            {
+                string contentToSave = entry.unsavedCode ?? ReadFile(entry); 
+                File.WriteAllText(JsFilesSaveFolder + entry.filename, contentToSave, Encoding.UTF8);
+            
+                entry.unsavedCode = null;
+            
+                UpdateDirtyIndicator();
+            }
         }
 
+        private int GetActiveUsageCount(ProgrammingUiFileEntry entry)
+        {
+            return programmingUI.robotActiveFiles.Values.Count(e => e == entry);
+        }
+        
         private int GetOpenFileIndex(bool getActiveIndex = false)
         {
             for (int i = 0; i < files.Count; i++)
@@ -139,6 +171,41 @@ namespace Cosmobot
             return 0;
         }
 
+        private bool HasAnyUnsavedChanges()
+        {
+            return files.Any(f => !string.IsNullOrWhiteSpace(f.unsavedCode));
+        }
+        
+        private void UpdateDirtyIndicator()
+        {
+            bool hasUnsaved = HasAnyUnsavedChanges();
+
+            dirtyIndicator.SetActive(!hasUnsaved);
+        }
+        
+        private void UpdateAllFileStats()
+        {
+            foreach (ProgrammingUiFileEntry entry in files)
+            {
+                int count = GetActiveUsageCount(entry);
+                entry.UpdateStats($"{count} robot" + (count == 1 ? "" : "s"));
+            }
+        }
+        
+        private void HandleCodeChanged()
+        {
+            if (currentEntry == null) return;
+
+            string currentCode = programmingUI.Code ?? "";
+            string fileCode = ReadFile(currentEntry);
+
+            currentEntry.unsavedCode = currentCode != fileCode
+                ? currentCode
+                : null;
+
+            UpdateDirtyIndicator();
+        }
+        
         public int GetFileCount()
         {
             return files.Count;
@@ -161,18 +228,31 @@ namespace Cosmobot
 
         private void HandleOpenFile(ProgrammingUiFileEntry entry)
         {
-            programmingUI.robotOpenFiles[currentRobot] = entry;
-            programmingUI.Code = ReadFile(entry);
+            if (currentEntry != null)
+            {
+                string currentCode = programmingUI.Code ?? "";
+                string fileCode = ReadFile(currentEntry);
+
+                currentEntry.unsavedCode = currentCode != fileCode
+                    ? currentCode
+                    : null;
+
+                UpdateDirtyIndicator();
+            }
+            
+            UpdateDirtyIndicator();
+            currentEntry = entry;
+
+            if (string.IsNullOrWhiteSpace(entry.unsavedCode))
+                entry.unsavedCode = null;
+
+            programmingUI.Code = entry.unsavedCode ?? ReadFile(entry);
         }
         
         private void HandleActiveFile(ProgrammingUiFileEntry entry)
         {
             programmingUI.robotActiveFiles[currentRobot] = entry;
-        }
-        
-        private void SaveTextToFile(string filename)
-        {
-            File.WriteAllText(JsFilesSaveFolder + filename, programmingUI.Code, Encoding.UTF8);
+            UpdateAllFileStats();
         }
     }
 }

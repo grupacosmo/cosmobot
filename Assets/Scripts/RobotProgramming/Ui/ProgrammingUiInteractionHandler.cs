@@ -28,10 +28,10 @@ namespace Cosmobot
             fileManager.RemoveOpenFile();
         }
 
-        public void SaveFile()
+        public void SaveAllFiles()
         {
             if (IsUiInteractionInvalid("Found no files to save")) { return; }
-            fileManager.SaveFile();
+            fileManager.SaveAllFiles();
         }
 
         public void RunActiveFile()

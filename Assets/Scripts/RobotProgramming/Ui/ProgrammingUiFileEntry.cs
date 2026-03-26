@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +20,7 @@ namespace Cosmobot
         private TMP_Text fileStatsText;
 
         public string filename;
+        [CanBeNull] public string unsavedCode;
 
         public event FileEntryEvent OnOpenFile;
         public event FileEntryEvent OnActivateFile;

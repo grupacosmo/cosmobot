@@ -360,12 +360,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   openFileToggle: {fileID: 3590240414527533216}
-  closeFileToggle: {fileID: 3590240414527533216}
   activeFileToggle: {fileID: 1943412305861122044}
   fileNameText: {fileID: 2442122619247860959}
   fileStatsText: {fileID: 6494214606662517643}
   filename: 
-  unsavedContents: 
+  unsavedCode: 
 --- !u!114 &3651377736046406442
 MonoBehaviour:
   m_ObjectHideFlags: 0

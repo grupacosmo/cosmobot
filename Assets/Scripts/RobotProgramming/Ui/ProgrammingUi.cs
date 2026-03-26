@@ -12,7 +12,8 @@ namespace Cosmobot
     public class ProgrammingUi : MonoBehaviour
     {
         public string Code { get => bufferedText; set => HandleFileLoad(value); }
-
+        public event Action OnCodeChanged;
+        
         [SerializeField]
         private float fontSize = 36;
 
@@ -29,7 +30,6 @@ namespace Cosmobot
         private TMP_Text fileStatusText;
 
         public SerializableDictionary<Programmable, ProgrammingUiFileEntry> robotActiveFiles = new();
-        public SerializableDictionary<Programmable, ProgrammingUiFileEntry> robotOpenFiles = new();
         
         // syntax highlight
         private static readonly Regex parsingRegex = PrepareApiTypes();
@@ -78,7 +78,7 @@ namespace Cosmobot
             UpdateFontSize();
 
             inputField.onValueChanged.AddListener(OnInputFieldValueChanged);
-            codeDisplay.text = inputField.text;
+            dirty = true;
         }
 
         private void OnDisable()
@@ -130,8 +130,16 @@ namespace Cosmobot
 
         private void HandleFileLoad(string fileContents)
         {
+            fileContents ??= "";
+
             bufferedText = fileContents;
-            inputField.text = fileContents;
+            inputField.SetTextWithoutNotify(fileContents);
+            
+            bufferedLineCount = CountLines();
+            RecalculateVisibleLineCount();
+            UpdateLineNumbers(); 
+            
+            dirty = true;
         }
         
         private void UpdateFileStatus()
@@ -251,6 +259,8 @@ namespace Cosmobot
         {
             bufferedText = newValue;
             dirty = true;
+            
+            OnCodeChanged?.Invoke();
         }
 
         private static Color ColorHex(uint color)
