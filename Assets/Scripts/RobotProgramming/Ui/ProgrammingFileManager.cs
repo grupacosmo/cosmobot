@@ -27,14 +27,23 @@ namespace Cosmobot
         private GameObject uiFileEntryPrefab;
 
         private readonly List<ProgrammingUiFileEntry> files = new();
-        private const string JsFilesSaveFolder = @"/home/milosz/cosmobot/JsFiles/"; // TEMP
+        private static string jsFilesSaveFolder;
         private ProgrammingUiFileEntry currentEntry;
 
         public Programmable currentRobot;
 
+        private void Awake()
+        {
+            jsFilesSaveFolder = Path.Combine(Application.persistentDataPath, "JsFiles");
+            if (!Directory.Exists(jsFilesSaveFolder))
+            {
+                Directory.CreateDirectory(jsFilesSaveFolder);
+            }
+        }
+
         private void Start()
         {
-            string[] jsFiles = Directory.GetFiles(JsFilesSaveFolder, "*.js");
+            string[] jsFiles = Directory.GetFiles(jsFilesSaveFolder, "*.js");
             foreach (string filePath in jsFiles)
             {
                 CreateNewFileEntry(Path.GetFileName(filePath));
@@ -139,7 +148,7 @@ namespace Cosmobot
             foreach (ProgrammingUiFileEntry entry in files)
             {
                 string contentToSave = entry.unsavedCode ?? ReadFile(entry);
-                File.WriteAllText(JsFilesSaveFolder + entry.filename, contentToSave, Encoding.UTF8);
+                File.WriteAllText(jsFilesSaveFolder + entry.filename, contentToSave, Encoding.UTF8);
 
                 entry.unsavedCode = null;
 
@@ -212,17 +221,17 @@ namespace Cosmobot
 
         private static void CreateFile(string filename)
         {
-            File.Create(JsFilesSaveFolder + filename).Dispose();
+            File.Create(jsFilesSaveFolder + filename).Dispose();
         }
 
         private static void RemoveFile(string filename)
         {
-            File.Delete(JsFilesSaveFolder + filename);
+            File.Delete(jsFilesSaveFolder + filename);
         }
 
         private static string ReadFile(ProgrammingUiFileEntry entry)
         {
-            return File.ReadAllText(JsFilesSaveFolder + entry.filename, Encoding.UTF8);
+            return File.ReadAllText(jsFilesSaveFolder + entry.filename, Encoding.UTF8);
         }
 
         private void HandleOpenFile(ProgrammingUiFileEntry entry)
