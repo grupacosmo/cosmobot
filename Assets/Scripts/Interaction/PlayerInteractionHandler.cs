@@ -19,6 +19,7 @@ namespace Cosmobot
 
         public void Update()
         {
+            // TEMP: temporary code for accessing robot UI
             if (!Input.GetMouseButtonDown(0)) { return; }
             if (!Physics.Raycast(
                     playerCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition),
