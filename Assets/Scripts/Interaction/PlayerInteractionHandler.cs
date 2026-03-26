@@ -1,4 +1,3 @@
-using Cosmobot.Api;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -16,21 +15,7 @@ namespace Cosmobot
 
         private DefaultInputActions actions;
         private IInteractable interaction;
-
-        public void Update()
-        {
-            // TEMP: temporary code for accessing robot UI
-            if (!Input.GetMouseButtonDown(0)) { return; }
-            if (!Physics.Raycast(
-                    playerCamera.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition),
-                    out RaycastHit hit, 500f)) { return; }
-
-            if (hit.collider.TryGetComponent<Programmable>(out Programmable programmable))
-            {
-                programmingUiManager.OpenUI(programmable);
-            }
-        }
-
+        
         private void OnEnable()
         {
             if (actions == null)
