@@ -15,9 +15,9 @@ namespace Cosmobot
         [SerializeField]
         private ScrollRect consoleScrollView;
 
-        [SerializeField] 
+        [SerializeField]
         private GameObject logInstantiationTarget;
-        
+
         [Header("Canvas UI Prefabs")]
         [SerializeField]
         private GameObject uiLogEntryPrefab;
@@ -35,7 +35,7 @@ namespace Cosmobot
 
             if (scrollToBottom)
                 StartCoroutine(ScrollToBottomCoroutine());
-            
+
             Enqueue(uiLog);
         }
 

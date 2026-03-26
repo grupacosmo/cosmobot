@@ -15,7 +15,7 @@ namespace Cosmobot
 
         private DefaultInputActions actions;
         private IInteractable interaction;
-        
+
         private void OnEnable()
         {
             if (actions == null)

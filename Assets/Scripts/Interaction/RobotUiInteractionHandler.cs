@@ -9,7 +9,7 @@ namespace Cosmobot
         private ProgrammingUiManager programmingUiManager;
 
         private Programmable robot;
-        
+
         public string Prompt { get; private set; } = "Press 'E' to interact";
 
         private void Start()

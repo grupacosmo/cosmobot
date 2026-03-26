@@ -28,7 +28,7 @@ namespace Cosmobot
         [TextArea(10, 20)]
 
         public string code;
-        
+
         private ManualResetEvent taskCompletedEvent; //for waiting for Unity thread
         private CancellationTokenSource cancellationTokenSource; //for thread killing
         private ConcurrentQueue<Action> commandQueue = new ConcurrentQueue<Action>();
