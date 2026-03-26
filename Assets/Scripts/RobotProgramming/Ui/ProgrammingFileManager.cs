@@ -52,8 +52,6 @@ namespace Cosmobot
             if (files.Count == 0) { return; }
 
             HandleOpenFile(files[0]);
-            files[0].IsOpen = true;
-
         }
 
         private void OnEnable()
@@ -63,7 +61,6 @@ namespace Cosmobot
             ProgrammingUiFileEntry activeEntry = programmingUI.robotActiveFiles.GetValueOrDefault(currentRobot);
             if (activeEntry is null) { return; }
 
-            activeEntry.IsOpen = true;
             activeEntry.IsActive = true;
 
             HandleOpenFile(activeEntry);
@@ -250,6 +247,7 @@ namespace Cosmobot
 
             UpdateDirtyIndicator();
             currentEntry = entry;
+            entry.IsOpen = true;
 
             if (string.IsNullOrWhiteSpace(entry.unsavedCode))
                 entry.unsavedCode = null;
