@@ -15,7 +15,7 @@ MonoBehaviour:
   id: material-mess
   displayName: Mess
   icon: {fileID: 0}
-  prefab: {fileID: 1363890005986749115, guid: a3751d5d286133155960b45f4ce9b0e6, type: 3}
+  modelPrefab: {fileID: 1363890005986749115, guid: a3751d5d286133155960b45f4ce9b0e6, type: 3}
   additionalData:
     keys: []
     values: []

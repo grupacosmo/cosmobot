@@ -13,13 +13,6 @@ namespace Cosmobot.Api
     {
         private ProgrammableFunctionWrapper wrapper;
 
-        private BaseEngineLogic baseLogic;
-
-        private void Start()
-        {
-            baseLogic = gameObject.GetComponent<BaseEngineLogic>();
-        }
-
         public void SetupThread(ManualResetEvent taskEvent, CancellationToken token, ConcurrentQueue<Action> commandQueue)
         {
             wrapper = new ProgrammableFunctionWrapper(taskEvent, token, commandQueue);
@@ -48,7 +41,7 @@ namespace Cosmobot.Api
 
             if (!Physics.Raycast(transform.position, Vector3.down, out hit, 1))
             {
-                baseLogic.Log("Nothing detected under me");
+                RobotLogger.LogWarning("Nothing detected under me");
                 return;
             }
 
@@ -56,14 +49,14 @@ namespace Cosmobot.Api
 
             if (deposit == null)
             {
-                baseLogic.Log("There's no material deposit here");
+                RobotLogger.LogWarning("There's no material deposit here");
                 return;
             }
 
             ItemInfo material = deposit.Mine();
             if (material == null)
             {
-                baseLogic.LogError("Gathered material was null");
+                RobotLogger.LogWarning("Gathered material was null");
                 return;
             }
 

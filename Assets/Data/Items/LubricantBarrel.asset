@@ -15,7 +15,7 @@ MonoBehaviour:
   id: lubricant-barrel
   displayName: Lubricant Barrel
   icon: {fileID: 0}
-  prefab: {fileID: 1862692014303423458, guid: e1481ce457c634310a74fdde5734c9ce, type: 3}
+  modelPrefab: {fileID: 1862692014303423458, guid: e1481ce457c634310a74fdde5734c9ce, type: 3}
   additionalData:
     keys: []
     values: []

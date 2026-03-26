@@ -15,7 +15,7 @@ MonoBehaviour:
   id: fuel-barrel
   displayName: Fuel Barrel
   icon: {fileID: 0}
-  prefab: {fileID: 1862692014303423458, guid: f98aee7f0035bf81490c075100b8c99e, type: 3}
+  modelPrefab: {fileID: 1862692014303423458, guid: f98aee7f0035bf81490c075100b8c99e, type: 3}
   additionalData:
     keys: []
     values: []

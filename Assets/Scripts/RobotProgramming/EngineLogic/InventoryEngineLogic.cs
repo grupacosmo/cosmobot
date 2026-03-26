@@ -16,8 +16,6 @@ namespace Cosmobot.Api
     {
         private ProgrammableFunctionWrapper wrapper;
 
-        private BaseEngineLogic baseLogic;
-
         private InventoryComponent inventoryComponent;
         [SerializeField] private float searchRange;
         [SerializeField] private float reachRange;
@@ -25,7 +23,6 @@ namespace Cosmobot.Api
         private void Start()
         {
             inventoryComponent = gameObject.GetComponent<InventoryComponent>();
-            baseLogic = gameObject.GetComponent<BaseEngineLogic>();
         }
 
         public void SetupThread(ManualResetEvent taskEvent, CancellationToken token, ConcurrentQueue<Action> commandQueue)
@@ -141,14 +138,14 @@ namespace Cosmobot.Api
         {
             if (item == null || !item.itemComponent)
             {
-                baseLogic.LogError("Item doesn't exist anymore");
+                RobotLogger.LogError("Item doesn't exist anymore");
                 return;
             }
 
             Vector2 pos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.z);
             if (Vector2.Distance(pos, item.itemComponent.transform.position) > reachRange)
             {
-                baseLogic.LogError("Item is too far");
+                RobotLogger.LogError("Item is too far");
                 return;
             }
 
@@ -158,7 +155,7 @@ namespace Cosmobot.Api
                 return;
             }
 
-            baseLogic.LogError("Couldn't add item to inventory");
+            RobotLogger.LogError("Couldn't add item to inventory");
         }
 
         private void DropItem(string itemId = "")
@@ -168,7 +165,7 @@ namespace Cosmobot.Api
                 ItemInstance temp = inventoryComponent.inventory.RemoveLatest();
                 if (temp == null)
                 {
-                    baseLogic.Log("No items to be dropped");
+                    RobotLogger.LogInfo("No items to be dropped");
                     return;
                 }
 
@@ -179,7 +176,7 @@ namespace Cosmobot.Api
             ItemInstance item = inventoryComponent.inventory.RemoveFirstById(itemId);
             if (item == null)
             {
-                baseLogic.Log("No such item in inventory");
+                RobotLogger.LogInfo("No such item in inventory");
                 return;
             }
 

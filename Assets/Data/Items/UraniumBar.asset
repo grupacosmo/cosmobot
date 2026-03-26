@@ -15,7 +15,7 @@ MonoBehaviour:
   id: uranium-bar
   displayName: Uranium Bar
   icon: {fileID: 0}
-  prefab: {fileID: 1862692014303423458, guid: 832f36600b99b69aeb877f1b63911363, type: 3}
+  modelPrefab: {fileID: 1862692014303423458, guid: 832f36600b99b69aeb877f1b63911363, type: 3}
   additionalData:
     keys: []
     values: []

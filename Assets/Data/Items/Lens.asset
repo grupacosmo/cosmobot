@@ -15,7 +15,7 @@ MonoBehaviour:
   id: lens
   displayName: Lens
   icon: {fileID: 0}
-  prefab: {fileID: 1862692014303423458, guid: 923e0323b3dc7ec758da772f8658600f, type: 3}
+  modelPrefab: {fileID: 1862692014303423458, guid: 923e0323b3dc7ec758da772f8658600f, type: 3}
   additionalData:
     keys: []
     values: []
