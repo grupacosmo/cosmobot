@@ -22,7 +22,7 @@ namespace Cosmobot
 
         [SerializeField]
         private ProgrammingUiLogManager logManager;
-        
+
         public string EngineStackTrace => engineInstance.Advanced.StackTrace;
 
         private ProgrammableData instance;
