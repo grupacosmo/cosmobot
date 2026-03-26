@@ -177,9 +177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logManager: {fileID: 0}
   code: 
-  activeFile: {fileID: 0}
 --- !u!65 &5262942
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -346,9 +344,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logManager: {fileID: 0}
   code: 
-  activeFile: {fileID: 0}
 --- !u!65 &24800182
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -616,7 +612,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &100876130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -734,7 +730,6 @@ GameObject:
   - component: {fileID: 127583547}
   - component: {fileID: 127583546}
   - component: {fileID: 127583548}
-  - component: {fileID: 127583549}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -787,22 +782,6 @@ MonoBehaviour:
   programmingUi: {fileID: 984255081}
   fileManager: {fileID: 203391317}
   playerController: {fileID: 530060404}
---- !u!114 &127583549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 127583545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d53612442e9d4eb484cde6905f74f5d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxLogEntries: 100
-  consoleScrollView: {fileID: 904585085}
-  logInstantiationTarget: {fileID: 1257615556}
-  uiLogEntryPrefab: {fileID: 5786305717814102051, guid: 35775eb09a89dd52ea3a89ebb4f3a5a8, type: 3}
 --- !u!1 &203391311
 GameObject:
   m_ObjectHideFlags: 0
@@ -1077,9 +1056,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logManager: {fileID: 0}
   code: 
-  activeFile: {fileID: 0}
 --- !u!65 &226238873
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2076,9 +2053,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logManager: {fileID: 127583549}
   code: 
-  activeFile: {fileID: 0}
 --- !u!65 &461082888
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3077,12 +3052,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logManager: {fileID: 127583549}
   code: "function foo() {\n   bar();\n}\n\nfunction bar() {\n  log(\"Log from Robot
     Script\");\n}\n\nfoo();\n\nlog(\"BaseRobot Log\");\nwait(1);\nlogWarning(\"BaseRobot
     Warning\");\nwait(1);\nlogError(\"BaseRobot Error\");\nwait(1);\nlet x = 2;\nlog(x);\nlet
     y = \"string\";\nlog(y)\ndance();"
-  activeFile: {fileID: 0}
 --- !u!114 &586230994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4275,9 +4248,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logManager: {fileID: 127583549}
   code: 
-  activeFile: {fileID: 0}
 --- !u!1 &904585083
 GameObject:
   m_ObjectHideFlags: 0
@@ -4290,6 +4261,7 @@ GameObject:
   - component: {fileID: 904585087}
   - component: {fileID: 904585086}
   - component: {fileID: 904585085}
+  - component: {fileID: 904585088}
   m_Layer: 5
   m_Name: Console Scroll View
   m_TagString: Untagged
@@ -4386,6 +4358,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 904585083}
   m_CullTransparentMesh: 1
+--- !u!114 &904585088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 904585083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d53612442e9d4eb484cde6905f74f5d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxLogEntries: 50
+  consoleScrollView: {fileID: 904585085}
+  logInstantiationTarget: {fileID: 1257615556}
+  uiLogEntryPrefab: {fileID: 5786305717814102051, guid: 35775eb09a89dd52ea3a89ebb4f3a5a8, type: 3}
 --- !u!1 &911677250
 GameObject:
   m_ObjectHideFlags: 0
@@ -4681,6 +4669,7 @@ MonoBehaviour:
   codeDisplay: {fileID: 1941104651}
   lineNumbersText: {fileID: 1262629569}
   fileStatusText: {fileID: 1835161054}
+  logManager: {fileID: 904585088}
   robotActiveFiles:
     keys: []
     values: []
@@ -4697,8 +4686,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fileManager: {fileID: 203391317}
-  logManager: {fileID: 127583549}
-  uiManager: {fileID: 127583548}
 --- !u!1 &986398515
 GameObject:
   m_ObjectHideFlags: 0
@@ -4944,8 +4931,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1521439339}
   m_HandleRect: {fileID: 1521439337}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.9999999
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8885,9 +8872,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08d5d60114dd36745a3e79113fc61462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logManager: {fileID: 0}
   code: 
-  activeFile: {fileID: 0}
 --- !u!65 &1784620195
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11122,4 +11107,3 @@ SceneRoots:
   - {fileID: 1169003705}
   - {fileID: 1943543427}
   - {fileID: 100876131}
-

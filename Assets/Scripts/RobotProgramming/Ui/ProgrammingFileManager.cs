@@ -78,7 +78,6 @@ namespace Cosmobot
             ProgrammingUiFileEntry entry = programmingUI.robotActiveFiles[currentRobot];
             entry.IsOpen = true;
             currentRobot.code = ReadFile(entry);
-            currentRobot.activeFile = entry;
             currentRobot.RunTask();
         }
 

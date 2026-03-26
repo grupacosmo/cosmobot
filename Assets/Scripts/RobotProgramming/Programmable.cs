@@ -19,10 +19,6 @@ namespace Cosmobot
     /// </summary>
     public class Programmable : MonoBehaviour
     {
-
-        [SerializeField]
-        private ProgrammingUiLogManager logManager;
-
         public string EngineStackTrace => engineInstance.Advanced.StackTrace;
 
         private ProgrammableData instance;
@@ -32,8 +28,7 @@ namespace Cosmobot
         [TextArea(10, 20)]
 
         public string code;
-        public ProgrammingUiFileEntry activeFile;
-
+        
         private ManualResetEvent taskCompletedEvent; //for waiting for Unity thread
         private CancellationTokenSource cancellationTokenSource; //for thread killing
         private ConcurrentQueue<Action> commandQueue = new ConcurrentQueue<Action>();
@@ -58,7 +53,7 @@ namespace Cosmobot
         {
             if (task != null && task.IsAlive)
             {
-                logManager.CreateLog(LogLevel.Warn, "Task already running");
+                Debug.LogError("Task already running");
                 return;
             }
 
@@ -140,9 +135,7 @@ namespace Cosmobot
             }
             catch (OperationCanceledException)
             {
-                commandQueue.Enqueue(() => logManager.CreateLog(
-                    LogLevel.Info,
-                    "Operation was cancelled"));
+                Debug.LogError("Operation was cancelled");
                 RobotLogger.LogError("Program was stopped/cancelled", RobotLogger.LogOptions.SkipUnityDebugLog);
             }
             catch (Jint.Runtime.JavaScriptException ex)
@@ -151,18 +144,14 @@ namespace Cosmobot
                     ex.JavaScriptStackTrace != null
                         ? ("[JS]  " + ex.JavaScriptStackTrace.Replace("\n", "\n[JS]  "))
                         : "[No JS stack trace available]";
-                commandQueue.Enqueue(() => logManager.CreateLog(
-                    LogLevel.Error,
-                    $"[Programmable JsThread] JS Error ({objectName}): {ex.Error} | {ex.Location}\n{jsStackTrace}\n{ex.StackTrace}"));
+                Debug.LogError($"[Programmable JsThread] JS Error ({objectName}): {ex.Error} | {ex.Location}\n{jsStackTrace}\n{ex.StackTrace}");
                 RobotLogger.LogError(
                     $"[JavaScript Exception]: {ex.Error}\n\n{ex.JavaScriptStackTrace ?? "Stack trace not available"}",
                     RobotLogger.LogOptions.SkipUnityDebugLog);
             }
             catch (Exception ex)
             {
-                commandQueue.Enqueue(() => logManager.CreateLog(
-                    LogLevel.Error,
-                    $"[Programmable JsThread] Error: ({objectName}): {ex.Message}\n {ex.StackTrace}"));
+                Debug.LogError($"[Programmable JsThread] Error: ({objectName}): {ex.Message}\n {ex.StackTrace}");
                 RobotLogger.LogError("Internal unknown error occurred! This error is outside of your code, and you " +
                                      "have probably discovered a \"real\"-world glitch! Unfortunately, this is a game" +
                                      $"bug - you can report it at {GameInfo.BugReportUrl}.\n\n" +
@@ -176,9 +165,6 @@ namespace Cosmobot
             finally
             {
                 RobotLogger.ClearCurrent();
-                commandQueue.Enqueue(() => logManager.CreateLog(
-                    LogLevel.Info,
-                    "[Programmable JsThread] Done"));
             }
         }
 

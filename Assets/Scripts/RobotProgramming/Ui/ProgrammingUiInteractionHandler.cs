@@ -4,13 +4,8 @@ namespace Cosmobot
 {
     public class ProgrammingUiInteractionHandler : MonoBehaviour
     {
-
         [SerializeField]
         private ProgrammingFileManager fileManager;
-        [SerializeField]
-        private ProgrammingUiLogManager logManager;
-        [SerializeField]
-        private ProgrammingUiManager uiManager;
 
         public void CreateNewFile()
         {
@@ -50,7 +45,7 @@ namespace Cosmobot
         {
             if (fileManager.GetFileCount() != 0) { return false; }
 
-            logManager.CreateLog(LogLevel.Warn, logMessage);
+            Debug.LogWarning(logMessage);
             return true;
         }
     }
