@@ -148,7 +148,7 @@ namespace Cosmobot
             foreach (ProgrammingUiFileEntry entry in files)
             {
                 string contentToSave = entry.unsavedCode ?? ReadFile(entry);
-                File.WriteAllText(jsFilesSaveFolder + entry.filename, contentToSave, Encoding.UTF8);
+                File.WriteAllText(Path.Combine(jsFilesSaveFolder, entry.filename), contentToSave, Encoding.UTF8);
 
                 entry.unsavedCode = null;
 
@@ -221,17 +221,17 @@ namespace Cosmobot
 
         private static void CreateFile(string filename)
         {
-            File.Create(jsFilesSaveFolder + filename).Dispose();
+            File.Create(Path.Combine(jsFilesSaveFolder, filename)).Dispose();
         }
 
         private static void RemoveFile(string filename)
         {
-            File.Delete(jsFilesSaveFolder + filename);
+            File.Delete(Path.Combine(jsFilesSaveFolder, filename));
         }
 
         private static string ReadFile(ProgrammingUiFileEntry entry)
         {
-            return File.ReadAllText(jsFilesSaveFolder + entry.filename, Encoding.UTF8);
+            return File.ReadAllText(Path.Combine(jsFilesSaveFolder, entry.filename), Encoding.UTF8);
         }
 
         private void HandleOpenFile(ProgrammingUiFileEntry entry)
