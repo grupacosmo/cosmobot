@@ -9,9 +9,10 @@ namespace Cosmobot
 
         public int ResourceRequirement => resourceRequirement;
 
-        public void SetRequirement(int requirement)
+        public void SetRequirement(int requirement, GameObject previewObject)
         {
             resourceRequirement = requirement;
+            Instantiate(previewObject, transform.position, transform.rotation, transform);
         }
 
         public void DecreaseRequirement(int amount)
