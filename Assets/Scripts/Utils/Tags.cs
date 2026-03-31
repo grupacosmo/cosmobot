@@ -4,5 +4,6 @@ namespace Cosmobot.Utils
     {
         public const string Item = "Item";
         public const string Enemy = "Enemy";
+        public const string Player = "Player";
     }
 }
