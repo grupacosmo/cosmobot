@@ -26,7 +26,8 @@ namespace Cosmobot
 
         private IEngineLogic[] engineLogicInterfaces;
         [TextArea(10, 20)]
-        [SerializeField] private string code;
+
+        public string code;
 
         private ManualResetEvent taskCompletedEvent; //for waiting for Unity thread
         private CancellationTokenSource cancellationTokenSource; //for thread killing
@@ -42,15 +43,35 @@ namespace Cosmobot
         {
             instance = new ProgrammableData(this);
             taskCompletedEvent = new ManualResetEvent(false);
+
+            debugI = staticDebugI++;
+            engineLogicInterfaces = GetComponents<IEngineLogic>();
+            objectName = gameObject.name;
+        }
+
+        public void RunTask()
+        {
+            if (task != null && task.IsAlive)
+            {
+                Debug.LogError("Task already running");
+                return;
+            }
+
             cancellationTokenSource = new CancellationTokenSource();
 
             task = new Thread(() => JsThread(cancellationTokenSource.Token));
             task.IsBackground = true;
             task.Start();
+        }
 
-            debugI = staticDebugI++;
-            engineLogicInterfaces = GetComponents<IEngineLogic>();
-            objectName = gameObject.name;
+        public void StopTask()
+        {
+            StopAllCoroutines();
+            commandQueue.Clear();
+
+            cancellationTokenSource?.Cancel();
+            cancellationTokenSource?.Dispose();
+            cancellationTokenSource = null;
         }
 
         private void Update()
@@ -114,7 +135,7 @@ namespace Cosmobot
             }
             catch (OperationCanceledException)
             {
-                Debug.Log("[Programmable JsThread] Operation was cancelled");
+                Debug.LogError("Operation was cancelled");
                 RobotLogger.LogError("Program was stopped/cancelled", RobotLogger.LogOptions.SkipUnityDebugLog);
             }
             catch (Jint.Runtime.JavaScriptException ex)
@@ -128,7 +149,7 @@ namespace Cosmobot
                     $"[JavaScript Exception]: {ex.Error}\n\n{ex.JavaScriptStackTrace ?? "Stack trace not available"}",
                     RobotLogger.LogOptions.SkipUnityDebugLog);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Debug.LogError($"[Programmable JsThread] Error: ({objectName}): {ex.Message}\n {ex.StackTrace}");
                 RobotLogger.LogError("Internal unknown error occurred! This error is outside of your code, and you " +
@@ -144,7 +165,6 @@ namespace Cosmobot
             finally
             {
                 RobotLogger.ClearCurrent();
-                Debug.Log("[Programmable JsThread] Done");
             }
         }
 

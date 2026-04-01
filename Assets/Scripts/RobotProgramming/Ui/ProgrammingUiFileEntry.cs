@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +19,9 @@ namespace Cosmobot
         [SerializeField]
         private TMP_Text fileStatsText;
 
+        public string filename;
+        [CanBeNull] public string unsavedCode;
+
         public event FileEntryEvent OnOpenFile;
         public event FileEntryEvent OnActivateFile;
 
@@ -27,12 +31,18 @@ namespace Cosmobot
         public void SetFile(ToggleGroup openFileGroup, ToggleGroup activeFileGroup, string filename, string stats)
         {
             fileNameText.text = filename;
+            this.filename = filename;
             fileStatsText.text = stats;
 
             openFileToggle.isOn = false;
             activeFileToggle.isOn = false;
             openFileToggle.group = openFileGroup;
             activeFileToggle.group = activeFileGroup;
+        }
+
+        public void UpdateStats(string stats)
+        {
+            fileStatsText.text = stats;
         }
 
         private void OnEnable()
@@ -45,6 +55,8 @@ namespace Cosmobot
         {
             activeFileToggle.onValueChanged.RemoveListener(OnActiveToggle);
             openFileToggle.onValueChanged.RemoveListener(OnOpenToggle);
+            IsActive = false;
+            IsOpen = false;
         }
 
         private void OnOpenToggle(bool value)
