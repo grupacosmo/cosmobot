@@ -47,17 +47,15 @@ namespace Cosmobot.ItemSystem
 #if UNITY_EDITOR
             ReInitImage();
 #endif
-            // <TEMP>
             if (Application.isPlaying)
             {
-                ItemComponent itemComponent = gameObject.AddComponent<ItemComponent>();
-                itemComponent.Init(new ItemInstance(itemInfo, itemData));
+                transform.localScale = Vector3.one;
                 Destroy(this);
                 Destroy(GetComponent<MeshRenderer>());
                 Destroy(GetComponent<MeshFilter>());
-                transform.localScale = Vector3.one;
+                ItemComponent itemComponent = gameObject.AddComponent<ItemComponent>();
+                itemComponent.Init(new ItemInstance(itemInfo, itemData));
             }
-            // </TEMP>
         }
 
 #if UNITY_EDITOR
