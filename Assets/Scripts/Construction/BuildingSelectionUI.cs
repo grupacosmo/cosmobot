@@ -43,8 +43,8 @@ namespace Cosmobot
             LoadButtons();
             exitButton.onClick.AddListener(Close);
             gameObject.SetActive(false);
-            playerCamera = mainCamera.GetComponent<PlayerCamera>();
-            playerConstructionHandler = player.GetComponent<PlayerConstructionHandler>();
+            playerCamera = GameManager.PlayerCamera;
+            playerConstructionHandler = GameManager.GetPlayerComponent<PlayerConstructionHandler>();
         }
 
         private void LateUpdate()
