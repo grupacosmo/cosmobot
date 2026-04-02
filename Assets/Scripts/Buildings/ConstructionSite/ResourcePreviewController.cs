@@ -1,3 +1,4 @@
+using Cosmobot.ItemSystem;
 using UnityEngine;
 
 namespace Cosmobot
@@ -9,10 +10,10 @@ namespace Cosmobot
 
         public int ResourceRequirement => resourceRequirement;
 
-        public void SetRequirement(int requirement, GameObject previewObject)
+        public void SetRequirement(int requirement, ItemInfo previewObject)
         {
             resourceRequirement = requirement;
-            Instantiate(previewObject, transform.position, transform.rotation, transform);
+            Instantiate(previewObject.ModelPrefab, transform.position, transform.rotation, transform);
         }
 
         public void DecreaseRequirement(int amount)
