@@ -4,7 +4,7 @@ namespace Cosmobot
 {
     public class PlayerFallProtector : MonoBehaviour
     {
-        public float voidYLevel = -20;
+        public float voidYLevel = -200;
 
         private void FixedUpdate()
         {
