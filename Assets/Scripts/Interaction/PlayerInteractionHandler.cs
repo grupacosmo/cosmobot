@@ -60,7 +60,6 @@ namespace Cosmobot
         private void ShowInteractionPrompt()
         {
             if (!interactionPrompt) return;
-            Debug.Log($"Interaction with: '{(interaction as Component)?.name}' with prompt: '{interaction?.Prompt}'");
             interactionPrompt.text = interaction?.Prompt;
             interactionPrompt.enabled = true;
         }
