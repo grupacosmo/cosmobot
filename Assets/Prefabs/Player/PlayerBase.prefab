@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 2893797271701524176}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -40, y: 2, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -346,13 +346,37 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1137498538287740836, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
+      insertIndex: 3
+      addedObject: {fileID: 8770446475998164016}
   m_SourcePrefab: {fileID: 100100000, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
 --- !u!1 &1993758676804139253 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1137498538287740836, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
   m_PrefabInstance: {fileID: 1468864044066262865}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8770446475998164016
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1993758676804139253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cf0962dc2ba4505b9030a0230ff839c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraTransform: {fileID: 9026704049276820769}
+  constructionPreview: {fileID: 5161581348327670105}
+  buildTargetingCollisionMask:
+    serializedVersion: 2
+    m_Bits: 3265
+  maxBuildDistance: 20
+  maxTerrainHeight: 100
+  constructionSitePrefab: {fileID: 6571599839263284129, guid: 11c3bb8c65eb71bca9cff435f75bdc0b, type: 3}
+  buildingSelectionUI: {fileID: 2079012980313551054}
 --- !u!20 &4536162389977337266 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 3067474405274665699, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
@@ -361,6 +385,11 @@ Camera:
 --- !u!4 &7157217834124179820 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8588927043253974589, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
+  m_PrefabInstance: {fileID: 1468864044066262865}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &9026704049276820769 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7577094790283547248, guid: a1cc49c1cd9baed489f4c4bb111c9a19, type: 3}
   m_PrefabInstance: {fileID: 1468864044066262865}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4109237760262021838
