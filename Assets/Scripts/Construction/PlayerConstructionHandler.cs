@@ -222,7 +222,7 @@ namespace Cosmobot
                 Physics.Raycast(objectRay, out RaycastHit objectRayHit, 1f, buildTargetingCollisionMask);
             if (objectRaySuccess
                     && objectRayHit.transform != null
-                    && (objectRayHit.transform.gameObject.name == "Floor element"
+                    && (objectRayHit.transform.gameObject.name.Contains("Floor element")
                     || objectRayHit.transform.gameObject.name == "Terrain"))
                 return true; // TEMP: should be replaced later by a standard floor element prefab
 

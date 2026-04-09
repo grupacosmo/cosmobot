@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Cosmobot.BuildingSystem;
 using Cosmobot.Utils;
 using TMPro;
@@ -18,12 +17,6 @@ namespace Cosmobot
 
         [SerializeField]
         private SerializableDictionary<string, Button> buttonInfo;
-
-        [SerializeField]
-        private GameObject player;
-
-        [SerializeField]
-        private Camera mainCamera;
 
         [SerializeField]
         private Button exitButton;

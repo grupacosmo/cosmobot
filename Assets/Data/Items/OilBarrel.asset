@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: oil-barrel
   displayName: Oil Barrel
-  icon: {fileID: 0}
+  icon: {fileID: 2800000, guid: 98bae8cd856bb965cae7059cf5ab2a8e, type: 3}
   modelPrefab: {fileID: 1862692014303423458, guid: 5ac969199ff6f289099ab4998edd0228, type: 3}
   additionalData:
     keys: []

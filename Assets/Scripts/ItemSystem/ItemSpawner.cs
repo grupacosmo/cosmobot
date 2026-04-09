@@ -25,24 +25,15 @@ namespace Cosmobot.ItemSystem
 
         private void Awake()
         {
-            if (Application.isPlaying)
-            {
-                /*ItemComponent itemComponent = gameObject.AddComponent<ItemComponent>();
-                itemComponent.Init(new ItemInstance(itemInfo, itemData));
-                Destroy(this);
-                Destroy(GetComponent<MeshRenderer>());
-                Destroy(GetComponent<MeshFilter>());
-                transform.localScale = Vector3.one;*/
-            }
 #if UNITY_EDITOR
-            else
+            if (!Application.isPlaying)
             {
                 if (gameObject.GetComponent<MeshRenderer>() == null)
                 {
                     Mesh m = Resources.Load<Mesh>("billboard_cross");
                     gameObject.AddComponent<MeshFilter>().mesh = m;
                     gameObject.AddComponent<MeshRenderer>();
-                    transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+                    transform.localScale = Vector3.one;
                 }
                 material = new Material(Shader.Find("Hidden/InternalErrorShader"));
                 gameObject.GetComponent<MeshRenderer>().material = material;
@@ -56,17 +47,15 @@ namespace Cosmobot.ItemSystem
 #if UNITY_EDITOR
             ReInitImage();
 #endif
-            // <TEMP>
             if (Application.isPlaying)
             {
-                ItemComponent itemComponent = gameObject.AddComponent<ItemComponent>();
-                itemComponent.Init(new ItemInstance(itemInfo, itemData));
+                transform.localScale = Vector3.one;
                 Destroy(this);
                 Destroy(GetComponent<MeshRenderer>());
                 Destroy(GetComponent<MeshFilter>());
-                transform.localScale = Vector3.one;
+                ItemComponent itemComponent = gameObject.AddComponent<ItemComponent>();
+                itemComponent.Init(new ItemInstance(itemInfo, itemData));
             }
-            // </TEMP>
         }
 
 #if UNITY_EDITOR
@@ -96,6 +85,7 @@ namespace Cosmobot.ItemSystem
 
         }
 
+        private static readonly int matFieldSurface = Shader.PropertyToID("_Surface");
         private void SetItemIcon()
         {
             if (material == null) 
@@ -107,11 +97,14 @@ namespace Cosmobot.ItemSystem
                 ? Shader.Find("Hidden/InternalErrorShader")
                 : Shader.Find("Universal Render Pipeline/Unlit");
 
+            material.name = "Mat " + shader.name;
             material.shader = shader;
             material.color = Color.white;
             if (itemInfo?.Icon != null)
             {
                 material.mainTexture = itemInfo.Icon;
+                const float MatSurfaceTransparent = 1;
+                material.SetFloat(matFieldSurface, MatSurfaceTransparent);
             }
             
         }

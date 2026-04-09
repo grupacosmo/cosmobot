@@ -53,18 +53,11 @@ namespace Cosmobot.ItemSystem
                     $"Prefab of item '{id}' does not have '{nameof(ItemComponent)}' script attached!");
             }
 
-            if (itemComponent.ItemInfo != this)
-            {
-                throw new InvalidOperationException(
-                    $"Prefab of item '{id}' has different ItemInfo setup! (found '{itemComponent.ItemInfo.Id}')");
-            }
-
+            itemComponent.Init(new ItemInstance(this));
             foreach (KeyValuePair<string, string> keyValuePair in additionalData)
             {
                 itemComponent.ItemData[keyValuePair.Key] = keyValuePair.Value;
             }
-
-            itemComponent.Init(new ItemInstance(this));
 
             return instantiatedObject;
         }

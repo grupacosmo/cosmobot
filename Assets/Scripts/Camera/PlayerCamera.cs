@@ -50,7 +50,7 @@ namespace Cosmobot
         private float yInput;
         private float yRotation;
         private float zoomFov;
-        public bool IsFirstPerson { get; private set; } = true;
+        public bool IsFirstPerson { get; private set; } = false;
         public bool IsZoomed { get; private set; }
 
         private void Start()

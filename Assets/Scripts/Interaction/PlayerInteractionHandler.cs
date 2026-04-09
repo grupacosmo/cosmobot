@@ -10,7 +10,7 @@ namespace Cosmobot
         private TMP_Text interactionPrompt;
 
         private DefaultInputActions actions;
-        private IInteractable interaction  ;
+        private IInteractable interaction;
 
         private void OnEnable()
         {
@@ -59,6 +59,7 @@ namespace Cosmobot
 
         private void ShowInteractionPrompt()
         {
+            if (!interactionPrompt) return;
             interactionPrompt.text = interaction?.Prompt;
             interactionPrompt.enabled = true;
         }
