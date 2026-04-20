@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documentation>
+    <functions>
+        <function name="findItem">
+            <args>
+                <arg>
+                    <name>type</name>
+                    <type>string</type>
+                    <description>type of an item to search for, eg. 'coal'</description>
+                </arg>
+            </args>
+            <returns>
+                <type>Item|null</type>
+                <description>Matching item near a robot or null if no item was found within range.</description>
+            </returns>
+            <description>Searches for an {{@types/Item}} object of specified type near the robot.</description>
+            <example>
+                const item = findItem('coal');
+                if (item) {
+                    log('Item found at: ' + item.getPosition());
+                } else {
+                    log('No item of specified type found nearby.')
+                }
+            </example>
+            <seeAlso>
+                <typeRef name="Item"/>
+                <funcRef name="findClosestItem"/>
+                <funcRef name="findAllItems"/>
+                <funcRef name="log"/>
+            </seeAlso>
+        </function>
+        <function name="findClosestItem">
+            <args>
+                <arg>
+                    <name>type</name>
+                    <type>string</type>
+                    <description>type of an item to search for, eg. 'coal'</description>
+                </arg>
+            </args>
+            <returns>
+                <type>Item|null</type>
+                <description>Matching item near a robot or null if no item was found within range.</description>
+            </returns>
+            <description>
+                Searches for an {{@types/Item}} object of specified type near the robot. 
+                If more than one are found the closest one will be retrieved.
+            </description>
+            <example>
+                const item = findClosestItem('coal');
+                if (item) {
+                    log('Item found at: ' + item.getPosition());
+                } else {
+                    log('No item of specified type found nearby.')
+                }
+            </example>
+            <seeAlso>
+                <typeRef name="Item"/>
+                <funcRef name="findItem"/>
+                <funcRef name="findAllItems"/>
+                <funcRef name="log"/>
+            </seeAlso>
+        </function>
+        <function name="findAllItems">
+            <args>
+                <arg>
+                    <name>type</name>
+                    <type>string</type>
+                    <description>type of an item to search for, eg. 'coal'</description>
+                </arg>
+            </args>
+            <returns>
+                <type>Array(Item)|null</type>
+                <description>Matching item near a robot or null if no item was found within range.</description>
+            </returns>
+            <description>Searches for all {{@types/Item}} objects of specified type near the robot.</description>
+            <example>
+                const items = findAllItems('coal');
+                for (let index = 0; index &lt; items.length; index++) {
+                    const item = index[i]
+                    log('Found: ' + item + ' at: ' + item.getPosition());
+                }
+            </example>
+            <seeAlso>
+                <typeRef name="Item"/>
+                <funcRef name="findItem"/>
+                <funcRef name="findClosestItem"/>
+                <funcRef name="log"/>
+            </seeAlso>
+        </function>
+        <function name="pickupItem">
+            <args>
+                <arg>
+                    <name>item</name>
+                    <type>Item</type>
+                    <description>Item object that will be picked up.</description>
+                </arg>
+            </args>
+            <returns>
+                <type>null</type>
+                <description></description>
+            </returns>
+            <description>
+                Picks up the specified {{@types/Item}} and adds it to the robot's inventory. 
+                Fails if the Item is too far.
+            </description>
+            <example>
+                pickupItem('coal');
+            </example>
+            <seeAlso>
+                <typeRef name="Items"/>
+            </seeAlso>
+        </function>
+        <function name="dropItem">
+            <args>
+                <arg>
+                    <name>itemId</name>
+                    <type>string|null</type>
+                    <description>ID of the item to be removed. Can be null.</description>
+                </arg>
+            </args>
+            <returns>
+                <type>null</type>
+                <description></description>
+            </returns>
+            <description>
+                Drop the specified {{@types/Item}} and removes it from the robot's inventory.
+                When no itemId is provided the most recently added item will be dropped.
+            </description>
+            <example>
+                dropItem('itemId'); // drops a specific item.
+                dropItem(); // drop the most recently added item.
+            </example>
+            <seeAlso>
+                <typeRef name="Item"/>
+                <funcRef name="pickupItem"/>
+            </seeAlso>
+        </function>
+        <function name="wait">
+            <args>
+                <arg>
+                    <name>seconds</name>
+                    <type>float</type>
+                    <description>Number of seconds.</description>
+                </arg>
+            </args>
+            <returns>
+                <type>null</type>
+                <description></description>
+            </returns>
+            <description>Stops robot actions for a specified amount of seconds.</description>
+            <example>
+                moveForward(10.0);
+                wait(5.0);
+                turnLeft(90.0);
+            </example>
+            <seeAlso>
+                <funcRef name="moveForward"/>
+                <funcRef name="turnLeft"/>
+            </seeAlso>
+        </function>
+        <function name="log">
+            <args>
+                <arg>
+                    <name>message</name>
+                    <type>string</type>
+                    <description>Message to display.</description>
+                </arg>
+            </args>
+            <returns>
+                <type>null</type>
+                <description></description>
+            </returns>
+            <description>Prints out message to the console.</description>
+            <example>
+                log('Hello World!');
+            </example>
+            <seeAlso>
+                <typeRef name=""/>
+                <funcRef name=""/>
+            </seeAlso>
+        </function>
+        <function name="logWarning">
+            <args>
+                <arg>
+                    <name>message</name>
+                    <type>string</type>
+                    <description>Message to display.</description>
+                </arg>
+            </args>
+            <returns>
+                <type>null</type>
+                <description></description>
+            </returns>
+            <description>Prints out a warning.</description>
+            <example>
+                logWarning('This probably shouldn't happen.');
+            </example>
+            <seeAlso>
+                <typeRef name=""/>
+                <funcRef name=""/>
+            </seeAlso>
+        </function>
+        <function name="logError">
+            <args>
+                <arg>
+                    <name>message</name>
+                    <type>string</type>
+                    <description>Message to display.</description>
+                </arg>
+            </args>
+            <returns>
+                <type>null</type>
+                <description></description>
+            </returns>
+            <description>Print out an error.</description>
+            <example>
+                logError('This definetily shouldn't happen.');
+            </example>
+            <seeAlso>
+                <typeRef name=""/>
+                <funcRef name=""/>
+            </seeAlso>
+        </function>
+        <function name="dance">
+            <args>
+            </args>
+            <returns>
+                <type>null</type>
+                <description></description>
+            </returns>
+            <description>Starts a silly dance animation.</description>
+            <example>
+                dance();
+            </example>
+            <seeAlso>
+                <typeRef name=""/>
+                <funcRef name=""/>
+            </seeAlso>
+        </function>
+        <function name="moveToObject">
+            <args>
+                <arg>
+                    <name>object</name>
+                    <type>Entity</type>
+                    <description>Object to move to.</description>
+                </arg>
+            </args>
+            <returns>
+                <type>null</type>
+                <description></description>
+            </returns>
+            <description>Instructs the robot to move to a specified {{@types/Entity}}.</description>
+            <example>
+                moveToObject(Player);
+            </example>
+            <seeAlso>
+                <typeRef name=""/>
+                <funcRef name="moveForward"/>
+                <funcRef name="moveToPosition"/>
+            </seeAlso>
+        </function>
+        <function name="moveToPosition">
+            <args>
+                <arg>
+                    <name>x</name>
+                    <type>float</type>
+                    <description>x coordinate</description>
+                </arg>
+                <arg>
+                    <name>y</name>
+                    <type>float</type>
+                    <description>y coordinate</description>
+                </arg>
+            </args>
+            <returns>
+                <type>null</type>
+                <description></description>
+            </returns>
+            <description>Instructs the robot to move to a specified position.</description>
+            <example>
+                moveToPosition(10.0, 10.0);
+            </example>
+            <seeAlso>
+                <typeRef name=""/>
+                <funcRef name="moveForward"/>
+                <funcRef name="moveToObject"/>
+            </seeAlso>
+        </function>
+        <function name="moveForward">
+            <args>
+                <arg>
+                    <name>distance</name>
+                    <type>float</type>
+                    <description>Distance to travel.</description>
+                </arg>
+            </args>
+            <returns>
+                <type>null</type>
+                <description></description>
+            </returns>
+            <description>Instructs the robot to move a specified distance forward.</description>
+            <example>
+                moveForward(10.0);
+            </example>
+            <seeAlso>
+                <typeRef name=""/>
+                <funcRef name="moveToPosition"/>
+                <funcRef name="moveToObject"/>
+            </seeAlso>
+        </function>
+        <function name="turnRight">
+            <args>
+                <arg>
+                    <name>degrees</name>
+                    <type>float</type>
+                    <description>Turn angle in degrees.</description>
+                </arg>
+            </args>
+            <returns>
+                <type>null</type>
+                <description></description>
+            </returns>
+            <description>Turns the robot right by a specified amount of degrees.</description>
+            <example>
+                turnRight(90.0);
+            </example>
+            <seeAlso>
+                <typeRef name=""/>
+                <funcRef name="turnLeft"/>
+                <funcRef name="turnFacing"/>
+            </seeAlso>
+        </function>
+        <function name="turnLeft">
+            <args>
+                <arg>
+                    <name>degrees</name>
+                    <type>float</type>
+                    <description>Turn angle in degrees.</description>
+                </arg>
+            </args>
+            <returns>
+                <type>null</type>
+                <description></description>
+            </returns>
+            <description>Turns the robot left by a specified amount of degrees.</description>
+            <example>
+                turnLeft(90.0);
+            </example>
+            <seeAlso>
+                <typeRef name=""/>
+                <funcRef name="turnRight"/>
+                <funcRef name="turnFacing"/>
+            </seeAlso>
+        </function>
+        <function name="turnFacing">
+            <args>
+                <arg>
+                    <name>degrees</name>
+                    <type>float</type>
+                    <description>Turn angle in degrees.</description>
+                </arg>
+            </args>
+            <returns>
+                <type>null</type>
+                <description></description>
+            </returns>
+            <description>Turns the robot to a direction based on provided degrees.</description>
+            <example>
+                turnFacing(-90.0);
+                turnFacing(90.0);
+            </example>
+            <seeAlso>
+                <typeRef name=""/>
+                <funcRef name="turnLeft"/>
+                <funcRef name="turnRight"/>
+            </seeAlso>
+        </function>
+        <function name="setupConstructionSite">
+            <args>
+            </args>
+            <returns>
+                <type>null</type>
+                <description></description>
+            </returns>
+            <description>Creates a new construction site building in front of the robot.</description>
+            <example>
+                setupConstructionSite();
+            </example>
+            <seeAlso>
+                <typeRef name=""/>
+                <funcRef name="moveForward"/>
+                <funcRef name="turnRight"/>
+                <funcRef name="turnLeft"/>
+                <funcRef name="turnFacing"/>
+            </seeAlso>
+        </function>
+        <function name="dig">
+            <args>
+            </args>
+            <returns>
+                <type>null</type>
+                <description></description>
+            </returns>
+            <description>
+                Scans the ground beneath the robot for ore veins.
+                If a vein is found, a new ore corresponding to the vein type will be spawned in front of the robot. 
+            </description>
+            <example>
+                dig();
+            </example>
+            <seeAlso>
+                <typeRef name=""/>
+                <funcRef name="moveForward"/>
+                <funcRef name="turnRight"/>
+                <funcRef name="turnLeft"/>
+                <funcRef name="turnFacing"/>
+            </seeAlso>
+        </function>
+    </functions>
+    <types>
+        <type name="Vec3">
+            <description>A 3D vector representation. Has x, y and z fields.</description>
+            <fields>
+                <field>
+                    <type>float</type>
+                    <name>x</name>
+                    <description>X coordinate of the vector.</description>
+                </field>
+                <field>
+                    <type>float</type>
+                    <name>y</name>
+                    <description>Y coordinate of the vector.</description>
+                </field>
+                <field>
+                    <type>float</type>
+                    <name>z</name>
+                    <description>Z coordinate of the vector.</description>
+                </field>
+            </fields>
+            <methods>
+                <method>
+                    <name></name>
+                    <returns></returns>
+                    <description></description>
+                </method>
+            </methods>
+            <example>
+                const vector3 = vec3(1.0, 1.0, 1.0);
+            </example>
+        </type>
+        <type name="Vec2">
+            <description>A 2D vector representation. Has x and y fields.</description>
+            <fields>
+                <field>
+                    <type>float</type>
+                    <name>x</name>
+                    <description>X coordinate of the vector.</description>
+                </field>
+                <field>
+                    <type>float</type>
+                    <name>y</name>
+                    <description>Y coordinate of the vector.</description>
+                </field>
+            </fields>
+            <methods>
+                <method>
+                    <name></name>
+                    <returns></returns>
+                    <description></description>
+                </method>
+            </methods>
+            <example>
+                const vector2 = vec2(1.0, 1.0);
+            </example>
+        </type>
+        <type name="Item">
+            <description>Subclass of Entity. Represents pickupable items.</description>
+            <fields>
+                <field>
+                    <type></type>
+                    <name></name>
+                    <description></description>
+                </field>
+            </fields>
+            <methods>
+                <method>
+                    <name></name>
+                    <returns></returns>
+                    <description></description>
+                </method>
+            </methods>
+            <example></example>
+        </type>
+        <type name="Hostile">
+            <description>Subclass of Entity. Represents an enemy.</description>
+            <fields>
+                <field>
+                    <type></type>
+                    <name></name>
+                    <description></description>
+                </field>
+            </fields>
+            <methods>
+                <method>
+                    <name></name>
+                    <returns></returns>
+                    <description></description>
+                </method>
+            </methods>
+            <example></example>
+        </type>
+    </types>
+</documentation>
