@@ -34,9 +34,15 @@ namespace Cosmobot.ItemSystem
                 .Where(i => i is not null)
                 .ToHashSet();
 
-        private void Awake()
+        private void Start()
         {
             craftingRecipeGroup = ItemManager.Instance.GetCraftingRecipeGroup(craftingRecipeGroupId);
+            if (craftingRecipeGroup == null)
+            {
+                Debug.LogError("No recipe group found for the crafter. Disabling crafter", this);
+                enabled = false;
+                return;
+            }
         }
 
 #if UNITY_EDITOR
@@ -74,6 +80,8 @@ namespace Cosmobot.ItemSystem
         /// </summary>
         public void Craft()
         {
+            if (!enabled) return;
+
             CraftingRecipe? recipeOp = GetCraftingRecipeForItemsInSlot();
             if (recipeOp is null)
             {

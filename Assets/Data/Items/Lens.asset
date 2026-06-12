@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: lens
   displayName: Lens
-  icon: {fileID: 0}
+  icon: {fileID: 2800000, guid: 79882538914808bf5bc86fe8b4fd0175, type: 3}
   modelPrefab: {fileID: 1862692014303423458, guid: 923e0323b3dc7ec758da772f8658600f, type: 3}
   additionalData:
     keys: []

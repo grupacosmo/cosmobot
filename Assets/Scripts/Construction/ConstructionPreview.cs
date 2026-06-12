@@ -6,6 +6,8 @@ namespace Cosmobot
 {
     public class ConstructionPreview : MonoBehaviour
     {
+        private static readonly int center = Shader.PropertyToID("_Center");
+
         [SerializeField]
         private MeshRenderer gridDisplayRenderer;
 
@@ -31,7 +33,7 @@ namespace Cosmobot
 
         public void SetGridPosition(Vector4 newPosition)
         {
-            gridDisplayRenderer.material.SetVector("_Center", newPosition);
+            gridDisplayRenderer.material.SetVector(center, newPosition);
             gridDisplayTransform.position = newPosition;
         }
     }

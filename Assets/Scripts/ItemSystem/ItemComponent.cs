@@ -61,9 +61,13 @@ namespace Cosmobot.ItemSystem
             }
             item = initValue;
 
-            gameObject.AddComponent<BoxCollider>();
+            gameObject.tag = Tags.Item;
+            gameObject.layer = Layers.Item;
+            BoxCollider addComponent = gameObject.AddComponent<BoxCollider>();
+            addComponent.center = new Vector3(0f, 0.5f, 0f);
+            addComponent.size = Vector3.one;
             gameObject.AddComponent<Rigidbody>();
-            Instantiate(initValue.ItemInfo.ModelPrefab, transform);
+            Instantiate(initValue.ItemInfo.ModelPrefab, transform).name = "model";
         }
 
         /// <summary>

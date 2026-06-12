@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 namespace Cosmobot.Utils
@@ -27,6 +28,10 @@ namespace Cosmobot.Utils
         {
             if (!ReferenceEquals(Instance, this)) return;
 
+#if UNITY_EDITOR
+            // prevent log warning (and keeping enabled) when exiting playmode
+            if (Application.exitCancellationToken.IsCancellationRequested) return;
+#endif
             enabled = true;
             Debug.LogWarning($"SingletonSystem {typeof(T).Name} cannot be disabled", this);
         }
@@ -37,6 +42,10 @@ namespace Cosmobot.Utils
             {
                 SystemOnDestroy();
                 Instance = null;
+#if UNITY_EDITOR
+                // prevent log warning when exiting playmode
+                if (Application.exitCancellationToken.IsCancellationRequested) return;
+#endif
                 Debug.LogWarning($"SingletonSystem {typeof(T).Name} unregistered", this);
             }
         }

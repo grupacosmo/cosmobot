@@ -63,6 +63,7 @@ namespace Cosmobot
 
         private void ShowInteractionPrompt()
         {
+            if (!interactionPrompt) return;
             interactionPrompt.text = interaction?.Prompt;
             interactionPrompt.enabled = true;
         }

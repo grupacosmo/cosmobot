@@ -53,7 +53,7 @@ namespace Cosmobot.Api
         // (!)remember to include "ManualResetEvent taskCompletedEvent" in arguments if using WrapDeffered and .Set() it at the end of action
         private Item FindItem(string type = "")
         {
-            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << Layers.ITEM);
+            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << Layers.Item);
 
             if (objects.Length == 0)
             {
@@ -80,7 +80,7 @@ namespace Cosmobot.Api
 
         private Item FindClosestItem(string type = "")
         {
-            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << Layers.ITEM);
+            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << Layers.Item);
 
             if (objects.Length == 0)
             {
@@ -114,7 +114,7 @@ namespace Cosmobot.Api
 
         private List<Item> FindAllItems(string type = "")
         {
-            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << Layers.ITEM);
+            Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << Layers.Item);
             List<Item> items = new List<Item>();
 
             foreach (Collider collider in objects)

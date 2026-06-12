@@ -14,7 +14,7 @@ namespace Cosmobot
         private GameObject resourcePreview;
 
         public GameObject[] PreviewObjects => previewObjects;
-        public GameObject ResourcePreview => ResourcePreview;
+        public GameObject ResourcePreview => resourcePreview;
 
         public void SetPreviewObjects(GameObject[] previewObjects)
         {

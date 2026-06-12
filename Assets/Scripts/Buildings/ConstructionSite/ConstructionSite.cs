@@ -41,7 +41,7 @@ namespace Cosmobot
                 GameObject preview = GetComponent<ConstructionSiteResourcePreview>()
                     .CreateResourcePreview((SerializableDictionary<ItemInfo, int>)requiredResources, previewCount);
                 preview.transform.SetParent(transform);
-                preview.GetComponent<ResourcePreviewController>().SetRequirement(pair.Value);
+                preview.GetComponent<ResourcePreviewController>().SetRequirement(pair.Value, pair.Key);
                 previewObjects.SetValue(preview, previewCount);
                 constructionSiteResources[pair.Key] = preview;
                 previewCount++;

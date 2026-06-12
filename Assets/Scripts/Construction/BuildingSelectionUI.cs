@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using Cosmobot.BuildingSystem;
 using Cosmobot.Utils;
 using TMPro;
@@ -20,12 +19,6 @@ namespace Cosmobot
         private SerializableDictionary<string, Button> buttonInfo;
 
         [SerializeField]
-        private GameObject player;
-
-        [SerializeField]
-        private Camera mainCamera;
-
-        [SerializeField]
         private Button exitButton;
 
         [SerializeField]
@@ -43,8 +36,8 @@ namespace Cosmobot
             LoadButtons();
             exitButton.onClick.AddListener(Close);
             gameObject.SetActive(false);
-            playerCamera = mainCamera.GetComponent<PlayerCamera>();
-            playerConstructionHandler = player.GetComponent<PlayerConstructionHandler>();
+            playerCamera = GameManager.PlayerCamera;
+            playerConstructionHandler = GameManager.GetPlayerComponent<PlayerConstructionHandler>();
         }
 
         private void LateUpdate()

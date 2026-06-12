@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: uranium-ore
   displayName: Uranium Ore
-  icon: {fileID: 0}
+  icon: {fileID: 2800000, guid: bf12df1c8255dd5e2b575749dcbabef7, type: 3}
   modelPrefab: {fileID: 1862692014303423458, guid: 5d47c927b432588a887399a2f1456cd4, type: 3}
   additionalData:
     keys: []
