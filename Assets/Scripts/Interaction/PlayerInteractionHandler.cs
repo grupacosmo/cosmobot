@@ -8,6 +8,10 @@ namespace Cosmobot
     {
         [SerializeField]
         private TMP_Text interactionPrompt;
+        [SerializeField]
+        private ProgrammingUiManager programmingUiManager;
+        [SerializeField]
+        private PlayerCamera playerCamera;
 
         private DefaultInputActions actions;
         private IInteractable interaction;

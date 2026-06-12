@@ -96,6 +96,12 @@ namespace Cosmobot
             actions.PlayerMovement.Disable();
         }
 
+        public void LockMovement(bool lockMovement)
+        {
+            if (lockMovement) actions.PlayerMovement.Disable();
+            else actions.PlayerMovement.Enable();
+        }
+
         public void OnMovement(InputAction.CallbackContext context)
         {
             var inputMoveRaw = context.action.ReadValue<Vector2>();

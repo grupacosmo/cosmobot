@@ -53,6 +53,8 @@ namespace Cosmobot.Api
         // (!)remember to include "ManualResetEvent taskCompletedEvent" in arguments if using WrapDeffered and .Set() it at the end of action
         private Item FindItem(string type = "")
         {
+            Vector3 robotPos3D = gameObject.transform.position;
+            Vector2 robotPos = new Vector2(robotPos3D.x, robotPos3D.z);
             Collider[] objects = Physics.OverlapSphere(gameObject.transform.position, searchRange, 1 << Layers.Item);
 
             if (objects.Length == 0)
@@ -69,7 +71,10 @@ namespace Cosmobot.Api
 
                 if (string.IsNullOrEmpty(type) || itemComponent.ItemInfo.Id == type)
                 {
-                    Vector2 pos = new Vector2(collider.transform.position.x, collider.transform.position.z);
+                    Vector2 itemPos = new Vector2(collider.transform.position.x, collider.transform.position.z);
+                    if (Vector2.Distance(itemPos, robotPos) > searchRange)
+                        continue;
+
                     Item item = new Item(itemComponent, wrapper);
                     return item;
                 }
@@ -142,9 +147,13 @@ namespace Cosmobot.Api
                 return;
             }
 
-            Vector2 pos = new Vector2(gameObject.transform.position.x, gameObject.transform.position.z);
-            if (Vector2.Distance(pos, item.itemComponent.transform.position) > reachRange)
+            Vector3 pos3d = gameObject.transform.position;
+            Vector3 itemPos3D = item.itemComponent.transform.position;
+            Vector2 pos = new Vector2(pos3d.x, pos3d.z);
+            Vector2 itemPos = new Vector2(itemPos3D.x, itemPos3D.z);
+            if (Vector2.Distance(pos, itemPos) > reachRange)
             {
+                Debug.Log($"pos:[{pos.x}, {pos.y}], itemPos:[{itemPos.x}, {itemPos.y}] | {Vector2.Distance(pos, itemPos)} > {reachRange}");
                 RobotLogger.LogError("Item is too far");
                 return;
             }

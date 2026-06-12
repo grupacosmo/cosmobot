@@ -89,3 +89,6 @@ Assets/Plugins/*.dll.meta
 
 # Allow Formatting.csproj for formatting check check
 !Formatting.csproj
+
+# TEMP js files test path
+JsFiles/
