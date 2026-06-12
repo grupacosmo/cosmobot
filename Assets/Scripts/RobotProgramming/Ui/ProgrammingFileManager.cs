@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -83,8 +82,10 @@ namespace Cosmobot
 
             ProgrammingUiFileEntry entry = programmingUI.robotActiveFiles[currentRobot];
             entry.IsOpen = true;
-            currentRobot.code = ReadFile(entry);
-            currentRobot.RunTask();
+            if (currentRobot.SetCode(ReadFile(entry)))
+            {
+                currentRobot.RunTask();
+            }
         }
 
         public void StopActiveFile()

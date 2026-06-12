@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Cosmobot
 {
@@ -48,5 +49,14 @@ namespace Cosmobot
             Debug.LogWarning(logMessage);
             return true;
         }
+
+        //// TODO: connect to robot
+        // private Button runButton;
+        // private Button stopButton;
+        // private void UpdateRunningState(Programmable source, bool isRunning)
+        // {
+        //     runButton.interactable = !isRunning;
+        //     stopButton.interactable = isRunning;
+        // }
     }
 }

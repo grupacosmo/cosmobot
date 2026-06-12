@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,6 +24,34 @@ namespace Cosmobot
         private GameObject uiLogEntryPrefab;
 
         private readonly Queue<ProgrammingUiLogEntry> logs = new();
+
+        private void OnEnable()
+        {
+            RobotLogger.AddAllLogEventHandler(CreateLog);
+            // TODO: add only new logs instead of all of them
+            // TODO: add only current robot logs
+            foreach (ProgrammingUiLogEntry uiLog in logs)
+            {
+                Destroy(uiLog);
+            }
+            logs.Clear();
+            List<RobotLogger.ReadOnlyRobotLogs> allLogs = RobotLogger.GetAllLogs();
+            // slow af
+            var robotLogs = allLogs.SelectMany(rl
+                => rl.Logs.Select(l
+                        => Tuple.Create(rl.Robot, l)))
+                .OrderBy(rl => rl.Item2.timestamp);
+
+            foreach (var robotLog in robotLogs)
+            {
+                CreateLog(robotLog.Item1, robotLog.Item2);
+            }
+        }
+
+        private void OnDisable()
+        {
+            RobotLogger.RemoveAllLogEventHandler(CreateLog);
+        }
 
         public void CreateLog(ProgrammableData data, LogEntry logEntry)
         {

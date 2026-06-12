@@ -5,13 +5,9 @@ namespace Cosmobot
     public class ProgrammingUiManager : MonoBehaviour
     {
         [SerializeField]
-        private PlayerCamera playerCamera;
-        [SerializeField]
         private ProgrammingUi programmingUi;
         [SerializeField]
         private ProgrammingFileManager fileManager;
-        [SerializeField]
-        private PlayerController playerController;
 
         public void Start()
         {
@@ -32,8 +28,8 @@ namespace Cosmobot
         private void ChangeUiState(bool isActive)
         {
             programmingUi.gameObject.SetActive(isActive);
-            playerCamera.ChangeLock(isActive);
-            playerController.LockMovement(isActive);
+            GameManager.PlayerCamera.ChangeLock(isActive);
+            GameManager.PlayerController.LockMovement(isActive);
         }
     }
 }

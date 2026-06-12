@@ -67,7 +67,6 @@ namespace Cosmobot
 
         private void OnEnable()
         {
-            RobotLogger.AddAllLogEventHandler(logManager.CreateLog);
 
             bool hasComponents = true;
             hasComponents &= ComponentUtils.RequireNotNull(inputField, "inputField", this);
@@ -88,8 +87,6 @@ namespace Cosmobot
 
         private void OnDisable()
         {
-            RobotLogger.RemoveAllLogEventHandler(logManager.CreateLog);
-
             if (inputField != null)
             {
                 inputField.onValueChanged.RemoveListener(OnInputFieldValueChanged);

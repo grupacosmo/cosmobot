@@ -10,7 +10,7 @@ namespace Cosmobot
 
         private Programmable robot;
 
-        public string Prompt { get; private set; } = "Press 'E' to interact";
+        public string Prompt { get; private set; } = "Press 'E' to program the robot";
 
         private void Start()
         {
